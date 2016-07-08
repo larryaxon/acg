@@ -12,42 +12,27 @@ namespace ACG.CommonForms
   public partial class ctlACGDate : UserControl
   {
     private DateTime? _value;
-    private string _text;
     public string Format { get; set; }
-    public override string Text { get { return _text; } set { setText(value); base.Text = _text; } }
-    public DateTime? Value { get { return _value; } set { setValue(value); Text = _text; } }
-
-    public ctlACGDate() : base()
+    public override string Text { get { return txtDate.Text; } set { setText(value); } }
+    public DateTime? Value
     {
-        Format = "d";
-    }
-
-    public override string ToString()
-    {
-      return this.ToString(Format);
-    }
-
-    public string ToString(string format)
-    {
-      if (string.IsNullOrEmpty(format))
-        format = "d";
-      if (_value == null)
-        return null;
-      return ((DateTime)_value).ToString(format);
-    }
-
-    private void setValue(DateTime? dt)
-    {
-      if (dt == null)
+      get
       {
-        _value = null;
-        _text = null;
+        return _value;
       }
-      else
+      set
       {
-        _value = dt;
-        _text = ((DateTime)dt).ToString(Format);
+        _value = value;
+        if (value == null)
+          txtDate.Text = null;
+        else
+          txtDate.Text = ((DateTime)_value).ToString(Format);
       }
+    }
+    public ctlACGDate()
+    {
+      Format = "d";
+      InitializeComponent();
     }
 
     private void setText(string textDate)
@@ -55,7 +40,7 @@ namespace ACG.CommonForms
       DateTime dt;
       if (string.IsNullOrEmpty(textDate))
       {
-        _text = null;
+        txtDate.Text = null;
         _value = null;
         return;
       }
@@ -63,7 +48,7 @@ namespace ACG.CommonForms
       if (isDate)
       {
         _value = dt;
-        _text = dt.ToString(Format);
+        txtDate.Text = dt.ToString(Format);
       }
       else
       {
@@ -71,33 +56,32 @@ namespace ACG.CommonForms
         //throwError(string.Format("{0} is not a valid Date", textDate));
       }
     }
-    private void throwError(string message)
-    {
-      throw new Exception(message);
-    }
 
     private void txtDate_Leave(object sender, EventArgs e)
     {
-    }
-    private void txtDate_Validating(object sender, EventArgs e)
-    {
-    }
-    private void AutoScaleDimensions(ctlACGDate date)
-    {
+      setText(txtDate.Text);
     }
 
-    ///************************************************************************************************************
-    // * 
-    // * Events
-    // * 
-    // ************************************************************************************************************/
-    //public event EventHandler ButtonClick;
+    private void txtDate_Validating(object sender, CancelEventArgs e)
+    {
+      if (!isValid(txtDate.Text))
+        e.Cancel = true;
+    }
 
-    //protected void Button1_Click(object sender, EventArgs e)
-    //{
-    //  //bubble the event up to the parent
-    //  if (this.ButtonClick != null)
-    //    this.ButtonClick(this, e);
-    //}
+    private bool isValid(string text)
+    {
+      if (string.IsNullOrEmpty(text))
+        return true;
+      DateTime dt;
+      bool valid = DateTime.TryParse(text, out dt);
+      if (valid)
+        _value = dt;
+      return valid;
+    }
+
+    private void txtDate_TextChanged(object sender, EventArgs e)
+    {
+
+    }
   }
 }

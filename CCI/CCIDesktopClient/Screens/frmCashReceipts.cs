@@ -449,7 +449,7 @@ namespace CCI.DesktopClient.Screens
     private void frmCashReceipts_Load(object sender, EventArgs e)
     {
       srchCashReceipts.NameType = CommonData.UnmatchedNameTypes.CashReceipts;
-      _startDate = (new DateTime(DateTime.Today.Year, DateTime.Today.AddMonths(-1).Month, 1));
+      _startDate = (new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1)).AddMonths(-1);
       DateTime endDate = DateTime.Today;
       tbBillingPeriod.Text = _startDate.AddMonths(1).ToShortDateString();
       srchCashReceipts.Init(CCI.Common.CommonData.UnmatchedNameTypes.CashReceipts, null);

@@ -36,7 +36,7 @@
       this.txtDate.Dock = System.Windows.Forms.DockStyle.Fill;
       this.txtDate.Location = new System.Drawing.Point(0, 0);
       this.txtDate.Name = "txtDate";
-      this.txtDate.Size = new System.Drawing.Size(1327, 20);
+      this.txtDate.Size = new System.Drawing.Size(245, 20);
       this.txtDate.TabIndex = 0;
       this.txtDate.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
       this.txtDate.Leave += new System.EventHandler(this.txtDate_Leave);
@@ -44,9 +44,11 @@
       // 
       // ctlACGDate
       // 
+      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.Controls.Add(this.txtDate);
       this.Name = "ctlACGDate";
-      this.Size = new System.Drawing.Size(1327, 676);
+      this.Size = new System.Drawing.Size(245, 20);
       this.ResumeLayout(false);
       this.PerformLayout();
 

@@ -1,0 +1,28 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Text;
+using System.Windows.Forms;
+
+using ACG.App.Common;
+using ACG.DesktopClient.Common;
+using ACG.DesktopClient.Screens;
+
+namespace ACG.DesktopClient.Screens
+{
+  public partial class frmBudgetQuery : ScreenBase
+  {
+    public frmBudgetQuery()
+    {
+      InitializeComponent();
+    }
+
+    private void frmBudgetQuery_Load(object sender, EventArgs e)
+    {
+      srchBudgetQuery.Load(CommonData.NameTypes.BudgetQuery, "BudgetQuery");
+      srchBudgetQuery.ReLoad();
+    }
+  }
+}

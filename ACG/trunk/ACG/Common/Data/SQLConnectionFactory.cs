@@ -33,9 +33,9 @@ namespace ACG.Common.Data
     /// <summary>
     /// Constant holding the definition of the configuration file name.
     /// </summary>
-    private const string cCONNECTIONSTRING = "Data Source= {0};Initial Catalog={1};{2}MultipleActiveResultSets=True;Connection Timeout={3};";//New config for connStr added by Leo
+    private const string cCONNECTIONSTRING = "Server={0};Database={1};{2}MultipleActiveResultSets=True;Connection Timeout={3};";//New config for connStr added by Leo
     private const string cINTEGRATEDSEC = "Integrated Security=True;";
-    private const string cUSERAUTHENTICATION = "uid={0};Password={1};";
+    private const string cUSERAUTHENTICATION = "User Id={0};Password={1};";
     public int TIMEOUTSECONDS = 300; // 300 seconds time out to wait for a connection
 
     /// <summary>

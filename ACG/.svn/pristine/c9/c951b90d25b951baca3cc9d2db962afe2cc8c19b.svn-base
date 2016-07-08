@@ -1,0 +1,68 @@
+﻿namespace ACG.DesktopClient.Screens
+{
+  partial class frmBudgetQuery
+  {
+    /// <summary>
+    /// Required designer variable.
+    /// </summary>
+    private System.ComponentModel.IContainer components = null;
+
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
+    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+    protected override void Dispose(bool disposing)
+    {
+      if (disposing && (components != null))
+      {
+        components.Dispose();
+      }
+      base.Dispose(disposing);
+    }
+
+    #region Windows Form Designer generated code
+
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
+    private void InitializeComponent()
+    {
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmBudgetQuery));
+      this.srchBudgetQuery = new ACG.DesktopClient.Common.ctlSearchGrid();
+      this.SuspendLayout();
+      // 
+      // srchBudgetQuery
+      // 
+      this.srchBudgetQuery.ColumnName = "CustomerName";
+      this.srchBudgetQuery.DisplaySearchCriteria = true;
+      this.srchBudgetQuery.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.srchBudgetQuery.ExportCriteria = false;
+      this.srchBudgetQuery.InnerWhere = "";
+      this.srchBudgetQuery.Location = new System.Drawing.Point(0, 0);
+      this.srchBudgetQuery.Name = "srchBudgetQuery";
+      this.srchBudgetQuery.NameType = ACG.App.Common.CommonData.NameTypes.BudgetQuery;
+      this.srchBudgetQuery.SearchCriteria = ((System.Collections.Generic.Dictionary<string, string[]>)(resources.GetObject("srchBudgetQuery.SearchCriteria")));
+      this.srchBudgetQuery.Size = new System.Drawing.Size(1142, 576);
+      this.srchBudgetQuery.TabIndex = 0;
+      this.srchBudgetQuery.Title = "Search (0 Records Found)";
+      this.srchBudgetQuery.UniqueIdentifier = "ID";
+      // 
+      // frmBudgetQuery
+      // 
+      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.ClientSize = new System.Drawing.Size(1142, 576);
+      this.Controls.Add(this.srchBudgetQuery);
+      this.Name = "frmBudgetQuery";
+      this.Text = "frmBudgetQuery";
+      this.Load += new System.EventHandler(this.frmBudgetQuery_Load);
+      this.ResumeLayout(false);
+
+    }
+
+    #endregion
+
+    private Common.ctlSearchGrid srchBudgetQuery;
+  }
+}

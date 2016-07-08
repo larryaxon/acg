@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+    <configSections>
+    </configSections>
+    <connectionStrings>
+        <add name="ACG.Report.Properties.Settings.ACGConnectionString"
+            connectionString="Data Source=localhost;Initial Catalog=ACG;Persist Security Info=True;User ID=ACGRemoteUser;Password=ACGAccess2012$"
+            providerName="System.Data.SqlClient" />
+    </connectionStrings>
+    <startup> 
+        
+       <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.0,Profile=Client" />       
+        
+       
+    </startup>
+</configuration>

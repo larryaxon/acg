@@ -223,10 +223,14 @@ namespace CCI.DesktopClient.Screens
             DateTime billdate = txtBillDate.Value;
             if (ValidImport(billdate, filetype) == false)
             {
-              openSpreadsheet(this.txtFileName1.Text);
+              if (useNewImport)
+                this.txtFileName1.Text = this.txtFileName1.Text.Replace("Y:\\", "c:\\city hosted solutions\\");
+              else
+                openSpreadsheet(this.txtFileName1.Text);
               this.lblMRCWholesaleMsg.Text = "Importing...";
               importMRCFile("Wholesale", billdate);
-              closeExcel();
+              if (!useNewImport)
+                closeExcel();
               if (importfileinvaliddate == false)
               {
                 string user = SecurityContext.User;
@@ -257,10 +261,14 @@ namespace CCI.DesktopClient.Screens
             DateTime billdate = txtBillDate.Value;
             if (ValidImport(billdate, filetype) == false)
             {
-              openSpreadsheet(this.txtFileName2.Text);
+              if (useNewImport)
+                this.txtFileName2.Text = this.txtFileName2.Text.Replace("Y:\\", "c:\\city hosted solutions\\");
+              else
+                openSpreadsheet(this.txtFileName2.Text);
               this.lblMRCRetailMsg.Text = "Importing...";
               importMRCFile("Retail", billdate);
-              closeExcel();
+              if (!useNewImport)
+                closeExcel();
               if (importfileinvaliddate == false)
               {
                 string user = SecurityContext.User;
@@ -291,10 +299,14 @@ namespace CCI.DesktopClient.Screens
             DateTime billdate = txtBillDate.Value;
             if (ValidImport(billdate, filetype) == false)
             {
+              if (useNewImport)
+                this.txtFileName3.Text = this.txtFileName3.Text.Replace("Y:\\", "c:\\city hosted solutions\\");
+              else
               openSpreadsheet(this.txtFileName3.Text);
               this.lblOCCWholesaleMsg.Text = "Importing...";
               importOther("Wholesale", billdate);
-              closeExcel();
+              if (!useNewImport)
+                closeExcel();
               if (importfileinvaliddate == false)
               {
                 string user = SecurityContext.User;
@@ -324,10 +336,14 @@ namespace CCI.DesktopClient.Screens
             DateTime billdate = txtBillDate.Value;
             if (ValidImport(billdate, filetype) == false)
             {
-              openSpreadsheet(this.txtFileName4.Text);
+              if (useNewImport)
+                this.txtFileName4.Text = this.txtFileName4.Text.Replace("Y:\\", "c:\\city hosted solutions\\");
+              else
+                openSpreadsheet(this.txtFileName4.Text);
               this.lblOCCRetailMsg.Text = "Importing...";
               importOther("Retail", billdate);
-              closeExcel();
+              if (!useNewImport)
+                closeExcel();
               if (importfileinvaliddate == false)
               {
                 string user = SecurityContext.User;
@@ -356,7 +372,7 @@ namespace CCI.DesktopClient.Screens
             Boolean importerror;
    //         this.txtFileName5.Text = this.txtFileName5.Text.Replace("y:\\", "d:\\city operations\\");
    //         this.txtFileName5.Text = this.txtFileName5.Text.Replace("Y:\\", "d:\\city operations\\");
-            this.txtFileName5.Text = this.txtFileName5.Text.Replace("y:\\", "c:\\city hosted solutions\\");
+            //this.txtFileName5.Text = this.txtFileName5.Text.Replace("y:\\", "c:\\city hosted solutions\\");
             this.txtFileName5.Text = this.txtFileName5.Text.Replace("Y:\\", "c:\\city hosted solutions\\");
             Cursor.Current = Cursors.WaitCursor;
             string filetype = "Calls Wholesale";
@@ -425,7 +441,7 @@ namespace CCI.DesktopClient.Screens
             Boolean importerror;
 //            this.txtFileName6.Text = this.txtFileName6.Text.Replace("y:\\", "d:\\city operations\\");
 //            this.txtFileName6.Text = this.txtFileName6.Text.Replace("Y:\\", "d:\\city operations\\");
-            this.txtFileName6.Text = this.txtFileName6.Text.Replace("y:\\", "c:\\city hosted solutions\\");
+            //this.txtFileName6.Text = this.txtFileName6.Text.Replace("y:\\", "c:\\city hosted solutions\\");
             this.txtFileName6.Text = this.txtFileName6.Text.Replace("Y:\\", "c:\\city hosted solutions\\");
 
             Cursor.Current = Cursors.WaitCursor;
@@ -755,7 +771,7 @@ namespace CCI.DesktopClient.Screens
       private bool ValidImport(DateTime billdate, string filetype)
       {
         bool logexists;
-        logexists = _dataSource.checkProcessStepsbeforeimport(billdate, "Tax Detail", filetype);
+        logexists = _dataSource.checkProcessStepsbeforeimport(billdate, filetype, filetype);
         return logexists;
       }
       private bool ValidPost(DateTime billdate, string step)
@@ -1016,11 +1032,11 @@ namespace CCI.DesktopClient.Screens
       {
         string storedproc;
         storedproc = "ImportHostedOCCRetail";
-        string filepath = txtFileName2.Text;
+        string filepath = txtFileName4.Text;
         if (OCCType == "Wholesale")
         {
           storedproc = "ImportHostedOCCWholesale";
-          filepath = txtFileName1.Text;
+          filepath = txtFileName3.Text;
         }
         string criteria = String.Format(",'{0}'", billdate.ToString("yyyyMMdd"));
         returnmsg = _dataSource.executestoredproc(storedproc, filepath, criteria);
@@ -1684,7 +1700,7 @@ namespace CCI.DesktopClient.Screens
         {
           if (downloadFiles)
           {
-            if (iFile < _fileTypePrefixes.GetLength(0) - 2)  // last two files are tax and ledger and they are not on the ftp site
+            if (iFile < _fileTypePrefixes.GetLength(0) - 1)  // last two files are tax and ledger and they are not on the ftp site 10-31-2015 supposedly the tax file will be there so I add it
             {
               txt.Text = "Downloading...";
               txt.ForeColor = Color.Blue;

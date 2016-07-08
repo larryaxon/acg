@@ -1,0 +1,156 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Text;
+
+using ACG.App.Common;
+
+namespace ACG.Sys.Data
+{
+  public partial class DataSource
+  {
+    public ACGTable getTimeData(int timeID)
+    {
+      if (timeID == null)
+        return new ACGTable();
+      string sql = string.Format("Select * from TimeEntry where ID = {0}", timeID.ToString());
+      return CommonFunctions.convertDataSetToCCITable(getDataFromSQL(sql));
+    }
+    public decimal getTimeRate(string customerid, string projectid, string resourceid, DateTime effectiveDate)
+    {
+      decimal rate = 0;
+      string sql = @"select top 1 r.rate from rates r 
+where resourceid in ('All', '{0}') and Customerid in ('All', '{1}') and ProjectID in ('All', '{2}') 
+and '{3}' between isnull(startdate, '{4}') and isnull(enddate, '{5}')
+order by case when ResourceID = 'All' then 1 else 0 end,
+case when CustomerID = 'All' then 1 else 0 end,
+case when ProjectID = 'All' then 1 else 0 end";
+      sql = string.Format(sql, resourceid, customerid, projectid, effectiveDate.ToShortDateString(),
+        CommonData.PastDateTime.ToShortDateString(), CommonData.FutureDateTime.ToShortDateString());
+      DataSet ds = getDataFromSQL(sql);
+      if (ds == null)
+        return rate;
+      if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+        rate = CommonFunctions.CDecimal(ds.Tables[0].Rows[0][0]);
+      ds.Clear();
+      ds = null;
+      return rate;
+    }
+    public DataSet getTimeSummary(string resourceid, DateTime startDate, DateTime endDate, bool billableOnly, CommonData.TimeEntrySummaryMode mode)
+    {
+      string billableWhere = billableOnly ? " AND BillingCode = 'Billable' " : string.Empty;
+      string sql = string.Empty;
+      switch (mode)
+      {
+        case CommonData.TimeEntrySummaryMode.Daily:
+          sql = @"select timeworkeddate Date, sum(Convert(decimal(18, 2), EnteredTime)) / 60  Hours from timeentry
+    where resourceid = '{0}' and timeworkeddate between '{1}' and '{2}' {3}
+    group by timeworkeddate order by timeworkeddate";
+          break;
+        case CommonData.TimeEntrySummaryMode.Weekly:
+          sql = @"select datepart(year, timeworkeddate) Year, datepart(week, timeworkeddate) Week, sum(Convert(decimal(18, 2), EnteredTime)) / 60  Hours from timeentry
+    where resourceid = '{0}' and timeworkeddate between '{1}' and '{2}' {3}
+    group by datepart(year, timeworkeddate), datepart(week, timeworkeddate) 
+    order by datepart(year, timeworkeddate), datepart(week, timeworkeddate) ";
+          break;
+        case CommonData.TimeEntrySummaryMode.ByProject:
+          sql = @"select c.name Customer, p.Name Project, sum(Convert(decimal(18, 2), EnteredTime)) / 60  Hours 
+    from timeentry t
+    inner join Customers c on t.customerid = c.customerid
+    inner join Projects p on t.customerid = p.customerid and t.projectid = p.projectid
+    where resourceid = '{0}' and timeworkeddate between '{1}' and '{2}' {3}
+    group by c.Name, p.Name 
+    order by c.Name, p.Name ";
+          break;
+      }
+      if (string.IsNullOrEmpty(sql))
+        return new DataSet();
+      sql = string.Format(sql, resourceid, startDate.ToShortDateString(), endDate.ToShortDateString(),billableWhere);
+      return getDataFromSQL(sql);
+    }
+    /// <summary>
+    /// Returns the timeId
+    /// </summary>
+    /// <param name="fields"></param>
+    /// <returns></returns>
+    public int updateTimeEntry(Hashtable fields)
+    {
+      string sql = string.Empty;
+      int id = fields.ContainsKey(CommonData.fieldTIMEID) ? CommonFunctions.CInt(fields[CommonData.fieldTIMEID], -1) : -1;
+
+      if (id == -1) // new record
+      {
+        StringBuilder fieldList = new StringBuilder();
+        StringBuilder valueList = new StringBuilder();
+        foreach (DictionaryEntry entry in fields)
+        {
+          string fldName = CommonFunctions.CString(entry.Key);
+          if (!fldName.Equals("id", StringComparison.CurrentCultureIgnoreCase))
+          {
+            if (fieldList.Length > 0)
+              fieldList.Append(", ");
+            if (valueList.Length > 0)
+              valueList.Append(", ");
+            fieldList.Append(fldName);
+            valueList.Append("'");
+            if (fldName.Equals("createdatetime"))
+              valueList.Append(DateTime.Now.ToString(CommonData.FORMATLONGDATETIME));
+            else
+            {
+              if (CommonFunctions.IsDateTime(entry.Value))
+                valueList.Append(CommonFunctions.CDateTime(entry.Value).ToString(CommonData.FORMATLONGDATETIME));
+              else
+                valueList.Append(CommonFunctions.CString(entry.Value));
+            }
+            valueList.Append("'");
+          }
+        }
+        if (!fields.ContainsKey(CommonData.fieldCREATEDDATETIME.ToLower()))
+        {
+          fieldList.Append(", ");
+          fieldList.Append(CommonData.fieldCREATEDDATETIME);
+          valueList.Append(", '");
+          valueList.Append(DateTime.Now.ToString(CommonData.FORMATLONGDATETIME));
+          valueList.Append("'");
+        }
+
+        sql = string.Format("insert into TimeEntry ({0}) Values ({1})", fieldList.ToString(), valueList.ToString());
+      }
+      else // updaterecord  
+      {
+        StringBuilder updateSQL = new StringBuilder();
+        string updateStart = "Update TimeEntry Set ";
+        updateSQL.Append(updateStart);
+        foreach (DictionaryEntry entry in fields)
+        {
+          string fldName = CommonFunctions.CString(entry.Key);
+          if (!fldName.Equals("id", StringComparison.CurrentCultureIgnoreCase))
+          {
+            if (updateSQL.Length > updateStart.Length)
+              updateSQL.Append(", ");
+            updateSQL.Append(string.Format("{0} = '{1}'", fldName, CommonFunctions.CString(entry.Value)));
+          }
+        }
+        updateSQL.Append(string.Format(" WHERE ID = {0}", id.ToString()));
+        sql = updateSQL.ToString();
+      }
+      int? ret = updateDataFromSQL(sql);
+      if (ret == null)
+        return -1;
+      else
+        return (int)ret;
+      
+    }
+    public void deleteTimeEntry(int id)
+    {
+      if (id > 0)
+      {
+        string sql = string.Format("Delete from TimeEntry where ID = {0}", id.ToString());
+        updateDataFromSQL(sql);
+      }
+    }
+  }
+}

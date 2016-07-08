@@ -1,0 +1,226 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{587D4EA7-8C63-4928-BEC3-E0D3CC472FCD}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ACG.DesktopClient</RootNamespace>
+    <AssemblyName>ACG.DesktopClient</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=11.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.WinForms, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common\AttributeSaveEventArgs.cs" />
+    <Compile Include="Common\CommonFormFunctions.cs" />
+    <Compile Include="Common\ctlExceptionsTreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Common\ctlExceptionsTreeView.Designer.cs">
+      <DependentUpon>ctlExceptionsTreeView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\ctlMaintenanceBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Common\ctlMaintenanceBase.Designer.cs">
+      <DependentUpon>ctlMaintenanceBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\ctlSearchGrid.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Common\ctlSearchGrid.Designer.cs">
+      <DependentUpon>ctlSearchGrid.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\ctlTreeBase.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Common\ctlTreeBase.designer.cs">
+      <DependentUpon>ctlTreeBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\frmLogin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Common\frmLogin.Designer.cs">
+      <DependentUpon>frmLogin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\frmMessage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Common\frmMessage.designer.cs">
+      <DependentUpon>frmMessage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\MaintenanceGridRowSelectedArgs.cs" />
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Screens\frmBudgetQuery.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmBudgetQuery.Designer.cs">
+      <DependentUpon>frmBudgetQuery.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmMaintenance.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmMaintenance.Designer.cs">
+      <DependentUpon>frmMaintenance.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmProjects.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmProjects.Designer.cs">
+      <DependentUpon>frmProjects.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmRates.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmRates.Designer.cs">
+      <DependentUpon>frmRates.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmTimeEntry.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmTimeEntry.Designer.cs">
+      <DependentUpon>frmTimeEntry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\ScreenBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\ScreenBase.Designer.cs">
+      <DependentUpon>ScreenBase.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Common\ctlMaintenanceBase.resx">
+      <DependentUpon>ctlMaintenanceBase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\ctlSearchGrid.resx">
+      <DependentUpon>ctlSearchGrid.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\ctlTreeBase.resx">
+      <DependentUpon>ctlTreeBase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\frmLogin.resx">
+      <DependentUpon>frmLogin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\frmMessage.resx">
+      <DependentUpon>frmMessage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Screens\frmBudgetQuery.resx">
+      <DependentUpon>frmBudgetQuery.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmMaintenance.resx">
+      <DependentUpon>frmMaintenance.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmProjects.resx">
+      <DependentUpon>frmProjects.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmRates.resx">
+      <DependentUpon>frmRates.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmTimeEntry.resx">
+      <DependentUpon>frmTimeEntry.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="DB.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="log4net.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\ACG.App\ACG.App.csproj">
+      <Project>{01803791-69F2-4A4C-B997-DCEA239CD3BA}</Project>
+      <Name>ACG.App</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ACG.Report\ACG.Report.csproj">
+      <Project>{BDE6FE5C-CAE7-4C05-85CA-21F73E72C39D}</Project>
+      <Name>ACG.Report</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ACG.Sys\ACG.Sys.csproj">
+      <Project>{FC403C77-0275-45FA-87A2-A7D75B30347D}</Project>
+      <Name>ACG.Sys</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ACG\ACG.csproj">
+      <Project>{A9E993B0-A25A-4F36-9339-1D7F6E6F5ADA}</Project>
+      <Name>ACG</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

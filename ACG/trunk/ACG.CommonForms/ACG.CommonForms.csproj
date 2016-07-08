@@ -78,9 +78,6 @@
     </ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Office.Interop.Excel, Version=11.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -94,10 +91,13 @@
   <ItemGroup>
     <Compile Include="CommonFormFunctions.cs" />
     <Compile Include="ctlACGDate.cs">
-      <SubType>Component</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="ctlACGDate.Designer.cs">
       <DependentUpon>ctlACGDate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ctlACGDatex.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="ctlDayPlanner.cs">
       <SubType>UserControl</SubType>
@@ -205,6 +205,17 @@
       <Project>{a9e993b0-a25a-4f36-9339-1d7f6e6f5ada}</Project>
       <Name>ACG</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="Microsoft.Office.Core">
+      <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>5</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
