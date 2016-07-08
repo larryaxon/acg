@@ -1,0 +1,471 @@
+﻿@model CCIWebClient.Models.CustomerInformationModel
+@{
+    ViewBag.Title = "Index";
+}
+<link href="@Url.Content("~/Content/Views/QuoteTable.css")" rel="stylesheet" type="text/css" />
+<div id="Quote_Body">
+    @* START TITLE: Hosted Services *@
+    <a href="#" id="hosted-services-title" class="quote-content-title">Hosted Services</a>
+    
+    <!-- START SECTION: Lines and Trunks -->
+    <div class="quote-content-block">
+        <div class="quote-content-left">
+            <img class="quote-content-image" src="/Content/images/quoteICO-lines.png" alt="" />
+        </div>
+        <div class="quote-content-right">
+            <div class="quote-right-top">
+                <h3>Lines and Trunks</h3>
+                <p>Get amazingly simple business-quality lines.</p>
+                <a href="#" class="learn-more-drop">» Learn More</a>
+                <div class="learn-more-drop-content">
+                    <p>
+                    Your complete list of products and the associated dealer costs can be found in your 
+                    Dealer Agreement.  The “Cost” is our dealer cost to you.  The “Sales Price” is the
+                    amount that you would like charged to the customer and shown on their bill.  The 
+                    difference in the two is your Dealer Markup/Profit.  “IP Station Lines” include all of 
+                    the standard features.  “Basic IP Lines” do not include any features.
+                    </p>
+                </div>
+            </div>
+            <div id="LinesTrunks" class="quote-linesTrunks-bottom">
+                @{Html.RenderAction("LinesAndTrunks", "Quote", new { model = Model });}
+            </div><!-- .quote-linesTrunks-bottom -->
+            <a href="#" class="quote-bolda moreless-linesAndTrunks">+ More</a>                
+        </div><!-- .quote-content-right -->
+    </div><!-- .quote-content-block -->
+    <!-- END SECTION: Lines and Trunks -->
+
+    <img class="quote-spacer" src="/Content/images/quote-spacer.png" alt="" />
+
+    <!-- START SECTION: Features -->
+    <div class="quote-content-block">
+        <div class="quote-content-left">
+            <img class="quote-content-image" src="/Content/images/quoteICO-features.png" alt="" />
+        </div>
+        <div class="quote-content-right">
+            <div class="quote-right-top">
+                <h3>Features</h3>
+                <p>Choose from our easy-to-use additional ala carte features.</p>
+                <a href="#" class="learn-more-drop">» See All Included Features</a>
+                <div class="learn-more-drop-content">
+                    <p>
+                    There are over 20 features included with all of the “IP Station Lines”.  Below is a list 
+                    of the a la carte features that the customer may purchase.  For a complete 
+                    description of all of the features, please visit <a href="www.cityhosted.com/features.html">www.cityhosted.com/features.html</a>.  
+                    “Your cost” is your dealer cost for the features.  “Sales Price” is the price that you 
+                    would like to charge the customer for the features.  The difference represents your 
+                    Dealer Markup/Profit.
+                    </p>
+                </div>
+            </div>
+            <div id="Features" class="quote-linesTrunks-bottom"> @*is class OK?*@
+                @{Html.RenderAction("Features", "Quote", new { model = Model });}
+            </div><!-- .quote-linesTrunks-bottom -->
+            <a href="#" class="quote-bolda moreless-features">+ More</a>
+        </div><!-- .quote-content-right -->
+    </div><!-- .quote-content-block -->
+    <!-- END SECTION: Features -->
+
+    <img class="quote-spacer" src="/Content/images/quote-spacer.png" alt="" />
+
+    <!-- START SECTION: Faxing -->
+    <div class="quote-content-block">
+        <div class="quote-content-left">
+            <img class="quote-content-image" src="/Content/images/quoteICO-fax.png" alt="" />
+        </div>
+        <div class="quote-content-right">
+            <div class="quote-right-top">
+                <h3>Faxing</h3>
+                <p>Choose from our easy-to-use additional ala carte features.</p>
+                <a href="#" class="learn-more-drop">» Learn More</a>
+                <div class="learn-more-drop-content">
+                    <p>
+                    The iFax service converts incoming faxes into PDF documents and then forwards 
+                    them to an email address or group that you assign.  You may port over the 
+                    customer’s existing fax number or assign them a new number.  There is no per-page 
+                    cost for this service.  This service <b>DOES NOT</b> include outbound faxing.  “Your cost” is 
+                    your dealer cost for the iFaxes.  “Sales Price” is the price that you would like to 
+                    charge the customer for the iFaxes.  The difference represents your Dealer 
+                    Markup/Profit.
+                    </p>
+                </div>
+            </div>
+            <div id="Faxing" class="quote-faxing-bottom">
+               @{Html.RenderAction("Faxing", "Quote", new {model=Model});}
+            </div><!-- .quote-faxing-bottom -->
+            <a href="#" class="quote-bolda moreless-faxing">+ More</a>
+        </div><!-- .quote-content-right -->
+    </div><!-- .quote-content-block -->
+    <!-- END SECTION: Faxing -->
+    
+    <img class="quote-spacer" src="/Content/images/quote-spacer.png" alt="" />
+    
+    <!-- START SECTION: Phone Numbers -->
+    <div class="quote-content-block">
+        <div class="quote-content-left">
+            <img class="quote-content-image" src="/Content/images/quoteICO-phone.png" alt="" />
+        </div>
+        <div class="quote-content-right">
+            <div id="PhoneNumHeader" class="quote-right-top">
+                <h3>Phone Numbers</h3>
+                <p>Choose from our easy-to-use additional ala carte features.</p>
+                <a href="#" class="learn-more-drop">» Learn More</a>
+                <div class="learn-more-drop-content">
+                    <p>
+                    Please choose how numbers will be used for this customer.  Will we be porting 
+                    numbers from an existing carrier or assigning new numbers.  If we are porting 
+                    numbers, we will need a signed LOA and usually a current phone bill showing the 
+                    numbers.  Porting existing numbers will occasionally delay the order process as we 
+                    wait for the other carrier to release the numbers.  “Your cost” is your dealer cost for 
+                    the phones numbers.  “Sales Price” is the price that you would like to charge the 
+                    customer for the phone numbers.  The difference represents your Dealer Markup/Profit.
+                    </p>
+                </div>
+            </div>
+            <div class="quote-linesTrunks-bottom"> @*is class OK?*@
+                <div id="PhoneNumbers">
+                    @{Html.RenderAction("PhoneNumbers", "Quote", new { model = Model });}
+                </div>
+                <a href="#" class="quote-bolda moreless-phoneNumbers">+ More</a>
+            </div>
+            <!-- .quote-linesTrunks-bottom -->
+        </div><!-- .quote-content-right -->
+    </div><!-- .quote-content-block -->
+    <!-- END SECTION: Phone Numbers -->
+
+    <img class="quote-spacer" src="/Content/images/quote-spacer.png" alt="" />
+
+    <!-- START QUESTION: Phone Provider -->
+    <div class="question-container">
+       
+            @{Html.RenderAction("WhereYouGetYourPhone", "Quote", new {model=Model});}
+            @*<div class="quote-bolda qdadd-another">+ More</div>*@
+
+    </div><!-- .question-container -->
+    <!-- END QUESTION: Phone Provider -->
+    
+    @* END TITLE: Hosted Services *@
+    @* START TITLE: Equipment *@
+    <a href="#" id="equipment-title" class="quote-content-title">Equipment</a>
+    
+    <!-- START SECTION: Phones -->
+    <div class="quote-content-block">
+        <div class="quote-content-left">
+            <img class="quote-content-image" src="/Content/images/quoteICO-EP.png" alt="" />
+        </div>
+        <div class="quote-content-right">
+            <div class="quote-right-top">
+                <h3>Phones</h3>
+                <p>Select from Aastra, Polycom, or your own provided equipment.</p>
+                <a href="#" class="learn-more-drop">» Learn More</a>
+                <div class="learn-more-drop-content">
+                    <p>
+                    The CityHosted services have been tested and approved to work with newer Aastra 
+                    and Polycom IP phone models.  The phones listed below are on the approved list.  If 
+                    you would like to use any of the services with equipment not listed here, please 
+                    consult with your Sales Representative first.  “Your cost” is your dealer cost for the 
+                    phones.  “Sales Price” is the price that you would like to charge the customer for the 
+                    phones.  The difference represents your Dealer Markup/Profit.
+                    </p>
+                </div>
+            </div>
+            <div class="quote-linesTrunks-bottom"> @*is class OK?*@
+                <div id="Phones">
+                    @{Html.RenderAction("Phones", "Quote", new { model = Model });}
+                </div>
+                <a href="#" class="quote-bolda moreless-phones">+ More</a>
+            </div>
+            <!-- .quote-linesTrunks-bottom -->
+        </div><!-- .quote-content-right -->
+    </div><!-- .quote-content-block -->
+    <!-- END SECTION: Phones -->
+
+    <img class="quote-spacer" src="/Content/images/quote-spacer.png" alt="" />
+
+    <!-- START SECTION: Other Equipment -->
+    <div class="quote-content-block">
+        <div class="quote-content-left">
+            <img class="quote-content-image" src="/Content/images/quoteICO-EOE.png" alt="" />
+        </div>
+        <div class="quote-content-right">
+            <div id="OtherEquipHeader" class="quote-right-top">
+                <h3>Other Equipment</h3>
+                <p>Build in your cost and equipment to give a complete solution quote for the customer.</p>
+                <a href="#" class="learn-more-drop">» Learn More</a>
+                <div class="learn-more-drop-content">
+                    <p>
+                    Choose from other equipment that you would like included in this quote.  ASA 
+                    devices are used to convert the IP signal to an analog jack to be use for traditional 
+                    fax machines and telephones.  “Your cost” is your dealer cost for the equipment.  
+                    “Sales Price” is the price that you would like to charge the customer for the 
+                    equipment.  The difference represents your Dealer Markup/Profit.
+                    </p>
+                </div>
+            </div>
+            <div class="quote-linesTrunks-bottom"> @*is class OK?*@
+                <div id="OtherEquipment">
+                    @{Html.RenderAction("OtherEquipment", "Quote", new { model = Model });}
+                </div>
+                <a href="#" class="quote- bolda moreless-otherEquipment">+ More</a>
+                @*<a href="#" class="quote-bolda add-otherEquipment">Add New Row</a>*@
+            </div>
+            <!-- .quote-linesTrunks-bottom -->
+        </div><!-- .quote-content-right -->
+    </div><!-- .quote-content-block -->
+    <!-- END SECTION: Other Equipment -->
+
+
+    <img class="quote-spacer" src="/Content/images/quote-spacer.png" alt="" />
+    <!-- START SECTION: EquipmentRental -->
+    <div class="quote-content-block">
+        <div class="quote-content-left">
+            <img class="quote-content-image" src="/Content/images/quoteICO-ER.png" alt="" />
+        </div>
+        <div class="quote-content-right">
+            <div class="quote-right-top">
+                <h3>Equipment Rental</h3>
+                <p>Select from equipment that can be rented</p>
+                <a href="#" class="learn-more-drop">» Learn More</a>
+                <div class="learn-more-drop-content">
+                    <p>
+						So you clicked the "Learn More" button, didn't you?
+						When i know more, you'll know more!
+                    </p>
+                </div>
+            </div>
+            <div class="quote-linesTrunks-bottom"> @*is class OK?*@
+                <div id="EquipmentRental">
+                    @{Html.RenderAction("EquipmentRental", "Quote", new { model = Model });}
+                </div>
+                <a href="#" class="quote-bolda moreless-equipmentRental">+ More</a>
+            </div>
+            <!-- .quote-linesTrunks-bottom -->
+        </div><!-- .quote-content-right -->
+    </div><!-- .quote-content-block -->
+    <!-- END SECTION: EquipmentRental -->
+
+    <img class="quote-spacer" src="/Content/images/quote-spacer.png" alt="" />
+
+    <!-- START SECTION: Non-City-Hosted Equipment -->
+    <div class="quote-content-block">
+        <div class="quote-content-left">
+            <img class="quote-content-image" src="/Content/images/quoteICO-ENCE.png" alt="" />
+        </div>
+        <div class="quote-content-right">
+            <div class="quote-right-top">
+                <h3>Non CityHosted Equipment</h3>
+                <p>Build in your cost and equipment to give a complete solution quote for the customer.</p>
+                <a href="#" class="learn-more-drop">» Learn More</a>
+                <div class="learn-more-drop-content">
+                    <p>
+                    Enter in any additional equipment that you would like included in this quote.  This is 
+                    equipment that is not supplied or managed by CityHosted but that you would like 
+                    included in the quote for the customer.  “Your cost” is your own internal cost for the 
+                    equipment and is used for Gross Margin calculations only.  “Sales Price” is the price 
+                    that you would like to charge the customer for the equipment.  The difference 
+                    represents your Dealer Markup/Profit.
+                    </p>
+                </div>
+            </div>
+            <div class="quote-nonequipment-bottom">
+                <div id="NonCityEquipment">
+                    @{Html.RenderAction("NonCityEquipment", "Quote", new { model = Model });}
+                </div>
+                <a href="#" class="quote-bolda add-nonCityEquipment">Add New Row</a> 
+            </div>
+            <!-- .quote-nonequipment-bottom -->
+        </div><!-- .quote-content-right -->
+    </div><!-- .quote-content-block -->
+    <!-- END SECTION: Non-City-Hosted Equipment -->
+
+    <img class="quote-spacer" src="/Content/images/quote-spacer.png" alt="" />
+    
+    <!-- START QUESTION: Carrier Services Provider -->
+    <a href="#" id="carrier-services-title" class="quote-content-title">Carrier Services</a>
+    <div class="question-container">
+        @{Html.RenderAction("CarrierServices", "Quote", new { model = Model });}
+    </div><!-- .question-container -->
+    <!-- END QUESTION: Carrier Provider -->
+
+    @* END TITLE: Equipment *@
+    @* START TITLE: Carrier Services *@
+    <!--CAC <a href="#" id="carrier-services-title" class="quote-content-title">Carrier Services</a>-->
+
+    <!-- START SECTION: Dial Tone-->
+    <div class="quote-content-block">
+        <div class="quote-content-left">
+            <img class="quote-content-image" src="/Content/images/quoteICO-DT.png" alt="" />
+        </div>
+        <div class="quote-content-right">
+            <div class="quote-right-top">
+                <h3>Dial Tone</h3>
+                <p>Build in your cost and equipment to give a complete solution quote for the customer.</p>
+                <a href="#" class="learn-more-drop">» Learn More</a>
+                <div class="learn-more-drop-content">
+                    <p>
+                    Use this section to build a complete solution quote that includes the type, quantity, 
+                    and price of any additional dial tone products that the customer will be purchasing 
+                    separately including:  Analog Business Lines, PRI T-1s, or combination circuits.  
+                    Actual billing and commissions for any services in this section will be billed by the 
+                    supplying carrier and not by CityHosted.
+                    </p>
+                </div>
+            </div>
+            <div  class="quote-dialtone-bottom">
+                <div id="DialTone">
+                    @{Html.RenderAction("DialTone", "Quote", new { model = Model });}
+                </div>
+                <a href="#" class="quote-bolda moreless-dialTone">+ More</a>
+                @*<a href="#" class="quote-bolda add-dialTone">Add New Row</a>*@
+            </div><!-- .quote-dialtone-bottom -->
+        </div><!-- .quote-content-right -->
+    </div><!-- .quote-content-block -->
+    <!-- END SECTION: Dial Tone-->
+
+    <img class="quote-spacer" src="/Content/images/quote-spacer.png" alt="" />
+
+    <!-- START SECTION: Internet Access -->
+    <div class="quote-content-block">
+        <div class="quote-content-left">
+            <img class="quote-content-image" src="/Content/images/quoteICO-IA.png" alt="" />
+        </div><!-- .quote-content-left -->
+        <div class="quote-content-right">
+            <div class="quote-right-top">
+                <h3>Internet Access</h3>
+                <p>Build in your cost and equipment to give a complete solution quote for the customer.</p>
+                <a href="#" class="learn-more-drop">» Learn More</a>
+                <div class="learn-more-drop-content">
+                    <p>
+                    Use this section to build a complete solution quote that includes the type, quantity, 
+                    and price of any additional Internet products that the customer will be purchasing 
+                    separately including:  DSL, Cable, T-1, Ethernet, or Fiber connections.  Actual billing 
+                    and commissions for any services in this section will be billed by the supplying 
+                    carrier and not by CityHosted.
+                    </p>
+                </div>
+                @* <div class="learn-more-content">testing</div>  *@
+            </div>
+            <div  class="quote-dialtone-bottom"> @*is class OK?*@
+                <div id="InternetAccess">
+                    @{Html.RenderAction("InternetAccess", "Quote", new { model = Model });}
+                </div>
+                <a href="#" class="quote-bolda moreless-internetAccess">+ More</a>
+                @*<a href="#" class="quote-bolda add-internetAccess">Add New Row</a>*@
+            </div><!-- .quote-dialtone-bottom -->
+        </div><!-- .quote-content-right -->
+    </div><!-- .quote-content-block -->
+    <!-- END SECTION: Internet Access -->
+
+    <img class="quote-spacer" src="/Content/images/quote-spacer.png" alt="" />
+
+    <!-- START SECTION: Networking -->
+    <div class="quote-content-block">
+        <div class="quote-content-left">
+            <img class="quote-content-image" src="/Content/images/quoteICO-NTW.png" alt="" />
+        </div>
+        <div class="quote-content-right">
+            <div class="quote-right-top">
+                <h3>Networking</h3>
+                <p>Build in your cost and equipment to give a complete solution quote for the customer.</p>
+                <a href="#" class="learn-more-drop">» Learn More</a>
+                <div class="learn-more-drop-content">
+                    <p>
+                    Use this section to build a complete solution quote that includes the type, quantity, 
+                    and price of any additional Networking products that the customer will be 
+                    purchasing separately including:  Point to Point, MPLS, VPN, Network Firewall, or 
+                    Ethernet.  Actual billing and commissions for any services in this section will be 
+                    billed by the supplying carrier and not by CityHosted.
+                    </p>
+                </div>
+            </div>
+            <div  class="quote-dialtone-bottom"> @*is class OK?*@
+                <div id="Networking">
+                    @{Html.RenderAction("Networking", "Quote", new { model = Model });}
+                </div>
+                <a href="#" class="quote-bolda moreless-networking">+ More</a>
+                @*<a href="#" class="quote-bolda add-networking">Add New Row</a>*@
+            </div><!-- .quote-networking-bottom --> @*is class OK?*@
+        </div><!-- .quote-content-right -->
+    </div><!-- .quote-content-block -->
+    <!-- END SECTION: Networking -->
+
+    <img class="quote-spacer" src="/Content/images/quote-spacer.png" alt="" />
+
+    @* END TITLE: Carrier Services  *@
+    @* START TITLE: Installation Costs and Service Fees *@
+    <a href="#" id="installation-costs" class="quote-content-title">Installation Costs<br />
+        and Service Fees</a>
+
+    <!-- START QUESTION: Installation Costs -->
+     @*<div id ="installationcost">
+        @{Html.RenderAction("InstallationCost", "Quote", new { model = Model });}
+     </div>*@
+    <!-- END QUESTION: Installation Costs -->
+
+    <img class="quote-spacer" src="/Content/images/quote-spacer.png" alt="" />
+    <!-- START SECTION: MoreUsoc -->
+    <div class="quote-content-block">
+        <div class="quote-content-left">
+            <img class="quote-content-image" src="/Content/images/quoteICO-MU.png" alt="" />
+        </div>
+        <div class="quote-content-right">
+            <div class="quote-right-top">
+                <h3>Installation Fees</h3>
+                <p>Select any necessary Installation Fees that can be chosen</p>
+                <a href="#" class="learn-more-drop">» Learn More</a>
+                <div class="learn-more-drop-content">
+                    <p>
+						So you clicked the "Learn More" button, didn't you?
+						When i know more, you'll know more!
+                    </p>
+                </div>
+            </div>
+            <div class="quote-linesTrunks-bottom"> @*is class OK?*@
+                <div id="MoreUsoc">
+                    @{Html.RenderAction("MoreUsoc", "Quote", new { model = Model });}
+                </div>
+                <a href="#" class="quote-bolda moreless-moreUsoc">+ More</a>
+            </div>
+            <!-- .quote-linesTrunks-bottom -->
+        </div><!-- .quote-content-right -->
+    </div><!-- .quote-content-block -->
+    <!-- END SECTION: MoreUsoc -->
+
+    <!-- START SECTION: Additional Service Fees -->
+    <div class="quote-content-block">
+        <div class="quote-content-left">
+            <!--<img class="quote-content-image" src="/Content/images/???.png" alt="" />--> @*no img?*@
+        </div><!-- .quote-content-left -->
+        <div class="quote-content-right">
+            <div class="quote-right-top">
+                <h3>
+                    Additional Service Fees</h3>
+                <p>
+                    Build in your cost and equipment to give a complete solution quote for the customer.</p>
+                <a href="#" class="learn-more-drop">» Learn More</a>
+                <div class="learn-more-drop-content">
+                    <p>
+                    Use this section to include any additional fees or products that you would like billed 
+                    to your customer in conjunction with their order.  These may include Installation 
+                    Fees, Training Fees, Setup Fees, Service Plans, Programming Fees, or anything else.  
+                    These fees will appear on the customer’s invoice from CityHosted and any questions 
+                    regarding the fees will be directed to you the Dealer.  
+                    </p>
+                </div>
+                @*<div class="learn-more-content">testing</div>*@
+            </div>
+            <div class="quote-fee-bottom">
+                <div id="Fees">
+                    @{Html.RenderAction("Fees", "Quote", new { model = Model });}
+                </div>
+                <a href="#" class="quote-bolda add-fees">Add New Row</a>
+            </div><!-- .quote-fee-bottom -->
+        </div><!-- .quote-content-right -->
+    </div><!-- .quote-content-block -->
+    <!-- END SECTION: Additional Service Fees -->
+        <div id="DetailLoading" style="display: none">
+    </div>
+    <img class="quote-spacer" src="/Content/images/quote-spacer.png" alt="" />
+         
+    <img src="/Content/images/quote-spacer.png" alt="" />
+</div>

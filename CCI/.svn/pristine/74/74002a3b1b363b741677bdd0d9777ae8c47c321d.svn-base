@@ -1,0 +1,103 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Data;
+using System.Text;
+using System.Windows.Forms;
+
+using CCI.Common;
+using CCI.Sys.Data;
+using Microsoft.VisualBasic;
+
+namespace CCI.DesktopClient.Common
+{
+  public partial class ctlEntityGroupMembers : ctlGroupMembers
+  {
+
+    private DataSource _ds = null;
+    private DataSource _dataSource { get { if (_ds == null) _ds = new DataSource(); return _ds; } }
+    public SecurityContext SecurityContext { get; set; }
+    private string _entity = string.Empty;
+
+    public string Entity
+    {
+      get { return _entity; }
+      set { _entity = value; }
+    }
+
+    public bool IsGroup
+    {
+      get { return _isGroup; }
+      set { _isGroup = value; }
+    }
+    private string _entityType = string.Empty;
+    private string _groupEntityType = string.Empty;
+
+    public string GroupEntityType
+    {
+      get { return _groupEntityType; }
+      set { _groupEntityType = value; MemberDescription = _isGroup ?  "Group" : _groupEntityType; GroupDescription = _isGroup ? _groupEntityType : "Group" ; }
+    }
+
+    public string EntityType
+    {
+      get { return _entityType; }
+      set { _entityType = value; MemberDescription = _isGroup ? "Group" : _entityType; GroupDescription = _isGroup ? _entityType : "Group"; }
+    }
+    public ctlEntityGroupMembers()
+    {
+      InitializeComponent();
+      btnAddGroup.Visible = false;
+    }
+    public void Init(string entity, bool isGroup)
+    {
+      _entity = entity;
+      _isGroup = isGroup;
+    }
+    public new void Init()
+    {
+      if (!string.IsNullOrEmpty(_entity))
+      {
+        string memberType = _isGroup ? "Group" : "Entity";
+        string groupType = _isGroup ? "Entity" : "Group";
+        Members = _dataSource.getMembers(_entity, groupType, null);
+        NonMembers = _dataSource.getMembers(null, groupType, _isGroup ? _entityType : "Group" );
+        foreach (string member in Members)
+          NonMembers.Remove(member);
+        base.Init();
+      }
+    }
+
+    protected override void saveMove(string member, MoveDirection direction)
+    {
+      string mem = _isGroup ? _entity : getID(member);
+      string grp = _isGroup ? getID(member) : _entity;
+      if (direction == MoveDirection.FromMember)
+        _dataSource.terminateGroupMember(mem, grp, SecurityContext.User);
+      else
+        if (!_dataSource.existsGroupMember(mem, grp)) // if it is not there then add it
+        {
+          int? id = _dataSource.getMember(mem, grp);
+          _dataSource.updateGroupMember(id == null ? null : ((int)id).ToString(), mem, grp, SecurityContext.User);
+        }
+    }
+    protected override void saveAll()
+    {
+      int? ret = _dataSource.updateMembers(Entity, Members, true, _merge, SecurityContext.User);
+    }
+    protected override void addGroup()
+    {
+      string grpName = Interaction.InputBox("Enter a new Group Name", "Add Group", "Default Text");
+      _dataSource.createGroup(MakeNewEntityID(grpName), grpName, _groupEntityType, SecurityContext.User);
+      MessageBox.Show("Group Added");
+      Init();
+    }
+
+    public  string MakeNewEntityID(string newEntityName)
+    {
+      return _dataSource.MakeNewEntityID(newEntityName);
+    }
+  }
+}

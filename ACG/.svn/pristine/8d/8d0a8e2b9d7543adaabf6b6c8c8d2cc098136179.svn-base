@@ -1,0 +1,270 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Text;
+using System.Windows.Forms;
+
+using ACG.Common;
+using ACG.Common.Data;
+
+namespace ACG.CommonForms
+{
+  public partial class frmGenericMaintenanceSetup : Form, IScreenBase
+  {
+    private const string TESTFORM = "testform";
+    private const string TESTGRID = "testgrid";
+    private const string TESTSEARCH = "testsearch";
+    private bool _dirty = false;
+    private DataSourceGenericMaintenanceSetup _ds = null;
+    private DataSourceGenericMaintenanceSetup _dataSource { get { if (_ds == null) _ds = new DataSourceGenericMaintenanceSetup(); return _ds; } }
+    public string DefaultAssemblyName { get; set; }
+
+    public ISecurityContext SecurityContext { get; set; }
+
+    public frmGenericMaintenanceSetup()
+    {
+      InitializeComponent();
+      srchScreenName.SearchExec = new SearchDataSourceScreen();
+      DefaultAssemblyName = "ACG";
+    }
+
+    public void Save() 
+    {
+      if (!string.IsNullOrEmpty(srchScreenName.Text))
+        saveData();
+      else
+        MessageBox.Show("No data to save");
+    }
+
+    #region private methods
+    
+    private void loadData()
+    {
+      if (string.IsNullOrEmpty(srchScreenName.Text))
+      {
+        clearData(true);
+        return;
+      }
+      else
+      {
+        if (srchScreenName.CreatedNewItem)
+        {
+          clearData(false);
+          return;
+        }
+        else
+        {
+          DataSet ds = _dataSource.getScreenRecord(srchScreenName.Text);
+          if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+          {
+            clearData(false);
+          }
+          else
+          {
+            DataRow row = ds.Tables[0].Rows[0];
+            txtDescription.Text = CommonFunctions.CString(row["Description"]);
+            txtSearchDataSource.Text = CommonFunctions.CString(row["SearchDataSource"]);
+            srchTableName.Text = CommonFunctions.CString(row["TableName"]);
+            srchGridDataSource.Text = CommonFunctions.CString(row["GridSource"]);
+            txtIndexFields.Text = CommonFunctions.CString(row["IndexFields"]);
+            txtHiddenFields.Text = CommonFunctions.CString(row["HiddenFields"]);
+            txtReadonlyFields.Text = CommonFunctions.CString(row["ReadonlyFields"]);
+            ckCanAdd.Checked = CommonFunctions.CBoolean(row["CanAddNew"]);
+            ckCanEdit.Checked = CommonFunctions.CBoolean(row["CanEdit"]);
+            ckCanDelete.Checked = CommonFunctions.CBoolean(row["CanDelete"]);
+            _dirty = false;
+          }
+        }
+      }
+    }
+    private void clearData(bool clearSearch)
+    {
+      if (clearSearch)
+        srchScreenName.Text = string.Empty;
+      txtDescription.Text = string.Empty;
+      txtSearchDataSource.Text = string.Empty;
+      srchTableName.Text = string.Empty;
+      srchGridDataSource.Text = string.Empty;
+      txtIndexFields.Text = string.Empty;
+      txtHiddenFields.Text = string.Empty;
+      txtReadonlyFields.Text = string.Empty;
+      ckCanAdd.Checked = true;
+      ckCanEdit.Checked = true;
+      ckCanDelete.Checked = true;
+      ctlTestGrid.ClearAll();
+      _dirty = !clearSearch;
+    }
+    private void saveData()
+    {
+
+      int? ret = _dataSource.updateScreenRecord(srchScreenName.Text,
+        CommonFunctions.fixUpStringForSQL(txtDescription.Text), 
+        CommonFunctions.fixUpStringForSQL(srchTableName.Text), 
+        CommonFunctions.fixUpStringForSQL(srchGridDataSource.Text),
+        CommonFunctions.fixUpStringForSQL(txtSearchDataSource.Text),
+        CommonFunctions.fixUpStringForSQL(txtIndexFields.Text), 
+        CommonFunctions.fixUpStringForSQL(txtHiddenFields.Text),
+        CommonFunctions.fixUpStringForSQL(txtReadonlyFields.Text),
+        ckCanAdd.Checked, ckCanEdit.Checked, ckCanDelete.Checked, SecurityContext.User);
+      if (ret == -1)
+        MessageBox.Show("Update Record failed");
+      else
+      {
+        MessageBox.Show("Record Updated");
+        _dirty = false;
+      }
+    }
+    private void deleteData()
+    {
+      int? ret = _dataSource.deleteScreenRecord(srchScreenName.Text);
+      if (ret == -1)
+        MessageBox.Show("Delete Record failed");
+      else
+      {
+        MessageBox.Show("Record Deleted");
+        clearData(true);
+      }
+    }
+    private bool validData()
+    {
+      if (!isID(srchScreenName.Text))
+      {
+        MessageBox.Show("Must have a valid Screen ID. It must not be blank and must consist of characters that are A-Z,a-z,0-9");
+        return false;
+      }
+      if (string.IsNullOrEmpty(txtDescription.Text))
+      {
+        MessageBox.Show("You must have a description");
+        return false;
+      }
+      if (string.IsNullOrEmpty(txtSearchDataSource.Text))
+      {
+        MessageBox.Show("You must have a Search Data Source");
+        return false;
+      }
+      if (string.IsNullOrEmpty(srchTableName.Text))
+      {
+        MessageBox.Show("You must have a Table Name");
+        return false;
+      }
+      if (string.IsNullOrEmpty(srchGridDataSource.Text))
+      {
+        MessageBox.Show("You must have a Grid Data Source");
+        return false;
+      }
+      if (string.IsNullOrEmpty(txtIndexFields.Text))
+      {
+        MessageBox.Show("You must have index Fields");
+        return false;
+      }
+
+      return true;
+    }
+    private bool isID(string id)
+    {
+      if (string.IsNullOrEmpty(id))
+        return false;
+      return CommonFunctions.RemoveSpecialCharacters(id).Equals(id);
+    }
+    private void test(string type)
+    {
+      switch (type)
+      {
+        case TESTFORM:
+          ShowForm(srchScreenName.Text);
+          break;
+        case TESTGRID:
+          lblTestProgress.Visible = true;
+          lblTestProgress.Text = "Initializing grid";
+          lblTestProgress.Refresh();
+          ctlTestGrid.Init(srchGridDataSource.Text, null);
+          lblTestProgress.Text = "Loading data in grid";
+          lblTestProgress.Refresh(); 
+          ctlTestGrid.ReLoad();
+          lblTestProgress.Text = string.Empty;
+          lblTestProgress.Visible = false;
+          break;
+        case TESTSEARCH:
+          _dataSource.AssemblyName = DefaultAssemblyName;
+          ISearchDataSource source = _dataSource.getSearchDataSource(txtSearchDataSource.Text); // try to get a valid search data source
+          if (source == null)
+            MessageBox.Show("The specified Search Data Source does not exist or another error occurred");
+          else
+          {
+            lblTestSearch.Visible = true;
+            srchTest.Visible = true;
+            btnCancelTestSearch.Visible = true;
+            srchTest.SearchExec = source;
+          }
+          break;
+      }
+
+    }
+    public void ShowForm(string screen)
+    {
+      ACG.CommonForms.IScreenBase frm = new ACG.CommonForms.frmMaintenanceBase();
+      ((ACG.CommonForms.frmMaintenanceBase)frm).Init(screen);
+      ((ACG.CommonForms.IScreenBase)frm).SecurityContext = SecurityContext;
+      frm.Show();
+      frm.Activate();
+    }
+    #endregion
+
+    #region form events
+
+    private void frmGenericMaintenanceSetup_Load(object sender, EventArgs e)
+    {
+      srchScreenName.SearchExec = new SearchDataSourceScreen();
+      srchTableName.SearchExec = new SearchDataSourceTableList();
+      srchGridDataSource.SearchExec = new SearchDataSourceDataSources();
+      clearData(true);
+    }
+    private void srchDataSource_OnSelected(object sender, EventArgs e)
+    {
+      loadData();
+    }
+    private void btnTest_Click(object sender, EventArgs e)
+    {
+      test(TESTFORM);
+    }
+    private void btnCancel_Click(object sender, EventArgs e)
+    {
+      loadData();
+    }
+    private void btnNew_Click(object sender, EventArgs e)
+    {
+      clearData(true);
+    }
+    private void btnDelete_Click(object sender, EventArgs e)
+    {
+      deleteData();
+    }
+    private void btnSave_Click(object sender, EventArgs e)
+    {
+      saveData();
+    }
+    private void txtAny_TextChanged(object sender, EventArgs e)
+    {
+      _dirty = true;
+    }
+    private void btnTestSearch_Click(object sender, EventArgs e)
+    {
+      test(TESTSEARCH);
+    }
+    private void btnTestGrid_Click(object sender, EventArgs e)
+    {
+      test(TESTGRID);
+    }
+    #endregion
+
+    private void btnCancelTestSearch_Click(object sender, EventArgs e)
+    {
+      lblTestSearch.Visible = false;
+      srchTest.Visible = false;
+      btnCancelTestSearch.Visible = false;
+    }
+
+  }
+}

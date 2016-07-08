@@ -1,0 +1,144 @@
+﻿namespace CCI.DesktopClient.Screens
+{
+  partial class frmOrderEntry
+  {
+    /// <summary>
+    /// Required designer variable.
+    /// </summary>
+    private System.ComponentModel.IContainer components = null;
+
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
+    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+    protected override void Dispose(bool disposing)
+    {
+      if (disposing && (components != null))
+      {
+        components.Dispose();
+      }
+      base.Dispose(disposing);
+    }
+
+    #region Windows Form Designer generated code
+
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
+    private void InitializeComponent()
+    {
+      this.label1 = new System.Windows.Forms.Label();
+      this.srchOrder = new ACG.CommonForms.ctlSearch();
+      this.ctlEntities = new CCI.DesktopClient.Common.ctlEntityGridBase();
+      this.label2 = new System.Windows.Forms.Label();
+      this.cboEntityType = new System.Windows.Forms.ComboBox();
+      this.SuspendLayout();
+      // 
+      // label1
+      // 
+      this.label1.AutoSize = true;
+      this.label1.Location = new System.Drawing.Point(7, 10);
+      this.label1.Name = "label1";
+      this.label1.Size = new System.Drawing.Size(33, 13);
+      this.label1.TabIndex = 0;
+      this.label1.Text = "Order";
+      // 
+      // srchOrder
+      // 
+      this.srchOrder.AddNewMode = false;
+      this.srchOrder.AutoAddNewMode = true;
+      this.srchOrder.AutoSelectWhenMatch = false;
+      this.srchOrder.AutoTabToNextControlOnSelect = true;
+      this.srchOrder.ClearSearchWhenComplete = false;
+      this.srchOrder.Collapsed = true;
+      this.srchOrder.CreatedNewItem = false;
+      this.srchOrder.DisplayOnlyDescription = false;
+      this.srchOrder.DisplayOnlyID = false;
+      this.srchOrder.ID = "";
+      this.srchOrder.Location = new System.Drawing.Point(51, 7);
+      this.srchOrder.MaxHeight = 228;
+      this.srchOrder.MustExistInList = false;
+      this.srchOrder.MustExistMessage = "You must enter a valid value";
+      this.srchOrder.Name = "srchOrder";
+      this.srchOrder.ShowCustomerNameWhenSet = true;
+      this.srchOrder.ShowTermedCheckBox = false;
+      this.srchOrder.Size = new System.Drawing.Size(353, 25);
+      this.srchOrder.TabIndex = 1;
+      this.srchOrder.OnSelected += new System.EventHandler<System.EventArgs>(this.srchOrder_OnSelected);
+      // 
+      // ctlEntities
+      // 
+      this.ctlEntities.ColumnNames = new string[] {
+        "LegalName",
+        "Phone",
+        "Address1",
+        "Address2",
+        "City",
+        "State",
+        "Zip",
+        "Entity",
+        "EntityOwner",
+        "EntityType",
+        "IsPrimary"};
+      this.ctlEntities.EntityOwner = null;
+      this.ctlEntities.EntityOwnerType = null;
+      this.ctlEntities.EntityType = "Contact";
+      this.ctlEntities.IncludeGrandChildren = false;
+      this.ctlEntities.Location = new System.Drawing.Point(11, 242);
+      this.ctlEntities.Name = "ctlEntities";
+      this.ctlEntities.SecurityContext = null;
+      this.ctlEntities.Size = new System.Drawing.Size(1337, 277);
+      this.ctlEntities.StateList = null;
+      this.ctlEntities.TabIndex = 2;
+      // 
+      // label2
+      // 
+      this.label2.AutoSize = true;
+      this.label2.Location = new System.Drawing.Point(10, 211);
+      this.label2.Name = "label2";
+      this.label2.Size = new System.Drawing.Size(57, 13);
+      this.label2.TabIndex = 3;
+      this.label2.Text = "EntityType";
+      // 
+      // cboEntityType
+      // 
+      this.cboEntityType.FormattingEnabled = true;
+      this.cboEntityType.Items.AddRange(new object[] {
+            "Contact",
+            "Vendor",
+            "CCI Resource",
+            "Dealer"});
+      this.cboEntityType.Location = new System.Drawing.Point(78, 209);
+      this.cboEntityType.Name = "cboEntityType";
+      this.cboEntityType.Size = new System.Drawing.Size(153, 21);
+      this.cboEntityType.TabIndex = 4;
+      this.cboEntityType.SelectedIndexChanged += new System.EventHandler(this.cboEntityType_SelectedIndexChanged);
+      // 
+      // frmOrderEntry
+      // 
+      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.ClientSize = new System.Drawing.Size(1354, 525);
+      this.Controls.Add(this.cboEntityType);
+      this.Controls.Add(this.label2);
+      this.Controls.Add(this.ctlEntities);
+      this.Controls.Add(this.srchOrder);
+      this.Controls.Add(this.label1);
+      this.Name = "frmOrderEntry";
+      this.Text = "frmOrderEntry";
+      this.Load += new System.EventHandler(this.frmOrderEntry_Load);
+      this.ResumeLayout(false);
+      this.PerformLayout();
+
+    }
+
+    #endregion
+
+    private System.Windows.Forms.Label label1;
+    private ACG.CommonForms.ctlSearch srchOrder;
+    private Common.ctlEntityGridBase ctlEntities;
+    private System.Windows.Forms.Label label2;
+    private System.Windows.Forms.ComboBox cboEntityType;
+  }
+}

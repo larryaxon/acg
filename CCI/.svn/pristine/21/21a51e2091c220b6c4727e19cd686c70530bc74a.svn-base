@@ -1,0 +1,27 @@
+﻿using CrystalDecisions.Shared;
+using System.IO;
+
+namespace CCIWebClient.Reports
+{
+    public class QuoteReportHandler : ReportBase
+    {
+        public QuoteReportHandler(int QuoteId)
+        {
+            Report rep = new Report();
+            this.ReportDocument = rep.getReporDocument("Quote.rpt");
+            ParameterDiscreteValue quoteId = new ParameterDiscreteValue();
+            quoteId.Value = QuoteId;
+            /*CAC- for testing quoteId.Value = 108; */
+            this.ReportDocument.SetParameterValue("@id", QuoteId);
+            //this.ReportDocument.ParameterFields["@id"].CurrentValues.Add(quoteId);
+        }
+
+        public Stream QuoteReportStream(int Quoteid)
+        {
+            Stream stream = ReportDocument.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+
+
+            return stream;
+        }
+    }
+}

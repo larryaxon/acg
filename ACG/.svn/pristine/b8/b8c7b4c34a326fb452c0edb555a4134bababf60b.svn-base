@@ -1,0 +1,220 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{6658BCCB-A3D9-4C18-9D0F-3BEC1AE752CC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TAGBOSS.Common</RootNamespace>
+    <AssemblyName>TAGBOSS.Common</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;USETABLEHEADER</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DebugAE2|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\DebugAE2\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;USE_NEW_ATTR_ENGINE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;USETABLEHEADER</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugAE2|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\DebugAE2\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;USE_NEW_ATTR_ENGINE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugWin32|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\DebugWin32\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;USETABLEHEADER</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugWin32|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\DebugWin32\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;USETABLEHEADER</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>..\..\..\MCK\lib\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.XML" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ActionParameters.cs" />
+    <Compile Include="Cache\IncludedItemAddress.cs" />
+    <Compile Include="Cache\IncludedItemLeaf.cs" />
+    <Compile Include="Cache\IncludedItemTree.cs" />
+    <Compile Include="DictionaryElement.cs" />
+    <Compile Include="DictionaryElements.cs" />
+    <Compile Include="ExpressionEnums.cs" />
+    <Compile Include="FunctionExpression.cs" />
+    <Compile Include="ISortedItemBase.cs" />
+    <Compile Include="Model\Clr\MergeDataPoolRow.cs" />
+    <Compile Include="Model\Constants.cs" />
+    <Compile Include="Model\EItemFlags.cs" />
+    <Compile Include="Model\EAttributeFlags.cs" />
+    <Compile Include="Model\EntityFactoryItem.cs" />
+    <Compile Include="Model\ITAGBOSSData.cs" />
+    <Compile Include="Model\NewEntityReturn.cs" />
+    <Compile Include="Model\ProcessorDelegate.cs" />
+    <Compile Include="Model\SystemEntityFactory.cs" />
+    <Compile Include="Model\TableHeaderRowCollection.cs" />
+    <Compile Include="Model\TableHeaderRowEnumerator.cs" />
+    <Compile Include="Model\TableHeaderUniqueKeyEqualityComparer.cs" />
+    <Compile Include="Model\TAEL.cs" />
+    <Compile Include="Model\TAttribute.cs" />
+    <Compile Include="Model\TAttributeTHMerge.cs" />
+    <Compile Include="Model\TEntity.cs" />
+    <Compile Include="Model\TEntityCollection.cs" />
+    <Compile Include="Model\TIncludeItem.cs" />
+    <Compile Include="Model\TIncludeItemObject.cs" />
+    <Compile Include="Model\TIndex.cs" />
+    <Compile Include="Model\TIndexItem.cs" />
+    <Compile Include="Model\TItem.cs" />
+    <Compile Include="Model\TItemHistory.cs" />
+    <Compile Include="Model\TItemIncludeTree.cs" />
+    <Compile Include="Model\TItemType.cs" />
+    <Compile Include="Model\TParameterProcessor.cs" />
+    <Compile Include="Model\TValueHistory.cs" />
+    <Compile Include="TAGSystemNames.cs" />
+    <Compile Include="SQLConnectionFactory.cs" />
+    <Compile Include="TAGDictionary.cs" />
+    <Compile Include="EncryptDecryptString.cs" />
+    <Compile Include="Model\Clr\AttributeHistoryRow.cs" />
+    <Compile Include="Model\Clr\AttributeRow.cs" />
+    <Compile Include="Model\Clr\EntityChildrenRow.cs" />
+    <Compile Include="Model\ColumnEnumerator.cs" />
+    <Compile Include="DataClass.cs" />
+    <Compile Include="Dictionaries.cs" />
+    <Compile Include="DictionaryFactory.cs" />
+    <Compile Include="DictionaryFunctionManager.cs" />
+    <Compile Include="DictionaryFunctions.cs" />
+    <Compile Include="FieldBase.cs" />
+    <Compile Include="FunctionElement.cs" />
+    <Compile Include="Interface\IDataClassContainer.cs" />
+    <Compile Include="Interface\IDataClassItem.cs" />
+    <Compile Include="Logging\Log.cs" />
+    <Compile Include="Logging\LogFactory.cs" />
+    <Compile Include="Model\AttributesCollection.cs" />
+    <Compile Include="Model\DateHistory.cs" />
+    <Compile Include="Model\EntitiesCollection.cs" />
+    <Compile Include="Model\Entity.cs" />
+    <Compile Include="Model\EntityAttributesCollection.cs" />
+    <Compile Include="Model\EntityHierarchy.cs" />
+    <Compile Include="Model\Field.cs" />
+    <Compile Include="Model\FieldsCollection.cs" />
+    <Compile Include="Model\InvalidEntries.cs" />
+    <Compile Include="Model\InvalidEntry.cs" />
+    <Compile Include="Model\Item.cs" />
+    <Compile Include="Model\ItemHistory.cs" />
+    <Compile Include="Model\ItemHistoryCollection.cs" />
+    <Compile Include="Model\ItemType.cs" />
+    <Compile Include="Model\ItemTypeCollection.cs" />
+    <Compile Include="Model\TableHeaderColumn.cs" />
+    <Compile Include="Model\TableHeaderColumnsCollection.cs" />
+    <Compile Include="Model\TableHeaderRow.cs" />
+    <Compile Include="Model\TableHeaderUniqueKey.cs" />
+    <Compile Include="Model\TAGAttribute.cs" />
+    <Compile Include="Model\ValueHistory.cs" />
+    <Compile Include="Model\ValueHistoryCollection.cs" />
+    <Compile Include="Parameters.cs" />
+    <Compile Include="PickList.cs" />
+    <Compile Include="Printer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security.cs" />
+    <Compile Include="TableHeader.cs" />
+    <Compile Include="Model\TableHeaderCells.cs" />
+    <Compile Include="TableHeaderEnumerator.cs" />
+    <Compile Include="TAGClock.cs" />
+    <Compile Include="EntryRowBase.cs" />
+    <Compile Include="TAGExceptionMessage.cs" />
+    <Compile Include="TAGFunctions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ACG\ACG.csproj">
+      <Project>{a9e993b0-a25a-4f36-9339-1d7f6e6f5ada}</Project>
+      <Name>ACG</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

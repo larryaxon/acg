@@ -1,0 +1,35 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Text;
+
+using ACG.Common;
+
+namespace ACG.Common.Data
+{
+  public class SearchDataSourceDataSources : DataAccessBase, ISearchDataSource 
+  {
+    public string IDName { get; set; }
+    public string NameName { get; set; }
+    public string SQL { get; set; }
+    public string OrderByClause { get; set; }
+    public bool IncludeOnlyAnalysis { get; set; }
+    public SearchDataSourceDataSources()
+    {
+      SQL = "Select DataSource, Description from DataSources";
+      OrderByClause = " order by DataSource";
+      IDName = "DataSource";
+      NameName = "Description";
+      IncludeOnlyAnalysis = false;
+    }
+    public string[] Search(string criteria, bool useExactID)
+    {
+      string sql;
+      if (IncludeOnlyAnalysis)
+        sql = SQL + " WHERE Isnull(IncludeInAnalysis,0) = 1";
+      else
+        sql = SQL;
+      return getSearchList(sql, OrderByClause, criteria, IDName, new string[] { NameName }, useExactID, false);
+    }
+  }
+}

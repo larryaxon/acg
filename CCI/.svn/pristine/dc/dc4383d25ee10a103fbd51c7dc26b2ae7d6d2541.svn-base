@@ -1,0 +1,152 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Collections;
+using System.Linq;
+using System.Data;
+using System.Text;
+using System.Windows.Forms;
+using System.IO;
+using Excel = Microsoft.Office.Interop.Excel;
+
+using System.Data.SqlClient;
+using CCI.Common;
+using CCI.Sys.SecurityEngine;
+using TAGBOSS.Common.Model;
+
+namespace CCI.Sys.Data
+{
+  public partial class DataSource : DataAccessBase
+  {
+    public int? insertCashReceipt(string customerid, DateTime datereceived, DateTime billdate, string paymenttype, string checknumber, 
+      double amount, double nonSBamount, string User, string comment)
+    {
+      string TransDateTime = Convert.ToString(DateTime.Now);
+      string sql = string.Format(@"insert into ARTransactions (CustomerID, TransactionType, TransactionDate, BillDate, TransactionDateTime,
+	TransactionSubType, Amount, NonSaddlebackAmount, Reference, LastModifiedBy, LastModifiedDateTime, Comment)
+	values ('{0}','Cash', '{1}','{2}','{3}','{4}','{5}','{6}','{7}', '{8}', '{9}', '{10}')",
+      customerid, datereceived.ToShortDateString(), billdate.ToShortDateString(), datereceived.ToString(CommonData.FORMATLONGDATETIME), 
+      paymenttype, (-amount).ToString(), (-nonSBamount).ToString(), checknumber, User, DateTime.Now.ToString(CommonData.FORMATLONGDATETIME), comment);
+      return updateDataFromSQL(string.Format(sql));
+    }
+    public int? updateCashReceipt(string ID, string customerid, DateTime datereceived, string paymenttype, string checknumber, 
+      double amount, double nonSBamount, string User, string comment)
+    {
+      string TransDateTime = Convert.ToString(DateTime.Now);
+      string sql = string.Format(@"update ARTransactions set customerid = '{0}', TransactionDate = '{1}', TransactionSubType = '{2}', Reference = '{3}',
+                                    amount = {4}, NonSaddlebackAmount = {5}, lastmodifiedby = '{6}', lastmodifieddatetime = '{7}', comment = '{9}'
+                                    where ID = '{8}'",
+                                     customerid, datereceived, paymenttype, checknumber, (-amount).ToString(),
+                                     (-nonSBamount).ToString(), User, TransDateTime, ID, comment);
+      return updateDataFromSQL(string.Format(sql));
+    }
+    public void deleteCashReceipt(string rowid)
+    {
+      string sql = string.Format("delete from artransactions where id = {0}", rowid);
+      getDataFromSQL(sql);
+    }
+    public DataSet GetQBCustomerList()
+    {
+      string sql = "select InternalID as CustomerID, ExternalID as Name from externalidmapping where entitytype = 'QB' order by ExternalID";
+      return getDataFromSQL(sql);
+    }
+    public DataSet getCashReceiptsDataset()
+    {
+      string sql = @"select e.LegalName as Customer, cr.TransactionDate as DateReceived, cr.TransactionSubType as PaymentType, 
+                           cr.Reference as CheckNumber, -cr.amount as Amount, 'NWCS-' + right(e.alternateid,3) as CustomerID
+                       from ARTransactions cr 
+                          inner join entity e on cr.customerid = e.entity
+                       where ExportDateTime is null and cr.TransactionType = 'Cash'
+                       order by cr.TransactionDate, e.AlternateID";
+      DataSet ds = getDataFromSQL(sql);
+      return ds;
+    }
+    public void updateCashReceiptsPosted()
+    {
+      string postDateTime = Convert.ToString(DateTime.Now);
+      string sql = string.Format(@"update artransactions set ExportDateTime = '{0}' where TransactionType = 'Cash' and ExportDateTime is null", postDateTime);
+      updateDataFromSQL(sql);
+    }
+    public void updateCashReceiptsExported()
+    {
+      string postDateTime = Convert.ToString(DateTime.Now);
+      string sql = string.Format(@"update artransactions set ExportDateTime = '{0}' where TransactionType = 'Cash' and ExportDateTime is null", postDateTime);
+      updateDataFromSQL(sql);
+    }
+    public void exportCashReceiptsToCSV(DataSet ds)
+    {
+      string workbookPath = getexcelfile();
+      if (workbookPath != null)
+      {
+        if (workbookPath.Substring(workbookPath.Length - 4, 4) != ".csv")
+        {
+          workbookPath = workbookPath + ".csv";
+        }
+        StreamWriter wr = new StreamWriter(workbookPath);
+
+        string customerid = "";
+        string outstring;
+        foreach (DataTable dt in ds.Tables)
+        {
+          foreach (DataRow myRow in dt.Rows)
+          {
+            foreach (DataColumn myCol in dt.Columns)
+            {
+              if (myCol.ColumnName == "DateReceived")
+              {
+                DateTime outdate = Convert.ToDateTime(myRow[myCol]);
+                wr.Write(outdate.ToString("d") + ",");
+              }
+              else
+              {
+                if (myCol.ColumnName == "Amount")
+                {
+                  wr.Write(myRow[myCol] + ",");
+                }
+                else
+                {
+                  outstring = string.Format("\"{0}\",", myRow[myCol]);
+                  if (myCol.ColumnName == "Customer" || myCol.ColumnName == "PaymentType" || myCol.ColumnName == "CheckNumber")
+                  {
+                    wr.Write(outstring);
+                  }
+                  else // CustomerID
+                  {
+                    outstring = string.Format("\"{0}\"",Convert.ToString(myRow[myCol]));
+                    wr.Write(outstring);
+                  }
+                }
+              }
+            }
+            wr.WriteLine();
+          }
+        }
+
+
+        //close file
+        wr.Close();
+        //        Excel.Application excelApp = new Excel.Application();
+        //       excelApp.Visible = true;
+        //        Excel.Workbook newworkbook = excelApp.Workbooks.Open(workbookPath);
+      }
+    }
+    public void applyCashPost(DateTime throughDate)
+    {
+      //string sql = string.Format("exec CalculateCurrentARBalance '{0}'", throughDate.ToShortDateString());
+      //updateDataFromSQL(sql);
+    }
+    public DateTime? getMostRecentCashReceiptDate()
+    {
+      string sql = "select Max(TransactionDate) from ARTransactions where TransactionType = 'Cash'";
+      DataSet ds = getDataFromSQL(sql);
+      if (ds == null)
+        return null;
+      DateTime? returnDate = null;
+      if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+        returnDate = CommonFunctions.CDateTime(ds.Tables[0].Rows[0][0]);
+      ds.Clear();
+      ds = null;
+      return returnDate;
+    }
+
+  }
+}

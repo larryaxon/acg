@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1F9DC330-9EE4-4FDF-9F24-8ED23E516381}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CCI.Sys</RootNamespace>
+    <AssemblyName>CCI.Sys</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Data\AttributeDB.cs" />
+    <Compile Include="Data\DataAccessBase.cs" />
+    <Compile Include="Data\DataAdapterContainer.cs" />
+    <Compile Include="Data\DataSource.cs" />
+    <Compile Include="Data\DataSource\DataSource.CashReceiptsScreen.cs" />
+    <Compile Include="Data\DataSource\DataSource.CityCare.cs" />
+    <Compile Include="Data\DataSource\DataSource.CityHostedUSOCScreen.cs" />
+    <Compile Include="Data\DataSource\DataSource.Customer.cs" />
+    <Compile Include="Data\DataSource\DataSource.Dealer.cs" />
+    <Compile Include="Data\DataSource\DataSource.EntityData.cs" />
+    <Compile Include="Data\DataSource\DataSource.Exceptions.cs" />
+    <Compile Include="Data\DataSource\DataSource.FollowUps.cs" />
+    <Compile Include="Data\DataSource\DataSource.GenericMethods.cs" />
+    <Compile Include="Data\DataSource\DataSource.GetPickLists.cs" />
+    <Compile Include="Data\DataSource\DataSource.getSearchData.cs" />
+    <Compile Include="Data\DataSource\DataSource.ImportScreen.cs" />
+    <Compile Include="Data\DataSource\DataSource.Login.cs" />
+    <Compile Include="Data\DataSource\DataSource.MaintenanceGrid.cs" />
+    <Compile Include="Data\DataSource\DataSource.MRCMatching.cs" />
+    <Compile Include="Data\DataSource\DataSource.Order.cs" />
+    <Compile Include="Data\DataSource\DataSource.OrderScreen.cs" />
+    <Compile Include="Data\DataSource\DataSource.ProcessSteps.cs" />
+    <Compile Include="Data\DataSource\DataSource.Products.cs" />
+    <Compile Include="Data\DataSource\DataSource.ScreenDefinition.cs" />
+    <Compile Include="Data\DataSource\DataSource.SearchGrid.cs" />
+    <Compile Include="Data\EntityAttributes.cs" />
+    <Compile Include="Data\EntityBase.cs" />
+    <Compile Include="Data\EntityDB.cs" />
+    <Compile Include="Data\SearchDataSource\SearchDataSourceCustomer.cs" />
+    <Compile Include="Data\SearchDataSource\SearchDataSourceEntity.cs" />
+    <Compile Include="Data\SearchDataSource\SearchDataSourceEntityList.cs" />
+    <Compile Include="Data\SearchDataSource\SearchDataSourceGroups.cs" />
+    <Compile Include="Data\SearchDataSource\SearchDataSourceMasterDealer.cs" />
+    <Compile Include="Data\SearchDataSource\SearchDataSourceOrder.cs" />
+    <Compile Include="Data\SearchDataSource\SearchDataSourceProductList.cs" />
+    <Compile Include="Data\SearchDataSource\SearchDataSource.Item.cs" />
+    <Compile Include="Data\SearchDataSource\SearchDataSourceCarrier.cs" />
+    <Compile Include="Data\SecurityDB.cs" />
+    <Compile Include="Data\SQLConnectionFactory.cs" />
+    <Compile Include="SecurityEngine\LoadSecurity.cs" />
+    <Compile Include="SecurityEngine\SecurityFactory.cs" />
+    <Compile Include="SecurityEngine\SecurityGroups.cs" />
+    <Compile Include="Server\CCIServer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Server\CCIServer.getCustomerInfo.cs" />
+    <Compile Include="Server\CCIServer.getCustomerSuggestions.cs" />
+    <Compile Include="Server\CCIServer.getFieldValidationInfo.cs" />
+    <Compile Include="Server\CCIServer.getOrderDetail.cs" />
+    <Compile Include="Server\CCIServer.getOrderHeader.cs" />
+    <Compile Include="Server\CCIServer.getOrderScreen.cs" />
+    <Compile Include="Server\CCIServer.getOrderTotals.cs" />
+    <Compile Include="Server\CCIServer.Login.cs" />
+    <Compile Include="Server\CCIServer.GetPickLists.cs" />
+    <Compile Include="Server\CCIServer.GetVersion.cs" />
+    <Compile Include="Server\CCIServer.isValidSecurityID.cs" />
+    <Compile Include="Server\CCIServer.updateOrderDetail.cs" />
+    <Compile Include="Server\CCIServer.updateOrderHeader.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\ACG\trunk\ACG\ACG.csproj">
+      <Project>{A9E993B0-A25A-4F36-9339-1D7F6E6F5ADA}</Project>
+      <Name>ACG</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\acg\trunk\TAGBOSS.AttributeEngine2\TAGBOSS.AttributeEngine2\TAGBOSS.AttributeEngine2.csproj">
+      <Project>{2FAFFE05-61F2-4873-83F0-6F9F5D3FA76B}</Project>
+      <Name>TAGBOSS.AttributeEngine2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\acg\trunk\TAGBOSS.Common\TAGBOSS.Common.csproj">
+      <Project>{6658BCCB-A3D9-4C18-9D0F-3BEC1AE752CC}</Project>
+      <Name>TAGBOSS.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CCI.Common\CCI.Common.csproj">
+      <Project>{50D6E879-46C7-4930-8573-1763988A74CF}</Project>
+      <Name>CCI.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

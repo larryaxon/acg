@@ -1,0 +1,423 @@
+#nav {
+	margin: 50px auto 5px; border-radius: 10px; width: 950px; height: 36px; padding-left: 10px; list-style-type: none; background-image: url("/Content/images/city_menuDealer.png"); -moz-border-radius: 10px; -webkit-border-radius: 10px;
+}
+#nav li {
+	float: left;
+}
+#nav li a {
+	background: url("/Content/images/city_menuDealer.png") no-repeat; width: 114px; height: 36px; display: block;
+}
+#nav li a.login {
+	background: url("/Content/images/city_menuDealer.png") no-repeat; width: 150px; height: 36px; margin-left: 220px; display: block;
+}
+#nav li a span {
+	display: none;
+}
+#nav li a#home {
+	
+}
+#nav li a#home:hover {
+	
+}
+#nav li a#home:active {
+	background-position: 0px -72px;
+}
+#nav li a.on#home:link {
+	background-position: 0px -108px;
+}
+#nav li a.on#home:hover {
+	background-position: 0px -108px;
+}
+#nav li a.on#home:active {
+	background-position: 0px -108px;
+}
+#nav li a.on#home:visited {
+	background-position: 0px -108px;
+}
+#nav li a#services {
+	background-position: -114px 0px;
+}
+#nav li a#services:hover {
+	background-position: -114px -36px;
+}
+#nav li a#services:active {
+	background-position: -114px -72px;
+}
+#nav li a.on#services:link {
+	background-position: -114px -108px;
+}
+#nav li a.on#services:hover {
+	background-position: -114px -108px;
+}
+#nav li a.on#services:active {
+	background-position: -114px -108px;
+}
+#nav li a.on#services:visited {
+	background-position: -114px -108px;
+}
+#nav li a#citycare {
+	background-position: -228px 0px;
+}
+#nav li a#citycare:hover {
+	background-position: -228px -36px;
+}
+#nav li a#citycare:active {
+	background-position: -228px -72px;
+}
+#nav li a.on#citycare:link {
+	background-position: -228px -108px;
+}
+#nav li a.on#citycare:hover {
+	background-position: -228px -108px;
+}
+#nav li a.on#citycare:active {
+	background-position: -228px -108px;
+}
+#nav li a.on#citycare:visited {
+	background-position: -228px -108px;
+}
+#nav li a#cityhosted {
+	background-position: -342px 0px;
+}
+#nav li a#cityhosted:hover {
+	background-position: -342px -36px;
+}
+#nav li a#cityhosted:active {
+	background-position: -342px -72px;
+}
+#nav li a.on#cityhosted:link {
+	background-position: -342px -108px;
+}
+#nav li a.on#cityhosted:hover {
+	background-position: -342px -108px;
+}
+#nav li a.on#cityhosted:active {
+	background-position: -342px -108px;
+}
+#nav li a.on#cityhosted:visited {
+	background-position: -342px -108px;
+}
+#nav li a#contactpage {
+	background-position: -456px 0px;
+}
+#nav li a#contactpage:hover {
+	background-position: -456px -36px;
+}
+#nav li a#contactpage:active {
+	background-position: -456px -72px;
+}
+#nav li a.on#contactpage:link {
+	background-position: -456px -108px;
+}
+#nav li a.on#contactpage:hover {
+	background-position: -456px -108px;
+}
+#nav li a.on#contactpage:active {
+	background-position: -456px -108px;
+}
+#nav li a.on#contactpage:visited {
+	background-position: -456px -108px;
+}
+#nav li a#login {
+	background-position: -800px 0px; width: 150px;
+}
+#nav li a#login:hover {
+	background-position: -800px 0px !important;
+}
+#nav li a#login:active {
+	background-position: -800px -72px;
+}
+#nav li a.on#login:link {
+	background-position: -800px -108px;
+}
+#nav li a.on#login:hover {
+	background-position: -800px -108px;
+}
+#nav li a.on#login:active {
+	background-position: -800px -108px;
+}
+#nav li a.on#login:visited {
+	background-position: -800px -108px;
+}
+#navAgent {
+	margin: 50px auto 5px; border-radius: 10px; width: 950px; height: 36px; padding-left: 10px; list-style-type: none; background-image: url("/Content/images/city_menuAgent.png"); -moz-border-radius: 10px; -webkit-border-radius: 10px;
+}
+#navAgent li {
+	float: left;
+}
+#navAgent li a {
+	background: url("/Content/images/city_menuAgent.png") no-repeat; width: 114px; height: 36px; display: block;
+}
+#navAgent li a.login {
+	background: url("/Content/images/city_menuAgent.png") no-repeat; width: 150px; height: 36px; margin-left: 220px; display: block;
+}
+#navAgent li a span {
+	display: none;
+}
+#navAgent li a#home {
+	
+}
+#navAgent li a#home:hover {
+	
+}
+#navAgent li a#home:active {
+	background-position: 0px -72px;
+}
+#navAgent li a.on#home:link {
+	background-position: 0px -108px;
+}
+#navAgent li a.on#home:hover {
+	background-position: 0px -108px;
+}
+#navAgent li a.on#home:active {
+	background-position: 0px -108px;
+}
+#navAgent li a.on#home:visited {
+	background-position: 0px -108px;
+}
+#navAgent li a#services {
+	background-position: -114px 0px;
+}
+#navAgent li a#services:hover {
+	background-position: -114px -36px;
+}
+#navAgent li a#services:active {
+	background-position: -114px -72px;
+}
+#navAgent li a.on#services:link {
+	background-position: -114px -108px;
+}
+#navAgent li a.on#services:hover {
+	background-position: -114px -108px;
+}
+#navAgent li a.on#services:active {
+	background-position: -114px -108px;
+}
+#navAgent li a.on#services:visited {
+	background-position: -114px -108px;
+}
+#navAgent li a#citycare {
+	background-position: -228px 0px;
+}
+#navAgent li a#citycare:hover {
+	background-position: -228px -36px;
+}
+#navAgent li a#citycare:active {
+	background-position: -228px -72px;
+}
+#navAgent li a.on#citycare:link {
+	background-position: -228px -108px;
+}
+#navAgent li a.on#citycare:hover {
+	background-position: -228px -108px;
+}
+#navAgent li a.on#citycare:active {
+	background-position: -228px -108px;
+}
+#navAgent li a.on#citycare:visited {
+	background-position: -228px -108px;
+}
+#navAgent li a#cityhosted {
+	background-position: -342px 0px;
+}
+#navAgent li a#cityhosted:hover {
+	background-position: -342px -36px;
+}
+#navAgent li a#cityhosted:active {
+	background-position: -342px -72px;
+}
+#navAgent li a.on#cityhosted:link {
+	background-position: -342px -108px;
+}
+#navAgent li a.on#cityhosted:hover {
+	background-position: -342px -108px;
+}
+#navAgent li a.on#cityhosted:active {
+	background-position: -342px -108px;
+}
+#navAgent li a.on#cityhosted:visited {
+	background-position: -342px -108px;
+}
+#navAgent li a#contactpage {
+	background-position: -456px 0px;
+}
+#navAgent li a#contactpage:hover {
+	background-position: -456px -36px;
+}
+#navAgent li a#contactpage:active {
+	background-position: -456px -72px;
+}
+#navAgent li a.on#contactpage:link {
+	background-position: -456px -108px;
+}
+#navAgent li a.on#contactpage:hover {
+	background-position: -456px -108px;
+}
+#navAgent li a.on#contactpage:active {
+	background-position: -456px -108px;
+}
+#navAgent li a.on#contactpage:visited {
+	background-position: -456px -108px;
+}
+#navAgent li a#login {
+	background-position: -800px 0px; width: 150px;
+}
+#navAgent li a#login:hover {
+	background-position: -800px 0px !important;
+}
+#navAgent li a#login:active {
+	background-position: -800px -72px;
+}
+#navAgent li a.on#login:link {
+	background-position: -800px -108px;
+}
+#navAgent li a.on#login:hover {
+	background-position: -800px -108px;
+}
+#navAgent li a.on#login:active {
+	background-position: -800px -108px;
+}
+#navAgent li a.on#login:visited {
+	background-position: -800px -108px;
+}
+#navDealer {
+	margin: 50px auto 5px; border-radius: 10px; width: 950px; height: 36px; padding-left: 10px; list-style-type: none; background-image: url("/Content/images/city_menuAgent.png"); -moz-border-radius: 10px; -webkit-border-radius: 10px;
+}
+#navDealer li {
+	float: left;
+}
+#navDealer li a {
+	background: url("/Content/images/city_menuDealer.png") no-repeat; width: 114px; height: 36px; display: block;
+}
+#navDealer li a.login {
+	background: url("/Content/images/city_menuDealer.png") no-repeat; width: 150px; height: 36px; margin-left: 220px; display: block;
+}
+#navDealer li a span {
+	display: none;
+}
+#navDealer li a#home {
+	
+}
+#navDealer li a#home:hover {
+	
+}
+#navDealer li a#home:active {
+	background-position: 0px -72px;
+}
+#navDealer li a.on#home:link {
+	background-position: 0px -108px;
+}
+#navDealer li a.on#home:hover {
+	background-position: 0px -108px;
+}
+#navDealer li a.on#home:active {
+	background-position: 0px -108px;
+}
+#navDealer li a.on#home:visited {
+	background-position: 0px -108px;
+}
+#navDealer li a#services {
+	background-position: -114px 0px;
+}
+#navDealer li a#services:hover {
+	background-position: -114px -36px;
+}
+#navDealer li a#services:active {
+	background-position: -114px -72px;
+}
+#navDealer li a.on#services:link {
+	background-position: -114px -108px;
+}
+#navDealer li a.on#services:hover {
+	background-position: -114px -108px;
+}
+#navDealer li a.on#services:active {
+	background-position: -114px -108px;
+}
+#navDealer li a.on#services:visited {
+	background-position: -114px -108px;
+}
+#navDealer li a#citycare {
+	background-position: -228px 0px;
+}
+#navDealer li a#citycare:hover {
+	background-position: -228px -36px;
+}
+#navDealer li a#citycare:active {
+	background-position: -228px -72px;
+}
+#navDealer li a.on#citycare:link {
+	background-position: -228px -108px;
+}
+#navDealer li a.on#citycare:hover {
+	background-position: -228px -108px;
+}
+#navDealer li a.on#citycare:active {
+	background-position: -228px -108px;
+}
+#navDealer li a.on#citycare:visited {
+	background-position: -228px -108px;
+}
+#navDealer li a#cityhosted {
+	background-position: -342px 0px;
+}
+#navDealer li a#cityhosted:hover {
+	background-position: -342px -36px;
+}
+#navDealer li a#cityhosted:active {
+	background-position: -342px -72px;
+}
+#navDealer li a.on#cityhosted:link {
+	background-position: -342px -108px;
+}
+#navDealer li a.on#cityhosted:hover {
+	background-position: -342px -108px;
+}
+#navDealer li a.on#cityhosted:active {
+	background-position: -342px -108px;
+}
+#navDealer li a.on#cityhosted:visited {
+	background-position: -342px -108px;
+}
+#navDealer li a#contactpage {
+	background-position: -456px 0px;
+}
+#navDealer li a#contactpage:hover {
+	background-position: -456px -36px;
+}
+#navDealer li a#contactpage:active {
+	background-position: -456px -72px;
+}
+#navDealer li a.on#contactpage:link {
+	background-position: -456px -108px;
+}
+#navDealer li a.on#contactpage:hover {
+	background-position: -456px -108px;
+}
+#navDealer li a.on#contactpage:active {
+	background-position: -456px -108px;
+}
+#navDealer li a.on#contactpage:visited {
+	background-position: -456px -108px;
+}
+#navDealer li a#login {
+	background-position: -800px 0px; width: 150px;
+}
+#navDealer li a#login:hover {
+	background-position: -800px 0px !important;
+}
+#navDealer li a#login:active {
+	background-position: -800px -72px;
+}
+#navDealer li a.on#login:link {
+	background-position: -800px -108px;
+}
+#navDealer li a.on#login:hover {
+	background-position: -800px -108px;
+}
+#navDealer li a.on#login:active {
+	background-position: -800px -108px;
+}
+#navDealer li a.on#login:visited {
+	background-position: -800px -108px;
+}

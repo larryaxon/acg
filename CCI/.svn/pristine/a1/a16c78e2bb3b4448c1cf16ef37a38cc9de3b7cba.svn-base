@@ -1,0 +1,65 @@
+﻿namespace CCI.DesktopClient.Common
+{
+  partial class ctlEntityGridBase
+  {
+    /// <summary> 
+    /// Required designer variable.
+    /// </summary>
+    private System.ComponentModel.IContainer components = null;
+
+    /// <summary> 
+    /// Clean up any resources being used.
+    /// </summary>
+    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+    protected override void Dispose(bool disposing)
+    {
+      if (disposing && (components != null))
+      {
+        components.Dispose();
+      }
+      base.Dispose(disposing);
+    }
+
+    #region Component Designer generated code
+
+    /// <summary> 
+    /// Required method for Designer support - do not modify 
+    /// the contents of this method with the code editor.
+    /// </summary>
+    private void InitializeComponent()
+    {
+      this.grdEntities = new System.Windows.Forms.DataGridView();
+      ((System.ComponentModel.ISupportInitialize)(this.grdEntities)).BeginInit();
+      this.SuspendLayout();
+      // 
+      // grdEntities
+      // 
+      this.grdEntities.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+      this.grdEntities.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.grdEntities.Location = new System.Drawing.Point(0, 0);
+      this.grdEntities.Name = "grdEntities";
+      this.grdEntities.Size = new System.Drawing.Size(1069, 454);
+      this.grdEntities.TabIndex = 0;
+      this.grdEntities.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdEntities_CellValueChanged);
+      this.grdEntities.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.grdEntities_DataError);
+      this.grdEntities.RowHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.grdEntities_RowHeaderMouseClick);
+      this.grdEntities.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.grdEntities_RowsAdded);
+      this.grdEntities.UserAddedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.grdEntities_UserAddedRow);
+      // 
+      // ctlEntityGridBase
+      // 
+      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.Controls.Add(this.grdEntities);
+      this.Name = "ctlEntityGridBase";
+      this.Size = new System.Drawing.Size(1069, 454);
+      ((System.ComponentModel.ISupportInitialize)(this.grdEntities)).EndInit();
+      this.ResumeLayout(false);
+
+    }
+
+    #endregion
+
+    private System.Windows.Forms.DataGridView grdEntities;
+  }
+}

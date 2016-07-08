@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{01803791-69F2-4A4C-B997-DCEA239CD3BA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ACG.App</RootNamespace>
+    <AssemblyName>ACG.App</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ACG.App.Common\ACGCommands.cs" />
+    <Compile Include="ACG.App.Common\ACGExceptionMessage.cs" />
+    <Compile Include="ACG.App.Common\ACGForm.cs" />
+    <Compile Include="ACG.App.Common\ACGFormItem.cs" />
+    <Compile Include="ACG.App.Common\ACGSerializer.cs" />
+    <Compile Include="ACG.App.Common\ACGTable.cs" />
+    <Compile Include="ACG.App.Common\CommonData.cs" />
+    <Compile Include="ACG.App.Common\CommonFunctions.cs" />
+    <Compile Include="ACG.App.Common\EncryptDecryptString.cs" />
+    <Compile Include="ACG.App.Common\FieldValidation.cs" />
+    <Compile Include="ACG.App.Common\FormTypes.cs" />
+    <Compile Include="ACG.App.Common\ISortedItemBase.cs" />
+    <Compile Include="ACG.App.Common\ItemListCollection.cs" />
+    <Compile Include="ACG.App.Common\ItemListEntry.cs" />
+    <Compile Include="ACG.App.Common\ItemListEnumerator.cs" />
+    <Compile Include="ACG.App.Common\Logging\Log.cs" />
+    <Compile Include="ACG.App.Common\Logging\LogFactory.cs" />
+    <Compile Include="ACG.App.Common\PickListEntries.cs" />
+    <Compile Include="ACG.App.Common\PickListEntry.cs" />
+    <Compile Include="ACG.App.Common\PickListEnumerator.cs" />
+    <Compile Include="ACG.App.Common\PickListEqualityComparer.cs" />
+    <Compile Include="ACG.App.Common\SearchResult.cs" />
+    <Compile Include="ACG.App.Common\SearchResultCollection.cs" />
+    <Compile Include="ACG.App.Common\SearchResutEqualityComparer.cs" />
+    <Compile Include="ACG.App.Common\Security.cs" />
+    <Compile Include="ACG.App.Common\SecurityContext.cs" />
+    <Compile Include="ACG.App.Common\ServerRequest.cs" />
+    <Compile Include="ACG.App.Common\ServerResponse.cs" />
+    <Compile Include="ACG.App.Common\SortedCollectionBase.cs" />
+    <Compile Include="ACG.App.Common\SortedCollectionEnumerator.cs" />
+    <Compile Include="ACG.App.Common\SortedHashTable.cs" />
+    <Compile Include="ACG.App.Common\SortedItemBase.cs" />
+    <Compile Include="ACG.App.Common\UserInfo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ACG.App.Common\obj\Debug\ACG.App.Common.csproj.FileListAbsolute.txt" />
+    <Content Include="ACG.App.Common\obj\Debug\ACG.App.Common.dll" />
+    <Content Include="ACG.App.Common\obj\Debug\ACG.App.Common.pdb" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ACG.App.Common\obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
+    <None Include="ACG.App.Common\obj\Debug\ResolveAssemblyReference.cache" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ACG\ACG.csproj">
+      <Project>{A9E993B0-A25A-4F36-9339-1D7F6E6F5ADA}</Project>
+      <Name>ACG</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ACG.App.Common\obj\Debug\TempPE\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

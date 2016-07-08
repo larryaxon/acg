@@ -1,0 +1,53 @@
+﻿@model CCIWebClient.Models.CustomerInformationModel
+<table id="OtherEquipmentTable" class="QuoteTable">
+    <thead>
+        <tr>
+            <th>
+                Qty
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Sales Price
+            </th>
+            <th>
+                Your Cost
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            for (int i = 0; i < Model.OtherEquipment.Count; i++)
+            {
+           
+            <tr>
+                <td style="display: none">@Html.HiddenFor(model => Model.OtherEquipment[i].ItemId)
+                    @Html.HiddenFor(model => Model.OtherEquipment[i].DetailId)
+                    @Html.HiddenFor(model => Model.OtherEquipment[i].DealerCost)
+                </td>
+                <td>@Html.TextBoxFor(model => Model.OtherEquipment[i].Quantity)
+                </td>
+                <td>@Model.OtherEquipment[i].Description
+                </td>
+                <td>
+                    @Html.DropDownListFor(model => Model.OtherEquipment[i].RetailItemId, Model.OtherEquipment[i].MRCRetailList, new { @class = "phone-dropdown" })
+                    $
+                    @{if (string.IsNullOrEmpty(Model.OtherEquipment[i].Quantity) || Model.OtherEquipment[i].Variable == "0")
+                      {
+                          Model.OtherEquipment[i].Variable = "";
+                      }
+                      else
+                      {
+                          Model.OtherEquipment[i].Variable = (string.IsNullOrEmpty(Model.OtherEquipment[i].RetailMRC) ? Model.OtherEquipment[i].RetailNRC : Model.OtherEquipment[i].RetailMRC);
+                      }
+                    }
+                    @Html.TextBoxFor(model => Model.OtherEquipment[i].Variable, new { @style = "display:none" })
+                </td>
+                <td>@Model.OtherEquipment[i].DealerCost
+                </td>
+            </tr>  
+            }
+        }
+    </tbody>
+</table>

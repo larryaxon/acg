@@ -1,0 +1,86 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Text;
+using System.Windows.Forms;
+
+using ACG.Common;
+using ACG.Common.Data;
+
+namespace ACG.CommonForms
+{
+  public partial class frmDataSourceMaintenance : Form, IScreenBase
+  {
+    private DataSourceDataSources _ds = null;
+    private DataSourceDataSources _dataSource { get { if (_ds == null) _ds = new DataSourceDataSources(); return _ds; } }
+    public ISecurityContext SecurityContext { get; set; }
+    public frmDataSourceMaintenance()
+    {
+      InitializeComponent();
+      srchDataSource.SearchExec = new SearchDataSourceDataSources();
+    }
+    public void Save() { }
+
+    private void frmDataSourceMaintenance_Load(object sender, EventArgs e)
+    {
+      clearData();
+      ctlTestGrid.Init("None", null);
+    }
+
+    private void srchDataSource_OnSelected(object sender, EventArgs e)
+    {
+      loadData();
+    }
+
+    private void loadData()
+    {
+      DataSet ds = _dataSource.getDataSourceRecord(srchDataSource.Text);
+      if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+        clearData();
+      else
+      {
+        DataRow row = ds.Tables[0].Rows[0];
+        txtDescription.Text = CommonFunctions.CString(row["Description"]);
+        txtFromClause.Text = CommonFunctions.CString(row["FromClause"]);
+        txtOrderBy.Text = CommonFunctions.CString(row["OrderByClause"]);
+        txtParameterList.Text = CommonFunctions.CString(row["ParameterList"]);
+        txtMaxCount.Text = CommonFunctions.CInt(row["MaxCount"]).ToString();
+        ckOverrideWhere.Checked = CommonFunctions.CBoolean(row["OverrideWhere"]);
+      }
+    }
+    private void clearData()
+    {
+      txtDescription.Text = string.Empty;
+      txtFromClause.Text = string.Empty;
+      txtMaxCount.Text = string.Empty;
+      txtOrderBy.Text = string.Empty;
+      txtParameterList.Text = string.Empty;
+      //srchDataSource.AddNewMode = true;
+    }
+    private void saveData()
+    {
+      int? ret = _dataSource.updateDataSourceRecord(srchDataSource.Text, txtDescription.Text, txtFromClause.Text, txtOrderBy.Text, txtParameterList.Text,
+        CommonFunctions.CInt(txtMaxCount.Text), ckOverrideWhere.Checked, SecurityContext.User);
+      if (ret == -1)
+        MessageBox.Show("Update Record failed");
+      else
+        MessageBox.Show("Record Updated");
+    }
+    private void deleteData()
+    {
+      int? ret = _dataSource.deleteDataSourceRecord(srchDataSource.Text);
+      if (ret == -1)
+        MessageBox.Show("Delete Record failed");
+      else
+        MessageBox.Show("Record Deleted");
+    }
+
+    private void btnTest_Click(object sender, EventArgs e)
+    {
+      ctlTestGrid.Init(srchDataSource.Text, null);
+      ctlTestGrid.ReLoad();
+    }
+  }
+}

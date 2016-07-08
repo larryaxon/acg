@@ -1,0 +1,143 @@
+﻿namespace CCI.DesktopClient.Common
+{
+  partial class ctlEntityGridBase
+  {
+    /// <summary> 
+    /// Required designer variable.
+    /// </summary>
+    private System.ComponentModel.IContainer components = null;
+
+    /// <summary> 
+    /// Clean up any resources being used.
+    /// </summary>
+    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+    protected override void Dispose(bool disposing)
+    {
+      if (disposing && (components != null))
+      {
+        components.Dispose();
+      }
+      base.Dispose(disposing);
+    }
+
+    #region Component Designer generated code
+
+    /// <summary> 
+    /// Required method for Designer support - do not modify 
+    /// the contents of this method with the code editor.
+    /// </summary>
+    private void InitializeComponent()
+    {
+      this.grdEntities = new System.Windows.Forms.DataGridView();
+      this.splitMain = new System.Windows.Forms.SplitContainer();
+      this.flowEntityMaintenance = new System.Windows.Forms.FlowLayoutPanel();
+      this.btnSwap = new System.Windows.Forms.Button();
+      this.ctlGroupView = new CCI.DesktopClient.Common.ctlEntityGroupMembers();
+      ((System.ComponentModel.ISupportInitialize)(this.grdEntities)).BeginInit();
+      this.splitMain.Panel1.SuspendLayout();
+      this.splitMain.Panel2.SuspendLayout();
+      this.splitMain.SuspendLayout();
+      this.SuspendLayout();
+      // 
+      // grdEntities
+      // 
+      this.grdEntities.AllowUserToAddRows = false;
+      this.grdEntities.AllowUserToDeleteRows = false;
+      this.grdEntities.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+      this.grdEntities.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.grdEntities.Location = new System.Drawing.Point(0, 0);
+      this.grdEntities.Name = "grdEntities";
+      this.grdEntities.Size = new System.Drawing.Size(614, 450);
+      this.grdEntities.TabIndex = 0;
+      this.grdEntities.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdEntities_CellValueChanged);
+      this.grdEntities.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.grdEntities_DataError);
+      this.grdEntities.RowHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.grdEntities_RowHeaderMouseClick);
+      this.grdEntities.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.grdEntities_RowsAdded);
+      this.grdEntities.UserAddedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.grdEntities_UserAddedRow);
+      // 
+      // splitMain
+      // 
+      this.splitMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.splitMain.Location = new System.Drawing.Point(19, 0);
+      this.splitMain.Name = "splitMain";
+      // 
+      // splitMain.Panel1
+      // 
+      this.splitMain.Panel1.Controls.Add(this.flowEntityMaintenance);
+      // 
+      // splitMain.Panel2
+      // 
+      this.splitMain.Panel2.Controls.Add(this.ctlGroupView);
+      this.splitMain.Panel2.Controls.Add(this.grdEntities);
+      this.splitMain.Size = new System.Drawing.Size(1047, 450);
+      this.splitMain.SplitterDistance = 429;
+      this.splitMain.TabIndex = 1;
+      // 
+      // flowEntityMaintenance
+      // 
+      this.flowEntityMaintenance.AutoScroll = true;
+      this.flowEntityMaintenance.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+      this.flowEntityMaintenance.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.flowEntityMaintenance.Location = new System.Drawing.Point(0, 0);
+      this.flowEntityMaintenance.Name = "flowEntityMaintenance";
+      this.flowEntityMaintenance.Size = new System.Drawing.Size(429, 450);
+      this.flowEntityMaintenance.TabIndex = 0;
+      this.flowEntityMaintenance.Resize += new System.EventHandler(this.flowEntityMaintenance_Resize);
+      // 
+      // btnSwap
+      // 
+      this.btnSwap.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnSwap.Location = new System.Drawing.Point(0, 2);
+      this.btnSwap.Name = "btnSwap";
+      this.btnSwap.Size = new System.Drawing.Size(19, 447);
+      this.btnSwap.TabIndex = 2;
+      this.btnSwap.Text = "<";
+      this.btnSwap.UseVisualStyleBackColor = true;
+      this.btnSwap.Click += new System.EventHandler(this.btnSwap_Click);
+      // 
+      // ctlGroupView
+      // 
+      this.ctlGroupView.CanSwap = true;
+      this.ctlGroupView.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.ctlGroupView.Entity = "";
+      this.ctlGroupView.EntityType = "";
+      this.ctlGroupView.GroupDescription = "Group";
+      this.ctlGroupView.GroupEntityType = "";
+      this.ctlGroupView.IsGroup = false;
+      this.ctlGroupView.Location = new System.Drawing.Point(0, 0);
+      this.ctlGroupView.MemberDescription = "Member";
+      this.ctlGroupView.Merge = true;
+      this.ctlGroupView.Name = "ctlGroupView";
+      this.ctlGroupView.SecurityContext = null;
+      this.ctlGroupView.Size = new System.Drawing.Size(614, 450);
+      this.ctlGroupView.TabIndex = 1;
+      this.ctlGroupView.Visible = false;
+      // 
+      // ctlEntityGridBase
+      // 
+      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.Controls.Add(this.btnSwap);
+      this.Controls.Add(this.splitMain);
+      this.Name = "ctlEntityGridBase";
+      this.Size = new System.Drawing.Size(1069, 454);
+      ((System.ComponentModel.ISupportInitialize)(this.grdEntities)).EndInit();
+      this.splitMain.Panel1.ResumeLayout(false);
+      this.splitMain.Panel2.ResumeLayout(false);
+      this.splitMain.ResumeLayout(false);
+      this.ResumeLayout(false);
+
+    }
+
+    #endregion
+
+    private System.Windows.Forms.DataGridView grdEntities;
+    private System.Windows.Forms.SplitContainer splitMain;
+    private System.Windows.Forms.FlowLayoutPanel flowEntityMaintenance;
+    private System.Windows.Forms.Button btnSwap;
+    private ctlEntityGroupMembers ctlGroupView;
+  }
+}

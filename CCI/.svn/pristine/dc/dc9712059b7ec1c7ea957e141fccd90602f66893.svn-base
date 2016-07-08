@@ -1,0 +1,269 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Text;
+
+using CCI.Common;
+using CCI.Sys.SecurityEngine;
+using TAGBOSS.Common.Model;
+
+
+namespace CCI.Sys.Data
+{
+  public partial class DataSource
+  {
+    public ArrayList getDealerCustomerList(string dealer)
+    {
+      ArrayList list = new ArrayList();
+      ArrayList notDealerList = new ArrayList();
+      ArrayList dealerList = new ArrayList();
+      list.Add(notDealerList);
+      list.Add(dealerList);
+      if (string.IsNullOrEmpty(dealer))
+        return list;
+      // changed 6-6-2013 to exclude customers from other dealers
+      string sql = string.Format(@"select coalesce(d.SalesOrDealer, 'CCIDealer') Dealer, c.Entity + ': ' + c.LegalName Customer 
+          from entity c 
+          left join SalesOrDealerCustomers d on c.Entity = d.customer 
+          inner join (
+			select distinct Customer from NetworkInventory where Carrier = 'CityHosted'
+			--union select distinct Customer from Orders where OrderType = 'Quote'
+			) ni on ni.Customer = c.Entity
+          where c.entitytype = 'customer' and  coalesce(d.SalesOrDealer, 'CCIDealer') in ('{0}', 'CCIDealer')     
+          order by c.LegalName", dealer);
+      DataSet ds = getDataFromSQL(sql);
+      if (ds == null)
+        return list;
+      if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+      {
+        foreach (DataRow row in ds.Tables[0].Rows)
+        {
+          string customerdealer = CommonFunctions.CString(row["Dealer"]);
+          string customer = CommonFunctions.CString(row["Customer"]);
+          if (!string.IsNullOrEmpty(customer))
+            if (customerdealer.Equals(dealer, StringComparison.CurrentCultureIgnoreCase))
+              dealerList.Add(customer);
+            else
+              notDealerList.Add(customer);
+        }
+      }
+      ds.Clear();
+      ds = null;
+      return list;
+    }
+    public int? moveDealerCustomers(ArrayList customerList, string dealer, string user)
+    {
+      // first we need to check to see which customers are in the table
+      string inClause = CommonFunctions.ToList(customerList.ToArray(), "'");
+      string sql = string.Format("select distinct customer from SalesOrDealerCustomers where Customer in ({1})", dealer, inClause);
+      DataSet ds = getDataFromSQL(sql);
+      ArrayList oldCustomers = new ArrayList();
+      if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+        foreach (DataRow row in ds.Tables[0].Rows)
+          oldCustomers.Add(CommonFunctions.CString(row[0]));
+      if (ds != null)
+      {
+        ds.Clear();
+        ds = null;
+      }
+      ArrayList newCustomers = (ArrayList)customerList.Clone();
+      foreach (string cust in oldCustomers)
+        newCustomers.Remove(cust);
+      // now we have two lists. One is customers that are already in the table (oldCustomers) and the other is ones that are not
+      int? ret = null;
+      if (oldCustomers.Count > 0)
+      {
+        inClause = CommonFunctions.ToList(oldCustomers.ToArray(), "'");
+        sql = string.Format("update SalesOrDealerCustomers set SalesOrDealer = '{0}', LastModifiedBy = '{1}', LastModifiedDateTime = '{2}' where Customer in ({3})", 
+          dealer, user, DateTime.Today.ToShortDateString(), inClause);
+        ret = updateDataFromSQL(sql);
+      }
+      if (ret == null || ret >= 0)
+      {
+        if (newCustomers.Count > 0)
+        {
+          foreach (string newCust in newCustomers)
+          {
+            sql = string.Format("insert into SalesOrDealerCustomers (SalesOrDealer, Customer, LastModifiedBy, LastModifiedDateTime) Values('{0}','{1}','{2}','{3}')",
+              dealer, newCust, user, DateTime.Today.ToShortDateString());
+            ret = updateDataFromSQL(sql);
+            if (ret != null && ret == -1)
+              break;
+          }
+        }
+      }
+      return ret;
+    }
+    public DataSet getDealerPriceList(string dealer)
+    {
+      string sql = string.Format(@"select h.Dealer, h.itemid USOC, isnull(p.Name, h.itemid) Description, DealerCost, Install, StartDate, EndDate, LastModifiedBy, LastModifiedDateTime from hosteddealercosts h
+left join masterproductlist p on h.itemid = p.itemid
+where dealer = '{0}'", dealer);
+      //string sql = string.Format("exec DealerPriceList '{0}'", dealer);
+      return getDataFromSQL(sql);
+    }
+    public DataSet getDealerMarginReport(string dealer, DateTime billDate)
+    {
+      string dealerWhere = string.Empty;
+      if (!string.IsNullOrEmpty(dealer) && !dealer.Equals("All", StringComparison.CurrentCultureIgnoreCase))
+        dealerWhere = string.Format(" AND Dealer = '{0}' ", dealer);
+      string sql = @"select * from vw_dealermarginreport where date = '{0}' {1} order by [rev code], name, usoc";
+      sql = string.Format(sql, billDate.ToShortDateString(), dealerWhere);
+      return getDataFromSQL(sql);
+    }
+    public PickListEntries getDealerOrSalesPersonList()
+    {
+      string sql = @"select distinct e.Entity, case when e.entitytype = 'Dealer' then legalname else firstname + ' ' + legalname end Name from vw_attributenonxml a
+inner join entity e on a.entity = e.entity 
+where (item =  'user' and name = 'salesperson' and Value = 'Yes') 
+or (item =  'Dealer') order by case when e.entitytype = 'Dealer' then legalname else firstname + ' ' + legalname end ";
+      DataSet ds = getDataFromSQL(sql);
+      return CommonFunctions.toPickList(ds, "entity", "name");
+    }
+    public PickListEntries getSalesPersonList()
+    {
+      string sql = @"select distinct e.Entity, firstname + ' ' + legalname Name from vw_attributenonxml a
+inner join entity e on a.entity = e.entity 
+where (item =  'user' and name = 'salesperson' and Value = 'Yes')  order by firstname + ' ' + legalname ";
+      DataSet ds = getDataFromSQL(sql);
+      return CommonFunctions.toPickList(ds, "entity", "name");
+    }
+    public bool hasDealerLevel(string dealer, DateTime effectiveDate)
+    {
+      string sql = string.Format(@"select itemid from HostedDealerCosts
+        where dealer = '{0}' 
+        and ItemId in ('Gold', 'Silver', 'Bronze') 
+        and '{1}' between StartDate and isnull(EndDate, '{2}')",
+        dealer, effectiveDate.ToShortDateString(), CommonData.FutureDateTime.ToShortDateString());
+      DataSet ds = getDataFromSQL(sql);
+      if (ds == null)
+        return false;
+      bool hasLevel = false;
+      if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+        hasLevel = true;
+      ds.Clear();
+      ds = null;
+      return hasLevel;
+    }
+    public string getDealerLevel(string dealer, DateTime effectiveDate, string defaultLevel)
+    {
+      string sql = string.Format(@"select ItemId from HostedDealerCosts 
+        where dealer = '{0}' 
+        and ItemId in ('Gold', 'Silver', 'Bronze') 
+        and '{1}' between StartDate and isnull(EndDate, '{2}')", 
+        dealer, effectiveDate.ToShortDateString(), CommonData.FutureDateTime.ToShortDateString());
+      DataSet ds = getDataFromSQL(sql);
+      string level = string.IsNullOrEmpty(defaultLevel) ? "Bronze" : defaultLevel;
+      if (ds == null)
+        return level;
+      if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+        level = CommonFunctions.CString(ds.Tables[0].Rows[0][0], defaultLevel);
+      ds.Clear();
+      ds = null;
+      return level;
+    }
+    public string getDealerFromOrder(string orderid)
+    {
+      if (string.IsNullOrEmpty(orderid))
+        return string.Empty;
+      string sql = @"select s.salesordealer from orders o
+  inner join salesordealercustomers s on o.customer = s.customer where o.id = " + orderid;
+      DataSet ds = getDataFromSQL(sql);
+      if (ds == null)
+        return string.Empty;
+      string dealer = string.Empty;
+      if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+        dealer = CommonFunctions.CString(ds.Tables[0].Rows[0][0]);
+      ds.Clear();
+      ds = null;
+      return dealer;
+    }
+    #region Dealer Cost
+    public CCITable getDealerCostInfo(string dealer, string usoc)
+    {
+      string sql = string.Format("select DealerCost, Install from HostedDealerCosts where Dealer = '{0}' and ItemID = '{1}'", dealer, usoc);
+      return CommonFunctions.convertDataSetToCCITable(getDataFromSQL(sql));
+    }
+    public void updateDealerCost(string dealer, string usoc, string dealerCost, string install, string level, DateTime startDate, DateTime endDate, string user)
+    {
+      const string sqlupdate = 
+        @"Update HostedDealerCosts set DealerCost = '{0}', Install = '{1}', StartDate = '{4}', EndDate = {5}, LastModifiedBy = '{6}', LastModifiedDateTime = '{7}'
+        where Dealer = '{2}' and ItemID = '{3}'";
+      const string sqlselect = "select * from HostedDealerCosts where Dealer = '{0}' and ItemID = '{1}'";
+      const string sqlinsert = 
+        @"Insert into HostedDealerCosts (Dealer, ItemID, DealerCost, Install, StartDate, EndDate, LastModifiedBy, LastModifiedDateTime) 
+        Values ('{2}', '{3}', '{0}', '{1}', '{4}', {5}, '{6}', '{7}')";
+      string sql;
+      bool existsLevel = false;
+      bool existsDealer = false;
+      bool updateDealer = true;
+      decimal lCost = 0;
+      decimal lInstall = 0;
+      decimal dCost = 0;
+      decimal dInstall = 0;
+      string eDate = "null";
+      if (endDate != CommonData.FutureDateTime)
+        eDate = string.Format("'{0}'", endDate.ToShortDateString());
+      if (existsRecord("HostedDealerCosts", new string[] { "Dealer", "ItemID" }, new string[] { level, usoc }))
+      {
+        sql = string.Format(sqlselect, level, usoc);
+        DataSet ds = getDataFromSQL(sql);
+        if (ds != null)
+        {
+          if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+          {
+            existsLevel = true;
+            lCost = CommonFunctions.CDecimal(ds.Tables[0].Rows[0]["DealerCost"]);
+            lInstall = CommonFunctions.CDecimal(ds.Tables[0].Rows[0]["Install"]);
+          }
+          ds.Clear();
+          ds = null;
+        }
+      }
+      if (existsLevel)
+      {
+        sql = string.Format(sqlselect, dealer, usoc);
+        DataSet ds = getDataFromSQL(sql);
+        if (ds != null)
+        {
+          if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+          {
+            existsDealer = true;
+            dCost = CommonFunctions.CDecimal(ds.Tables[0].Rows[0]["DealerCost"]);
+            dInstall = CommonFunctions.CDecimal(ds.Tables[0].Rows[0]["Install"]);
+          }
+          ds.Clear();
+          ds = null;
+        }
+        if (existsDealer) // we have both a level and a dealer
+        {
+          if (lCost == dCost && lInstall == dInstall) // they match, so delete the dealer
+          {
+            deleteDealerCost(dealer, usoc);
+            updateDealer = false;
+          }
+        }
+      }
+      if (updateDealer)
+      {
+        if (existsRecord("HostedDealerCosts", new string[] { "Dealer", "ItemID" }, new string[] { dealer, usoc }))
+          sql = sqlupdate;
+        else
+          sql = sqlinsert;
+        sql = string.Format(sql, dealerCost, install, dealer, usoc, startDate.ToShortDateString(), eDate, user, DateTime.Now.ToString(CommonData.FORMATLONGDATETIME));
+        updateDataFromSQL(sql);
+      }
+    }
+    public void deleteDealerCost(string dealer, string usoc)
+    {
+      if (existsRecord("HostedDealerCosts", new string[] { "Dealer", "ItemID" }, new string[] { dealer, usoc }))
+      {
+        string sql = string.Format("delete from HostedDealerCosts where Dealer = '{0}' and ItemID = '{1}'", dealer, usoc);
+        updateDataFromSQL(sql);
+      }
+    }
+    #endregion
+  }
+}

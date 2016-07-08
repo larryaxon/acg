@@ -1,0 +1,550 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Data;
+using System.Text;
+
+using System.Data;
+using System.Data.SqlClient;
+using CCI.Common;
+using CCI.Sys.SecurityEngine;
+using TAGBOSS.Common.Model;
+
+namespace CCI.Sys.Data
+{
+  public partial class DataSource : DataAccessBase
+  {
+
+    #region general methods
+
+    public void deleteOpportunityLineItems(int opportunityID)
+    {
+      string sql = string.Format("DELETE FROM OpportunityLineItems WHERE OpportunityID = {0}", opportunityID.ToString());
+      updateDataFromSQL(sql);
+    }
+    public DateTime? getClosestFollowUpDate(string entity, DateTime? fuDate)
+    {
+      string sql = 
+        @"SELECT o.Customer, MIN(o.FollowUpDate) 
+            FROM Opportunities o INNER JOIN Entity e 
+            ON o.Customer = e.Entity 
+            WHERE '{0}' BETWEEN IsNull(e.startdate, '{0}') 
+              AND ISNULL(e.EndDate, '{0}') AND o.Customer = '{1}' 
+            GROUP BY o.Customer";
+      sql = string.Format(sql, DateTime.Today.ToShortDateString(), entity);
+      DataSet ds = getDataFromSQL(sql);
+      if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+        return fuDate;
+      DateTime? opFUdate = CommonFunctions.CDateTime(ds.Tables[0].Rows[0][1]);
+      if (opFUdate == null)
+        return fuDate;
+      if (fuDate == null)
+        return fuDate;
+      if (opFUdate < fuDate)
+        return opFUdate;
+      return fuDate;
+    }
+    #endregion
+    
+    #region Screens
+    #region Commission Exceptions
+    public DataSet getScheduledAndActualsWithDifferentTotals()
+    {
+      string sql = "SELECT * from vw_CustomerMatchup WHERE IsMatch = 0 ORDER BY Payor, Customer, PayCode";
+      return getDataFromSQL(sql);
+    }
+    public DataSet getScheduledWithNoActual()
+    {
+      string sql = "SELECT * FROM vw_CustomerMatchupScheduledWithNoActual WHERE IsMatch = 0 ORDER BY Payor, Customer, PayCode";
+      return getDataFromSQL(sql);
+    }
+    public DataSet getActualWithNoScheduled()
+    {
+      string sql = "SELECT * FROM vw_CustomerMatchupActualWithNoScheduled WHERE IsMatch = 0 ORDER BY Payor, Customer, PayCode";
+      return getDataFromSQL(sql);
+    }
+    public DataSet getAllUnmatched()
+    {
+      string sql = "SELECT * from vw_CustomerMatchupAll WHERE IsMatch = 0 ORDER BY Payor, Customer, PayCode";
+      return getDataFromSQL(sql);
+    }
+    public DataSet getActuals(string customer, string payor, string paycode)
+    {
+      string sql = "select * from vw_Actual where EntityType = 'Payor' and PayeeOrPayor = '{0}' and Customer = '{1}' and PayCode = '{2}' and PaymentDate between DATEADD(month, -1, getdate()) and GETDATE()";
+      sql = string.Format(sql, payor, customer, paycode);
+      return getDataFromSQL(sql);
+    }
+    public DataSet getScheduled(string customer, string payor, string paycode)
+    {
+      string sql = "select * from vw_Scheduled where PayeeOrPayor = 'Payor' and VendorAccountID = '{0}' and AccountNumber = '{1}' and PayCode = '{2}'";
+      sql = string.Format(sql, payor, customer, paycode);
+      return getDataFromSQL(sql);
+    }
+    #endregion
+    #region Code Master
+    public DataSet getCodeMaster(string codetype)
+    {
+      string sql = string.Format("Select * from CodeMaster where CodeType ='{0}' order by CodeValue", codetype);
+      DataSet ds = getDataFromSQL(sql);
+      if (ds.Tables.Count > 0)
+      {
+        ds.Tables[0].TableName = "CodeMaster";
+      }
+      return ds;
+    }
+    public string[] getCodeList(string codetype)
+    {
+      DataSet ds = getCodeMaster(codetype);
+      if (ds.Tables.Count > 0)
+      {
+        string[] list = new string[ds.Tables[0].Rows.Count];
+        for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+          list[i] = CommonFunctions.CString(ds.Tables[0].Rows[i]["CodeValue"]);
+        return list;
+      }
+      else
+        return new string[0];
+    }
+    public PickListEntries getCodeListDescriptions(string codetype)
+    {
+      PickListEntries list = new PickListEntries();
+      DataSet ds = getCodeMaster(codetype);
+      if (ds.Tables.Count > 0)
+      {
+        for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+        {
+          string description = CommonFunctions.CString(ds.Tables[0].Rows[i]["Description"]);          
+          string code = CommonFunctions.CString(ds.Tables[0].Rows[i]["CodeValue"]);
+          list.Add(new PickListEntry(code, description));
+        }
+        return list;
+      }
+      else
+        return list;
+    }
+    #endregion
+
+    #region Unmatched Screens
+    public DataSet getUnmatchedNames(CommonData.UnmatchedNameTypes type, Dictionary<string, string> parameters)
+    {
+      string sql = string.Empty;
+      bool includeNewCustomer = false;
+      string newCustomerClause = null;
+      switch (type)
+      {
+        case CommonData.UnmatchedNameTypes.Customer:
+          sql = "Select * from vw_ActualUnmatchedCustomers order by CustomerName";
+          break;
+        case CommonData.UnmatchedNameTypes.TrueUp:
+          sql = "select distinct customernameraw from citycare_prod.dbo.vw_MasterCommissionTrueUp where customername is null order by customernameraw";
+          break;
+        case CommonData.UnmatchedNameTypes.ImportCustomer:
+          sql = "Select * from vw_ImportUnmatchedCustomers order by CustomerName";
+          break;
+        case CommonData.UnmatchedNameTypes.Inventory:
+          sql = "Select * from vw_UnmatchedProducts order by ProductNameRaw";
+          break;
+        case CommonData.UnmatchedNameTypes.Payor:
+          sql = "Select VendorName from vw_UnmatchedPayors order by VendorName";
+          break;
+        case CommonData.UnmatchedNameTypes.Carrier:
+          sql = "Select CarrierName from vw_UnmatchedCarriers order by CarrierName";
+          break;
+        case CommonData.UnmatchedNameTypes.CityHostedCustomer:
+          sql = @"select distinct customerid customer from hostedmatchedmrc  c
+left join ExternalIDMapping map on c.customerid = map.ExternalID and map.EntityType = 'customer'
+where  c.customerid not like '2%' and map.ExternalID is null";
+          break;
+        case CommonData.UnmatchedNameTypes.CityHostedUnmatchedBTNs:
+          includeNewCustomer = false;
+          if (parameters.ContainsKey("includenewcustomers"))
+            includeNewCustomer = CommonFunctions.CBoolean(parameters["includenewcustomers"]);
+          newCustomerClause = string.Empty;
+          if (!includeNewCustomer)
+            newCustomerClause = " AND NewCustomerYN = 0 ";
+          sql = string.Format("select Customer + ' : ' + CustomerName + ' : ' + BTN as [Retail BTN] from vw_CityHostedUnmatchedBTNs where Source = 'Retail'{0}", newCustomerClause);
+          break;
+        case CommonData.UnmatchedNameTypes.CityHostedUnmatchedBTNsWholesale:
+          includeNewCustomer = false;
+          if (parameters.ContainsKey("includenewcustomers"))
+            includeNewCustomer = CommonFunctions.CBoolean(parameters["includenewcustomers"]);
+          newCustomerClause = string.Empty;
+          if (!includeNewCustomer)
+            newCustomerClause = " AND NewCustomerYN = 0 ";
+          sql = string.Format("select Customer + ' : ' + CustomerName + ' : ' + BTN as [Wholesale BTN] from vw_CityHostedUnmatchedBTNs where Source = 'Wholesale'{0}", newCustomerClause);
+          break;
+      }
+      if (string.IsNullOrEmpty(sql))
+        return null;
+      else 
+        return getDataFromSQL(sql);
+
+    }
+    //public DataSet getUnmatchedCustomers()
+    //{
+    //  string sql = "Select * from vw_ActualUnmatchedCustomers order by CustomerName";
+    //  return getDataFromSQL(sql);
+    //}
+    public DataSet getSimilarNamesLike(CommonData.UnmatchedNameTypes type, string whereClause)
+    {
+      string sql = string.Empty;
+      switch (type)
+      {
+        case CommonData.UnmatchedNameTypes.CityHostedCustomer:
+        case CommonData.UnmatchedNameTypes.TrueUp:
+        case CommonData.UnmatchedNameTypes.Customer:
+        case CommonData.UnmatchedNameTypes.ImportCustomer:
+          sql = string.Format("Select * from vw_Customers {0} ORDER BY CustomerName", whereClause);
+          break;
+        case CommonData.UnmatchedNameTypes.Inventory:
+          sql = string.Format("Select distinct Name ItemID from Products {0} ORDER BY Name", whereClause);
+          break;
+        case CommonData.UnmatchedNameTypes.Payor:
+          sql = string.Format("Select distinct VendorName from vw_VendorNameList {0} ORDER BY VendorName", whereClause);
+          break;
+        case CommonData.UnmatchedNameTypes.Carrier:
+          sql = string.Format("Select distinct CarrierName from vw_CarrierNameList {0} ORDER BY CarrierName", whereClause);
+          break;
+        case CommonData.UnmatchedNameTypes.CityHostedUnmatchedBTNs:
+          whereClause = whereClause.Replace("WHERE", "");
+          whereClause = string.Format(" AND ({0}) ", whereClause);
+          sql = string.Format("select Customer + ' : ' + CustomerName + ' : ' + BTN as [Wholesale BTN] from vw_CityHostedWholesaleBTNs where Source = 'Wholesale' {0}", whereClause);
+          break;
+        case CommonData.UnmatchedNameTypes.CityHostedUnmatchedBTNsWholesale:
+          whereClause = whereClause.Replace("WHERE", "");
+          whereClause = string.Format(" AND ({0}) ", whereClause);
+          sql = string.Format("select Customer + ' : ' + CustomerName + ' : ' + BTN as [Retail BTN] from vw_CityHostedRetailBTNs where Source = 'Retail' {0}", whereClause);
+          break;
+      }
+      if (string.IsNullOrEmpty(sql))
+        return null;
+      else 
+        return getDataFromSQL(sql);
+    }
+    public DataSet getAllRawData(CommonData.UnmatchedNameTypes type, string whereClause)
+    {
+      if (whereClause == null)
+        whereClause = string.Empty;
+      string sql = string.Empty;
+      switch (type)
+      {
+        case CommonData.UnmatchedNameTypes.ImportCustomer:
+        case CommonData.UnmatchedNameTypes.Customer:
+        case CommonData.UnmatchedNameTypes.TrueUp:
+          sql = string.Format("select * from CommissionsRaw {0}",whereClause);
+          break;
+      }
+      if (string.IsNullOrEmpty(sql))
+        return null;
+      else
+        return getDataFromSQL(sql);
+    }
+    public SortedDictionary<string, string> getResearchFields(CommonData.UnmatchedNameTypes type, object oWhere)
+    {
+      SortedDictionary<string, string> returnList = new SortedDictionary<string, string>(StringComparer.CurrentCultureIgnoreCase);
+      DataSet ds;
+      if (type == CommonData.UnmatchedNameTypes.UnmatchedNetworkInventory)
+        ds = getResearchData(CommonData.UnmatchedNameTypes.UnmatchedNetworkInventoryOneRow, null, 1);
+      else
+        ds = getResearchData(type, oWhere, 1);
+
+      StringBuilder fldList = new StringBuilder();
+      if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Columns.Count > 0)
+      {
+        foreach (DataColumn col in ds.Tables[0].Columns)
+        {
+          returnList.Add(col.Caption, "string");
+          fldList.Append(string.Format("'{0}',",col.Caption));
+        }
+      }
+      // now enrich the list with datatypes
+      if (fldList.Length > 0)
+        fldList.Length--; // get rid of last comman
+      string sql = string.Format(@"select Item, Value from vw_attributenonxml 
+        where Entity = 'Dictionary' and ItemType = 'Attribute' and Item in ({0}) and Name = 'DataType' and Value is not null",fldList.ToString());
+      ds = getDataFromSQL(sql);
+      if (ds == null)
+        return returnList;
+      if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+        foreach (DataRow row in ds.Tables[0].Rows)
+          returnList[CommonFunctions.CString(row[0])] = CommonFunctions.CString(row[1]);
+      ds.Clear();
+      ds = null;
+      return returnList;
+    }
+    public void refreshNetworkInventoryMatchup()
+    {
+      string sql = "Exec RefreshNetworkInventoryMatchup";
+//      string sql = "delete from NetworkInventoryMatchup";
+//      updateDataFromSQL(sql);
+//      sql = @"insert into NetworkInventoryMatchup
+//SELECT  raw.*, a.TotalMRCraw, a.TotalMRC, a.TotalEMUraw, a.TotalEMU, a.MRCMatches, a.EMUMatches, b.NeedsReview, b.Location
+//from vw_networkinventorymatchup raw inner join
+// vw_UnmatchedCommissionsRawVsNetworkInventory a on raw.commissionid = a.commissionid
+//inner join (select distinct CommissionID, Case when NeedsReview = 'Complete' then 'Complete' else 'NotReviewed' end NeedsReview, Location from networkinventory) b 
+//on a.CommissionID = b.CommissionID";
+      updateDataFromSQL(sql);
+    }
+    public void checkResearchRecord(CommonData.UnmatchedNameTypes type, string ID, bool isChecked)
+    {
+      string sql = "update {0}.dbo.{1} set {2} = {3}  where {4} = '{5}'";
+      if (string.IsNullOrEmpty(ID))
+        return;
+      string tableName = string.Empty;
+      string checkedFieldName = "scrubbed";
+      string checkedValue = isChecked ? "1" : "0";
+      string idFieldName = string.Empty;
+      string dbName = CommonData.CITYCAREPRODDBNAME;
+      bool isValid = false;
+      switch (type)
+      {
+        case CommonData.UnmatchedNameTypes.OldNetworkInventory:
+          tableName = "i_NetworkInventory";
+          idFieldName = "netinv_id";
+          isValid = true;
+          break;
+        case CommonData.UnmatchedNameTypes.Orders:
+          tableName = "tblProdOrder";
+          idFieldName = "prodorderid";
+          checkedFieldName = "scrubbedyn";
+          isValid = true;
+          break;
+        case CommonData.UnmatchedNameTypes.UnmatchedNetworkInventory:
+          tableName = "CommissionsRaw";
+          idFieldName = "CommissionIDRaw";
+          dbName = CommonData.CCIDBNAME;
+          isValid = true;
+          break;
+      }
+      if (isValid)
+      {
+        sql = string.Format(sql, dbName, tableName, checkedFieldName, checkedValue, idFieldName, ID);
+        updateDataFromSQL(sql);
+      }
+    }
+    public void addExternalID(string entityType, string internalID, string externalID)
+    {
+      string[] keyNames = new string[] { "ExternalSourceType", "ExternalSource", "ExternalID", "EntityType" };
+      string[] keyValues = new string[] { "Payor", "Payor", externalID, entityType };
+      string sql;
+      if (!existsRecord("ExternalIDMapping", keyNames, keyValues))
+        sql = "INSERT INTO ExternalIDMapping (ExternalSourceType, ExternalSource, ExternalID, EntityType, InternalID, LastModifiedBy, LastModifiedDateTime) VALUES ('{0}','{1}','{2}','{3}','{4}','{5}','{6}')";
+      else
+        sql = "UPDATE ExternalIDMapping SET InternalID = '{4}', LastModifiedBy = '{5}', LastModifiedDateTime = '{6}' WHERE ExternalSourceType = '{0}' and ExternalSource = '{1}' and ExternalID = '{2}' and EntityType = '{3}'";
+      sql = string.Format(sql, "Payor", "Payor", externalID.Replace("'","''"), entityType, internalID, _securityContext.User, DateTime.Now.ToString());
+      updateDataFromSQL(sql);
+    }
+    public bool existsRecord(string tableName, string[] keyNames, string[] keyValues)
+    {
+      if (keyNames == null || keyValues == null || keyNames.GetLength(0) != keyValues.GetLength(0))
+        return false;
+      StringBuilder sb = new StringBuilder();
+      sb.Append("Select Count(*) From ");
+      sb.Append(tableName);
+      sb.Append(" WHERE ");
+      bool firstTime = true;
+      for (int i = 0; i < keyNames.GetLength(0); i++)
+      {
+        if (firstTime)
+          firstTime = false;
+        else
+          sb.Append(" AND ");
+        sb.Append(keyNames[i]);
+        sb.Append(" = '");
+        sb.Append(keyValues[i].Replace("'","''"));
+        sb.Append("'");
+      }
+      DataSet ds = getDataFromSQL(sb.ToString());
+      if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+      {
+        ds.Clear();
+        ds = null;
+        return false;
+      }
+      int count = CommonFunctions.CInt(ds.Tables[0].Rows[0][0]);
+      ds.Clear();
+      ds = null;
+      if (count > 0)
+        return true;
+      return false;
+
+    }
+    public string getMatchedID(string desc, CommonData.UnmatchedNameTypes type)
+    {
+      string sql = null;
+      string returnID = null;
+      switch (type)
+      {
+        case CommonData.UnmatchedNameTypes.Item:
+          sql = string.Format("Select top 1 itemid from products where name = '{0}'", desc);
+          break;
+        case CommonData.UnmatchedNameTypes.Carrier:
+          sql = string.Format("select top 1 Entity from Entity where EntityType = 'Carrier' and legalname = '{0}'", desc);
+          break;        
+        case CommonData.UnmatchedNameTypes.CityHostedCustomer:
+        case CommonData.UnmatchedNameTypes.Customer:
+        case CommonData.UnmatchedNameTypes.Payor:
+          return desc;
+      }
+      if (sql != null)
+      {
+        DataSet ds = getDataFromSQL(sql);
+        if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+          return null;
+        returnID = CommonFunctions.CString(ds.Tables[0].Rows[0][0]);
+        ds.Clear();
+        ds = null;
+      }
+      return returnID;    
+    }
+    public string getCustomerIDFromCommissionID(string commissionID)
+    {
+      string id = null;
+      if (string.IsNullOrEmpty(commissionID))
+        return id;
+      StringBuilder sql = new StringBuilder();
+      sql.Append("select map.InternalID CustomerID from CommissionsRaw raw ");
+      sql.Append("inner join ExternalIDMapping map on raw.customernameRAW = map.ExternalID and map.EntityType = 'Customer' ");
+      sql.Append(string.Format("where commissionidRAW = '{0}'",commissionID));
+      DataSet ds = getDataFromSQL(sql.ToString());
+      if (ds == null) 
+        return id;
+      if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+        id = CommonFunctions.CString(ds.Tables[0].Rows[0]["CustomerID"]);
+      ds.Clear();
+      ds = null;
+      return id;
+    }
+    public bool existsNewCustomerIDFromOldOrder(string orderID)
+    {
+      if (string.IsNullOrEmpty(orderID))
+        return false;
+      if (!CommonFunctions.IsNumeric(orderID))
+        return false;
+      string sql = string.Format(@"select c.* from (select convert(nvarchar(10), 20000 + l.customerid) CustomerID, po.ProdOrderID from citycare_prod.dbo.tblprodorder po 
+inner join citycare_prod.dbo.tblorders o on o.orderid = po.orderid
+inner join citycare_prod.dbo.tbllocations l on o.locID = l.locID
+) c
+left join entity e on c.CustomerID = e.Entity
+where prodorderid = {0}
+and e.entity is not null", orderID);
+      DataSet ds = getDataFromSQL(sql);
+      if (ds == null)
+        return false;
+      bool ret = false;
+      if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+        ret = true;
+      ds.Clear();
+      ds = null;
+      return ret;
+    }
+    public long AddNetworkInventoryFromCityCareData(string tableName, List<string> idList, string user, string commissionID)
+    {
+      string strIDList = CommonFunctions.ToList((string[])idList.ToArray());
+      // we need the new id, but the sproc doesn't return it
+      string[] fieldlist = new string[] { "TableName", "IDList", "CommissionID", "User", "ID" };
+      string[] fieldvalues = new string[] { tableName, strIDList, commissionID, user, "0" };
+      string sprocName = "CreateNetworkInventory";
+      string idName = "ID";
+      return createRecordReturnID(fieldlist, fieldvalues, sprocName, idName);
+    }
+
+    #endregion
+    #region UserMaintenance
+    public UserInfo getUserInfo(string entity, DateTime effectiveDate)
+    {
+      EncryptDecryptString encrpt = new EncryptDecryptString();
+      UserInfo info = new UserInfo();
+      const string aPath = "{0}.Entity.User.{1}";
+      
+      info.Entity = entity;
+      EntityAttributesCollection eac = _ea.getAttributes(entity, "Entity", "User", null, effectiveDate);
+      string sql = string.Format("Select Login, Password, Domain, Entity from SecurityUsers where Entity = '{0}'",entity);
+      DataSet dsUser = getDataFromSQL(sql);
+      if (eac == null || !eac.Entities.Contains(entity) || !eac.Entities[entity].ItemTypes.Contains("Entity") ||
+        !eac.Entities[entity].ItemTypes["Entity"].Items.Contains("User")
+        || dsUser == null || dsUser.Tables.Count == 0 || dsUser.Tables[0].Rows.Count == 0)
+        return info;
+      info.Login = CommonFunctions.CString(dsUser.Tables[0].Rows[0]["Login"]);
+      info.Password = encrpt.decryptString(CommonFunctions.CString(dsUser.Tables[0].Rows[0]["Password"]));
+      info.Domain = CommonFunctions.CString(dsUser.Tables[0].Rows[0]["Domain"]);
+      Entity e = eac.Entities[entity];
+      info.EntityOwner = CommonFunctions.CString(e.Fields.getValue("EntityOwner"));
+      info.EntityType = "User";
+      info.FirstName = CommonFunctions.CString(e.Fields.getValue("FirstName"));
+      info.LastName = CommonFunctions.CString(e.Fields.getValue("LegalName"));
+      info.Email = CommonFunctions.CString(eac.getValue(string.Format(aPath, entity, "EmailAddress")));
+      info.OldID = CommonFunctions.CString(eac.getValue(string.Format(aPath, entity, "OldID")));
+      info.UserType = CommonFunctions.CString(eac.getValue(string.Format(aPath, entity, "UserType")));
+      dsUser.Clear();
+      dsUser = null;
+      sql = string.Format("Select top 1 SecurityGroup from SecurityGroups where Member = '{0}'", entity);
+      dsUser = getDataFromSQL(sql);
+      if (dsUser != null && dsUser.Tables.Count > 0 && dsUser.Tables[0].Rows.Count == 1)
+        info.SecurityGroup = CommonFunctions.CString(dsUser.Tables[0].Rows[0]["SecurityGroup"]);
+      return info;
+    }
+    public void UpdateUserInfo(UserInfo info)
+    {
+      if (!existsRecord("SecurityUsers", new string[] { "Entity" }, new string[] { info.Entity }))
+      {
+        addUserInfo(info);
+        return;
+      }
+      DateTime efDate = DateTime.Today;
+      EncryptDecryptString encrypt = new EncryptDecryptString();
+      string sql = string.Format("Update SecurityUsers set Login = '{0}', Password = '{1}', Domain = '{2}' where Entity = '{3}'",
+        info.Login, encrypt.encryptString(info.Password), info.Domain, info.Entity);
+      updateDataFromSQL(sql);
+
+      const string aPath = "{0}.Entity.User.{1}";
+      EntityAttributesCollection eac = _ea.getAttributes(info.Entity, "Entity", "User", null, efDate);
+      if (eac == null || !eac.Entities.Contains(info.Entity) || !eac.Entities[info.Entity].ItemTypes.Contains("Entity") ||
+        !eac.Entities[info.Entity].ItemTypes["Entity"].Items.Contains("User"))
+        return;
+
+      Entity e = eac.Entities[info.Entity];
+      e.Fields.setValue("FirstName", info.FirstName);
+      e.Fields.setValue("LegalName", info.LastName);
+      e.Fields.setValue("EntityOwner", info.EntityOwner);
+      eac.setValue(info.Email, string.Format(aPath, info.Entity, "EmailAddress"));
+      eac.setValue(info.UserType, string.Format(aPath, info.Entity, "UserType"));
+      _ea.Save(eac);
+    }
+    private void addUserInfo(UserInfo info)
+    {
+      /*
+       create procedure addNewUser (@Login varchar(50), @Password varchar(50), @SecurityGroup varchar(50), @Entity varchar(50), @FirstName varchar(50), @LastName varchar(50), 
+@Email varchar(128), @OldID varchar(12), @UserType varchar(50), @EntityOwner varchar(50), @LastModifiedBy varchar(50) = 'Axon-User') 
+       */
+      string entityFormat = "{0}{1}-{2}";
+      int seq = 1;
+      while (ExistsEntity(info.Entity)) // make sure the entity id is unique
+      {
+        info.Entity = string.Format(entityFormat, info.LastName, seq.ToString(), info.UserType);
+        seq++;
+      }
+      string sqlFormat = "Exec addNewUser '{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}'";
+      EncryptDecryptString encrypt = new EncryptDecryptString();
+      string sql = string.Format(sqlFormat, info.Login, encrypt.encryptString(info.Password), info.SecurityGroup, info.Entity, info.FirstName, info.LastName,
+        info.Email, info.OldID, info.EntityType, info.EntityOwner, _securityContext.User, DateTime.Today.ToString());
+      updateDataFromSQL(sql);
+    }
+    public string[] getSecurityGroups()
+    {
+      DataSet ds = getDataFromSQL("Select distinct SecurityGroup from SecurityGroups order by SecurityGroup");
+      if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+        return new string[0];
+      DataTable table = ds.Tables[0];
+      string[] list = new string[table.Rows.Count];
+      for (int i = 0; i < table.Rows.Count; i++)
+        list[i] = CommonFunctions.CString(table.Rows[i][0]);
+      return list;
+
+    }
+    #endregion
+
+    #endregion
+  }
+}

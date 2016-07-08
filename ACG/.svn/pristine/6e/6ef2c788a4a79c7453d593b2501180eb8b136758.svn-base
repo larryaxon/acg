@@ -1,0 +1,262 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Data;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+
+namespace ACG.CommonForms
+{
+  public partial class ctlDayPlanner : UserControl
+  {
+    #region private method data
+    private const string CONTROLNAME = "txtEntry";
+    private TimeSpan _increment = new TimeSpan(0,15,0);
+    private DateTime _beginTime;
+    private DateTime _displayBeginTime;
+    private DateTime _endTime;
+    private KnownColor _onHourColor = KnownColor.LightGray;
+    private KnownColor _alternateColor = KnownColor.LightGray;
+    private List<TimeEntry> _timeEntries = null;
+    private int _scrollMarginSize = 17;
+    TextBox _scrollToControl = null;
+    ToolTip _toolTip = null;
+    #endregion
+
+    [Serializable]
+    public class TimeEntry
+    {
+      public DateTime StartTime { get; set; }
+      public int Duration { get; set; }
+      public string[] Descriptions { get; set; }
+      public KnownColor BackColor { get; set; }
+      public KnownColor FontColor { get; set; }
+      public TimeEntry()
+      {
+        // set default values
+        FontColor = KnownColor.Black;
+        BackColor = KnownColor.White;
+        Duration = 30;
+        Descriptions = new string[0];
+        StartTime = DateTime.Now;
+      }
+    }
+    #region public properties
+    public List<TimeEntry> TimeEntries
+    {
+      get { return _timeEntries; }
+      set { _timeEntries = value; }
+    }
+    public KnownColor OnHourColor
+    {
+      get { return _onHourColor; }
+      set { _onHourColor = value; }
+    }
+    public KnownColor AlternateColor
+    {
+      get { return _alternateColor; }
+      set { _alternateColor = value; }
+    }
+
+    public DateTime DisplayBeginTime
+    {
+      get { return _displayBeginTime; }
+      set { _displayBeginTime = value; }
+    }
+    public DateTime BeginTime
+    {
+      get { return _beginTime; }
+      set { _beginTime = roundTime(value); }
+    }
+    public DateTime EndTime
+    {
+      get { return _endTime; }
+      set { _endTime = roundTime(value); }
+    }
+    #endregion
+
+    public ctlDayPlanner()
+    {
+      InitializeComponent();
+      BeginTime = DateTime.Today; // default is 12:00 am
+      DisplayBeginTime = BeginTime + new TimeSpan(8, 0, 0); // default is 8:00 am
+      EndTime = BeginTime.AddDays(1).AddMinutes(-1); // default is 24 hour later
+      _toolTip = new System.Windows.Forms.ToolTip();
+      _toolTip.InitialDelay = 1;
+    }
+    public void Init(DateTime beginTime, DateTime endTime, DateTime displayBeginTime)
+    {
+      BeginTime = beginTime;
+      EndTime = endTime;
+      DisplayBeginTime = displayBeginTime;
+      Init();
+    }
+    public void Init()
+    {
+      int height = 20;
+      int width = this.Width - 4 - _scrollMarginSize;
+      int numberIncrements = Convert.ToInt32((_endTime.Ticks - _beginTime.Ticks) / _increment.Ticks);
+      DateTime timeTitle = _beginTime;
+      bool onHour = true;
+      int top = 0;
+
+      for (int i = 0; i < numberIncrements; i++)
+      {
+        TextBox ctl = new TextBox();
+        int minutes = _increment.Minutes;
+        ctl.Name = CONTROLNAME + i.ToString();
+        ctl.ReadOnly = true;
+        if (onHour)
+        {
+          ctl.Text = timeTitle.ToShortTimeString();
+          ctl.BackColor = Color.FromKnownColor(OnHourColor);
+        }
+        else
+          ctl.BackColor = Color.FromKnownColor(AlternateColor);
+        onHour = !onHour;
+        timeTitle = timeTitle.AddMinutes(minutes);
+        ctl.Top = top;
+        top += height;
+        ctl.Left = 2;
+        ctl.Width = width;
+        ctl.Height = height;
+        panelMain.Controls.Add(ctl);
+        if (timeTitle.AddMinutes(-minutes) <= _displayBeginTime && _displayBeginTime <= timeTitle) // the display start time is in this time slice
+          _scrollToControl = ctl;
+      }
+      scrollToDisplayBegin();
+
+    }
+    public void LoadData(List<TimeEntry> timeEntries)
+    {
+      _timeEntries = timeEntries;
+      foreach (TimeEntry te in _timeEntries)
+      {
+        int minutes = _increment.Minutes;
+        int nbrSlots = te.Duration / minutes;
+        int incrementsPerHours = 60 / minutes;
+        TimeSpan diffTime = _endTime - _beginTime;
+        int totalSlots = Convert.ToInt32(diffTime.TotalHours * Convert.ToDouble(incrementsPerHours)); // total number of slots we have
+        TimeSpan startTime = roundTime(te.StartTime).TimeOfDay;
+        int slotsFromMidnight = (startTime.Hours * incrementsPerHours) + (startTime.Minutes / minutes);
+        int offset = (_beginTime.Hour * incrementsPerHours) + (_beginTime.Minute / minutes);
+        int startSlot = slotsFromMidnight - offset;
+        if (startSlot < 0)
+          startSlot = startSlot + totalSlots;
+        string toolTipMsg = string.Empty;
+        for (int k = 0; k < te.Descriptions.GetLength(0); k++)
+        {
+          toolTipMsg += te.Descriptions[k];
+          if (k < te.Descriptions.GetLength(0) - 1)
+            toolTipMsg += System.Environment.NewLine;
+        }
+        // change the description and color of the time slot
+        for (int i = 0; i < nbrSlots; i++)
+        {
+          int thisSlot = startSlot + i;
+          if (thisSlot > totalSlots)
+            thisSlot = thisSlot + totalSlots;
+          string ctlName = CONTROLNAME + thisSlot.ToString();
+          if (panelMain.Controls.ContainsKey(ctlName))
+          {
+            TextBox ctl = (TextBox)panelMain.Controls[ctlName];
+            if (i < te.Descriptions.GetLength(0))
+              ctl.Text = te.Descriptions[i];
+            _toolTip.SetToolTip(ctl, toolTipMsg);
+            ctl.BackColor = Color.FromKnownColor(te.BackColor);
+            //ctl.Enabled = true; // .Net wont allow us to change the font color if the control is disabled
+            ctl.ForeColor = Color.FromKnownColor(te.FontColor);
+            //ctl.Enabled = false;
+            ctl.Cursor = Cursors.Hand;
+          }
+        }
+
+      }
+    }
+    public void Clear()
+    {
+      _toolTip.RemoveAll();
+      int minutes = _increment.Minutes;
+//      int totalSlots = (_endTime - _beginTime).Days * 48 + (_endTime - _beginTime).Minutes / minutes; // total number of slots we have
+      int totalSlots = (_endTime - _beginTime).Days * 24 * (60 / minutes); // total number of slots we have
+      DateTime timeTitle = _beginTime;
+      bool onHour = true;
+      for (int i = 0; i < totalSlots; i++)
+      {
+        int thisSlot = i;
+        string ctlName = CONTROLNAME + thisSlot.ToString();
+        if (panelMain.Controls.ContainsKey(ctlName))
+        {
+          TextBox ctl = (TextBox)panelMain.Controls[ctlName];
+          if (onHour)
+          {
+            ctl.Text = timeTitle.ToShortTimeString();
+            ctl.BackColor = Color.FromKnownColor(OnHourColor);
+          }
+          else
+          {
+            ctl.Text = string.Empty;
+            ctl.BackColor = Color.FromKnownColor(AlternateColor);
+          }
+          ctl.ForeColor = Color.FromKnownColor(KnownColor.Black);
+          ctl.Cursor = Cursors.Default;
+
+          onHour = !onHour;
+          timeTitle = timeTitle.AddMinutes(minutes);
+        }
+      }
+      scrollToDisplayBegin();
+    }
+    private DateTime roundTime(DateTime t)
+    {
+      // round to the nearest increment 
+      long ticks = (t.Ticks + (_increment.Ticks / 2) + 1) / _increment.Ticks;
+      return new DateTime(ticks * _increment.Ticks);
+    }
+
+    private void panelMain_Resize(object sender, EventArgs e)
+    {
+      int minutes = _increment.Minutes;
+      int totalSlots = (_endTime - _beginTime).Hours * 2 + (_endTime - _beginTime).Minutes / minutes; // total number of slots we have
+      for (int i = 0; i < totalSlots; i++)
+      {
+        int thisSlot = i;
+        string ctlName = CONTROLNAME + thisSlot.ToString();
+        if (panelMain.Controls.ContainsKey(ctlName))
+        {
+          TextBox ctl = (TextBox)panelMain.Controls[ctlName];
+          ctl.Width = panelMain.Width - 4 - _scrollMarginSize;
+
+        }
+      }
+      scrollToDisplayBegin();
+    }
+    private void scrollToDisplayBegin()
+    {
+      //ScrollDown(panelMain, scrollToControl.Top);
+      //panelMain.ScrollControlIntoView(scrollToControl);
+      if (_scrollToControl != null)
+        if (_scrollToControl.Top >= panelMain.VerticalScroll.Minimum && _scrollToControl.Top <= panelMain.VerticalScroll.Maximum)
+          panelMain.VerticalScroll.Value = _scrollToControl.Top;
+    }
+    private void ScrollDown(Panel p, int pos)
+    {
+      //pos passed in should be positive
+      using (Control c = new Control() { Parent = p, Height = 1, Top = p.ClientSize.Height + pos })
+      {
+        p.ScrollControlIntoView(c);
+      }
+    }
+    private void ScrollUp(Panel p, int pos)
+    {
+      //pos passed in should be negative
+      using (Control c = new Control() { Parent = p, Height = 1, Top = pos })
+      {
+        p.ScrollControlIntoView(c);
+      }
+    }
+    
+  }
+}

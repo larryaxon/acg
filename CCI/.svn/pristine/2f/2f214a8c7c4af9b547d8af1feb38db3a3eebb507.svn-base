@@ -1,0 +1,39 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Text;
+
+using ACG.Common;
+using CCI.Sys.Data;
+
+namespace CCI.Sys.Data
+{
+  public class SearchDataSourceNamedSearch : DataAccessBase, ISearchDataSource 
+  {
+    public string IDName { get; set; }
+    public string NameName { get; set; }
+    public string SQL { get; set; }
+    public string OrderByClause { get; set; }
+    public string User { get; set; }
+    public CCI.Common.CommonData.UnmatchedNameTypes NameType { get; set; }
+    public SearchDataSourceNamedSearch()
+    {
+      SQL = @"    select * from (select substring(OptionType, 13,99) SearchName, Description 
+  from useroptions 
+  where userid = '{0}' and OptionName = '{1}' 
+  and OptionType like 'NamedSearch:%') a ";
+      OrderByClause = " order by SearchName ";
+      IDName = "SearchName";
+      NameName = "Description";
+      NameType = Common.CommonData.UnmatchedNameTypes.None;
+      User = string.Empty;
+    }
+    public string[] Search(string criteria, bool useExactID)
+    {
+      if (NameType == CCI.Common.CommonData.UnmatchedNameTypes.None)
+        return new string[0];
+      else
+        return getSearchList(string.Format(SQL, User, NameType.ToString()), OrderByClause, criteria, IDName, new string[] { NameName }, useExactID, true);
+    }
+  }
+}

@@ -1,0 +1,107 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Data;
+using System.Text;
+using System.Windows.Forms;
+
+using CCI.Common;
+using CCI.Sys.Data;
+
+namespace CCI.DesktopClient.Common
+{
+  public partial class ctlCityHostedDetail : UserControl
+  {
+    private DataSource _ds = null;
+    private DataSource _dataSource { get { if (_ds == null) _ds = new DataSource(); return _ds; } }
+    public SecurityContext SecurityContext { get; set; }
+    public string CustomerID { get; set; }
+    public string CustomerName { get; set; }
+    public string BTN { get; set; }
+    public string USOC { get; set; }
+    public DateTime? BillDate { get; set; }
+    public ctlCityHostedDetail()
+    {
+      InitializeComponent();
+      CustomerID = null;
+      CustomerName = null;
+      BTN = null;
+      USOC = null;
+      BillDate = null;
+    }
+
+    public new void Load(SecurityContext securityContext, string customerID)
+    {
+      SecurityContext = securityContext;
+      CustomerID = customerID;
+      srchWholesaleMRC.Init(CommonData.UnmatchedNameTypes.CityHostedDetailWholesaleMRC, "Wholesale MRC");
+      srchWholesaleOCC.Init(CommonData.UnmatchedNameTypes.CityHostedDetailWholesaleOCC, "Wholesale OCC");
+      srchWholesaleToll.Init(CommonData.UnmatchedNameTypes.CityHostedDetailWholesaleToll, "Wholesale Toll");
+      srchRetailMRC.Init(CommonData.UnmatchedNameTypes.CityHostedDetailRetailMRC, "Retail MRC");
+      srchRetailOCC.Init(CommonData.UnmatchedNameTypes.CityHostedDetailRetailOCC, "Retail OCC");
+      srchRetailToll.Init(CommonData.UnmatchedNameTypes.CityHostedDetailRetailToll, "Retail Toll");
+      srchTax.Init(CommonData.UnmatchedNameTypes.CityHostedDetailTax, "Tax");
+    }
+    public void ReLoad()
+    {
+      Dictionary<string, string[]> criteria = new Dictionary<string, string[]>(StringComparer.CurrentCultureIgnoreCase);
+      if (!string.IsNullOrEmpty(CustomerID))
+        criteria.Add("CustomerID", new string[] { ctlSearchGrid.opEQUALS, CustomerID });
+      if (!string.IsNullOrEmpty(CustomerName))
+        criteria.Add("CustomerName", new string[] { ctlSearchGrid.opEQUALS, CustomerName });
+      if (!string.IsNullOrEmpty(BTN))
+      {
+        string op;
+        if (BTN.Contains(","))
+          op = ctlSearchGrid.opIN;
+        else
+          op = ctlSearchGrid.opEQUALS;
+        criteria.Add("BTN", new string[] { op, BTN });
+      }
+      if (!string.IsNullOrEmpty(USOC))
+      {
+        string op;
+        if (USOC.Contains(","))
+          op = ctlSearchGrid.opIN;
+        else
+          op = ctlSearchGrid.opEQUALS;
+        criteria.Add("USOC", new string[] { op, USOC });
+      }
+      if (BillDate != null)
+        criteria.Add("BillDate", new string[] { ctlSearchGrid.opEQUALS, ((DateTime)BillDate).ToShortDateString() });
+      if (criteria.Count > 0)
+      {
+        srchWholesaleMRC.SearchCriteria = criteria;
+        srchWholesaleOCC.SearchCriteria = criteria;
+        srchWholesaleToll.SearchCriteria = criteria;
+        srchRetailMRC.SearchCriteria = criteria;
+        srchRetailOCC.SearchCriteria = criteria;
+        srchRetailToll.SearchCriteria = criteria;
+        srchTax.SearchCriteria = criteria;
+
+        srchWholesaleMRC.ReLoad();
+        srchWholesaleOCC.ReLoad();
+        srchWholesaleToll.ReLoad();
+        srchRetailMRC.ReLoad();
+        srchRetailOCC.ReLoad();
+        srchRetailToll.ReLoad();
+        srchTax.ReLoad();
+      }
+      else
+      {
+        Clear();
+      }
+    }
+    public void Clear()
+    {
+      srchWholesaleMRC.Clear();
+      srchWholesaleOCC.Clear();
+      srchWholesaleToll.Clear();
+      srchRetailMRC.Clear();
+      srchRetailOCC.Clear();
+      srchRetailToll.Clear();
+      srchTax.Clear();
+    }
+  }
+}

@@ -1,0 +1,123 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Collections;
+using System.Text;
+
+using ACG.Common.Logging;
+
+namespace CCI.Common
+{
+  public class CommonData : ACG.Common.CommonData
+  {
+/*
+ * This class exposes the centreal library of static data points (mostly constants and some global flags). 
+ * 
+ * Please do NOT add any data/property to this class if it is possible to add it to ACG.Common.CommonData.
+ * This way, we maintain an ever-expaning set of shared data. However, if there is something that has dependencies
+ * to this local projecr, then you must add it here. 
+ * 
+ * In that case, it should be a static or public property. No non-static methods are allowed in this class.
+ * 
+ * No functions/methods should be added to this class
+ */
+    public enum UnmatchedNameTypes { Customer, Item, Payor, Carrier, Location, PayCode, TrueUp, ImportCustomer, CityHostedCustomer, Inventory, 
+      NetworkInventory, SearchNetworkInventory, OldNetworkInventory, CustomerNetworkInventory, CityCareNetworkInventory, UnmatchedNetworkInventory, UnmatchedNetworkInventoryOneRow, Profiles, Orders, CityHostedUSOCs, 
+      CityHostedUSOCsRetail, ScreenDefinition, CityHostedMRCMatching, CityHostedQueryMain, CityHostedQueryMRC, CityHostedQueryCallDetail, CityHostedQueryOCC, CityHostedQueryTax,
+      CityHostedDealerCost,CashReceipts, CashReceiptsDetail, CityHostedMarginCustomerList, CityHostedMarginMRCSummary, CityHostedMarginOCCSummary, CityHostedMarginTollSummary,
+      CityHostedMarginTaxSummary, CityHostedMarginMRCUSOCDetail, CityHostedMarginAllSummary, CityHostedUnmatchedBTNs, CityHostedUnmatchedBTNsWholesale, CityHostedDetailWholesaleMRC, CityHostedDetailWholesaleOCC,
+      CityHostedDetailWholesaleToll, CityHostedDetailRetailMRC, CityHostedDetailRetailOCC, CityHostedDetailRetailToll, CityHostedDetailTax, CityHostedCustomerUSOCMatching, CityHostedOCCUSOCMatching,
+      MasterProductList, ProductList, CityHostedMRCNetworkInventoryMatch, CityHostedMRCWholesaleMatch, CityHostedLedgerInvoiceMatch, CityHostedLedgerCashMatch, FollowUps, CityHostedCustomersWithMissingInfo, 
+      AnalysisCustomerEntity, AnalysisMarginRaw, AnalysisDealerMargin, AnalysisAR, AnalysisLocation, AnalysisContact, AnalysisNetworkInventory, AnalysisTaxDetailHistory, AnalysisARDetail,
+      AnalysisOCCImportRaw, ProcessLog, CityHostedOCCEntry, CityHostedCreditMemos, AnalyticsScreen, None};
+
+    public enum USOCMaintenanceOperation { UpdateExisting, SwitchWholesale, AddNewWholesale, AddNewRetail }
+
+    public static string[] NetworkInventoryExceptionList = new string[] { "Missing NetworkInventory", "Quantity Mismatch", "MRC Mismatch", "Missing Saddleback MRC" };
+
+    public const string REQUESTROW = "RequestRow";
+    public const string ACTION = "Action";
+
+    public static int MAXIDLEMINUTES = 15;
+
+    public static string CITYCAREPRODDBNAME = "citycare_prod";
+    public static string CCIDBNAME = "Commissions";
+    public const string DEFAULTDOMAIN = "CCI.com";
+    public const string NEWTABLEFORMAT = "newtableformat";
+
+    public const string DEALERQUOTESCREEN = "DealerQuote";
+
+    public const string ENTITYTYPECUSTOMER = "Customer";
+    public const string ENTITYOWNERCCI = "CCI";
+    public const string EXTERNALSOURCEPAYOR = "Payor";
+    public const string EXTERNALSOURCETYPEPAYOR = "Payor";
+    public const string ITEMTYPEENTITY = "Entity";
+    public const string ORDERSTATUSOPEN = "Open";
+    public const string ORDERTYPEQUOTE = "Quote";
+
+    public const string NOCHANGE = "{NO_CHANGE}";
+    public const string parmACCOUNT = "Account";
+    public const string parmCONTEXT = "Context";
+    public const string parmCRITERIA = "Criteria";
+    public const string parmDATA = "data";
+    public const string parmFIELDNAMES = "FieldNames";
+    public const string parmORDERID = "OrderID";
+
+    // ATK Command table names
+    public const string tableATTRIBUTE = "Attribute";
+    public const string tableENTITY = "Entity";
+    public const string tableEXTERNALIDMAPPING = "ExternalIDMapping";
+    public const string tableORDERDETAIL = "OrderDetail";
+    public const string tableORDERS = "Orders";
+
+    public const string screenDEALERQUOTE = "DealerQuote";
+
+    public const string fieldADDRESS1 = "Address1";
+    public const string fieldADDRESS2 = "Address2";
+    public const string fieldATTRIBUTES = "Attributes";
+    public const string fieldCOLUMNNAME = "column_name";
+    public const string fieldCONTRACTTERM = "ContractTerm";
+    public const string fieldCITY = "City";
+    public const string fieldCREATEDBY = "CreatedBy";
+    public const string fieldCREATEDATETIME = "CreateDateTime";
+    public const string fieldCUSTOMER = "Customer";
+    public const string fieldDEALERORSALESPERSON = "DealerOrSalesPerson";
+    public const string fieldDETAILID = "DetailId";
+    public const string fieldDIRTY = "Dirty";
+    public const string fieldENTITY = "Entity";
+    public const string fieldENTITYOWNER = "EntityOwner";
+    public const string fieldENTITYTYPE = "EntityType";
+    public const string fieldEXTERNALID = "ExternalID";
+    public const string fieldEXTERNALSOURCE = "ExternalSource";
+    public const string fieldEXTERNALSOURCETYPE = "ExternalSourceType";
+    public const string fieldID = "Id";
+    public const string fieldINSTALLDATE = "InstallDate";
+    public const string fieldINTERNALID = "InternalID";
+    public const string fieldITEMID = "ItemId";
+    public const string fieldITEM = "Item";
+    public const string fieldITEMHISTORY = "ItemHistory";
+    public const string fieldITEMTYPE = "ItemType";
+    public const string fieldLASTMODIFIEDBY = "LastModifiedBy";
+    public const string fieldLASTMODIFIEDDATETIME = "LastModifiedDateTime";
+    public const string fieldLASTSTATUSCHANGEDATE = "LastStatusChangeDate";
+    public const string fieldLEGALNAME = "LegalName";
+    public const string fieldLINENUMBER = "LineNumber";
+    public const string fieldMRCRETAIL = "MRCRetail";
+    public const string fieldORDERID = "OrderId";
+    public const string fieldORDERNAME = "OrderName";
+    public const string fieldORDERTYPE = "OrderType";
+    public const string fieldQUANTITY = "Quantity";
+    public const string fieldQUOTEID = "QuoteId";
+    public const string fieldRETAILITEMID = "RetailItemID";
+    public const string fieldWHOLESALEITEMID = "ItemID";
+    public const string fieldRETAILMRC = "RetailMRC";
+    public const string fieldWHOLESALEMRC = "WholesaleMRC";
+    public const string fieldSECTIONAME = "Section";
+    public const string fieldSCREENSECTION = "screensection";
+    public const string fieldSHORTNAME = "ShortName";
+    public const string fieldSTATE = "State";
+    public const string fieldSTATUS = "Status";
+    public const string fieldSUITE = "Suite";
+    public const string fieldSYSTEMDATATYPE = "system_data_type";
+    public const string fieldZIP = "Zip";
+  }
+}

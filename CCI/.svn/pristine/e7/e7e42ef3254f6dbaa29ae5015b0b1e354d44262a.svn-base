@@ -1,0 +1,643 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Text;
+using System.Windows.Forms;
+
+using CCI.DesktopClient.Common;
+using CCI.Common;
+using CCI.Sys.Data;
+
+namespace CCI.DesktopClient.Screens
+{
+  public partial class frmNetworkInventory : ScreenBase
+  {
+    #region private method data
+    private const string CUSTOMERID = "customer";
+    private const string NETINVID = "CityCareNetInvID";
+    private DataSource _dSource = null;
+    string[] _hiddenColumns = new string[] { "netinv_id", "user_customerid", "location_id", "productid", "vendorid", "prodclassid", "prodsubclassid" };
+    private DataSource _dataSource { get { if (_dSource == null) _dSource = new DataSource(); return _dSource; } }
+    #endregion
+
+    #region public properties
+    public bool DisplayOldInventory { get { return ckShowOldInventory.Checked; } set { ckShowOldInventory.Checked = value; } }
+    public bool DisplayOldInventoryCheckBox { get { return ckShowOldInventory.Visible; } set { ckShowOldInventory.Visible = value; } }
+    #endregion
+
+    public frmNetworkInventory()
+    {
+      InitializeComponent();
+      Init();
+    }
+
+    #region public methods
+    public void Init()
+    {
+      for (int i = 0; i < _hiddenColumns.GetLength(0); i++)
+        srchCityCareNetworkInventory.HiddenColumns.Add(_hiddenColumns[i], null);
+      srchCityCareNetworkInventory.Init(CommonData.UnmatchedNameTypes.CityCareNetworkInventory,null );
+      srchNetworkInventory.Init(CommonData.UnmatchedNameTypes.SearchNetworkInventory, null);      
+      CommonFormFunctions.fillComboBoxList(txtVendor, _dataSource.getOldVendorList());
+      CommonFormFunctions.fillComboBoxList(txtAccountManager, _dataSource.getOldAccountManager());
+      CommonFormFunctions.fillComboBoxList(txtNewAccountManager, _dataSource.getNewEntityList("User"));
+      CommonFormFunctions.fillComboBoxList(txtDealer, _dataSource.getDealerOrSalesPersonList());
+
+    }
+    public new void Save()
+    {
+      saveNewFields();
+      srchNetworkInventory.ReLoad();
+      MessageBox.Show("Record Saved");
+    }
+    #endregion
+
+    #region private methods
+    #region main form methods
+    private void loadByOrder(string orderid)
+    {
+      if (DisplayOldInventory)
+      {
+        int netinv_id = _dataSource.getOldNetworkInventoryIDFromOrder(orderid);
+        if (netinv_id == -1)  // does not exist
+        {
+          DataSet ds = _dataSource.getOldNetworkInventoryOrderData(orderid);
+          if (ds == null)
+            return;
+          if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+          {
+            DataRow row = ds.Tables[0].Rows[0];
+            string vendorid = CommonFunctions.CString(row["vendorid"]);
+            string customerid = "2" + CommonFunctions.CInt(row["customerid"]).ToString("0000");
+            txtNewCustomer.Text = customerid;
+            CommonFormFunctions.fillComboBoxList(txtLocation, _dataSource.getOldLocationList(customerid.Substring(1)));
+            CommonFormFunctions.setComboBoxCell(txtVendor, vendorid);
+            CommonFormFunctions.fillComboBoxList(txtProduct, _dataSource.getOldProductList(vendorid));
+            CommonFormFunctions.setComboBoxCell(txtProduct, CommonFunctions.CString(row["productid"]));
+            CommonFormFunctions.setComboBoxCell(txtLocation, CommonFunctions.CString(row["locid"]));
+            txtOrder.Text = orderid;
+            txtAccount.Text = CommonFunctions.CString(row["account"]);
+            dtDateInstalled.Value = CommonFunctions.CDateTime(row["dateinstalled"]);
+            dtExpDate.Value = CommonFunctions.CDateTime(row["expdate"]);
+            txtMRC.Text = CommonFunctions.CString(row["MRC"]);
+            txtComments.Text = CommonFunctions.CString(row["comments"]);
+            txtCircuitID.Text = CommonFunctions.CString(row["circuitid"]);
+            txtAccountManager.Text = CommonFunctions.CString(row["accountmanager"]);
+            ckActive.Checked = true;
+          }
+          ds.Clear();
+          ds = null;
+        }
+        else
+        {
+          loadOldNI(netinv_id.ToString(), null);
+          int newnetinvid = _dataSource.getNewNetworkInventoryID(netinv_id.ToString());
+          loadNewFields(newnetinvid.ToString());
+        }
+      }
+      else
+        loadNewInventoryByOrder(orderid);
+    }
+    private void loadNewInventoryByOrder(string orderid)
+    {
+      int netinvid = _dataSource.getNewNetworkInventoryFromOrderID(orderid);
+      if (netinvid == -1) // does not exist
+      {
+        long  id = addToNewDatabaseFromOrder(orderid);
+        if (id > 0)
+          loadNewFields(id.ToString());
+      }
+      else
+        loadNewFields(netinvid.ToString());
+    }
+    private void search()
+    {
+      clearOldFields();
+      clearNewFields();
+      srchCityCareNetworkInventory.Clear();
+      srchNetworkInventory.Clear();
+      string customer = ctlCustomerSearch.Text;
+      string location = ctlLocationSearch.Text;
+      string orderid = txtOrderSearch.Text;
+      Dictionary<string, string[]> criteriaOld = new Dictionary<string, string[]>(StringComparer.CurrentCultureIgnoreCase);
+      Dictionary<string, string[]> criteriaNew = new Dictionary<string, string[]>(StringComparer.CurrentCultureIgnoreCase);
+      if (!string.IsNullOrEmpty(orderid)) // if there is an order id, we use that
+      {
+        int citycareorderid = _dataSource.getCityCareOrderFromProdOrderID(orderid);
+        if (citycareorderid > 0) // we have a "master" order
+        {
+          // so we display ALL prodorders for this order
+          criteriaNew.Add("CityCareOrder", new string[] { ctlSearchGrid.opEQUALS, citycareorderid.ToString() });
+          criteriaOld.Add("CityCareOrder", new string[] { ctlSearchGrid.opEQUALS, citycareorderid.ToString() });
+          
+          clearNewFields();
+          clearOldFields();
+        }
+        else
+        {
+          // nope, no master order so we display just the one that matches this prod order
+          criteriaNew.Add("OrderID", new string[] { ctlSearchGrid.opEQUALS, orderid });
+          criteriaOld.Add("prodorderid", new string[] { ctlSearchGrid.opEQUALS, orderid });
+          clearNewFields();
+          clearOldFields();
+        }
+        loadByOrder(orderid);
+      }        
+      else
+      {
+        if (!string.IsNullOrEmpty(location)) // we have a location, so use that
+        {
+          criteriaNew.Add("Location", new string[] { ctlSearchGrid.opEQUALS, location });
+          int oldloc = CommonFunctions.CInt(location.Substring(5, 4)); // extract the old loc id from the new one
+          criteriaOld.Add("location_id", new string[] { ctlSearchGrid.opEQUALS, oldloc.ToString() });
+        }
+        else
+        {
+          if (!string.IsNullOrEmpty(customer)) // if there is no location or order, but there is a customer, we use that
+          {
+            criteriaNew.Add("Customer", new string[] { ctlSearchGrid.opEQUALS, customer });
+            int oldcustomer = CommonFunctions.CInt(customer.Substring(1));
+            criteriaOld.Add("user_customerid", new string[] { ctlSearchGrid.opEQUALS, oldcustomer.ToString() });
+          }
+        }
+      }
+      srchCityCareNetworkInventory.SearchCriteria = criteriaOld;
+      srchNetworkInventory.SearchCriteria = criteriaNew;
+      if (criteriaOld.Count > 0)
+        reloadOldGrid();
+      if (criteriaNew.Count > 0)
+        srchNetworkInventory.ReLoad();
+
+    }
+    private void checkShowOldInventory()
+    {
+      splitCityCareNetworkInventory.Panel2Collapsed = !DisplayOldInventory;
+      splitEdit.Panel1Collapsed = !DisplayOldInventory;
+    }
+    //private Dictionary<string, string[]> refreshSearchCriteria(string customerID, string netinv_id)
+    //{
+    //  Dictionary<string, string[]> criteria = new Dictionary<string, string[]>(StringComparer.CurrentCultureIgnoreCase);
+    //  if (!string.IsNullOrEmpty(srchCityCareNetworkInventory.SelectedID))
+    //  {
+    //    //string[] commCondition = new string[] { ctlSearchGrid.opEQUALS, srchCityCareNetworkInventory.SelectedID };
+    //    //customerID = (CommonFunctions.CInt(customerID) + 20000).ToString();
+    //    string[] custCondition = new string[] { ctlSearchGrid.opEQUALS, customerID };
+    //    string[] idCondition = new string[] { ctlSearchGrid.opEQUALS, netinv_id };
+    //    if (criteria.ContainsKey(CUSTOMERID))
+    //      criteria[CUSTOMERID] = custCondition;
+    //    else
+    //      criteria.Add(CUSTOMERID, custCondition);
+    //    if (criteria.ContainsKey(NETINVID))
+    //      criteria[NETINVID] = idCondition;
+    //    else
+    //      criteria.Add(NETINVID, idCondition);
+    //  }
+    //  return criteria;
+    //}
+
+    #endregion
+
+    #region old inventory methods
+    private void loadOldNI(string netinvid, string custid)
+    {
+      if (string.IsNullOrEmpty(netinvid))
+        clearOldFields();
+      else
+      {
+        loadOldFields(netinvid);
+      }
+    }
+    private void loadOldFields(string netinvid)
+    {
+      /*
+       *scrubbed	active	CustomerName	vendorname	ProductName	mrc	prodnickname	circuitid	installdate	expdate	vendoraccno	ItemID	prodorderid	usernotes	LocationID	locationname	ID	comments	Customer
+0	1	INTERNATIONAL INSTITUTE OF THE AMERICAS	Qwest Local	Basic Business Line	543.15	product 007		2003-11-12 00:00:00.000	2003-10-01 00:00:00.000	6023479556511	BASICBUSINESSLINE	1690	NULL	109861062	PHOENIX - N. 43RD AVE.	53	THIS IS AN ORDER TO CONVERT 17 1FB LINES TO CENTREX ON A 37 MONTH CONTRACT. THIS SALE IS CHANNEL INTEGRATED	20986
+       */
+      if (!DisplayOldInventory) // don't bother to do this if we are not displaying it
+        return;
+      DataSet ds = _dataSource.getOldNetworkInventory(netinvid);
+      if (ds == null)
+        return;
+      if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+      {
+        DataRow row = ds.Tables[0].Rows[0];
+        txtNetInvID.Text = netinvid;
+        txtOrder.Text = CommonFunctions.CString(row["prodorderid"]);
+        string customerid = "2" + CommonFunctions.CInt(row["user_customerid"]).ToString("0000");
+        txtCustomer.Text = customerid;
+        //CommonFormFunctions.setComboBoxCell(txtCustomer, customerid);
+        CommonFormFunctions.fillComboBoxList(txtLocation, _dataSource.getOldLocationList(customerid.Substring(1)));
+        CommonFormFunctions.setComboBoxCell(txtLocation, CommonFunctions.CString(row["location_id"]));
+        string productid = CommonFunctions.CString(row["product_id"]);
+        string vendorid = _dataSource.getOldVendorID(productid);
+        CommonFormFunctions.setComboBoxCell(txtVendor, vendorid);
+        CommonFormFunctions.fillComboBoxList(txtProduct, _dataSource.getOldProductList(vendorid));
+        CommonFormFunctions.setComboBoxCell(txtProduct, productid);
+        txtProductNickName.Text = CommonFunctions.CString(row["prodnickname"]);
+        txtAccount.Text = CommonFunctions.CString(row["vendoraccno"]);
+        txtMRC.Text = CommonFunctions.CDecimal(row["mrc"]).ToString();
+        dtDateInstalled.Value = CommonFunctions.CDateTime(row["installdate"]);
+        dtExpDate.Value = CommonFunctions.CDateTime(row["expdate"]);
+        ckActive.Checked = CommonFunctions.CBoolean(row["active"]);
+        txtComments.Text = CommonFunctions.CString(row["pocomments"]);
+        txtAccountManager.Text = CommonFunctions.CString(row["nm_cityaccmgr"]);
+        txtCircuitID.Text = CommonFunctions.CString(row["circuitid"]);
+        int id = _dataSource.getNewNetworkInventoryID(netinvid);
+        if (id > 0)
+          loadNewFields(id.ToString());
+        else
+          clearNewFields();
+        lblNew.Visible = false;
+      }
+      ds.Clear();
+      ds = null;
+    }
+    private void clearOldFields()
+    {
+      txtNetInvID.Text = string.Empty;
+      txtOrder.Text = string.Empty;
+      // default to search value if any
+      if (!string.IsNullOrEmpty(ctlCustomerSearch.Text))
+        txtCustomer.Text = ctlCustomerSearch.Text;
+      else
+        txtCustomer.Text = null;
+      if (!string.IsNullOrEmpty(ctlLocationSearch.Text))
+        txtLocation.Text = CommonFunctions.CInt(ctlLocationSearch.Text.Substring(5)).ToString(); // pick out location = xxxx from 1CCCCxxxx
+      else
+        txtLocation.Text = null;
+      txtVendor.Text = null;
+      txtProduct.Text = null;
+      txtProductNickName.Text = string.Empty;
+      txtMRC.Text = string.Empty;
+      txtComments.Text = string.Empty;
+      txtAccount.Text = string.Empty;
+      txtAccountManager.Text = null;
+      txtCircuitID.Text = null;
+      dtDateInstalled.Value = DateTime.Today;
+      dtExpDate.Value = DateTime.Today;
+      ckActive.Checked = true;
+      lblNew.Visible = true;
+    }
+    private void saveOldFields()
+    {
+      string netinv_id = txtNetInvID.Text;
+      string user_customerid = txtCustomer.Text.Substring(1); //CommonFormFunctions.getComboValue(txtCustomer);
+      string location_id = CommonFormFunctions.getComboValue(txtLocation);
+      string product_id = CommonFormFunctions.getComboValue(txtProduct);
+      decimal mrc = CommonFunctions.CDecimal(txtMRC.Text);
+      DateTime expdate = dtExpDate.Value;
+      DateTime installdate = dtDateInstalled.Value;
+      string nm_cityaccmgr = txtAccountManager.Text;
+      string circuitid = txtCircuitID.Text;
+      string comments = txtComments.Text;
+      string prodorder_id = txtOrder.Text;
+      string prodnickname = txtProductNickName.Text;
+      string account = txtAccount.Text;
+      bool active = ckActive.Checked;
+      bool scrubbed = false;
+      int id = _dataSource.updateOldNetworkInventory(netinv_id, user_customerid, location_id, product_id, mrc, expdate, 
+        installdate, nm_cityaccmgr, circuitid, comments, prodorder_id, active, scrubbed, prodnickname, account);
+      txtNetInvID.Text = id.ToString();
+      reloadOldGrid();
+    }
+    private void reloadOldGrid()
+    {
+      if (DisplayOldInventory)
+        srchCityCareNetworkInventory.ReLoad();
+    }
+    #endregion
+    #region new inventory methods
+    private void loadNewFields(string newnetinvid)
+    {
+      DataSet ds = _dataSource.getNewNetworkInventory(newnetinvid);
+      if (ds == null)
+        return;
+      if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+      {
+        DataRow row = ds.Tables[0].Rows[0];
+        txtNewNetInvID.Text = newnetinvid;
+        txtNewOrderID.Text = CommonFunctions.CString(row["orderid"]);
+        if (string.IsNullOrEmpty(txtNewOrderID.Text))
+          txtNewOrderID.Text = CommonFunctions.CString(row["CityCareProdOrderID"]);
+        string customerid = CommonFunctions.CString(row["Customer"]);
+        txtNewCustomer.Text = customerid;
+        ((SearchDataSourceEntity)txtNewLocation.SearchExec).EntityOwner = customerid;
+        txtNewLocation.Text = CommonFunctions.CString(row["Location"]);
+        string itemid = CommonFunctions.CString(row["ItemID"]);
+        string carrier = CommonFunctions.CString(row["Carrier"]);
+        txtNewCarrier.Text = carrier;
+        txtNewVendor.Text = CommonFunctions.CString(row["Payor"]);
+        ((SearchDataSourceProductList)txtNewItemID.SearchExec).Carrier = carrier;
+        txtNewItemID.Text = itemid;
+        txtQuantity.Text = Math.Round(CommonFunctions.CDecimal(row["Quantity"]),2).ToString();
+        txtNewNickName.Text = CommonFunctions.CString(row["productnickname"]);
+        txtNewAccount.Text = CommonFunctions.CString(row["vendoraccountid"]);
+        txtNewMRC.Text = Math.Round(CommonFunctions.CDecimal(row["mrc"]),2).ToString();
+        txtNewNRC.Text = Math.Round(CommonFunctions.CDecimal(row["nrc"]),2).ToString(); 
+        dtNewDateInstalled.Value = CommonFunctions.CDateTime(row["installdate"]);
+        dtNewStartDate.Value = CommonFunctions.CDateTime(row["startdate"]);
+        dtNewEndDate.Value = CommonFunctions.CDateTime(row["enddate"]);
+        dtNewExpDate.Value = CommonFunctions.CDateTime(row["expirationdate"]);
+        bool isActiveByDate = CommonFunctions.CDateTime(row["startdate"], CommonData.PastDateTime) <= DateTime.Today && DateTime.Today <= CommonFunctions.CDateTime(row["enddate"], CommonData.FutureDateTime);
+        ckNewActive.Checked = System.DBNull.Value == row["inactive"] && isActiveByDate ? true : false;
+        txtNewComments.Text = CommonFunctions.CString(row["comments"]);
+        txtNewAccountManager.Text = CommonFunctions.CString(row["AccountManager"]);
+        txtNewCircuitID.Text = CommonFunctions.CString(row["circuitid"]);
+        txtBTN.Text = CommonFunctions.CString(row["btn"]);
+        string dealer = CommonFunctions.CString(row["DealerOrSalesPerson"]);
+        if (string.IsNullOrEmpty(dealer))
+          txtDealer.Text = null;
+        else
+          CommonFormFunctions.setComboBoxCell(txtDealer, dealer);
+        lblNewNew.Visible = false;
+      }
+      ds.Clear();
+      ds = null;
+    }
+    private void reloadNewProductCombo()
+    {
+      string itemid = txtNewItemID.Text;
+      string carrier = txtNewCarrier.Text;
+      ((SearchDataSourceProductList)txtNewItemID.SearchExec).Carrier = carrier;
+      txtNewItemID.Text = itemid;
+    }
+    private void clearNewFields()
+    {
+      txtNewNetInvID.Text = string.Empty;
+      txtNewOrderID.Text = string.Empty;
+      // default to search value if any
+      if (!string.IsNullOrEmpty(ctlCustomerSearch.Text))
+        txtNewCustomer.Text = ctlCustomerSearch.Text;
+      else
+        txtNewCustomer.Text = null;
+      if (!string.IsNullOrEmpty(ctlLocationSearch.Text))
+        txtNewLocation.Text = ctlLocationSearch.Text;
+      else
+        txtNewLocation.Text = null;
+      txtNewCarrier.Text = null;
+      txtNewItemID.Text = null;
+      txtNewNickName.Text = string.Empty;
+      txtNewMRC.Text = string.Empty;
+      txtNewNRC.Text = string.Empty;
+      txtNewComments.Text = string.Empty;
+      txtNewAccount.Text = string.Empty;
+      CommonFormFunctions.setComboBoxCell(txtNewAccountManager,SecurityContext.User);
+      txtNewCircuitID.Text = null;
+      txtBTN.Text = null;
+      txtQuantity.Text = "1";
+      dtNewDateInstalled.Value = DateTime.Today;
+      dtNewEndDate.Value = DateTime.Today;
+      dtNewStartDate.Value = DateTime.Today;
+      dtNewExpDate.Value = DateTime.Today;
+      ckActive.Checked = true;
+      CommonFormFunctions.setComboBoxCell(txtDealer, "CCIDealer");
+      lblNewNew.Visible = true;
+    }
+    private void saveNewFields()
+    {
+      string netinv_id = txtNewNetInvID.Text;
+      string customer = txtNewCustomer.Text;
+      string location = txtNewLocation.Text;
+      string itemid = txtNewItemID.Text;
+      string carrier = txtNewCarrier.Text;
+      string vendor = txtNewVendor.Text;
+      decimal mrc = CommonFunctions.CDecimal(txtNewMRC.Text);
+      decimal nrc = CommonFunctions.CDecimal(txtNewNRC.Text);
+      int quantity = CommonFunctions.CInt(txtQuantity.Text);
+      DateTime endDate = dtNewEndDate.Value;
+      DateTime startDate = dtNewStartDate.Value;
+      DateTime installdate = dtNewDateInstalled.Value;
+      DateTime expirationdate = dtNewExpDate.Value;
+      string mgr = txtNewAccountManager.Text;
+      string circuitid = txtNewCircuitID.Text;
+      string comments = txtNewComments.Text;
+      int orderid = CommonFunctions.CInt(txtNewOrderID.Text);
+      string prodnickname = txtNewNickName.Text;
+      string dealer = CommonFormFunctions.getComboValue(txtDealer);
+      string account = txtNewAccount.Text;
+      bool active = ckNewActive.Checked && startDate <= DateTime.Today && DateTime.Today <= endDate;
+      string btn = txtBTN.Text;
+      int? id = _dataSource.updateNewNetworkInventory(netinv_id, customer, location, orderid, orderid, carrier, itemid, prodnickname, account,
+        mrc, nrc, comments, mgr, dealer, installdate, startDate, endDate, circuitid, btn, quantity, active, vendor, expirationdate);
+      if (id != null && id > 0)
+        txtNewNetInvID.Text = id.ToString();
+    }
+    private long addToNewDatabase()
+    {
+      long retVal = -1;
+      if (string.IsNullOrEmpty(txtNetInvID.Text))
+        MessageBox.Show("You must have a saved network inventory record with a valid netinv_id");
+      else
+      {
+        List<string> idList = new List<string>();
+        idList.Add(txtNetInvID.Text);
+        retVal = _dataSource.AddNetworkInventoryFromCityCareData("NetworkInventory", idList, SecurityContext.User, string.Empty);
+        srchNetworkInventory.ReLoad();
+      }
+      return retVal;
+    }
+    private long addToNewDatabaseFromOrder(string orderid)
+    {
+      long retVal = -1;
+      if (string.IsNullOrEmpty(orderid))
+        MessageBox.Show("You must have a valid orderid");
+      else
+      {
+        if (_dataSource.existsNewCustomerIDFromOldOrder(orderid))
+        {
+          List<string> idList = new List<string>();
+          idList.Add(orderid);
+          retVal = _dataSource.AddNetworkInventoryFromCityCareData("Orders", idList, SecurityContext.User, string.Empty);
+        }
+        else
+          MessageBox.Show("This customer has not yet been imported from the CityCare database. You must do that before you can create the NetworkInvetory from it");
+      }
+      return retVal;
+    }
+    #endregion
+    #endregion
+
+    #region form events
+    #region main form events
+    private void frmCityCareNetworkInventory_Load(object sender, EventArgs e)
+    {
+      checkShowOldInventory();
+      ctlCustomerSearch.SearchExec = new SearchDataSourceEntity("Customer");
+      ctlLocationSearch.SearchExec = new SearchDataSourceEntity("Location");
+      txtCustomer.SearchExec = new SearchDataSourceEntity("Customer");
+      txtNewCustomer.SearchExec = new SearchDataSourceEntity("Customer");
+      txtNewLocation.SearchExec = new SearchDataSourceEntity("Location");
+      txtNewCarrier.SearchExec = new SearchDataSourceEntity("Carrier");
+      txtNewVendor.SearchExec = new SearchDataSourceEntity("Payor");
+      txtNewItemID.SearchExec = new SearchDataSourceProductList();
+    }
+    private void txtCustomerSearch_Leave(object sender, EventArgs e)
+    {
+      ctlLocationSearch.Text = string.Empty;
+      txtOrderSearch.Text = string.Empty;
+      if (string.IsNullOrEmpty(ctlCustomerSearch.Text))
+        ((SearchDataSourceEntity)ctlLocationSearch.SearchExec).EntityOwner = string.Empty;
+      else
+      {
+        ((SearchDataSourceEntity)ctlLocationSearch.SearchExec).EntityOwner = ctlCustomerSearch.Text;
+        search();
+      }
+
+    }
+    private void btnSearch_Click(object sender, EventArgs e)
+    {
+      search();
+    }
+    private void txtOrderSearch_Leave(object sender, EventArgs e)
+    {
+      if (!string.IsNullOrEmpty(txtOrderSearch.Text))
+      {
+        ctlCustomerSearch.Text = string.Empty;
+        ctlLocationSearch.Text = string.Empty;
+        search();
+      }
+    }
+    private void ctlLocationSearch_Leave(object sender, EventArgs e)
+    {
+      if (!string.IsNullOrEmpty(ctlLocationSearch.Text))
+      {
+        txtOrderSearch.Text = string.Empty;
+        search();
+      }
+    }
+    private void ckShowOldInventory_CheckedChanged(object sender, EventArgs e)
+    {
+      checkShowOldInventory();
+    }
+
+    #endregion
+    #region old inventory events
+    private void srchCityCareNetworkInventory_RowSelected(object sender, ACG.CommonForms.MaintenanceGridRowSelectedArgs e)
+    {
+      string netinvid = CommonFunctions.CString(e.SelectedRow.Cells["ID"].Value);
+      string custid = CommonFunctions.CString(e.SelectedRow.Cells["Customer"].Value);
+      loadOldNI(netinvid, custid);
+    }
+    private void txtCVendor_Leave(object sender, EventArgs e)
+    {
+      string vendorid = ((PickListEntry)txtVendor.SelectedItem).IDupper;
+      CommonFormFunctions.fillComboBoxList(txtProduct, _dataSource.getOldProductList(vendorid));
+    }
+    private void txtOrder_Leave(object sender, EventArgs e)
+    {
+      // pick up defaults from order data
+      if (!string.IsNullOrEmpty(txtOrder.Text) && txtOrder.Modified)
+        loadByOrder(txtOrder.Text);
+    }
+    private void btnNew_Click(object sender, EventArgs e)
+    {
+      clearOldFields();
+    }
+    private void btnSave_Click(object sender, EventArgs e)
+    {
+      saveOldFields();
+      long id = addToNewDatabase();
+      //int id = _dataSource.getNewNetworkInventoryID(txtNetInvID.Text);
+      loadNewFields(id.ToString());
+      reloadOldGrid();
+      srchNetworkInventory.ReLoad();
+      MessageBox.Show("Record Saved");
+
+    }
+    private void btnDelete_Click(object sender, EventArgs e)
+    {
+      _dataSource.deleteOldNetworkInventory(txtNetInvID.Text);
+      clearOldFields();
+      reloadOldGrid();
+      srchNetworkInventory.ReLoad();
+      MessageBox.Show("Record deleted");
+      
+    }
+    private void txtCustomer_OnSelected(object sender, EventArgs e)
+    {
+      string custid = txtCustomer.Text;
+      if (!string.IsNullOrEmpty(custid))
+      {
+        custid = custid.Substring(1); // strip off the left "2"
+        CommonFormFunctions.fillComboBoxList(txtLocation, _dataSource.getOldLocationList(custid));
+      }
+    }
+    /// <summary>
+    /// If we are editing a record, we reload from the db, cancelling all user input. 
+    /// If we are adding a new record, then clear the fields instead
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void btnCancel_Click(object sender, EventArgs e)
+    {
+      if (!lblNew.Visible && !string.IsNullOrEmpty(txtNetInvID.Text))
+        loadOldFields(txtNetInvID.Text);
+      else
+        clearOldFields();
+    }
+    #endregion
+    #region new inventory events
+    private void srchNetworkInventory_RowSelected(object sender, ACG.CommonForms.MaintenanceGridRowSelectedArgs e)
+    {
+      if (e.SelectedRow != null)
+      {
+        string netinvid = CommonFunctions.CString(e.SelectedRow.Cells["ID"].Value);
+        string oldnetinvid = CommonFunctions.CString(e.SelectedRow.Cells["CityCareNetInvID"].Value);
+        if (DisplayOldInventory && !string.IsNullOrEmpty(oldnetinvid))
+          loadOldFields(oldnetinvid);
+        else 
+          loadNewFields(netinvid);
+      }
+    }
+    private void txtNewCarrier_OnSelected(object sender, EventArgs e)
+    {
+      reloadNewProductCombo();
+    }
+    private void btnNewSave_Click(object sender, EventArgs e)
+    {
+      Save();
+    }
+    private void btnNewNew_Click(object sender, EventArgs e)
+    {
+      clearNewFields();
+    }
+    private void btnNewDelete_Click(object sender, EventArgs e)
+    {
+      _dataSource.deleteNewNetworkInventory(txtNewNetInvID.Text);
+      clearNewFields();
+      srchNetworkInventory.ReLoad();
+      MessageBox.Show("Record deleted");
+    }
+    private void txtNewCustomer_OnSelected(object sender, EventArgs e)
+    {
+      string custid = txtNewCustomer.Text;
+      if (!string.IsNullOrEmpty(custid))
+        ((SearchDataSourceEntity)txtNewLocation.SearchExec).EntityOwner = custid;
+    }
+    private void btnClone_Click(object sender, EventArgs e)
+    {
+      txtNewNetInvID.Text = string.Empty;
+      lblNewNew.Visible = true;
+    }
+    /// <summary>
+    /// If we are editing a record, we reload from the db, cancelling all user input. 
+    /// If we are adding a new record, then clear the fields instead
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void btnNewCancel_Click(object sender, EventArgs e)
+    {
+      if (!lblNewNew.Visible && !string.IsNullOrEmpty(txtNewNetInvID.Text))
+        loadNewFields(txtNewNetInvID.Text);
+      else
+        clearNewFields();
+    }
+    #endregion
+
+
+    #endregion
+
+  }
+}

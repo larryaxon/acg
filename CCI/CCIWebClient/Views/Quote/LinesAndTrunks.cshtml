@@ -1,0 +1,49 @@
+﻿@model CCIWebClient.Models.CustomerInformationModel
+<table id="LinesTrunksTable" class="QuoteTable">
+    <thead>
+        <tr>
+            <th>
+                Qty
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Sales Price
+            </th>
+            <th>
+                Your Cost
+            </th>
+        </tr>
+    </thead>
+    @{
+        for (int i = 0; i < Model.LinesTrunks.Count; i++)
+        {
+             
+        <tr>
+            <td style="display: none">
+                @Html.HiddenFor(model => Model.LinesTrunks[i].ItemId)
+                @Html.HiddenFor(model => Model.LinesTrunks[i].DetailId)
+                @Html.HiddenFor(model => Model.LinesTrunks[i].DealerCost)
+            </td>
+            <td>@Html.TextBoxFor(model => Model.LinesTrunks[i].Quantity)
+            </td>
+            <td>@Model.LinesTrunks[i].Description
+            </td>
+            <td>
+                @Html.DropDownListFor(model => Model.LinesTrunks[i].RetailItemId, Model.LinesTrunks[i].MRCRetailList, new { @class = "phone-dropdown" })
+                $
+                @{if (string.IsNullOrEmpty(Model.LinesTrunks[i].Quantity) || Model.LinesTrunks[i].Variable == "0")
+                  {
+                      Model.LinesTrunks[i].Variable = "";
+                  }                      
+                }
+                @Html.TextBoxFor(model => Model.LinesTrunks[i].Variable, new { @style = "display:none" })
+            </td>
+            <td>
+            @Model.LinesTrunks[i].DealerCost
+            </td>
+        </tr>  
+        }
+    }
+</table>

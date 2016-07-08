@@ -1,0 +1,161 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Data;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+
+using CCI.Common;
+using CCI.Sys.Data;
+
+using TAGBOSS.Common.Model;
+
+namespace CCI.DesktopClient.Common
+{
+  public partial class ctlOpportunities : ctlMaintenanceBase
+  {
+    private const string IBPENTITYTYPE = "Payee";
+    private const string REPENTITYTYPE = "User";
+    private const string colIBP = "Dealer";
+    private const string colREP = "Rep";
+    private const string colCREATEDBY = "CreatedBy";
+    private const string colCREATEDDATETIME = "CreatedDateTime";
+    private const string colOPPORTUNITYID = "OpportunityID";
+    private DataGridViewComboBoxColumn _IBPcell = new DataGridViewComboBoxColumn();
+    private SortedDictionary<string, SearchResult> _IBPlist = null;
+    private DataGridViewComboBoxColumn _repCell = new DataGridViewComboBoxColumn();
+    private SortedDictionary<string, SearchResult> _repList = null;
+    Dictionary<string, string> parameters = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase);
+    public SortedDictionary<string, SearchResult> RepList { get { return _repList; } set { _repList = value; } }
+    public SortedDictionary<string, SearchResult> IBPList { get { return _IBPlist; } set { _IBPlist = value; } }
+    public string Entity { get; set; }
+    public bool IsIBP { get; set; }
+    public ctlOpportunities()
+    {
+      TableName = "Opportunities";
+      IsIBP = false;
+      InitializeComponent();
+      ReadOnlyColumns.Add(colOPPORTUNITYID, null);
+      ReadOnlyColumns.Add(colCREATEDBY, null);
+      ReadOnlyColumns.Add(colCREATEDDATETIME, null);
+      HiddenColumns.Add("Customer", null);
+      ExtendedFieldName = "Note";
+      ExtendedFieldCaptionColumn = "OpportunityName";
+      ShowExtendedField = true;
+    }
+
+    public void Init(string entity)
+    {
+      UniqueIdentifier = colOPPORTUNITYID;
+      if (DefaultValues.ContainsKey(colREP))
+        DefaultValues[colREP] = SecurityContext.User;
+      else
+        DefaultValues.Add(colREP, SecurityContext.User);
+      if (DefaultValues.ContainsKey(colCREATEDBY))
+        DefaultValues[colCREATEDBY] = SecurityContext.User;
+      else
+        DefaultValues.Add(colCREATEDBY, SecurityContext.User);
+      if (DefaultValues.ContainsKey(colCREATEDDATETIME))
+        DefaultValues[colCREATEDDATETIME] = DateTime.Now;
+      else
+        DefaultValues.Add(colCREATEDDATETIME, DateTime.Now);
+      if (!IsIBP)
+      {
+        if (_IBPlist == null || _IBPlist.Count == 0)
+          _IBPlist = _dataSource.SearchEntities(null, IBPENTITYTYPE).SortedBy("legalname");
+        if (_IBPcell.Items.Count == 0)
+        {
+          _IBPcell.DisplayMember = "LegalName";
+          _IBPcell.ValueMember = "EntityID";
+          foreach (KeyValuePair<string, SearchResult> s in _IBPlist)
+            _IBPcell.Items.Add(s.Value);
+        }
+        if (!PickLists.ContainsKey(colIBP))
+          PickLists.Add(colIBP, _IBPcell);
+      }
+      if (_repList == null || _repList.Count == 0)
+        _repList = _dataSource.SearchEntities(null, REPENTITYTYPE).SortedBy("legalname");
+      if (_repCell.Items.Count == 0)
+      {
+        _repCell.DisplayMember = "LegalName";
+        _repCell.ValueMember = "EntityID";
+        foreach (KeyValuePair<string, SearchResult> s in _repList)
+          _repCell.Items.Add(s.Value);
+        if (!PickLists.ContainsKey(colREP))
+          PickLists.Add(colREP, _repCell);
+      }
+      parameters.Clear();
+      Entity = entity;
+      parameters.Add("Entity", entity);
+      load(parameters);
+      if (IsIBP)
+        grdMaintenance.Columns["Dealer"].Visible = false;
+      if (grdMaintenance.Columns.Contains("EstimatedMRC"))
+      {
+        DataGridViewCellStyle style = new DataGridViewCellStyle();
+        style.Format = "c";
+        grdMaintenance.Columns["EstimatedMRC"].DefaultCellStyle = style;
+      }
+    }
+
+    private new void load(Dictionary<string, string> parameters)
+    {
+      this.SuspendLayout();
+      base.load(parameters);
+      foreach (DataGridViewRow row in grdMaintenance.Rows)
+      {
+        string val;
+        DataGridViewComboBoxCell cell;
+        if (!IsIBP)
+        {
+          cell = (DataGridViewComboBoxCell)_IBPcell.Clone();
+          val = CommonFunctions.CString(row.Cells[colIBP].Value);
+          if (!string.IsNullOrEmpty(val))
+            cell.Value = _dataSource.getSearchResultEntity(val);
+          row.Cells[colIBP] = cell;
+        }
+        cell = (DataGridViewComboBoxCell)_repCell.Clone();
+        val = CommonFunctions.CString(row.Cells[colREP].Value);
+        if (!string.IsNullOrEmpty(val))
+          cell.Value = _dataSource.getSearchResultEntity(val);
+        row.Cells[colREP] = cell;
+      }
+      this.ResumeLayout();
+    }
+
+    public new void updateFromDataAdapter(object sender, DataGridViewCellEventArgs e)
+    {
+      // first we prepopulate hidden columns with initial data if this is a new record
+      if (_da.DataSet != null && _da.DataSet.Tables.Count > 0 && e.RowIndex >= 0 && e.RowIndex < _da.DataSet.Tables[0].Rows.Count)
+      {
+        DataTable dt = _da.DataSet.Tables[0];
+        DataRow row = dt.Rows[e.RowIndex];
+        if (row.RowState != DataRowState.Unchanged)
+        {
+          switch (row.RowState)
+          {
+            case DataRowState.Added:
+              row["Customer"] = Entity;
+              break;
+          }
+          base.updateFromDataAdapter(sender, e);
+        }
+      }
+
+    }
+
+    public new void grdMaintenance_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
+    {
+      // if we delete an opportunity, we need to delete the line items
+      for (int i = e.RowIndex; i < e.RowIndex + e.RowIndex; i++)  // for each deleted row
+      {
+        int opportunityID = CommonFunctions.CInt(grdMaintenance.Rows[i].Cells[colOPPORTUNITYID].Value);
+        _dataSource.deleteOpportunityLineItems(opportunityID);
+      }
+      base.grdMaintenance_RowsRemoved(sender, e);
+    }
+
+  }
+}

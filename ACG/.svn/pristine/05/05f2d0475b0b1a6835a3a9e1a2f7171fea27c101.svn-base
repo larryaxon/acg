@@ -1,0 +1,201 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A9E993B0-A25A-4F36-9339-1D7F6E6F5ADA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ACG</RootNamespace>
+    <AssemblyName>ACG</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugWin32|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\DebugWin32\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugWin32|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\DebugWin32\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common\ACGCommands.cs" />
+    <Compile Include="Common\ACGForm.cs" />
+    <Compile Include="Common\ACGFormItem.cs" />
+    <Compile Include="Common\ACGSerializer.cs" />
+    <Compile Include="Common\ACGTable.cs" />
+    <Compile Include="Common\Data\SearchDataSourceCCIProducts.cs" />
+    <Compile Include="Common\Data\SearchDataSourceCISMaterials.cs" />
+    <Compile Include="Common\Data\SearchDataSourceCISEmployees.cs" />
+    <Compile Include="Common\Data\DataSourceDataSources.cs" />
+    <Compile Include="Common\Data\DataSourceGenericMaintenanceSetup.cs" />
+    <Compile Include="Common\Data\SearchDataSourceCodeMaster.cs" />
+    <Compile Include="Common\Data\SearchDataSourceCISCustomers.cs" />
+    <Compile Include="Common\Data\SearchDataSourceTableList.cs" />
+    <Compile Include="Common\Data\MaintenanceDataSource.cs" />
+    <Compile Include="Common\Data\SearchDataSourceDataSources.cs" />
+    <Compile Include="Common\Data\SearchDataSourceGrid.cs" />
+    <Compile Include="Common\Data\SearchDataSourceNamedSearch.cs" />
+    <Compile Include="Common\Data\SearchDataSourceScreen.cs" />
+    <Compile Include="Common\ExceptionMessage.cs" />
+    <Compile Include="Common\CommonData.cs" />
+    <Compile Include="Common\CommonFunctions.cs" />
+    <Compile Include="Common\Data\DataAccessBase.cs" />
+    <Compile Include="Common\Data\DataAdapterContainer.cs" />
+    <Compile Include="Common\Data\SecurityDB.cs" />
+    <Compile Include="Common\Data\SQLConnectionFactory.cs" />
+    <Compile Include="Common\EncryptDecryptString.cs" />
+    <Compile Include="Common\FormTypes.cs" />
+    <Compile Include="Common\ISecurityContext.cs" />
+    <Compile Include="Common\ISortedItemBase.cs" />
+    <Compile Include="Common\Logging\Log.cs" />
+    <Compile Include="Common\Logging\LogFactory.cs" />
+    <Compile Include="Common\Mailer.cs" />
+    <Compile Include="Common\Parameters.cs" />
+    <Compile Include="Common\PickListEntries.cs" />
+    <Compile Include="Common\PickListEntry.cs" />
+    <Compile Include="Common\PickListEnumerator.cs" />
+    <Compile Include="Common\PickListEqualityComparer.cs" />
+    <Compile Include="Common\ISearchDataSource.cs" />
+    <Compile Include="Common\SearchResult.cs" />
+    <Compile Include="Common\SearchResultCollection.cs" />
+    <Compile Include="Common\SearchResutEqualityComparer.cs" />
+    <Compile Include="Common\Security.cs" />
+    <Compile Include="Common\SecurityContext.cs" />
+    <Compile Include="Common\SecurityEngine\LoadSecurity.cs" />
+    <Compile Include="Common\SecurityEngine\SecurityFactory.cs" />
+    <Compile Include="Common\SecurityEngine\SecurityGroups.cs" />
+    <Compile Include="Common\ServerRequest.cs" />
+    <Compile Include="Common\ServerResponse.cs" />
+    <Compile Include="Common\SortedCollectionBase.cs" />
+    <Compile Include="Common\SortedCollectionEnumerator.cs" />
+    <Compile Include="Common\SortedHashTable.cs" />
+    <Compile Include="Common\SortedItemBase.cs" />
+    <Compile Include="Common\UserInfo.cs" />
+    <Compile Include="Common\UserOption.cs" />
+    <Compile Include="Common\UserOptionCollection.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

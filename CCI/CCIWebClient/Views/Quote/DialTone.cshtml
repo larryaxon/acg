@@ -1,0 +1,60 @@
+﻿@model CCIWebClient.Models.CustomerInformationModel
+<table id="DialToneTable" class="QuoteTable">
+    <thead>
+        <tr>
+            <th>
+                Qty
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Sales Price
+            </th>
+            <th>
+                Your Cost
+            </th>
+        </tr>
+    </thead>
+    @{
+        for (int i = 0; i < Model.DialTone.Count; i++)
+        {
+            
+        <tr>
+            <td style="display: none">
+                @Html.HiddenFor(model => Model.DialTone[i].ItemId)
+                @Html.HiddenFor(model => Model.DialTone[i].DetailId)
+                @Html.HiddenFor(model => Model.DialTone[i].DealerCost)
+            </td>
+            <td>
+                @Html.TextBoxFor(model => Model.DialTone[i].Quantity)
+            </td>
+            <td>
+                @Model.DialTone[i].Description
+            </td>
+            @*<td class="Description2">
+               @{ if (Model.DialTone[i].Description == "")
+                  {
+                   @Html.TextBoxFor(model => Model.DialTone[i].Description)}
+                  else { 
+                    @Model.DialTone[i].Description
+                  }
+            }   
+            </td>*@
+            <td>
+                @Html.DropDownListFor(model => Model.DialTone[i].RetailItemId, Model.DialTone[i].MRCRetailList, new {@class = "phone-dropdown" })
+                $
+            </td>
+            <td>
+                @Model.DialTone[i].DealerCost
+            </td>
+            @*<td>
+                @Html.TextBoxFor(model => Model.DialTone[i].Monthly)
+            </td>
+            <td>
+                @Html.TextBoxFor(model => Model.DialTone[i].Install)
+            </td>*@
+        </tr>
+        }
+    }
+</table>

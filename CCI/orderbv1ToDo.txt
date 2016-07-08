@@ -1,0 +1,3 @@
+**add search to groups
+**click-select member pane to fill edit pane
+change titles so they match (groups s/b Contacts)

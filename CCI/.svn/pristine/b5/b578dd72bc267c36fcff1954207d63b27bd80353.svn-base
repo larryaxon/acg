@@ -1,0 +1,98 @@
+﻿namespace CCI.DesktopClient.Screens
+{
+  partial class frmDealerPricing
+  {
+    /// <summary>
+    /// Required designer variable.
+    /// </summary>
+    private System.ComponentModel.IContainer components = null;
+
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
+    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+    protected override void Dispose(bool disposing)
+    {
+      if (disposing && (components != null))
+      {
+        components.Dispose();
+      }
+      base.Dispose(disposing);
+    }
+
+    #region Windows Form Designer generated code
+
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
+    private void InitializeComponent()
+    {
+      this.ctlDealerPricingMaintenance = new CCI.DesktopClient.Common.ctlMaintenanceBase();
+      this.label1 = new System.Windows.Forms.Label();
+      this.cboLevel = new System.Windows.Forms.ComboBox();
+      this.SuspendLayout();
+      // 
+      // ctlDealerPricingMaintenance
+      // 
+      this.ctlDealerPricingMaintenance.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.ctlDealerPricingMaintenance.ExtendedFieldCaptionColumn = null;
+      this.ctlDealerPricingMaintenance.ExtendedFieldName = null;
+      this.ctlDealerPricingMaintenance.FireRowSelectedOnSearch = true;
+      this.ctlDealerPricingMaintenance.Location = new System.Drawing.Point(3, 33);
+      this.ctlDealerPricingMaintenance.Name = "ctlDealerPricingMaintenance";
+      this.ctlDealerPricingMaintenance.NoteLabel = "Note for";
+      this.ctlDealerPricingMaintenance.ReadOnly = false;
+      this.ctlDealerPricingMaintenance.SecurityContext = null;
+      this.ctlDealerPricingMaintenance.ShowExtendedField = false;
+      this.ctlDealerPricingMaintenance.Size = new System.Drawing.Size(1173, 656);
+      this.ctlDealerPricingMaintenance.TabIndex = 0;
+      this.ctlDealerPricingMaintenance.UniqueIdentifier = null;
+      // 
+      // label1
+      // 
+      this.label1.AutoSize = true;
+      this.label1.Location = new System.Drawing.Point(5, 10);
+      this.label1.Name = "label1";
+      this.label1.Size = new System.Drawing.Size(33, 13);
+      this.label1.TabIndex = 1;
+      this.label1.Text = "Level";
+      // 
+      // cboLevel
+      // 
+      this.cboLevel.FormattingEnabled = true;
+      this.cboLevel.Items.AddRange(new object[] {
+            "Bronze",
+            "Silver",
+            "Gold"});
+      this.cboLevel.Location = new System.Drawing.Point(44, 2);
+      this.cboLevel.Name = "cboLevel";
+      this.cboLevel.Size = new System.Drawing.Size(121, 21);
+      this.cboLevel.TabIndex = 2;
+      this.cboLevel.SelectedIndexChanged += new System.EventHandler(this.cboLevel_SelectedIndexChanged);
+      // 
+      // frmDealerPricing
+      // 
+      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.ClientSize = new System.Drawing.Size(1179, 691);
+      this.Controls.Add(this.cboLevel);
+      this.Controls.Add(this.label1);
+      this.Controls.Add(this.ctlDealerPricingMaintenance);
+      this.Name = "frmDealerPricing";
+      this.Text = "frmDealerPricing";
+      this.Load += new System.EventHandler(this.frmDealerPricing_Load);
+      this.ResumeLayout(false);
+      this.PerformLayout();
+
+    }
+
+    #endregion
+
+    private Common.ctlMaintenanceBase ctlDealerPricingMaintenance;
+    private System.Windows.Forms.Label label1;
+    private System.Windows.Forms.ComboBox cboLevel;
+  }
+}

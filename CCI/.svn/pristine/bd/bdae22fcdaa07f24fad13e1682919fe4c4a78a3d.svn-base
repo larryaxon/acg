@@ -1,0 +1,297 @@
+﻿namespace CCI.DesktopClient.Screens
+{
+  partial class frmAnalysisReport
+  {
+    /// <summary>
+    /// Required designer variable.
+    /// </summary>
+    private System.ComponentModel.IContainer components = null;
+
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
+    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+    protected override void Dispose(bool disposing)
+    {
+      if (disposing && (components != null))
+      {
+        components.Dispose();
+      }
+      base.Dispose(disposing);
+    }
+
+    #region Windows Form Designer generated code
+
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
+    private void InitializeComponent()
+    {
+      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmAnalysisReport));
+      this.btnGroups = new System.Windows.Forms.Button();
+      this.ckFilterByIDList = new System.Windows.Forms.CheckBox();
+      this.splitMain = new System.Windows.Forms.SplitContainer();
+      this.splitTop = new System.Windows.Forms.SplitContainer();
+      this.topGrid = new CCI.DesktopClient.Common.ctlSearchGrid();
+      this.middleGrid = new CCI.DesktopClient.Common.ctlSearchGrid();
+      this.bottomGrid = new CCI.DesktopClient.Common.ctlSearchGrid();
+      this.label1 = new System.Windows.Forms.Label();
+      this.cboTopGrid = new System.Windows.Forms.ComboBox();
+      this.cboMiddleGrid = new System.Windows.Forms.ComboBox();
+      this.cboBottomGrid = new System.Windows.Forms.ComboBox();
+      this.btnClear = new System.Windows.Forms.Button();
+      this.srchNamedSearch = new ACG.CommonForms.ctlSearch();
+      this.splitMain.Panel1.SuspendLayout();
+      this.splitMain.Panel2.SuspendLayout();
+      this.splitMain.SuspendLayout();
+      this.splitTop.Panel1.SuspendLayout();
+      this.splitTop.Panel2.SuspendLayout();
+      this.splitTop.SuspendLayout();
+      this.SuspendLayout();
+      // 
+      // btnGroups
+      // 
+      this.btnGroups.Location = new System.Drawing.Point(238, 1);
+      this.btnGroups.Name = "btnGroups";
+      this.btnGroups.Size = new System.Drawing.Size(89, 20);
+      this.btnGroups.TabIndex = 2;
+      this.btnGroups.Text = "Create Group";
+      this.btnGroups.UseVisualStyleBackColor = true;
+      this.btnGroups.Click += new System.EventHandler(this.btnGroups_Click);
+      // 
+      // ckFilterByIDList
+      // 
+      this.ckFilterByIDList.AutoSize = true;
+      this.ckFilterByIDList.Checked = true;
+      this.ckFilterByIDList.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.ckFilterByIDList.Location = new System.Drawing.Point(10, 2);
+      this.ckFilterByIDList.Name = "ckFilterByIDList";
+      this.ckFilterByIDList.Size = new System.Drawing.Size(223, 17);
+      this.ckFilterByIDList.TabIndex = 1;
+      this.ckFilterByIDList.Text = "Filter bottom grids by upper grid customers";
+      this.ckFilterByIDList.UseVisualStyleBackColor = true;
+      this.ckFilterByIDList.CheckedChanged += new System.EventHandler(this.ckFilterByIDList_CheckedChanged);
+      // 
+      // splitMain
+      // 
+      this.splitMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.splitMain.Location = new System.Drawing.Point(2, 27);
+      this.splitMain.Name = "splitMain";
+      this.splitMain.Orientation = System.Windows.Forms.Orientation.Horizontal;
+      // 
+      // splitMain.Panel1
+      // 
+      this.splitMain.Panel1.Controls.Add(this.splitTop);
+      // 
+      // splitMain.Panel2
+      // 
+      this.splitMain.Panel2.Controls.Add(this.bottomGrid);
+      this.splitMain.Panel2Collapsed = true;
+      this.splitMain.Size = new System.Drawing.Size(1331, 708);
+      this.splitMain.SplitterDistance = 443;
+      this.splitMain.TabIndex = 0;
+      // 
+      // splitTop
+      // 
+      this.splitTop.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.splitTop.Location = new System.Drawing.Point(0, 0);
+      this.splitTop.Name = "splitTop";
+      this.splitTop.Orientation = System.Windows.Forms.Orientation.Horizontal;
+      // 
+      // splitTop.Panel1
+      // 
+      this.splitTop.Panel1.Controls.Add(this.topGrid);
+      // 
+      // splitTop.Panel2
+      // 
+      this.splitTop.Panel2.Controls.Add(this.middleGrid);
+      this.splitTop.Panel2Collapsed = true;
+      this.splitTop.Size = new System.Drawing.Size(1331, 708);
+      this.splitTop.SplitterDistance = 431;
+      this.splitTop.TabIndex = 0;
+      // 
+      // topGrid
+      // 
+      this.topGrid.AllowSortByColumn = true;
+      this.topGrid.AutoRefreshWhenFieldChecked = true;
+      this.topGrid.CanChangeDisplayFields = true;
+      this.topGrid.CanChangeDisplaySearchCriteria = true;
+      this.topGrid.ColumnName = "CustomerName";
+      this.topGrid.DisplayFields = false;
+      this.topGrid.DisplaySearchCriteria = true;
+      this.topGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.topGrid.FieldsDefaultIsChecked = true;
+      this.topGrid.ForceReloadSearchColumns = false;
+      this.topGrid.IncludeGroupAsCriteria = false;
+      this.topGrid.InnerWhere = "";
+      this.topGrid.Location = new System.Drawing.Point(0, 0);
+      this.topGrid.Name = "topGrid";
+      this.topGrid.NameType = CCI.Common.CommonData.UnmatchedNameTypes.Customer;
+      this.topGrid.Size = new System.Drawing.Size(1331, 708);
+      this.topGrid.TabIndex = 0;
+      this.topGrid.Title = "Search (0 Records Found)";
+      this.topGrid.UniqueIdentifier = "ID";
+      this.topGrid.UseNamedSearches = false;
+      this.topGrid.SearchPressed += new CCI.DesktopClient.Common.ctlSearchGrid.SearchPressedHandler(this.topGrid_SearchPressed);
+      // 
+      // middleGrid
+      // 
+      this.middleGrid.AllowSortByColumn = true;
+      this.middleGrid.AutoRefreshWhenFieldChecked = true;
+      this.middleGrid.CanChangeDisplayFields = true;
+      this.middleGrid.CanChangeDisplaySearchCriteria = true;
+      this.middleGrid.ColumnName = "CustomerName";
+      this.middleGrid.DisplayFields = false;
+      this.middleGrid.DisplaySearchCriteria = true;
+      this.middleGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.middleGrid.FieldsDefaultIsChecked = true;
+      this.middleGrid.ForceReloadSearchColumns = false;
+      this.middleGrid.IncludeGroupAsCriteria = false;
+      this.middleGrid.InnerWhere = "";
+      this.middleGrid.Location = new System.Drawing.Point(0, 0);
+      this.middleGrid.Name = "middleGrid";
+      this.middleGrid.NameType = CCI.Common.CommonData.UnmatchedNameTypes.Customer;
+      this.middleGrid.Size = new System.Drawing.Size(150, 46);
+      this.middleGrid.TabIndex = 0;
+      this.middleGrid.Title = "Search (0 Records Found)";
+      this.middleGrid.UniqueIdentifier = "ID";
+      this.middleGrid.UseNamedSearches = false;
+      this.middleGrid.SearchPressed += new CCI.DesktopClient.Common.ctlSearchGrid.SearchPressedHandler(this.middleGrid_SearchPressed);
+      // 
+      // bottomGrid
+      // 
+      this.bottomGrid.AllowSortByColumn = true;
+      this.bottomGrid.AutoRefreshWhenFieldChecked = true;
+      this.bottomGrid.CanChangeDisplayFields = true;
+      this.bottomGrid.CanChangeDisplaySearchCriteria = true;
+      this.bottomGrid.ColumnName = "CustomerName";
+      this.bottomGrid.DisplayFields = false;
+      this.bottomGrid.DisplaySearchCriteria = true;
+      this.bottomGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.bottomGrid.FieldsDefaultIsChecked = true;
+      this.bottomGrid.ForceReloadSearchColumns = false;
+      this.bottomGrid.IncludeGroupAsCriteria = false;
+      this.bottomGrid.InnerWhere = "";
+      this.bottomGrid.Location = new System.Drawing.Point(0, 0);
+      this.bottomGrid.Name = "bottomGrid";
+      this.bottomGrid.NameType = CCI.Common.CommonData.UnmatchedNameTypes.Customer;
+
+      this.bottomGrid.Size = new System.Drawing.Size(150, 46);
+      this.bottomGrid.TabIndex = 0;
+      this.bottomGrid.Title = "Search (0 Records Found)";
+      this.bottomGrid.UniqueIdentifier = "ID";
+      this.bottomGrid.UseNamedSearches = false;
+      // 
+      // label1
+      // 
+      this.label1.AutoSize = true;
+      this.label1.Location = new System.Drawing.Point(333, 3);
+      this.label1.Name = "label1";
+      this.label1.Size = new System.Drawing.Size(122, 13);
+      this.label1.TabIndex = 3;
+      this.label1.Text = "Grid Top/Middle/Bottom";
+      // 
+      // cboTopGrid
+      // 
+      this.cboTopGrid.FormattingEnabled = true;
+      this.cboTopGrid.Location = new System.Drawing.Point(461, 0);
+      this.cboTopGrid.Name = "cboTopGrid";
+      this.cboTopGrid.Size = new System.Drawing.Size(198, 21);
+      this.cboTopGrid.TabIndex = 4;
+      this.cboTopGrid.SelectedIndexChanged += new System.EventHandler(this.cboTopGrid_SelectedIndexChanged);
+      // 
+      // cboMiddleGrid
+      // 
+      this.cboMiddleGrid.FormattingEnabled = true;
+      this.cboMiddleGrid.Location = new System.Drawing.Point(670, 0);
+      this.cboMiddleGrid.Name = "cboMiddleGrid";
+      this.cboMiddleGrid.Size = new System.Drawing.Size(198, 21);
+      this.cboMiddleGrid.TabIndex = 5;
+      this.cboMiddleGrid.SelectedIndexChanged += new System.EventHandler(this.cboMiddleGrid_SelectedIndexChanged);
+      // 
+      // cboBottomGrid
+      // 
+      this.cboBottomGrid.FormattingEnabled = true;
+      this.cboBottomGrid.Location = new System.Drawing.Point(879, 0);
+      this.cboBottomGrid.Name = "cboBottomGrid";
+      this.cboBottomGrid.Size = new System.Drawing.Size(198, 21);
+      this.cboBottomGrid.TabIndex = 6;
+      this.cboBottomGrid.SelectedIndexChanged += new System.EventHandler(this.cboBottomGrid_SelectedIndexChanged);
+      // 
+      // btnClear
+      // 
+      this.btnClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnClear.Location = new System.Drawing.Point(1286, 1);
+      this.btnClear.Name = "btnClear";
+      this.btnClear.Size = new System.Drawing.Size(45, 20);
+      this.btnClear.TabIndex = 7;
+      this.btnClear.Text = " Clear";
+      this.btnClear.UseVisualStyleBackColor = true;
+      this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
+      // 
+      // srchNamedSearch
+      // 
+      this.srchNamedSearch.AddNewMode = false;
+      this.srchNamedSearch.AutoSelectWhenMatch = false;
+      this.srchNamedSearch.ClearSearchWhenComplete = false;
+      this.srchNamedSearch.Collapsed = true;
+      this.srchNamedSearch.CreatedNewItem = false;
+      this.srchNamedSearch.DisplayOnlyID = false;
+      this.srchNamedSearch.ID = "";
+      this.srchNamedSearch.Location = new System.Drawing.Point(1081, 2);
+      this.srchNamedSearch.MaxHeight = 228;
+      this.srchNamedSearch.Name = "srchNamedSearch";
+      this.srchNamedSearch.ShowCustomerNameWhenSet = true;
+      this.srchNamedSearch.ShowTermedCheckBox = false;
+      this.srchNamedSearch.Size = new System.Drawing.Size(199, 19);
+      this.srchNamedSearch.TabIndex = 8;
+      this.srchNamedSearch.Visible = false;
+      // 
+      // frmAnalysisReport
+      // 
+      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.ClientSize = new System.Drawing.Size(1331, 735);
+      this.Controls.Add(this.srchNamedSearch);
+      this.Controls.Add(this.btnClear);
+      this.Controls.Add(this.cboBottomGrid);
+      this.Controls.Add(this.cboMiddleGrid);
+      this.Controls.Add(this.cboTopGrid);
+      this.Controls.Add(this.label1);
+      this.Controls.Add(this.btnGroups);
+      this.Controls.Add(this.ckFilterByIDList);
+      this.Controls.Add(this.splitMain);
+      this.Name = "frmAnalysisReport";
+      this.Text = "frmAnalysisReport";
+      this.Load += new System.EventHandler(this.frmAnalysisReport_Load);
+      this.splitMain.Panel1.ResumeLayout(false);
+      this.splitMain.Panel2.ResumeLayout(false);
+      this.splitMain.ResumeLayout(false);
+      this.splitTop.Panel1.ResumeLayout(false);
+      this.splitTop.Panel2.ResumeLayout(false);
+      this.splitTop.ResumeLayout(false);
+      this.ResumeLayout(false);
+      this.PerformLayout();
+
+    }
+
+    #endregion
+
+    private System.Windows.Forms.SplitContainer splitMain;
+    private System.Windows.Forms.SplitContainer splitTop;
+    private Common.ctlSearchGrid topGrid;
+    private Common.ctlSearchGrid middleGrid;
+    private Common.ctlSearchGrid bottomGrid;
+    private System.Windows.Forms.CheckBox ckFilterByIDList;
+    private System.Windows.Forms.Button btnGroups;
+    private System.Windows.Forms.Label label1;
+    private System.Windows.Forms.ComboBox cboTopGrid;
+    private System.Windows.Forms.ComboBox cboMiddleGrid;
+    private System.Windows.Forms.ComboBox cboBottomGrid;
+    private System.Windows.Forms.Button btnClear;
+    private ACG.CommonForms.ctlSearch srchNamedSearch;
+  }
+}

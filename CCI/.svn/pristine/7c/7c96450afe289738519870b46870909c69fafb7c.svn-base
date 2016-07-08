@@ -1,0 +1,39 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+<script src="@Url.Content("~/Scripts/Menu/HoverIntent.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Menu/jquery.dropdown.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Menu/menu.js")" type="text/javascript"></script>
+<link href="@Url.Content("~/Content/Menu/Menu.css")" rel="stylesheet" type="text/css" />
+<ul class="dropdown">
+    <li>@Html.ActionLink("Timekeeping", "index", "TimeEntry")
+    </li>
+  @*  <li><a href="#">Review Time</a> </li>*@
+    <li><a href="#">Client/Matter</a>
+        <ul class="sub_menu">
+            @*  <li>@Html.ActionLink("Clients/Matters", "index", "Matters")</li> <!-- This SubMenu link was pointing to wrong page --> *@
+            @* <li>@Html.ActionLink("Clients/Matters", "index", "ClientsMatters")</li>*@ @*  <li>@Html.ActionLink("Lookup", "index", "Lookup")</li>*@
+            <li>@Html.ActionLink("Client Individual", "index", "AddClientIndividual")</li>
+            <li>@Html.ActionLink("Client Corp/Org", "index", "AddClientCorpOrg")</li>
+            @* <li><a href="#">Client List</a></li>*@
+            <li>@Html.ActionLink("Matter", "index", "AddMatter")</li>
+           @* <li>@Html.ActionLink("TimeOptions", "index", "TimeOptions")</li>*@ @*This is a temporary testing link*@
+            @* <li><a href="#">Edit Matter</a></li>*@
+        </ul>
+    </li>
+  @*  <li><a href="#">Reports</a> <ul class="sub_menu">
+            <li>@Html.ActionLink("Payments", "index", "Payments")</li>
+            <li>@Html.ActionLink("Task Activation", "index", "TaskActivation")</li>
+        </ul> </li>
+    <li><a href="#">Delegates</a>   <ul class="sub_menu">
+            <li>@Html.ActionLink("Delegates", "index", "Delegates")</li>
+        </ul> </li>*@
+@*    <li><a href="#">Account</a>
+        <ul class="sub_menu">
+            <li>@Html.ActionLink("Account", "index", "AddAccount")</li>
+        </ul>
+    </li>*@
+    <li>@Html.ActionLink("Account", "index", "AddAccount")
+    <li>@Html.ActionLink("Log Out", "index", "Login")
+    </li>
+</ul>

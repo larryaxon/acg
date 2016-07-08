@@ -1,0 +1,195 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Text;
+
+using CCI.Common;
+using CCI.Sys.SecurityEngine;
+
+namespace CCI.Sys.Data
+{
+  public partial class DataSource : DataAccessBase
+  {
+    public const string colRETAILUSOC = "RetailItemID";
+    public const string colWHOLESALEUSOC = "ItemID";
+    public const string colRETAILMRC = "MRCRetail";
+    public CCITable getOrderScreen(string user, bool recommendedOnly, string orderID, string screenSection)
+    {
+      string dealer = _ea.EntityOwner(user);
+      //string dealerlevel;
+      string dealerLevel = getDealerLevel(dealer, DateTime.Today, "Bronze");
+      //string dealerLevel = CommonFunctions.CString(getEntityValue(dealer, "DealerLevel"));
+      string whereClause = string.Empty;
+      /*
+       * We optionally only get "IsRecommended" screen items. However, if we choose this option, we optionally may supply the order id. 
+       * If we have this, we also make sure and get records from the order, even if their IsRecommended is not trur
+       * 
+       * Note we also need to add placeholder columns for all of the manual entry columns:
+       * 	CarrierDescription	ItemDescription	VendorDescription	PhoneMakeModel	VendorEmail	VendorPhone	Description	ConnectionType	ContractExpirationDate	CarrierEmail	CarrierPhone	ContactName										
+       */
+      if (recommendedOnly)
+      {
+        whereClause = "where IsNULL(s.IsRecommended, 0) = 1";
+        if (!string.IsNullOrEmpty(orderID)) // and if we supplied an order
+          whereClause = string.Format("{0} or m.ItemId in (select distinct itemid from OrderDetail where Orderid = {1})", whereClause, orderID);
+      }
+      if (!string.IsNullOrEmpty(screenSection))
+        whereClause += string.Format(" {0} ScreenSection = '{1}' ", string.IsNullOrEmpty(whereClause) ? "WHERE" : "AND", screenSection);
+      //whereClause += string.Format(" {0} u.USOCRetail is not null ", string.IsNullOrEmpty(whereClause) ? "WHERE" : "AND");
+      CCITable result = new CCITable();
+      // this will return a list of items with dealer costs and, if present, different rows for each customer price per item
+      // note the manual entry placeholder columns
+      string sql =
+@" select s.Screen, s.ScreenSection, s.Sequence, '' Quantity, m.ItemID, m.ExternalName Description, s.ImagePath, 
+   isnull(u.USOCRetail,s.ItemID + '-' + convert(nvarchar(10),s.sequence)) RetailItemID, 
+   case 
+			when coalesce(u.Price, case when IsNull(s.useMRC, 1) = 1 then p.MRC else p.NRC end) = '-1' then '-1' 
+			else '$' + Convert(varchar(12), Convert(money, coalesce(u.Price, case when IsNull(s.useMRC, 1) = 1 then p.MRC else p.NRC end), 1)) 
+	 end MRCRetail, 
+	'$' + Convert(varchar(12), dc.DealerCost, 1) DealerCost,  
+   '{3}' as OrderId, -1 as DetailID,
+   null CarrierDescription, null ItemDescription, null VendorDescription, null PhoneMakeModel, null VendorEmail, null VendorPhone, null Description, null ConnectionType, 
+   null ContractExpirationDate, null CarrierEmail, null CarrierPhone, null ContactName, 0 RetailMRC, 0 isVariable, 0 RetailNRC, 0 WholesaleNRC, IsNull(s.useMRC, 1) useMRC
+from ScreenDefinition s 
+inner join MasterProductList m on s.ItemID = m.ItemID
+inner join ProductList p on s.ItemID = p.ItemId and p.Carrier = 'CityHosted'
+left join (Select RetailUSOC, RetailUSOC + '-' + Convert(nvarchar(10), Price) USOCRetail, Price  from hostedusocretailpricing) u on s.ItemID = u.RetailUSOC
+inner join (select d1.ItemID, case when d2.ItemID is null then d1.DealerCost when d2.DealerCost < d1.DealerCost then d2.DealerCost else d1.DealerCost end DealerCost 
+            from hosteddealercosts d1 
+            left join hosteddealercosts d2 on d1.ItemID = d2.ItemID and d2.dealer = '{0}' and getdate() between isnull(d2.startdate,'1/1/1900') and isnull(d2.enddate, '12/31/2100')
+            where d1.Dealer = '{1}' /*and getdate() between isnull(d1.startdate, '1/1/1900') and isnull(d1.enddate, '12/31/2100')*/) dc on dc.ItemID = m.ItemID 
+{2}
+ order by s.Screen, s.ScreenSection, s.Sequence, m.ItemID, u.Price Desc";
+
+//CAC- start/end dates not working...
+//@" select s.Screen, s.ScreenSection, s.Sequence, '' Quantity, m.ItemID, m.ExternalName Description, s.ImagePath, 
+//   isnull(u.USOCRetail,s.ItemID + '-' + convert(nvarchar(10),s.sequence)) RetailItemID, 
+//   case 
+//			when coalesce(u.Price, case when IsNull(s.useMRC, 1) = 1 then p.MRC else p.NRC end) = '-1' then '-1' 
+//			else '$' + Convert(varchar(12), Convert(money, coalesce(u.Price, case when IsNull(s.useMRC, 1) = 1 then p.MRC else p.NRC end), 1)) 
+//	 end MRCRetail, 
+//	'$' + Convert(varchar(12), dc.DealerCost, 1) DealerCost,  
+//   '{3}' as OrderId, -1 as DetailID,
+//   null CarrierDescription, null ItemDescription, null VendorDescription, null PhoneMakeModel, null VendorEmail, null VendorPhone, null Description, null ConnectionType, 
+//   null ContractExpirationDate, null CarrierEmail, null CarrierPhone, null ContactName, 0 RetailMRC, 0 isVariable, 0 RetailNRC, 0 WholesaleNRC, IsNull(s.useMRC, 1) useMRC
+//from ScreenDefinition s 
+//inner join MasterProductList m on s.ItemID = m.ItemID
+//inner join ProductList p on s.ItemID = p.ItemId and p.Carrier = 'CityHosted'
+//left join (Select RetailUSOC, RetailUSOC + '-' + Convert(nvarchar(10), Price) USOCRetail, Price  from hostedusocretailpricing) u on s.ItemID = u.RetailUSOC
+//inner join (select d1.ItemID, case when d2.ItemID is null then d1.DealerCost when d2.DealerCost < d1.DealerCost then d2.DealerCost else d1.DealerCost end DealerCost 
+//            from hosteddealercosts d1 
+//            left join hosteddealercosts d2 on d1.ItemID = d2.ItemID and d2.dealer = '{0}'  and getdate() between d2.startdate and isnull(d2.enddate, '12/31/2100')
+//            where d1.Dealer = '{1}' and getdate() between d1.startdate and isnull(d1.enddate, '12/31/2100')) dc on dc.ItemID = m.ItemID 
+//{2}
+// order by s.Screen, s.ScreenSection, s.Sequence, m.ItemID, u.Price Desc";
+
+      
+//        @"select s.Screen, s.ScreenSection, s.Sequence, '' Quantity, m.ItemID, m.Name Description, s.ImagePath, u.USOCRetail RetailItemID, 
+//          case when u.MRCRetail = '-1' then '-1' else '$' + Convert(varchar(12), Convert(money, u.MRCRetail, 1)) end MRCRetail, '$' + Convert(varchar(12), dc.DealerCost, 1) DealerCost, 
+//          '{3}' as OrderId, -1 as DetailID,
+//          null CarrierDescription, null ItemDescription, null VendorDescription, null PhoneMakeModel, null VendorEmail, null VendorPhone, null Description, null ConnectionType, 
+//          null ContractExpirationDate, null CarrierEmail, null CarrierPhone, null ContactName, 0 RetailMRC, 0 isVariable, 0 RetailNRC, 0 WholesaleNRC		
+//          from ScreenDefinition s 
+//          inner join MasterProductList m on s.ItemID = m.ItemID
+//          inner join vw_CityHostedUSOCs u on s.ItemID = u.USOCWholesale
+//          inner join (select d1.ItemID, case when d2.ItemID is null then d1.DealerCost when d2.DealerCost < d1.DealerCost then d2.DealerCost else d1.DealerCost end DealerCost 
+//            from hosteddealercosts d1 
+//            left join hosteddealercosts d2 on d1.ItemID = d2.ItemID and d2.dealer = '{0}'
+//            where d1.Dealer = '{1}') dc on dc.ItemID = m.ItemID {2}
+//          order by s.Screen, s.ScreenSection, s.Sequence, m.ItemID, u.MRCRetail";
+      sql = string.Format(sql, dealer, dealerLevel, whereClause, orderID);
+      DataSet ds = getDataFromSQL(sql);
+      if (ds != null)
+      {
+
+        if (ds != null && ds.Tables.Count > 0)
+        {
+          string lastrow = string.Empty;
+          string thisrow = string.Empty;
+          DataTable dt = ds.Tables[0];
+          int colCount = dt.Columns.Count;
+          for (int iCol = 0; iCol < colCount; iCol++)
+          {
+            string colName = dt.Columns[iCol].ColumnName.ToLower();
+            result.AddColumn(colName);
+            result.setDataType(colName, dt.Columns[iCol].DataType.Name.ToString().ToLower());
+          }
+
+          object[] oColValues = new object[colCount];
+          object[] oLastColValues = new object[colCount];
+          int realRow = 0;
+          if (ds.Tables[0].Rows.Count > 0)
+          {
+            lastrow = string.Empty;
+            PickListEntries pickList = new PickListEntries();
+            pickList.SortedByAscending = false; // sort the picklist DESC
+            int nbrKeyCols = 3;
+            for (int iRow = 0; iRow < ds.Tables[0].Rows.Count; iRow++)
+            {
+              lastrow = thisrow;
+              thisrow = string.Empty;
+              DataRow dr = ds.Tables[0].Rows[iRow];
+              for (int iCol = 0; iCol < colCount; iCol++)
+              {
+                object oVal = CommonFunctions.getDBValue(null, dr[iCol]);
+                if (iCol < nbrKeyCols)
+                  thisrow += CommonFunctions.CString(oVal);
+                oColValues[iCol] = oVal;
+              }
+              if (!string.IsNullOrEmpty(lastrow) && !lastrow.Equals(thisrow, StringComparison.CurrentCultureIgnoreCase)) // is this different from the last row?
+              {
+                result.AddRow(oLastColValues);
+                result.setPickList(realRow++, colRETAILUSOC, pickList);
+                pickList = new PickListEntries();
+                pickList.SortedByAscending = false;
+              }
+              if (string.IsNullOrEmpty(CommonFunctions.CString(dr[colWHOLESALEUSOC]))) // this is a "manual" item
+              {
+                result.AddRow(oColValues);
+              }
+              else
+              {
+                PickListEntry list = new PickListEntry();
+                list.ID = CommonFunctions.CString(dr[colRETAILUSOC]);
+                string val = CommonFunctions.CString(CommonFunctions.getDBValue(null, dr[colRETAILMRC]));
+                if (val.Equals("-1"))
+                  val = "Variable";
+                else
+                  val = CommonFunctions.fixupDollarFormat(val, false);
+                list.Description = val;
+                if (!pickList.Contains(list.ID))
+                  pickList.Add(list);
+              }
+
+              oLastColValues = (object[])oColValues.Clone();
+            }
+            if (!string.IsNullOrEmpty(lastrow) && !lastrow.Equals(thisrow, StringComparison.CurrentCultureIgnoreCase)) // since we only add thr row when it chanages, we pick up the last one.
+            {
+              result.AddRow(oLastColValues);
+              result.setPickList(realRow++, colRETAILUSOC, pickList);
+            }
+          }
+        }
+        ds.Clear();
+        ds = null;
+      }
+      return result;
+    }
+
+    public CCITable getCustomerSuggestions(string customerName, string address1, string city, string state, string zip, string salesOwner)
+    {
+      CCITable list = new CCITable();
+      DataSet ds = searchEntities(customerName, address1, city, state, zip, "Customer", salesOwner, false);
+      if (ds != null)
+      {
+        list = CommonFunctions.convertDataSetToCCITable(ds);
+        ds.Clear();
+        ds = null;
+      }
+      return list;
+    }
+  }
+}

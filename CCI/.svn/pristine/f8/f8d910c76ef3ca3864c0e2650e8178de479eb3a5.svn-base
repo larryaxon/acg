@@ -1,0 +1,220 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+<link href="@Url.Content("~/Content/Dealer/Dealer.css")" rel="stylesheet" type="text/css" />
+<div class="dealer-overview-shelf">
+    <div class="overview-cta">
+        <a class="tritop-title" href="/Quote/Index"
+            name="overview">Request Quote</a>
+        <div class="tritop-sub">
+            Easy quote tool for Hosted Lines, Phones, Features, Carrier Services, and more.</div>
+        <a href="/Quote/Index">
+            <img class="tritop-icon" src="/images/support.png"></a>
+        <p class="tritop-icon-text">
+            Need help getting a quote?<br>
+            Get started quick and easy.
+            @Html.ActionLink("Create a Quote", "Index", "Quote")
+        </p>
+    </div>
+    <div class="overview-ctaR">
+        <a class="tritop-title" href="http://www.citycommunications.com/dealer-overview.html#overview"
+            name="overview">Submit an Order</a><br>
+        <div class="tritop-sub">
+            Submit an order to one of our Dealer program project managers.</div>
+        <a href="http://www.citycommunications.com/dealer-overview.html#">
+            <img class="tritop-icon" src="/images/submit.png"></a>
+        <p class="tritop-icon-text">
+            Order everything your<br>
+            customer needs in one place.<br>
+            <a href="http://www.citycommunications.com/dealer-overview.html#">Submit an Order</a></p>
+    </div>
+    <div class="overview-ctaR">
+        <a class="tritop-title" href="http://www.citycommunications.com/dealer-overview.html#overview"
+            name="overview">View Customers</a>
+        <div class="tritop-sub">
+            See a complete list of all your current customers, make edits, and more.</div>
+        <a href="http://www.citycommunications.com/dealer-overview.html#">
+            <img class="tritop-icon" src="/images/customers.png"></a>
+        <p class="tritop-icon-text">
+            View inventory and numbers, manage moves, adds and changes. <a href="http://www.citycommunications.com/dealer-overview.html#">
+                View Customers</a></p>
+    </div>
+</div>
+<!-- <div id="overview-submenu">
+        	<a href="#overview" class="overview-item">
+            	<img src="/images/overview-icon.png" class="overview-icon"><br>
+                <span class="overview-title">Program Overview:</span><br>
+                <span class="overview-desc">View program summary & payment information.</span>
+            </a>
+                    
+        	<a href="#documents" class="overview-itemC">
+            	<img src="/images/documents-icon.png" class="overview-icon"><br>
+                <span class="overview-title">Sales Docs</span><br>
+                <span class="overview-desc">View and download<br>sales documents.</span>
+            </a>
+            
+            <a href="#downloads" class="overview-itemD">
+            	<img src="/images/downloads-icon.png" class="overview-icon"><br>
+                <span class="overview-title">Downloads:</span><br>
+                <span class="overview-desc">Download support<br>and process PDFs.</span>
+            </a>
+            
+            <a href="#faqs" class="overview-itemE">
+            	<img src="/images/faq-icon.png" class="overview-icon"><br>
+                <span class="overview-title">F.A.Q.s:</span><br>
+                <span class="overview-desc">View the frequently<br>asked questions.</span>
+            </a>
+            
+            <a href="#contactus" class="overview-itemE">
+            	<img src="/images/contact-icon.png" class="overview-icon"><br>
+                <span class="overview-title">Contact Us:</span><br>
+                <span class="overview-desc">By phone, email,<br>or online form.</span>
+            </a>
+       </div><!-- end overview submenu -->
+<!-- start main -->
+<div id="sidebar_industry">
+    <div id="overview-container">
+        <!-- <a href="#" class="totop">Back to Top</a>
+            	<a href="#overview" name="overview" class="section-title">Program Overview</a>
+                <p class="overview-feat-desc"><img src="/images/overview-phone.jpg" class="overview-monitor"><strong>Spend more time selling.</strong><br>
+<br>
+ The City Hosted Agent program is among the very best when it comes to supporting our agents. You can relax knowing your customers are in good hands as we guide them through our comprehensive implementation process that ensures that they have a quality experience from the start. We value your confidence in us, and we will do everything possible to make sure that the customer is happy and you look great for recommending us.<br><br></p> -->
+        <a class="section-document-title" href="http://www.citycommunications.com/dealer-overview.html#documents"
+            name="documents">Sales Documents</a><img class="overview-folder" src="/images/overview-folder.jpg">
+        <p class="overview-folderp">
+            Click below to download one of our sales or support documents. Lorem Ipsum is simply
+            dummy text of the printing and typesetting industry. LoremIpsum is simply dummy
+            text of the printing and typesetting.<br>
+            <br>
+        </p>
+        <div class="overview-listsplit">
+            <ul>
+                <li><a href="http://www.citycommunications.com/documents/CityHosted-Dealer%20Adavantages.pdf">
+                    Dealer Overview</a></li>
+                <li><a href="http://www.citycommunications.com/documents/CityHosted-Recommended%20Equipment%20Aastra.pdf">
+                    Aastra Recommended Equipment</a></li>
+                <li><a href="http://www.citycommunications.com/documents/CityHosted-Recommended%20Equipment%20Polycom.pdf">
+                    Polycom Recommended Equipment</a></li>
+            </ul>
+        </div>
+        <div class="overview-listsplit">
+            <ul>
+                <li><a href="http://www.citycommunications.com/documents/CityHosted-Retail%20Business-Restaurants.pdf">
+                    Retail-Restaurant Sales Slick</a></li>
+                <li><a href="http://www.citycommunications.com/documents/CityHosted-Why%20City%20Hosted.pdf">
+                    Why City Hosted</a></li>
+                <li><a href="http://www.citycommunications.com/documents/HowVOIPworks.pdf">How VOIP
+                    Works</a></li>
+            </ul>
+        </div>
+        <img src="/images/overview-tray-support.jpg"><a class="section-title" href="http://www.citycommunications.com/dealer-overview.html#downloads"
+            name="downloads">Support and Internal Process Downloads</a><img class="overview-support"
+                src="/images/overview-support.jpg">
+        <p class="overview-supportp">
+            Click below to download one of our sales or support documents. Lorem Ipsum is simply
+            dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy
+            text of the printing and typesetting industry.<br>
+            <br>
+        </p>
+        <div class="overview-support-listsplit">
+            <h3>
+                Support</h3>
+            <ul>
+                <li><a href="http://www.citycommunications.com/dealer-overview.html#">FAQ (coming soon)</a></li>
+                <li><a href="http://www.citycommunications.com/dealer-overview.html#">Support Process
+                    (coming soon)</a></li>
+                <li><a href="http://www.citycommunications.com/dealer-overview.html#">How To (coming
+                    soon)</a></li>
+                <li><a href="http://www.citycommunications.com/dealer-overview.html#">Price List (coming
+                    soon) </a></li>
+                <li><a href="http://www.citycommunications.com/dealer-overview.html#">References (coming
+                    soon)</a></li>
+            </ul>
+        </div>
+        <div class="overview-support-listsplit">
+            <h3>
+                Internal Process</h3>
+            <ul>
+                <li><a href="http://www.citycommunications.com/documents/CityHosted-Customer%20Billing.pdf"
+                    target="_blank">Customer Billing Overview</a></li>
+                <li><a href="http://www.citycommunications.com/documents/CityHosted-Now%20What.pdf">
+                    Now What </a></li>
+                <li><a href="http://www.citycommunications.com/dealer-overview.html#">Document Title
+                    Name Here</a></li>
+                <li><a href="http://www.citycommunications.com/dealer-overview.html#">Document Title
+                </a></li>
+                <li><a href="http://www.citycommunications.com/dealer-overview.html#">Different Doc
+                    Title longer line</a></li>
+            </ul>
+        </div>
+        <!--  <div class="overview-third">
+                	<h2>Support</h2>
+                    <ul>
+                    	<li><a href="#">FAQ (coming soon)</a></li>
+                        <li><a href="#">Support Process (coming soon)</a></li>
+                        <li><a href="#">How To (coming soon)</a></li>
+                        <li><a href="#">Price List (coming soon) </a></li>
+                        <li><a href="#">References (coming soon)</a></li>
+                    </ul>
+                </div>
+                
+                <div class="overview-third">
+                	<h2>Internal Process</h2>
+                    <ul>
+                    	<li><a href="documents/CityHosted-Customer Billing.pdf" target="_blank">Customer Billing Overview</a></li>
+                        <li><a href="documents/CityHosted-Now What.pdf">Now What </a></li>
+                        <li><a href="#">Document Title Name Here</a></li>
+                        <li><a href="#">Document Title </a></li>
+                        <li><a href="#">Different Doc Title longer line</a></li>
+                    </ul>
+                    
+                    <br><br>
+                </div> -->
+    </div>
+    <div id="overview-subBar">
+        <div class="tri-200">
+            <a href="http://www.citycommunications.com/dealer-overview.html#">
+                <img class="tri-200-icon" src="/images/icon-status.png"></a>
+            <p>
+                <a class="tri-200-title" href="http://www.citycommunications.com/dealer-overview.html#">
+                    My Status</a><br>
+                <a class="tri-200-subtitle" href="http://www.citycommunications.com/dealer-overview.html#">
+                    View your status</a></p>
+        </div>
+        <div class="tri-200">
+            <a href="http://www.citycommunications.com/dealer-overview.html#">
+                <img class="tri-200-icon" src="/images/icon-orders.png"></a>
+            <p>
+                <a class="tri-200-title" href="http://www.citycommunications.com/dealer-overview.html#">
+                    Recent Orders</a><br>
+                <a class="tri-200-subtitle" href="http://www.citycommunications.com/dealer-overview.html#">
+                    View recent orders</a></p>
+        </div>
+        <div class="tri-200">
+            <a href="http://www.citycommunications.com/dealer-overview.html#">
+                <img class="tri-200-icon" src="/images/icon-inventory.png"></a>
+            <p>
+                <a class="tri-200-title" href="http://www.citycommunications.com/dealer-overview.html#">
+                    My Inventory</a><br>
+                <a class="tri-200-subtitle" href="http://www.citycommunications.com/dealer-overview.html#">
+                    View your inventory</a></p>
+        </div>
+        <div class="tri-200">
+            <a href="http://www.citycommunications.com/dealer-overview.html#">
+                <img class="tri-200-icon" src="/images/icon-reports.png"></a>
+            <p>
+                <a class="tri-200-title" href="http://www.citycommunications.com/dealer-overview.html#">
+                    My Reports</a><br>
+                <a class="tri-200-subtitle" href="http://www.citycommunications.com/dealer-overview.html#">
+                    View your reports</a></p>
+        </div>
+        <div class="tri-200">
+            <a href="http://www.citycommunications.com/dealer-overview.html#">
+                <img class="tri-200-icon" src="/images/icon-quote.png"></a>
+            <p>
+                <a class="tri-200-title" href="http://www.citycommunications.com/dealer-overview.html#">
+                    Get Support</a><br>
+                <a class="tri-200-subtitle" href="http://www.citycommunications.com/dealer-overview.html#">
+                    Contact us now</a></p>
+        </div>
+    </div>

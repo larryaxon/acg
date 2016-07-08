@@ -1,0 +1,119 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+
+using CCI.Common;
+using CCI.DesktopClient.Common;
+using CCI.Sys.Data;
+
+namespace CCI.DesktopClient.Screens
+{
+  public partial class frmScreenDefinitionMaintenance : ScreenBase
+  {
+    #region module data
+    private const string colScreen = "screen";
+    private const string colScreenSection = "screensection";
+    private const string colSectionSequence = "sectionsequence";
+    private const string colItemSequence = "itemsequence";
+    private const string colDescription = "description";
+    private const string colName = "name";
+    private const string colUSOC = "ItemID";
+    private const string colIsRecommended = "isrecommended";
+    private const string colImage = "imagepath";
+    DataSource _ds = null;
+    DataSource _dataSource { get { if (_ds == null) _ds = new DataSource(); return _ds; } }
+    #endregion
+    public frmScreenDefinitionMaintenance()
+    {
+      InitializeComponent();
+      string[] sections = _dataSource.getCodeList(CommonData.DEALERQUOTESCREEN);
+      cboSection.Items.AddRange(sections);
+      srchScreenDefinition.HiddenColumns.Add(colScreen, null);
+      srchScreenDefinition.HiddenColumns.Add(colScreenSection, null);
+      srchScreenDefinition.HiddenColumns.Add(colSectionSequence, null);
+      srchScreenDefinition.HiddenColumns.Add(colDescription, null);
+      srchScreenDefinition.Init(CCI.Common.CommonData.UnmatchedNameTypes.ScreenDefinition, null);
+      ItemListCollection items = _dataSource.getItemList("SaddleBack");
+      cboUSOC.Items.Clear();
+      cboUSOC.ValueMember = "ItemID";
+      cboUSOC.DisplayMember = "ItemIDandDescription";      
+      foreach (ItemListEntry item in items)
+        cboUSOC.Items.Add(item);
+
+    }
+    public void Init()
+    {
+    }
+    #region form events
+    private void btlLoad_Click(object sender, EventArgs e)
+    {
+      loadGrid();
+    }
+    private void srchScreenDefinition_RowSelected(object sender, MaintenanceGridRowSelectedArgs e)
+    {
+      string wholesaleUSOC = CommonFunctions.CString(e.SelectedRow.Cells[colUSOC].Value);
+      loadFields(e.SelectedRow);
+    }
+    private void btnNew_Click(object sender, EventArgs e)
+    {
+      clearFields();
+    }
+    private void btnDelete_Click(object sender, EventArgs e)
+    {
+      _dataSource.deleteScreenDefinition(CommonData.DEALERQUOTESCREEN, cboSection.Text, getItemID(cboUSOC.Text));
+      clearFields();
+      loadGrid();
+    }
+    private void btnSave_Click(object sender, EventArgs e)
+    {
+      _dataSource.updateScreenDefinition(CommonData.DEALERQUOTESCREEN, cboSection.Text, getItemID(cboUSOC.Text), 
+        CommonData.PastDateTime.ToShortDateString(), txtSequence.Text, ckIsRecommended.Checked.ToString(), ckUseMRC.ToString(), txtImageFileName.Text, SecurityContext.User);
+      
+      clearFields();
+      loadGrid();
+    }
+    #endregion
+    #region private methods
+    private void loadGrid()
+    {
+      Dictionary<string, string[]> criteria = new Dictionary<string, string[]>(StringComparer.CurrentCultureIgnoreCase);
+
+      criteria.Add(colScreen, new string[] { ctlSearchGrid.opEQUALS, CommonData.DEALERQUOTESCREEN });
+      criteria.Add(colScreenSection, new string[] { ctlSearchGrid.opEQUALS, cboSection.Text });
+      srchScreenDefinition.SearchCriteria = criteria;
+      srchScreenDefinition.ReLoad();
+    }
+    private void clearFields()
+    {
+      txtSequence.Text = string.Empty;
+      //cboUSOC.Text = string.Empty;
+      cboUSOC.ResetText();
+      txtName.Text = string.Empty;
+      ckIsRecommended.Checked = false;
+      txtImageFileName.Text = string.Empty;
+    }
+    private void loadFields(DataGridViewRow row)
+    {
+      clearFields();
+      txtSequence.Text = CommonFunctions.CString(row.Cells[colItemSequence].Value);
+      CommonFormFunctions.setComboBoxCell(cboUSOC, CommonFunctions.CString(row.Cells[colUSOC].Value));
+      txtName.Text = CommonFunctions.CString(row.Cells[colName].Value);
+      ckIsRecommended.Checked = CommonFunctions.CBoolean(row.Cells[colIsRecommended].Value);
+      txtImageFileName.Text= CommonFunctions.CString(row.Cells[colImage].Value);
+    }
+    private string getItemID(string itemDescription)
+    {
+      if (!itemDescription.Contains(":"))
+        return itemDescription;
+      string[] parts = itemDescription.Split(new char[] { ':' });
+      return CommonFunctions.CString(parts[0]);
+    }
+
+    #endregion
+  }
+}

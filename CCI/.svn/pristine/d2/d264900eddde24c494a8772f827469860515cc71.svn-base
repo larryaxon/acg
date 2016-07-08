@@ -1,0 +1,10 @@
+﻿
+div#login
+{
+    width: 400px;
+}
+
+.simple_form label 
+{
+    margin-left: 10px;
+}

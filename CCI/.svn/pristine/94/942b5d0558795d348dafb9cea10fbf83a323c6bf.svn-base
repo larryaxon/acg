@@ -1,0 +1,7 @@
+﻿@model CCIWebClient.Models.QuoteTotalsModel
+<div class="quote-info-colL">
+    Quote ID:<br />
+</div>
+<div class="quote-info-col">
+    <span class="quote-id">@Html.Raw(Model.QuoteId)</span>
+</div>

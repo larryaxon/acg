@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+    <configSections>
+    </configSections>
+    <connectionStrings>
+        <add name="CCI.DesktopClient.Properties.Settings.CommissionsConnectionString"
+            connectionString="Data Source=mail.citycommunications.net;Initial Catalog=Commissions_abw;Persist Security Info=True;User ID=dbadmin09;Password=sharad2009"
+            providerName="System.Data.SqlClient" />
+    </connectionStrings>
+</configuration>

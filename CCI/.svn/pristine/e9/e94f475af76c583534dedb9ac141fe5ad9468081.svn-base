@@ -1,0 +1,18 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<div id="login_banner">
+    <form name="login-form" method="post" action="" id="login-form">
+        <fieldset>
+            <label for="username" class="username-label">
+                Username:</label>
+            <input type="text" id="username" name="username" class="username-field" value="" />
+            <label for="password" class="password-label">
+                Password:</label>
+            <input type="password" id="password" name="password" class="password-field" value="" />
+            <br />
+            <input type="submit" class="login-submit" id="submit" value="" />
+        </fieldset>
+    </form>
+</div>

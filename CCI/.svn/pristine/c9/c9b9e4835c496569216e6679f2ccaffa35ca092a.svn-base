@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <appSettings>
+    <add key="ChargifyURL" value="https://city-hosted-solutions.chargify.com"/>
+    <add key="ChargifyAPIKey" value="FSZRVOfAHTHqHBZS5raU"/>
+    <add key="ChargifyPassword" value="Citycomm1!"/>
+    <!--<add key="ChargifySharedKey" value="6vTTB0e9WKts8yL7LEiG"/>-->
+    <add key="ChargifySharedKey" value="Tr9fdHNvMpYVCE5YRCV"/>
+    <add key="ChargifySetupComponent" value="7337975"/>
+  </appSettings>
+    <!--<configSections>
+    </configSections>-->
+    <connectionStrings>
+        <add name="CCI.DesktopClient.Properties.Settings.CommissionsConnectionString"
+            connectionString="Data Source=mail.citycommunications.net;Initial Catalog=Commissions_abw;Persist Security Info=True;User ID=dbadmin09;Password=sharad2009"
+            providerName="System.Data.SqlClient" />
+    </connectionStrings>
+</configuration>

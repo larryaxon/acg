@@ -1,0 +1,32 @@
+﻿@using CCIWebClient.Models
+@model CCIWebClient.Models.EmailToModel
+           
+
+
+@{
+    <script type="text/javascript">
+        function myOnClick() {
+            alert('Message Sent');
+            window.close();
+        }
+    </script>  
+}
+        
+<link href="@Url.Content("~/Content/Views/mailform.css")" rel="stylesheet" type="text/css" />
+@using (Html.BeginForm("SendQuoteByMail", "Quote", FormMethod.Post))
+{
+<div class="mailform">
+    @Html.HiddenFor(model => Model.QuoteId)
+    @Html.LabelFor(model => model.toEmail)
+    @Html.TextBoxFor(model => model.toEmail)
+    @Html.LabelFor(model => model.Subject)
+    @Html.TextBoxFor(model => model.Subject)
+    @Html.LabelFor(model => model.Content)
+    @Html.TextAreaFor(model => Model.Content, new { rows = 5, col = 1 })
+    <input type="submit" onclick="myOnClick()" value="Send Email" />    
+</div>
+}
+
+
+
+

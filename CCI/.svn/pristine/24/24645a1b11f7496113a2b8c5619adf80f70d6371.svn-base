@@ -1,0 +1,278 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Text;
+
+using CCI.Common;
+using CCI.Sys.SecurityEngine;
+using TAGBOSS.Common.Model;
+
+
+namespace CCI.Sys.Data
+{
+  public partial class DataSource
+  {
+    private const string _customerEntityType = "Customer";
+    public CCIEntity findCustomer(string customerName, string address1, string address2, string city, string state, string zip, string phone)
+    {
+      return new CCIEntity();
+    }
+    public CCIEntity getCustomer(string id)
+    {
+      string entityPath = "{0}.Entity.Customer.{1}";
+      EntityAttributesCollection eac = getEntity(id, _customerEntityType, DateTime.Today);
+      CCIEntity cust = new CCIEntity();
+      cust.OriginalID = id;
+      if (eac == null)
+        return cust;
+      if (!eac.Entities.Contains(id) || eac.getValue(string.Format("{0}.Entity.Customer", id)) == null)
+        return cust;
+      cust.LegalName = CommonFunctions.CString(eac.getValue(entityPath, id, "LegalName"));
+      cust.ShortName = CommonFunctions.CString(eac.getValue(entityPath, id, "ShortName"));
+      cust.FullName = CommonFunctions.CString(eac.getValue(entityPath, id, "FullName"));
+      cust.Address1 = CommonFunctions.CString(eac.getValue(entityPath, id, "Address1"));
+      cust.Address2 = CommonFunctions.CString(eac.getValue(entityPath, id, "Address2"));
+      cust.City = CommonFunctions.CString(eac.getValue(entityPath, id, "City"));
+      cust.State = CommonFunctions.CString(eac.getValue(entityPath, id, "State"));
+      cust.Zip = CommonFunctions.CString(eac.getValue(entityPath, id, "Zip"));
+      return cust;
+    }
+    public CCITable getCustomerTable(string id)
+    {
+      CCITable cust = new CCITable();
+      if (string.IsNullOrEmpty(id))
+        return cust;
+      string sql = string.Format("select * from Entity where Entity = '{0}'", id);
+      DataSet ds = getDataFromSQL(sql);
+      if (ds == null)
+        return cust;
+      cust = CommonFunctions.convertDataSetToCCITable(ds);
+      ds.Clear();
+      ds = null;
+      return cust;
+    }
+    public void updateMRCUnmatchedCustomers()
+    {
+      string sql = "exec UpdateHostedCustomersFromExternalIDMapping";
+      updateDataFromSQL(sql);
+    }
+    public void RefreshCustomersFromCityCare(string user)
+    {
+      updateDataFromCityCareCustomers(user, false);
+    }
+    public void updateDataFromCityCareCustomers(string user, bool refreshAll)
+    {
+      string altid, customerid;
+      // customer info
+      string sql = @"select convert(nvarchar(10), 20000 + c.customerid) CustomerID, c.customername, BillingName, BillingContact, BillcontactNumber,
+                            BillMail BillingEmail, convert(nvarchar(10), pAddressPrefix) + ' ' + paddress Address1, psuitenum Address2,
+                            pCity City, pState State, pZip Zip, v.SaddlebackID,
+                            PrimaryContact, PrimContactNumber PrimaryContactNumber, PrimEmail PrimaryEmail, 
+                            convert(nvarchar(10), bAddressPrefix) + ' ' + baddress BillingAddress1, bsuitenum BillingAddress2,
+                            bCity BillingCity, bState BillingState, bZip BillingZip  
+                       from citycare_prod.dbo.tblcustomers c
+                        left join entity e on convert(nvarchar(10), 20000 + customerid) = e.entity
+                        left join vw_CHSCustomerListFromCityCare v on v.customerid = c.customerid";
+      if (!refreshAll)
+        sql += " where e.entity is null";
+      DataSet ds = getDataFromSQL(sql);
+      if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+      {
+        foreach (DataRow row in ds.Tables[0].Rows)
+        {
+          customerid = CommonFunctions.CString(row["customerid"]);
+          altid = CommonFunctions.CString(row["SaddlebackID"]);
+          if (altid.Equals("00000000"))
+            altid = null;
+          saveEntity(customerid,
+                      "CCI",
+                      "Customer",
+                      CommonFunctions.CString(row["customername"]),
+                      altid,
+                      CommonFunctions.CString(row["Address1"]),
+                      CommonFunctions.CString(row["Address2"]),
+                      CommonFunctions.CString(row["City"]),
+                      CommonFunctions.CString(row["State"]),
+                      CommonFunctions.CString(row["Zip"]),
+                      user,
+                      new string[] { "BillingAddress1", "BillingAddress2", "BillingCity", "BillingState", "BillingZip" },
+                      new string[] { CommonFunctions.CString(row["BillingAddress1"]),
+                                   CommonFunctions.CString(row["BillingAddress2"]),
+                                   CommonFunctions.CString(row["BillingCity"]),
+                                   CommonFunctions.CString(row["BillingState"]),
+                                   CommonFunctions.CString(row["BillingZip"]) });
+          string primaryContact = CommonFunctions.CString(row["PrimaryContact"]);
+          if (!string.IsNullOrEmpty(primaryContact))
+          {
+            // create and "ID" from the name
+            int seq = 0;
+            //while (existsRecord("Entity", new string[] { "Entity" }, new string[] { makeContactID(customerid, primaryContact, seq)}))
+            //  seq++;
+            string contactid = makeContactID(customerid, primaryContact, seq);
+            saveEntity(contactid, customerid, "Contact", primaryContact, null, 
+                      CommonFunctions.CString(row["Address1"]),
+                      CommonFunctions.CString(row["Address2"]),
+                      CommonFunctions.CString(row["City"]),
+                      CommonFunctions.CString(row["State"]),
+                      CommonFunctions.CString(row["Zip"]),
+                      user, 
+                      new string[] { "Phone", "Email" }, 
+                      new string[] { CommonFunctions.CString(row["PrimaryContactNumber"]), 
+                                CommonFunctions.CString(row["PrimaryEmail"]) });
+          }
+
+        }
+        ds.Clear();
+        ds = null;
+      }
+      // now get locations
+      sql = @"select convert(nvarchar(20), 100000000 + customerid * 10000 + locid) LocationID, 
+                    convert(nvarchar(10), 20000 + customerid) CustomerID, locationname, pBTN LocationPhone, 
+                    convert(nvarchar(10), pAddressPrefix) + ' ' + paddress Address1, psuitenum Address2,
+                    pCity City, pState State, pZip Zip, loccontact PrimaryContact, locContactNumber PrimaryContactNumber, locmail PrimaryEmail, 
+                    loccontactfax PrimaryFax 
+               from citycare_prod.dbo.tbllocations l
+                 left join entity e on convert(nvarchar(20), 100000000 + customerid * 10000 + locid) = e.entity
+               where e.entity is null";
+      ds = getDataFromSQL(sql);
+      if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+      {
+        foreach (DataRow row in ds.Tables[0].Rows)
+        {
+          altid = null;
+          customerid = CommonFunctions.CString(row["CustomerID"]);
+          saveEntity(CommonFunctions.CString(row["LocationID"]),
+                      customerid,
+                      "Location",
+                      CommonFunctions.CString(row["locationname"]),
+                      altid,
+                      CommonFunctions.CString(row["Address1"]),
+                      CommonFunctions.CString(row["Address2"]),
+                      CommonFunctions.CString(row["City"]),
+                      CommonFunctions.CString(row["State"]),
+                      CommonFunctions.CString(row["Zip"]),
+                      user,
+                      new string[] { "PrimaryLocation", "Phone" } ,
+                      new string[] { "true", CommonFunctions.CString(row["LocationPhone"]) });
+          string primaryContact = CommonFunctions.CString(row["PrimaryContact"]);
+          if (!string.IsNullOrEmpty(primaryContact))
+          {
+            // create and "ID" from the name
+            int seq = 0;
+            string contactid = makeContactID(customerid, primaryContact, seq);
+            if (contactid.StartsWith("Error"))
+              throw new Exception(contactid);
+            //while (existsRecord("Entity", new string[] { "Entity" }, new string[] { contactid }))
+            //{
+            //  seq++;
+            //  contactid = makeContactID(customerid, primaryContact, seq);
+            //  if (contactid.StartsWith("Error"))
+            //    throw new Exception(contactid);
+            //}
+            saveEntity(contactid, CommonFunctions.CString(row["LocationID"]), "Contact", primaryContact, null, 
+                      CommonFunctions.CString(row["Address1"]),
+                      CommonFunctions.CString(row["Address2"]),
+                      CommonFunctions.CString(row["City"]),
+                      CommonFunctions.CString(row["State"]),
+                      CommonFunctions.CString(row["Zip"]),
+                      user, 
+                      new string[] { "Phone", "Email" }, 
+                      new string[] { CommonFunctions.CString(row["PrimaryContactNumber"]), 
+                                CommonFunctions.CString(row["PrimaryEmail"]) });
+          }
+        }
+        ds.Clear();
+        ds = null;
+      }
+    }
+    
+    private string makeContactID(string entityowner, string contactname, int seq)
+    {
+      try
+      {
+        string contact = string.IsNullOrEmpty(contactname) ? string.Empty : contactname.Trim().Replace(" ", "").Replace(".", "").Replace(",", "").Replace("/", "").Replace("-", "").Replace("'", "");
+        contact = contact.Substring(0,Math.Min(10,contact.Length));
+        return string.Format("{0}-{1}{2}", entityowner, contact,
+          seq == 0 ? string.Empty : seq.ToString());
+      }
+      catch (Exception ex)
+      {
+        return string.Format("Error, EntityOwner<{0}>, Contactname<{1}> in makeContactID", entityowner, contactname);
+      }
+
+
+    }
+    private void saveEntity(string entity, string entityowner, string entitytype, string legalname, string altid, 
+      string address1, string address2, string city, string state, string zip, string user,
+      string[] attributeNames, string[] attributeValues)
+    {
+      string itemtype = "Entity";
+      EntityAttributesCollection eac = _ea.getAttributes(entity, itemtype, entitytype, null, DateTime.Today, true);
+      Entity e;
+      Item i;
+      ItemType it;
+      if (eac.Entities.Contains(entity))
+        e = eac.Entities[entity];
+      else
+      {
+        e = new Entity();
+        e.ID = entity;
+        eac.Entities.Add(e);
+      }
+      if (e.ItemTypes.Contains(itemtype))
+        it = e.ItemTypes[itemtype];
+      else
+      {
+        it = new ItemType();
+        it.ID = itemtype;
+        e.ItemTypes.Add(it);
+      }
+      if (it.Items.Contains(entitytype))
+        i = it.Items[entitytype];
+      else
+      {
+        i = new Item();
+        i.ID = entitytype;
+        it.Items.Add(i);
+      }
+      e.AddField("EntityType", entitytype);
+      e.AddField("EntityOwner", entityowner);
+      e.AddField("LegalName", legalname);
+      e.AddField("Address1", address1);
+      e.AddField("Address2", address2);
+      e.AddField("City", city);
+      e.AddField("State", state);
+      e.AddField("Zip", zip);
+      e.AddField("AlternateID", altid);
+      e.AddField("LastModifiedBy", user);
+      e.AddField("LastModifiedDateTime", DateTime.Now);
+      if (attributeNames != null && attributeValues != null && attributeNames.GetLength(0) == attributeValues.GetLength(0))
+      {
+        for (int iAttr = 0; iAttr < attributeNames.GetLength(0); iAttr++)
+          i.AddAttribute(attributeNames[iAttr], attributeValues[iAttr]);
+        i.LastModifiedBy = user;
+        i.LastModifiedDateTime = DateTime.Now;
+      }
+      _ea.CurrentUser = user;
+      _ea.Save(eac);
+    }
+    public bool existsAlternateID(string entity, string alternateID, string entityType)
+    {
+      string entityClause = string.Empty;
+      if (!string.IsNullOrEmpty(entity))
+        entityClause = string.Format(" and Entity <> '{0}' ", entity);
+      string sql = string.Format("select Entity from Entity where EntityType = '{0}' and AlternateID = '{1}' {2}", entityType, alternateID, entityClause);
+      DataSet ds = getDataFromSQL(sql);
+      if (ds == null)
+        return false;
+      bool retCode = false;
+      if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+        retCode = true;
+      ds.Clear();
+      ds = null;
+      return retCode;
+    }
+  }
+}

@@ -1,0 +1,44 @@
+﻿@model CCIWebClient.Models.CustomerInformationModel
+<table id="MoreUsocTable" class="QuoteTable">
+    <thead>
+        <tr>
+            <th>
+                Qty
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Sales Price
+            </th>
+            <th>
+                Your Cost
+            </th>
+        </tr>
+    </thead>
+    @{
+        for (int i = 0; i < Model.MoreUsoc.Count; i++)
+        {
+          
+        <tr>
+            <td style="display: none">
+                @Html.HiddenFor(model => Model.MoreUsoc[i].ItemId)
+                @Html.HiddenFor(model => Model.MoreUsoc[i].DetailId)
+            </td>
+            <td>@Html.TextBoxFor(model => Model.MoreUsoc[i].Quantity)
+            </td>
+            <td>@Model.MoreUsoc[i].Description
+            </td>
+            <td>
+                @Html.DropDownListFor(model => Model.MoreUsoc[i].RetailItemId, Model.MoreUsoc[i].MRCRetailList, new {@class = "phone-dropdown" })
+                <!--$-->
+                @Html.TextBoxFor(model=> Model.MoreUsoc[i].Variable, new {@style="display:none;"})
+           
+@*                <input type="text" id="@("MoreUsoc_" + i + "__Variable")" name="@("MoreUsoc_[" + i + "].Variable")" style="display: none;" />*@
+            </td>
+            <td>@Model.MoreUsoc[i].DealerCost
+            </td>
+        </tr>  
+        }
+    }
+</table>

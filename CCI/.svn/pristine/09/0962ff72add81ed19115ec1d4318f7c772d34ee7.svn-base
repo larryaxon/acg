@@ -1,0 +1,24 @@
+﻿@model CCIWebClient.Models.CustomerSuggestedModel
+@using CCIWebClient.Models;
+@{
+    ViewBag.Title = "SelectCustomer";
+}
+<div id="selectedcustomers">
+
+<table>
+@foreach (customerSuggested cust in Model.Customers)
+{
+    <tr>
+        <!--<td>@cust.QuoteId</td>-->
+        <td>@cust.CustomerName</td>
+        <td>@cust.Address</td>
+        <td>@cust.Suite</td>
+        <td>@cust.City</td>
+        <td>@cust.State</td>
+        <td>@cust.ZipCode</td>
+        <td><input type="button" id="@cust.QuoteId" value="View"/></td>
+    </tr>
+}
+</table>
+
+</div>

@@ -1,0 +1,185 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+<link href="@Url.Content("~/Content/Agent/Agent.css")" rel="stylesheet" type="text/css" />
+
+<ul id="quoteNav">
+         <li>@Html.ActionLink("Quote Page", "Index", "Quote")</li>
+    @*<input type="button" value="Quote Page" onclick="window.location.href('@Url.Action("Index","Quote")')"/>*@
+</ul>
+
+<div id="overview-submenu">
+    <a href="#overview" class="overview-item">
+        <img src="/images/overview-icon.png" class="overview-icon"><br>
+        <span class="overview-title">Program Overview:</span><br>
+        <span class="overview-desc">View program summary & payment information.</span>
+    </a><a href="#documents" class="overview-itemC">
+        <img src="/images/documents-icon.png" class="overview-icon"><br>
+        <span class="overview-title">Documents:</span><br>
+        <span class="overview-desc">View and download<br>
+            program forms.</span> </a><a href="#downloads" class="overview-itemD">
+                <img src="/images/downloads-icon.png" class="overview-icon"><br>
+                <span class="overview-title">Downloads:</span><br>
+                <span class="overview-desc">Download program<br>
+                    PDF files.</span> </a><a href="#faqs" class="overview-itemE">
+                        <img src="/images/faq-icon.png" class="overview-icon"><br>
+                        <span class="overview-title">F.A.Q.s:</span><br>
+                        <span class="overview-desc">View the frequently<br>
+                            asked questions.</span> </a><a href="#contactus" class="overview-itemE">
+                                <img src="/images/contact-icon.png" class="overview-icon"><br>
+                                <span class="overview-title">Contact Us:</span><br>
+                                <span class="overview-desc">By phone, email,<br>
+                                    or online form.</span> </a>
+    <div id="overview-container">
+        <a href="#" class="totop">Back to Top</a> <a href="#overview" name="overview" class="section-title">
+            Program Overview</a>
+        <p class="overview-feat-desc">
+            <img src="images/overview-monitor.png" class="overview-monitor"><strong>Spend more time
+                selling.</strong><br>
+            <br>
+            The City Hosted Agent program is among the very best when it comes to supporting
+            our agents. You can relax knowing your customers are in good hands as we guide them
+            through our comprehensive implementation process that ensures that they have a quality
+            experience from the start. We value your confidence in us, and we will do everything
+            possible to make sure that the customer is happy and you look great for recommending
+            us.<br>
+            <br>
+        </p>
+        <img src="/images/overview-tray.jpg">
+        <a href="#" class="totop">Back to Top</a> <a href="#documents" name="documents" class="section-title">
+            Documents</a>
+        <p class="overview-feat-desc">
+            Click below to download one of our sales or support documents.<br>
+            <br>
+            <div class="overview-third">
+                <h2>
+                    Sales</h2>
+                <ul>
+                    <li><a href="/documents/CityHosted-Become An Agent.pdf" target="_blank">Agent Overview</a></li>
+                    <li><a href="/documents/CityHosted-Dealer Adavantages.pdf">Dealer Overview</a></li>
+                    <li><a href="/documents/CityHosted-Recommended Equipment Aastra.pdf">Aastra Recommended
+                        Equipment</a></li>
+                    <li><a href="/documents/CityHosted-Recommended Equipment Polycom.pdf">Polycom Recommended
+                        Equipment</a></li>
+                    <li><a href="/documents/CityHosted-Retail Business-Restaurants.pdf">Retail-Restaurant
+                        Sales Slick</a></li>
+                    <li><a href="/documents/CityHosted-Why City Hosted.pdf">Why City Hosted</a></li>
+                    <li><a href="/documents/HowVOIPworks.pdf">How VOIP Works</a></li>
+                </ul>
+            </div>
+            <div class="overview-third">
+                <h2>
+                    Support</h2>
+                <ul>
+                    <li><a href="#">FAQ (coming soon)</a></li>
+                    <li><a href="#">Support Process (coming soon)</a></li>
+                    <li><a href="#">How To (coming soon)</a></li>
+                    <li><a href="#">Price List (coming soon) </a></li>
+                    <li><a href="#">References (coming soon)</a></li>
+                </ul>
+            </div>
+            <div class="overview-third">
+                <h2>
+                    Internal Process</h2>
+                <ul>
+                    <li><a href="/documents/CityHosted-Customer Billing.pdf" target="_blank">Customer Billing
+                        Overview</a></li>
+                    <li><a href="/documents/CityHosted-Now What.pdf">Now What </a></li>
+                    <li><a href="#">Document Title Name Here</a></li>
+                    <li><a href="#">Document Title </a></li>
+                    <li><a href="#">Different Doc Title longer line</a></li>
+                </ul>
+                <br>
+                <br>
+            </div>
+            <br>
+            <br>
+        </p>
+        <img src="images/overview-tray.jpg">
+        <a href="#" class="totop">Back to Top</a> <a href="#downloads" name="downloads" class="section-title">
+            Downloads</a>
+        <p class="overview-feat-desc">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla hendrerit, odio et
+            condimentum elementum, orci tortor interdum tortor, vitae varius ligula dui vitae
+            urna. Suspendisse quis accumsan orci. Quisque mollis orci sed massa faucibus vehicula.
+            Cras mollis magna a augue volutpat pellentesque. Vivamus nisl elit, rhoncus ac euismod
+            eget, pulvinar sed dolor. Proin congue lectus a dolor ornare ut aliquam ante aliquet.
+            Aenean vel purus nulla, vel imperdiet felis.<br>
+            <br>
+            <div class="overview-third">
+                <h2>
+                    Document Column 1</h2>
+                <ul>
+                    <li><a href="#">Document Title Name Here</a></li>
+                    <li><a href="#">Different Doc</a></li>
+                    <li><a href="#">Document Title Name Here</a></li>
+                    <li><a href="#">Document Title </a></li>
+                    <li><a href="#">Different Doc Title longer line</a></li>
+                </ul>
+            </div>
+            <div class="overview-third">
+                <h2>
+                    Document Column 1</h2>
+                <ul>
+                    <li><a href="#">Document Title Name Here</a></li>
+                    <li><a href="#">Different Doc</a></li>
+                    <li><a href="#">Document Title Name Here</a></li>
+                    <li><a href="#">Document Title </a></li>
+                    <li><a href="#">Different Doc Title longer line</a></li>
+                </ul>
+            </div>
+            <div class="overview-third">
+                <h2>
+                    Document Column 1</h2>
+                <ul>
+                    <li><a href="#">Document Title Name Here</a></li>
+                    <li><a href="#">Different Doc </a></li>
+                    <li><a href="#">Document Title Name Here</a></li>
+                    <li><a href="#">Document Title </a></li>
+                    <li><a href="#">Different Doc Title longer line</a></li>
+                </ul>
+                <br>
+                <br>
+            </div>
+        </p>
+        <img src="images/overview-tray.jpg">
+        <a href="#" class="totop">Back to Top</a> <a href="#faqs" name="faqs" class="section-title">
+            F.A.Q.s</a>
+        <p class="overview-feat-desc">
+            <strong>How Long Does It Take To Insall?</strong> Normally we can have phones installed
+            within two weeks. Porting of numbers, equipment availability, and carrier access
+            can all adversely affect that timeline.</p>
+        <p class="overview-feat-desc">
+            <strong>What's Included With The Service?</strong> Click <a href="features.html">here</a>
+            to see a complete list of the features included with the hosted seats.</p>
+        <p class="overview-feat-desc">
+            <strong>Is Long Distance Free?</strong> Yes, long distance between phones on the
+            same account are free. All other long distance is out of your shared pool of minutes.<br>
+        </p>
+        <img src="images/overview-tray.jpg">
+        <a href="#" class="totop">Back to Top</a> <a href="#contactus" name="contactus" class="section-title">
+            Contact Us</a>
+        <p class="overview-feat-desc">
+            For quotes or questions, please contact us at:
+            <br>
+        </p>
+        <p class="overview-feat-desc">
+            Mark Kraska</p>
+        <p class="overview-feat-desc">
+            602.515.0314</p>
+        <p class="overview-feat-desc">
+            mark@cityhosted.com</p>
+        <p class="overview-feat-desc">
+            &nbsp;</p>
+        <p class="overview-feat-desc">
+            Brian Pacheco</p>
+        <p class="overview-feat-desc">
+            602.515.0313</p>
+        <p class="overview-feat-desc">
+            brian@cityhosted.com<br>
+            <br>
+        </p>
+        <img src="images/overview-tray.jpg">
+    </div>
+</div>
+<!-- sidebar container -->

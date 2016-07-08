@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="CCIBusinessServer">
+</Property><Property Name="Solution File" Value="F:\Projects\Larry\CCI\CCIBusinessServer\CCIBusinessServer.sln">
+</Property><Property Name="Date" Value="Tuesday, October 16, 2012">
+</Property><Property Name="Time" Value="16:33:12 PM">
+</Property></Properties><Event ErrorLevel="0" Project="CCI" Source="..\CCI\CCI.csproj" Description="Project file successfully backed up as F:\Projects\Larry\CCI\CCIBusinessServer\Backup\CCI.csproj">
+</Event><Event ErrorLevel="0" Project="CCI" Source="..\CCI\Common\CCIExceptionMessage.cs" Description="File successfully backed up as F:\Projects\Larry\CCI\CCIBusinessServer\Backup\Common\CCIExceptionMessage.cs">
+</Event><Event ErrorLevel="0" Project="CCI" Source="..\CCI\Common\CommonData.cs" Description="File successfully backed up as F:\Projects\Larry\CCI\CCIBusinessServer\Backup\Common\CommonData.cs">
+</Event><Event ErrorLevel="0" Project="CCI" Source="..\CCI\Common\CommonFunctions.cs" Description="File successfully backed up as F:\Projects\Larry\CCI\CCIBusinessServer\Backup\Common\CommonFunctions.cs">
+</Event><Event ErrorLevel="0" Project="CCI" Source="..\CCI\Common\Data\AttributeDB.cs" Description="File successfully backed up as F:\Projects\Larry\CCI\CCIBusinessServer\Backup\Common\Data\AttributeDB.cs">
+</Event><Event ErrorLevel="0" Project="CCI" Source="..\CCI\Common\Data\DataAccessBase.cs" Description="File successfully backed up as F:\Projects\Larry\CCI\CCIBusinessServer\Backup\Common\Data\DataAccessBase.cs">
+</Event><Event ErrorLevel="0" Project="CCI" Source="..\CCI\Common\Data\DataAdapterContainer.cs" Description="File successfully backed up as F:\Projects\Larry\CCI\CCIBusinessServer\Backup\Common\Data\DataAdapterContainer.cs">
+</Event><Event ErrorLevel="0" Project="CCI" Source="..\CCI\Common\Data\DataSource.cs" Description="File successfully backed up as F:\Projects\Larry\CCI\CCIBusinessServer\Backup\Common\Data\DataSource.cs">
+</Event><Event ErrorLevel="0" Project="CCI" Source="..\CCI\Common\Data\EntityAttributes.cs" Description="File successfully backed up as F:\Projects\Larry\CCI\CCIBusinessServer\Backup\Common\Data\EntityAttributes.cs">
+</Event><Event ErrorLevel="0" Project="CCI" Source="..\CCI\Common\Data\EntityBase.cs" Description="File successfully backed up as F:\Projects\Larry\CCI\CCIBusinessServer\Backup\Common\Data\EntityBase.cs">
+</Event><Event ErrorLevel="0" Project="CCI" Source="..\CCI\Common\Data\EntityDB.cs" Description="File successfully backed up as F:\Projects\Larry\CCI\CCIBusinessServer\Backup\Common\Data\EntityDB.cs">
+</Event><Event ErrorLevel="0" Project="CCI" Source="..\CCI\Common\Data\SecurityDB.cs" Description="File successfully backed up as F:\Projects\Larry\CCI\CCIBusinessServer\Backup\Common\Data\SecurityDB.cs">
+</Event><Event ErrorLevel="0" Project="CCI" Source="..\CCI\Common\Data\SQLConnectionFactory.cs" Description="File successfully backed up as F:\Projects\Larry\CCI\CCIBusinessServer\Backup\Common\Data\SQLConnectionFactory.cs">
+</Event><Event ErrorLevel="0" Project="CCI" Source="..\CCI\Common\EncryptDecryptString.cs" Description="File successfully backed up as F:\Projects\Larry\CCI\CCIBusinessServer\Backup\Common\EncryptDecryptString.cs">
+</Event><Event ErrorLevel="0" Project="CCI" Source="..\CCI\Common\ItemListCollection.cs" Description="File successfully backed up as F:\Projects\Larry\CCI\CCIBusinessServer\Backup\Common\ItemListCollection.cs">
+</Event><Event ErrorLevel="0" Project="CCI" Source="..\CCI\Common\ItemListEntry.cs" Description="File successfully backed up as F:\Projects\Larry\CCI\CCIBusinessServer\Backup\Common\ItemListEntry.cs">
+</Event><Event ErrorLevel="0" Project="CCI" Source="..\CCI\Common\ItemListEnumerator.cs" Description="File successfully backed up as F:\Projects\Larry\CCI\CCIBusinessServer\Backup\Common\ItemListEnumerator.cs">
+</Event><Event ErrorLevel="0" Project="CCI" Source="..\CCI\Common\Logging\Log.cs" Description="File successfully backed up as F:\Projects\Larry\CCI\CCIBusinessServer\Backup\Common\Logging\Log.cs">
+</Event><Event ErrorLevel="0" Project="CCI" Source="..\CCI\Common\Logging\LogFactory.cs" Description="File successfully backed up as F:\Projects\Larry\CCI\CCIBusinessServer\Backup\Common\Logging\LogFactory.cs">
+</Event><Event ErrorLevel="0" Project="CCI" Source="..\CCI\Common\SearchResult.cs" Description="File successfully backed up as F:\Projects\Larry\CCI\CCIBusinessServer\Backup\Common\SearchResult.cs">
+</Event><Event ErrorLevel="0" Project="CCI" Source="..\CCI\Common\SearchResultCollection.cs" Description="File successfully backed up as F:\Projects\Larry\CCI\CCIBusinessServer\Backup\Common\SearchResultCollection.cs">
+</Event><Event ErrorLevel="0" Project="CCI" Source="..\CCI\Common\SearchResutEqualityComparer.cs" Description="File successfully backed up as F:\Projects\Larry\CCI\CCIBusinessServer\Backup\Common\SearchResutEqualityComparer.cs">
+</Event><Event ErrorLevel="0" Project="CCI" Source="..\CCI\Common\Security.cs" Description="File successfully backed up as F:\Projects\Larry\CCI\CCIBusinessServer\Backup\Common\Security.cs">
+</Event><Event ErrorLevel="0" Project="CCI" Source="..\CCI\Common\SecurityContext.cs" Description="File successfully backed up as F:\Projects\Larry\CCI\CCIBusinessServer\Backup\Common\SecurityContext.cs">
+</Event><Event ErrorLevel="0" Project="CCI" Source="..\CCI\Common\SecurityEngine\LoadSecurity.cs" Description="File successfully backed up as F:\Projects\Larry\CCI\CCIBusinessServer\Backup\Common\SecurityEngine\LoadSecurity.cs">
+</Event><Event ErrorLevel="0" Project="CCI" Source="..\CCI\Common\SecurityEngine\SecurityFactory.cs" Description="File successfully backed up as F:\Projects\Larry\CCI\CCIBusinessServer\Backup\Common\SecurityEngine\SecurityFactory.cs">
+</Event><Event ErrorLevel="0" Project="CCI" Source="..\CCI\Common\SecurityEngine\SecurityGroups.cs" Description="File successfully backed up as F:\Projects\Larry\CCI\CCIBusinessServer\Backup\Common\SecurityEngine\SecurityGroups.cs">
+</Event><Event ErrorLevel="0" Project="CCI" Source="..\CCI\Common\UserInfo.cs" Description="File successfully backed up as F:\Projects\Larry\CCI\CCIBusinessServer\Backup\Common\UserInfo.cs">
+</Event><Event ErrorLevel="0" Project="CCI" Source="..\CCI\Properties\AssemblyInfo.cs" Description="File successfully backed up as F:\Projects\Larry\CCI\CCIBusinessServer\Backup\Properties\AssemblyInfo.cs">
+</Event><Event ErrorLevel="0" Project="CCI" Source="..\CCI\CCI.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="CCI" Source="..\CCI\CCI.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="CCI" Source="..\CCI\CCI.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event></UpgradeLog>

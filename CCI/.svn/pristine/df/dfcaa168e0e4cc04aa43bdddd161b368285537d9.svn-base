@@ -1,0 +1,157 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Text;
+using System.Windows.Forms;
+
+using CCI.Common;
+using CCI.Sys.Data;
+using CCI.DesktopClient.Common;
+
+namespace CCI.DesktopClient.Screens
+{
+  public partial class frmCityHostedOCCMaintenance : ScreenBase
+  {
+    private DataSource _ds = null;
+    private DataSource _dataSource { get { if (_ds == null) _ds = new DataSource(); return _ds; } }
+    private bool _loading = false;
+    private const string CHSAJUSTMENTUSOC = "CHSADJ";
+
+    public frmCityHostedOCCMaintenance()
+    {
+      InitializeComponent();
+
+    }
+
+    #region form events
+
+    private void btnSave_Click(object sender, EventArgs e)
+    {
+      saveFields();
+    }
+    private void srchDealer_OnSelected(object sender, EventArgs e)
+    {
+      //if (!string.IsNullOrEmpty(srchDealer.Text))
+        ((SearchDataSourceCustomer)srchCustomer.SearchExec).Dealer = srchDealer.Text;
+      srchCustomer.Text = string.Empty;
+      reloadGrid(false);
+    }
+    private void srchCustomer_OnSelected(object sender, EventArgs e)
+    {
+      reloadGrid(false);
+    }
+    private void srchRetailUSOC_OnSelected(object sender, EventArgs e)
+    {
+      reloadGrid(false);
+    }
+    private void srchBillDate_ValueChanged(object sender, EventArgs e)
+    {
+      reloadGrid(false);
+    }
+    private void srchOCCAdjustments_RowSelected(object sender, ACG.CommonForms.MaintenanceGridRowSelectedArgs e)
+    {
+      DataGridViewRow row = e.SelectedRow;
+      loadFields(row);
+    }
+    private void frmCityHostedOCCMaintenance_Load(object sender, EventArgs e)
+    {
+      _loading = true;
+      srchBillDate.Value = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1); // first of current month (billdate)
+      srchCustomer.SearchExec = new SearchDataSourceCustomer();
+      srchDealer.SearchExec = new SearchDataSourceEntity("IBP", "CCI");
+      txtCustomer.SearchExec = new SearchDataSourceCustomer();
+      srchOCCAdjustments.Init(CommonData.UnmatchedNameTypes.CityHostedOCCEntry, null);
+      srchOCCAdjustments.ClearSearch();
+      _loading = false;
+    }
+    private void btnNew_Click(object sender, EventArgs e)
+    {
+      clearFields();
+    }
+    private void btnDelete_Click(object sender, EventArgs e)
+    {
+      deleteRecord();
+    }
+    private void ckAdjustmentsOnly_CheckedChanged(object sender, EventArgs e)
+    {
+      reloadGrid(false);
+    }
+    private void btnLoad_Click(object sender, EventArgs e)
+    {
+      reloadGrid(true);
+    }
+
+    #endregion
+
+    #region private methods
+    private void reloadGrid(bool forceRefresh)
+    {
+      if (!_loading && (ckAutoRefresh.Checked || forceRefresh))
+      {
+        Dictionary<string, string[]> criteria = new Dictionary<string, string[]>(StringComparer.CurrentCultureIgnoreCase);
+        if (!string.IsNullOrEmpty(srchDealer.Text))
+          criteria.Add("Dealer", new string[] { ctlSearchGrid.opEQUALS, srchDealer.Text });
+        if (!string.IsNullOrEmpty(srchCustomer.Text))
+          criteria.Add("CustomerID", new string[] { ctlSearchGrid.opEQUALS, srchCustomer.Text });
+        criteria.Add("BillDate", new string[] { ctlSearchGrid.opEQUALS, srchBillDate.Value.ToShortDateString() });
+        if (ckAdjustmentsOnly.Checked)
+          criteria.Add("RetailUSOC", new string[] { ctlSearchGrid.opEQUALS, CHSAJUSTMENTUSOC });
+        srchOCCAdjustments.SearchCriteria = criteria;
+        srchOCCAdjustments.ReLoad();
+        clearFields();
+      }
+    }
+    private void saveFields()
+    {
+      string ID = txtID.Text;
+      string customerID = txtCustomer.Text;
+      DateTime billDate = dtBillDate.Value;
+      string retailUSOC = CHSAJUSTMENTUSOC;
+      decimal retailAmount = CommonFunctions.CDecimal(txtRetailAmount.Text);
+      string description = txtDescription.Text;
+      int? ret = _dataSource.updateOCCAdjustment(ID, customerID, billDate, retailUSOC, retailAmount, description, SecurityContext.User, "ManualAdjustment");
+      reloadGrid(true);
+      MessageBox.Show("Record saved");
+    }
+    private void clearFields()
+    {
+      txtID.Text = string.Empty;
+      txtCustomer.Text = string.Empty;
+      dtBillDate.Value = srchBillDate.Value;
+      txtRetailAmount.Text = string.Empty;
+      txtDescription.Text = string.Empty;
+    }
+    private void loadFields(DataGridViewRow row)
+    {
+      bool isAdjustment = CommonFunctions.CBoolean(row.Cells["ManualAdjustment"].Value);
+      if (!isAdjustment)
+      {
+        MessageBox.Show("You can only edit adjustments");
+        return;
+      }
+      txtID.Text = CommonFunctions.CString(row.Cells["ID"].Value);
+      txtCustomer.Text = CommonFunctions.CString(row.Cells["CustomerID"].Value);
+      dtBillDate.Value = CommonFunctions.CDateTime(row.Cells["BillDate"].Value);
+      txtRetailAmount.Text = CommonFunctions.CString(row.Cells["RetailAmount"].Value);
+      txtDescription.Text = CommonFunctions.CString(row.Cells["Description"].Value);
+    }
+    private void deleteRecord()
+    {
+      string id = txtID.Text;
+      if (string.IsNullOrEmpty(id) || !CommonFunctions.IsNumeric(id))
+        MessageBox.Show("There is no record to delete");
+      else
+      {
+        _dataSource.deleteOCCAdjustment(id);
+        clearFields();
+        reloadGrid(true);
+        MessageBox.Show("Record deleted");
+      }
+    }
+
+    #endregion
+
+  }
+}

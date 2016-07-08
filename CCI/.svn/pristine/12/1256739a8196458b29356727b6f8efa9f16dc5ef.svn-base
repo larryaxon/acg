@@ -1,0 +1,60 @@
+﻿@{
+    ViewBag.Title = "Services";
+}
+<div id="site_banner_city">
+    <div id="services_header">
+        <h2>
+            Telecom just got easier.</h2>
+        <p>
+            Moves, changes, billing tickets, contract renewals, request for proposals, trouble
+            tickets, and more handled with one call.</p>
+        <p class="citycare_grn">
+            Your phone and computer will thank you.</p>
+        <a href="contact.html">
+            <img src="/images/services_cta.png" class="services_cta"></a>
+    </div>
+    <div id="featured">
+        <img src="/images/services_slide1.png" class="services_slide_right" />
+    </div>      
+</div>
+<!-- start main -->
+<div id="sidebar_services">
+    <div id="sidebarServices_container">
+        <div id="services_topA">
+            <p>
+                <img src="/images/services_cloud.png" class="sub_icon">Use the CityCare dashboard
+                to access the most important information about your business telecommunications.
+                The easy-to-use interface requires no training, but we are always happy to hear
+                from you.</p>
+            <img src="/images/sub_shelf.png">
+            <a href="http://portal.citycommunications.com/Account.aspx">&raquo; Login Here</a>&nbsp;&nbsp;or
+            Call <strong>(888) 983-5322</strong>
+        </div>
+        <div id="services_topB">
+            <p>
+                <img src="/images/services_phases.png" class="sub_icon">Let us show you an easier
+                way to manage your voice and data communications.</p>
+            <img src="images/sub_shelf.png">
+            <a href="contact.html">&raquo; Get Started Today</a>
+        </div>
+        <div id="services_bottomA">
+            <p>
+                <img src="/images/services_team.png" class="sub_icon">When you have a problem with
+                your voice or data services you want to work with someone who can help you get it
+                fixed, not waste time talking to a call center. With CityCare, you get to work
+                with our veteran staff of project management specialists.</p>
+        </div>
+        <div id="services_bottomB">
+            <p>
+                <img src="/images/services_salesman.png" class="sub_icon">Since we can help evaluate
+                all of your options and not just what they are selling, we find that those pesky
+                sales people will bother you less when they know that we have your back.</p>
+        </div>
+    </div>
+    <!-- sidebar container -->
+    <div class="footer_copyright_sub">
+        Copyright &copy; 2012 City Communications Integrated. All rights reserved.&nbsp;&nbsp;&nbsp;&nbsp;<a
+            href="documents/TermsAndConditions.pdf" title="Terms and Conditions">Terms of Use</a>
+        | <a href="documents/PrivacyPolicy.pdf" title="Privacy Policy">Privacy Policy</a></div>
+</div>
+<!-- end main -->

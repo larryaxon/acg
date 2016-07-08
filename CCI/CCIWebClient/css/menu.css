@@ -1,0 +1,167 @@
+/* Main Navigation */
+#nav{list-style-type:none;width:950px;height:36px;margin:50px auto 5px auto;background-image:url("city_menu.png"); -moz-border-radius: 10px;-webkit-border-radius: 10px;border-radius: 10px;padding-left:10px;}
+#nav li{float:left}
+#nav li a{background:url(city_menu.png) no-repeat;outline:none;display:block;width:114px;height:36px}
+#nav li a.login{background:url(city_menu.png) no-repeat;outline:none;display:block;width:150px;height:36px;margin-left:220px;}
+#nav li a span{display:none}
+
+#nav li a#home{background-position:0 0}
+#nav li a#home:hover{background-position:0 0px !important}
+#nav li a#home:active{background-position:0 -72px}
+#nav li a#home.on:link,
+#nav li a#home.on:hover,
+#nav li a#home.on:active,
+#nav li a#home.on:visited{background-position:0 -108px}
+
+#nav li a#services{background-position:-114px 0}
+#nav li a#services:hover{background-position:-114px -36px}
+#nav li a#services:active{background-position:-114px -72px}
+#nav li a#services.on:link,
+#nav li a#services.on:hover,
+#nav li a#services.on:active,
+#nav li a#services.on:visited{background-position:-114px -108px}
+
+#nav li a#citycare{background-position:-228px 0}
+#nav li a#citycare:hover{background-position:-228px -36px}
+#nav li a#citycare:active{background-position:-228px -72px}
+#nav li a#citycare.on:link,
+#nav li a#citycare.on:hover,
+#nav li a#citycare.on:active,
+#nav li a#citycare.on:visited{background-position:-228px -108px}
+
+#nav li a#cityhosted{background-position:-342px 0}
+#nav li a#cityhosted:hover{background-position:-342px -36px}
+#nav li a#cityhosted:active{background-position:-342px -72px}
+#nav li a#cityhosted.on:link,
+#nav li a#cityhosted.on:hover,
+#nav li a#cityhosted.on:active,
+#nav li a#cityhosted.on:visited{background-position:-342px -108px}
+
+#nav li a#contactpage{background-position:-456px 0}
+#nav li a#contactpage:hover{background-position:-456px -36px}
+#nav li a#contactpage:active{background-position:-456px -72px}
+#nav li a#contactpage.on:link,
+#nav li a#contactpage.on:hover,
+#nav li a#contactpage.on:active,
+#nav li a#contactpage.on:visited{background-position:-456px -108px}
+
+#nav li a#login{background-position:-800px 0; width:150px;}
+#nav li a#login:hover{background-position:-800px -0px !important}
+#nav li a#login:active{background-position:-800px -72px}
+#nav li a#login.on:link,
+#nav li a#login.on:hover,
+#nav li a#login.on:active,
+#nav li a#login.on:visited{background-position:-800px -108px}
+/* End Main Navigation */
+
+/* Dealer Navigation */
+#navAgent{list-style-type:none;width:950px;height:36px;margin:50px auto 5px auto;background-image:url("../images/city_menuAgent.png"); -moz-border-radius: 10px;-webkit-border-radius: 10px;border-radius: 10px;padding-left:10px;}
+#navAgent li{float:left}
+#navAgent li a{background:url("../images/city_menuAgent.png") no-repeat;outline:none;display:block;width:114px;height:36px}
+#navAgent li a.login{background:url("../images/city_menuAgent.png") no-repeat;outline:none;display:block;width:150px;height:36px;margin-left:220px;}
+#navAgent li a span{display:none}
+
+#navAgent li a#home{background-position:0 0}
+#navAgent li a#home:hover{background-position:0 0px !important}
+#navAgent li a#home:active{background-position:0 -72px}
+#navAgent li a#home.on:link,
+#navAgent li a#home.on:hover,
+#navAgent li a#home.on:active,
+#navAgent li a#home.on:visited{background-position:0 -108px}
+
+#navAgent li a#services{background-position:-114px 0}
+#navAgent li a#services:hover{background-position:-114px -36px}
+#navAgent li a#services:active{background-position:-114px -72px}
+#navAgent li a#services.on:link,
+#navAgent li a#services.on:hover,
+#navAgent li a#services.on:active,
+#navAgent li a#services.on:visited{background-position:-114px -108px}
+
+#navAgent li a#citycare{background-position:-228px 0}
+#navAgent li a#citycare:hover{background-position:-228px -36px}
+#navAgent li a#citycare:active{background-position:-228px -72px}
+#navAgent li a#citycare.on:link,
+#navAgent li a#citycare.on:hover,
+#navAgent li a#citycare.on:active,
+#navAgent li a#citycare.on:visited{background-position:-228px -108px}
+
+#navAgent li a#cityhosted{background-position:-342px 0}
+#navAgent li a#cityhosted:hover{background-position:-342px -36px}
+#navAgent li a#cityhosted:active{background-position:-342px -72px}
+#navAgent li a#cityhosted.on:link,
+#navAgent li a#cityhosted.on:hover,
+#navAgent li a#cityhosted.on:active,
+#navAgent li a#cityhosted.on:visited{background-position:-342px -108px}
+
+#navAgent li a#contactpage{background-position:-456px 0}
+#navAgent li a#contactpage:hover{background-position:-456px -36px}
+#navAgent li a#contactpage:active{background-position:-456px -72px}
+#navAgent li a#contactpage.on:link,
+#navAgent li a#contactpage.on:hover,
+#navAgent li a#contactpage.on:active,
+#navAgent li a#contactpage.on:visited{background-position:-456px -108px}
+
+#navAgent li a#login{background-position:-800px 0; width:150px;}
+#navAgent li a#login:hover{background-position:-800px -0px !important}
+#navAgent li a#login:active{background-position:-800px -72px}
+#navAgent li a#login.on:link,
+#navAgent li a#login.on:hover,
+#navAgent li a#login.on:active,
+#navAgent li a#login.on:visited{background-position:-800px -108px}
+/* End Agent Navigation */
+
+/* Agent Navigation */
+#navDealer{list-style-type:none;width:950px;height:36px;margin:50px auto 5px auto;background-image:url("../images/city_menuAgent.png"); -moz-border-radius: 10px;-webkit-border-radius: 10px;border-radius: 10px;padding-left:10px;}
+#navDealer li{float:left}
+#navDealer li a{background:url("../images/city_menuDealer.png") no-repeat;outline:none;display:block;width:114px;height:36px}
+#navDealer li a.login{background:url("../images/city_menuDealer.png") no-repeat;outline:none;display:block;width:150px;height:36px;margin-left:220px;}
+#navDealer li a span{display:none}
+
+#navDealer li a#home{background-position:0 0}
+#navDealer li a#home:hover{background-position:0 0px !important}
+#navDealer li a#home:active{background-position:0 -72px}
+#navDealer li a#home.on:link,
+#navDealer li a#home.on:hover,
+#navDealer li a#home.on:active,
+#navDealer li a#home.on:visited{background-position:0 -108px}
+
+#navDealer li a#services{background-position:-114px 0}
+#navDealer li a#services:hover{background-position:-114px -36px}
+#navDealer li a#services:active{background-position:-114px -72px}
+#navDealer li a#services.on:link,
+#navDealer li a#services.on:hover,
+#navDealer li a#services.on:active,
+#navDealer li a#services.on:visited{background-position:-114px -108px}
+
+#navDealer li a#citycare{background-position:-228px 0}
+#navDealer li a#citycare:hover{background-position:-228px -36px}
+#navDealer li a#citycare:active{background-position:-228px -72px}
+#navDealer li a#citycare.on:link,
+#navDealer li a#citycare.on:hover,
+#navDealer li a#citycare.on:active,
+#navDealer li a#citycare.on:visited{background-position:-228px -108px}
+
+#navDealer li a#cityhosted{background-position:-342px 0}
+#navDealer li a#cityhosted:hover{background-position:-342px -36px}
+#navDealer li a#cityhosted:active{background-position:-342px -72px}
+#navDealer li a#cityhosted.on:link,
+#navDealer li a#cityhosted.on:hover,
+#navDealer li a#cityhosted.on:active,
+#navDealer li a#cityhosted.on:visited{background-position:-342px -108px}
+
+#navDealer li a#contactpage{background-position:-456px 0}
+#navDealer li a#contactpage:hover{background-position:-456px -36px}
+#navDealer li a#contactpage:active{background-position:-456px -72px}
+#navDealer li a#contactpage.on:link,
+#navDealer li a#contactpage.on:hover,
+#navDealer li a#contactpage.on:active,
+#navDealer li a#contactpage.on:visited{background-position:-456px -108px}
+
+#navDealer li a#login{background-position:-800px 0; width:150px;}
+#navDealer li a#login:hover{background-position:-800px -0px !important}
+#navDealer li a#login:active{background-position:-800px -72px}
+#navDealer li a#login.on:link,
+#navDealer li a#login.on:hover,
+#navDealer li a#login.on:active,
+#navDealer li a#login.on:visited{background-position:-800px -108px}
+/* End Dealer Navigation */

@@ -1,0 +1,234 @@
+using System;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
+using System.IO;
+
+using TAGBOSS.Common;
+using TAGBOSS.Common.Logging;
+
+namespace TAGBOSS.Common
+{
+  /// <summary>
+  /// Singleton SQLConnection Factory
+  /// </summary>
+  /// <remarks>
+  /// The SQLConnection Factory class contains all the definitions needed in order to make SQL database connections.
+  /// The SQLConnection Factory class it has been declared as a sealed class to ensure no body else inherit this definition. 
+  /// </remarks>
+  public sealed class SQLConnectionFactory
+  {
+    
+    /// <summary>
+    /// Thread-Safe instance 
+    /// </summary>
+    private static readonly SQLConnectionFactory sqlConnectionFactoryInstance = new SQLConnectionFactory();
+    
+    /// <summary>
+    /// Log class object for logging purpose
+    /// </summary>
+    private Log log = new Log(LogFactory.GetInstance().GetLog("TAGBOSS.Sys.Dal.SQLConnectionFactory"));    
+
+    /// <summary>
+    /// Constant holding the definition of the configuration file name.
+    /// </summary>
+    private const string m_V4ConfigFileName = "DB.config";
+    private const string m_V3ConfigFileName = "TAGV3.config";
+    private const string cCONNECTIONSTRING = "Data Source= {0};Initial Catalog={1};{2}MultipleActiveResultSets=True;";//New config for connStr added by Leo
+    private const string cINTEGRATEDSEC = "Integrated Security=True;";
+    private const string cUSERAUTHENTICATION = "uid={0};Password={1};";
+
+    /// <summary>
+    /// Shared SQL Connection instance.
+    /// </summary>
+    private string V4connectionString;
+    private string V3connectionString;
+
+    #region ErrorMessages
+    /// <summary>
+    /// Constant to define database connection trouble message
+    /// </summary>
+    private const string EM_DATABASE_CONNECTION_FAILED = "Database Connection Failed";
+
+    /// <summary>
+    /// Constant to define configuration file not found exception message 
+    /// </summary>
+    private const string EM_CONFIGURATION_FILE_NOT_FOUND = "Configuration File Not Found";
+
+    #endregion
+
+    /// <summary>
+    /// SQLConnection Factory Constructor
+    /// </summary>
+    /// <remarks> 
+    /// Sealed constructor to ensure only this instance declared in this class can be created.
+    /// </remarks>
+    private SQLConnectionFactory()
+    {
+      V4connectionString = getConnectionString(TAGSystemNames.V4);
+      // don't fail at this time if TAGV3.config is not there
+      //try
+      //{
+      //  V3connectionString = getConnectionString(TAGSystemNames.V3);
+      //}
+      //catch { };
+    }
+
+    /// <summary>
+    /// Factory instance accessor method
+    /// </summary>
+    /// <returns>
+    /// Returns the instance for SQL Connection definitions.
+    /// </returns>
+    public static SQLConnectionFactory GetInstance()
+    {
+      return sqlConnectionFactoryInstance;
+    }
+    public string getConnectionString()
+    {
+      return getConnectionString(TAGSystemNames.V4);
+    }
+    public string getConnectionString(TAGSystemNames system) 
+    {
+      string configFileName;
+      if (system == TAGSystemNames.V3)
+        configFileName = m_V3ConfigFileName;
+      else
+        configFileName = m_V4ConfigFileName;
+      string currentPath = (string)TAGFunctions.evaluateFunction(TAGFunctions.EnumFunctions.getCurrentPath);
+      if (!currentPath.EndsWith("\\"))
+        currentPath += "\\";
+
+      string fileLocation = currentPath + configFileName;
+      string line, conStr = "";
+      string[] db_server;
+      string[] delimeters = new string[]{";"};
+      if (TAGFunctions.UseTAGBOSSConfig)
+      {
+        try
+        {
+          System.IO.StreamReader tagBossConfig_file = new System.IO.StreamReader(fileLocation);
+
+          while ((line = tagBossConfig_file.ReadLine()) != null)
+          {
+            if (!(line.IndexOf("//") >= 0) && (!(line.Equals(""))))
+              conStr = line;
+          }
+          tagBossConfig_file.Close();
+        }
+        catch (FileNotFoundException fnfe)
+        {
+          log.Error(Log.LogContext.Dal, EM_CONFIGURATION_FILE_NOT_FOUND, fnfe);
+          string msg = "Database Configuration file " + configFileName + " could not be found.";
+          FileNotFoundException myFnfe = new FileNotFoundException(msg, fnfe);
+          throw myFnfe;
+        }
+      }
+      else
+        conStr = ConfigurationManager.AppSettings.Get("Database");
+      db_server = conStr.Split(delimeters,StringSplitOptions.RemoveEmptyEntries);
+	    /* 
+         * added by LLA 1/14/2010 to set special demo database flag.
+         * Ok, I know this is ugly and a serious hack, but because of de-identifyed data,
+         * we needes some minor behavior differences if we are connected to a demo database.
+         * We assume here that it is a demo database if it has "demo" in the name.
+         * 
+         * Note that db_server[0] is the instance/server name (e.g. development, or rackspace server),
+         * and [1] is the name of the database
+         */
+
+      if (db_server.Length > 1)
+      {
+        TAGFunctions.DatabaseName = db_server[1];
+        if(db_server[1].ToLower().Contains("demo"))
+          TAGFunctions.IsDemoDatabase = true;   // set the global static flag
+      }
+      if (db_server.Length > 2)
+      {
+        string db_sec = "";
+        //TODO: OUT Parameter! We need to review this!
+        //string myToken = (string)TAGFunctions.evaluateFunction(TAGFunctions.EnumFunctions.getFunctionName, TAGFunctions.FUNCTIONCHAR + db_server[2], out db_sec);
+        string myToken = (string)TAGFunctions.evaluateFunction(TAGFunctions.EnumFunctions.getFunctionName, TAGFunctions.FUNCTIONCHAR + db_server[2], out db_sec);
+        string[] delimiters2 = { "," };
+        string[] authWords = (string[])TAGFunctions.evaluateFunction(TAGFunctions.EnumFunctions.parseString, db_sec, delimiters2);
+        db_server[2] = string.Format(cUSERAUTHENTICATION, authWords);
+        conStr = string.Format(cCONNECTIONSTRING, db_server);
+      }
+      else if (db_server.Length == 2)
+      {
+        string[] db_sec = new string[] { db_server[0], db_server[1], cINTEGRATEDSEC };
+      
+        conStr = string.Format(cCONNECTIONSTRING, db_sec);
+      }
+      return conStr;
+    }
+    /// <summary>
+    /// Shared SQL Connection property
+    /// </summary>
+    /// <remarks>
+    /// Property that allows to get or set the Database Connection.
+    /// </remarks>
+    public SqlConnection Connection
+    {
+      get
+      {
+        SqlConnection sqlConnection = null;
+        try
+        {
+          sqlConnection = new SqlConnection(V4connectionString);
+
+          if (sqlConnection.State == ConnectionState.Closed)
+            sqlConnection.Open();
+        }
+        catch (SqlException se)
+        {
+          log.Error(Log.LogContext.Dal, EM_DATABASE_CONNECTION_FAILED, se);
+        }
+
+        return sqlConnection;
+      }
+    }
+    public SqlConnection V3Connection
+    {
+      get
+      {
+        return Connection;
+        //SqlConnection sqlConnection = null;
+        //try
+        //{
+        //  sqlConnection = new SqlConnection(V3connectionString);
+
+        //  if (sqlConnection.State == ConnectionState.Closed)
+        //    sqlConnection.Open();
+        //}
+        //catch (SqlException se)
+        //{
+        //  log.Error(Log.LogContext.Dal, EM_DATABASE_CONNECTION_FAILED, se);
+        //}
+
+        //return sqlConnection;
+      }
+    }
+
+    public SqlConnection ConnectionBigPacket
+    {
+      get
+      {
+        SqlConnection sqlConnection = null;
+        try
+        {
+          sqlConnection = new SqlConnection(V4connectionString+";Packet Size=32767");
+
+          if (sqlConnection.State == ConnectionState.Closed)
+            sqlConnection.Open();
+        }
+        catch (SqlException se)
+        {
+          log.Error(Log.LogContext.Dal, EM_DATABASE_CONNECTION_FAILED, se);
+        }
+
+        return sqlConnection;
+      }
+    }
+  }
+}

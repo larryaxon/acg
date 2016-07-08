@@ -1,0 +1,161 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Text;
+using System.Windows.Forms;
+
+using CCI.Common;
+using CCI.DesktopClient.Common;
+using CCI.Sys.Data;
+
+namespace CCI.DesktopClient.Screens
+{
+  public partial class frmAnalysisReport : ScreenBase
+  {
+    private bool _clearing = false;
+    private List<string> _idList = null;
+    Dictionary<string, CommonData.UnmatchedNameTypes> _gridList = new Dictionary<string, CommonData.UnmatchedNameTypes>() 
+      { { "None", CommonData.UnmatchedNameTypes.None },
+        { "Customers", CommonData.UnmatchedNameTypes.AnalysisCustomerEntity },
+        { "Locations", CommonData.UnmatchedNameTypes.AnalysisLocation },
+        { "Contacts", CommonData.UnmatchedNameTypes.AnalysisContact },
+        { "Margin Raw",  CommonData.UnmatchedNameTypes.AnalysisMarginRaw },
+        { "Dealer Margin",  CommonData.UnmatchedNameTypes.AnalysisDealerMargin },
+        { "AR Summary", CommonData.UnmatchedNameTypes.AnalysisAR  },
+        { "AR Detail", CommonData.UnmatchedNameTypes.AnalysisARDetail }, 
+        { "Tax Detail", CommonData.UnmatchedNameTypes.AnalysisTaxDetailHistory },
+        { "OCC Import Raw", CommonData.UnmatchedNameTypes.AnalysisOCCImportRaw },
+        { "Network Inventory", CommonData.UnmatchedNameTypes.AnalysisNetworkInventory } };
+
+    public frmAnalysisReport()
+    {
+      InitializeComponent();
+      loadCombos();
+      srchNamedSearch.SearchExec = new SearchDataSourceNamedSearch();
+    }
+
+    private void frmAnalysisReport_Load(object sender, EventArgs e)
+    {
+      topGrid.UniqueIdentifier = middleGrid.UniqueIdentifier = bottomGrid.UniqueIdentifier = 
+        topGrid.IDListColumn = bottomGrid.IDListColumn = middleGrid.IDListColumn = "CustomerID";
+      topGrid.FieldsDefaultIsChecked = middleGrid.FieldsDefaultIsChecked = bottomGrid.FieldsDefaultIsChecked = true;
+      topGrid.CanChangeDisplayFields = middleGrid.CanChangeDisplayFields = bottomGrid.CanChangeDisplayFields = true;
+      topGrid.IncludeGroupAsCriteria = bottomGrid.IncludeGroupAsCriteria = middleGrid.IncludeGroupAsCriteria = true;
+      topGrid.UseNamedSearches = middleGrid.UseNamedSearches = bottomGrid.UseNamedSearches = true;
+      ((SearchDataSourceNamedSearch)srchNamedSearch.SearchExec).NameType = CommonData.UnmatchedNameTypes.AnalyticsScreen;
+      ((SearchDataSourceNamedSearch)srchNamedSearch.SearchExec).User = SecurityContext.User;
+    }
+
+    private void topGrid_SearchPressed(object sender, ACG.CommonForms.MaintenanceGridRowSelectedArgs e)
+    {
+      _idList = e.IDList;
+      if (ckFilterByIDList.Checked)
+      {
+        bottomGrid.IDList = _idList;
+        middleGrid.IDList = _idList;
+      }
+    }
+
+    private void ckFilterByIDList_CheckedChanged(object sender, EventArgs e)
+    {
+      if (!ckFilterByIDList.Checked)
+        middleGrid.IDList = bottomGrid.IDList = null; // get rid of the prior IDList so the search works properly
+    }
+
+    private void btnGroups_Click(object sender, EventArgs e)
+    {
+      ScreenBase frm = new frmGroups();
+      frm.SecurityContext = SecurityContext;
+      ((frmGroups)frm).Init(new ArrayList(topGrid.IDList));
+      frm.ShowDialog();
+    }
+
+    private void loadCombos()
+    {
+      cboTopGrid.Items.Clear();
+      cboMiddleGrid.Items.Clear();
+      cboBottomGrid.Items.Clear();
+      foreach (KeyValuePair<string, CommonData.UnmatchedNameTypes> entry in _gridList)
+      {
+        cboTopGrid.Items.Add(entry.Key);
+        cboMiddleGrid.Items.Add(entry.Key);
+        cboBottomGrid.Items.Add(entry.Key);
+      }
+      cboTopGrid.Text = cboMiddleGrid.Text = cboBottomGrid.Text = "None";
+    }
+    private void selectGrid(ComboBox cbo)
+    {
+      if (!_clearing)
+      {
+        Cursor.Current = Cursors.WaitCursor;
+        this.SuspendLayout();
+        ctlSearchGrid grid = topGrid;
+        string gridName = CommonFunctions.CString(cbo.SelectedItem);
+        CommonData.UnmatchedNameTypes type = _gridList[gridName];
+        switch (cbo.Name)
+        {
+          case "cboTopGrid":
+            grid = topGrid;
+            break;
+          case "cboMiddleGrid":
+            grid = middleGrid;
+            splitTop.Panel2Collapsed = cbo.Text.Equals("None"); // unhide the panel
+            break;
+          case "cboBottomGrid":
+            grid = bottomGrid;
+            splitMain.Panel2Collapsed = cbo.Text.Equals("None"); // unhide the panel
+            break;
+        }
+        grid.ClearAll();
+        grid.Init(type, grid.Name);
+        grid.ClearSearch();
+        this.ResumeLayout();
+        Cursor.Current = Cursors.Default;
+      }
+    }
+
+    private void cboTopGrid_SelectedIndexChanged(object sender, EventArgs e)
+    {
+      selectGrid((ComboBox)sender);
+    }
+
+    private void cboMiddleGrid_SelectedIndexChanged(object sender, EventArgs e)
+    {
+       selectGrid((ComboBox)sender);   
+    }
+
+    private void cboBottomGrid_SelectedIndexChanged(object sender, EventArgs e)
+    {
+      selectGrid((ComboBox)sender);    
+    }
+
+    private void middleGrid_SearchPressed(object sender, ACG.CommonForms.MaintenanceGridRowSelectedArgs e)
+    {
+      if (ckFilterByIDList.Checked)
+      {
+        bottomGrid.IDList = e.IDList;
+      }
+    }
+
+    private void btnClear_Click(object sender, EventArgs e)
+    {
+      _clearing = true;
+      cboTopGrid.Text = cboMiddleGrid.Text = cboBottomGrid.Text = "None";
+      topGrid.Init(CommonData.UnmatchedNameTypes.None, null);
+      middleGrid.Init(CommonData.UnmatchedNameTypes.None, null);
+      bottomGrid.Init(CommonData.UnmatchedNameTypes.None, null);
+      if (_idList != null)
+        _idList.Clear();
+      topGrid.IDList = middleGrid.IDList = bottomGrid.IDList = _idList;
+      bottomGrid.Clear();
+      middleGrid.Clear();
+      topGrid.Clear();
+      splitMain.Panel2Collapsed = splitTop.Panel2Collapsed = true;
+      _clearing = false;
+    }
+
+  }
+}

@@ -1,0 +1,139 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Text;
+using System.Windows.Forms;
+
+using ACG.Common;
+using ACG.Common.Data;
+
+namespace ACG.CommonForms
+{
+  public partial class frmMaintenanceBase : Form, IScreenBase
+  {
+    private bool _dirty = false;
+    private bool _fieldsLoaded = false;
+    private MaintenanceDataSource _dataSource = null;
+    private DataGridViewRow _selectedRow = null;
+
+    public ISecurityContext SecurityContext { get; set; }
+    public string DataSource { get; set; }
+
+    public frmMaintenanceBase()
+    {
+      InitializeComponent();
+    }
+
+    private void frmMaintenanceBase_Load(object sender, EventArgs e)
+    {
+
+    }
+
+    public void Init(string dataSource)
+    {
+      _dataSource = new MaintenanceDataSource(dataSource, SecurityContext);
+      _dataSource.AssemblyName = "CCI.Sys";
+      _dataSource.Init();
+      ctlSearchMain.SearchExec = _dataSource.SearchDataSource;
+      ctlSearchList.Init(_dataSource.GridDataSource, ctlSearchList.Name);
+      ctlSearchList.ReLoad();
+      initEditForm();
+    }
+
+    public void Save()
+    {
+      _dataSource.saveRecord(getValues());
+    }
+
+    public void Clear()
+    {
+      foreach (Control c in panelReadOnly.Controls)
+        if (c.Name.StartsWith("txt"))
+          c.Text = null;
+      foreach (Control c in panelEdit.Controls)
+        if (c.Name.StartsWith("txt"))
+          c.Text = null;
+    }
+
+    private string[] getValues()
+    {
+      return null;
+    }
+    private void initEditForm()
+    {
+      if (_fieldsLoaded)
+        return;
+      panelEdit.Controls.Clear();
+      panelReadOnly.Controls.Clear();
+      int width = 120;
+      for (int i = 0; i < _dataSource.FieldNames.GetLength(0); i++) // for each field
+      {
+        string fld = _dataSource.FieldNames[i];
+        Label lbl = new Label();
+        lbl.Name = "lbl" + fld;
+        lbl.Text = fld;
+        lbl.Width = width;
+        // check datatype and picklist fields to decide what kind of control to put here
+        TextBox txt = new TextBox();
+        txt.Name = "txt" + fld;
+        txt.Width = width;
+        if (_dataSource.HiddenFields.ContainsKey(fld))
+        {
+          lbl.Visible = false;
+          txt.Visible = false;
+        }
+        if (_dataSource.ReadOnlyFields.ContainsKey(fld) || _dataSource.HiddenFields.ContainsKey(fld))
+        {
+          txt.Enabled = false;
+          panelReadOnly.Controls.Add(lbl);
+          panelReadOnly.Controls.Add(txt);
+        }
+        else
+        {
+          panelEdit.Controls.Add(lbl);
+          panelEdit.Controls.Add(txt);
+        }
+        
+      }
+      _fieldsLoaded = true;
+    }
+
+    private void btnSave_Click(object sender, EventArgs e)
+    {
+      Save();
+    }
+
+    private void btnNew_Click(object sender, EventArgs e)
+    {
+
+    }
+
+    private void btnCancel_Click(object sender, EventArgs e)
+    {
+
+    }
+
+    private void ctlSearchList_RowSelected(object sender, MaintenanceGridRowSelectedArgs e)
+    {
+      Clear();
+      _selectedRow = e.SelectedRow;
+
+    }
+    private void loadFieldsFromGrid()
+    {
+      foreach (DataGridViewColumn col in ctlSearchList.Columns)
+      {
+        string fld = col.Name;
+        if (_dataSource.FieldList.ContainsKey(fld))
+        {
+          if (_dataSource.HiddenFields.ContainsKey(fld) || _dataSource.ReadOnlyFields.ContainsKey(fld))
+            panelReadOnly.Controls["txt" + fld].Text = CommonFunctions.CString(_selectedRow.Cells[fld].Value);
+          else
+            panelEdit.Controls["txt" + fld].Text = CommonFunctions.CString(_selectedRow.Cells[fld].Value);
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,175 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Data;
+using System.Text;
+using System.Windows.Forms;
+
+using CCI.Sys.Data;
+using CCI.Common;
+using CCI.DesktopClient.Screens;
+
+namespace CCI.DesktopClient.Common
+{
+  public partial class ctlFollowUps : UserControl
+  {
+    DataSource _ds = null;
+    DataSource _dataSource { get { if (_ds == null) _ds = new DataSource(); return _ds; } }
+    public string OrderID { get; set; }
+    public string CustomerID { get; set; }
+    /*
+         private string[] followUpFields = new string[] { "ID"
+      ,"AssignedTo"
+      ,"CustomerID"
+      ,"OrderID"
+      ,"Description"
+      ,"Notes"
+      ,"AsOfDate"
+      ,"DueDate"
+      ,"CreateDateTime"
+      ,"CompleteDateTime"
+      ,"DispositionCode"
+      ,"Source"
+      ,"LastModifiedBy"
+      ,"LastModifiedDateTime"};
+     */
+    private ACG.Common.ISecurityContext _securityContext = null;
+    public ctlFollowUps()
+    {
+      InitializeComponent();
+    }
+    public void Init()
+    {
+      Init(null, null);
+    }
+    public void Init(string orderID, string customerID)
+    {
+      OrderID = orderID;
+      CustomerID = customerID;
+      srchAssignedTo.SearchExec = new SearchDataSourceEntity("User");
+      srchCustomer.SearchExec = new SearchDataSourceEntity("Customer");      
+      srchFollowUps.Init(CommonData.UnmatchedNameTypes.FollowUps, "Followups");
+      ScreenBase parent = CommonFormFunctions.getParentForm(this);
+      _securityContext = parent.SecurityContext;
+      if (!string.IsNullOrEmpty(orderID))
+        clearFields();
+      loadGrid();
+      srchAssignedTo.Text = _securityContext.User;
+    }
+    private void loadGrid()
+    {
+      Dictionary<string, string[]> criteria = new Dictionary<string, string[]>(StringComparer.CurrentCultureIgnoreCase);
+      if (!string.IsNullOrEmpty(srchAssignedTo.Text))
+        criteria.Add("AssignedTo", new string[] { ctlSearchGrid.opEQUALS, srchAssignedTo.Text });
+      if (!string.IsNullOrEmpty(srchCustomer.Text))
+        criteria.Add("CustomerID", new string[] { ctlSearchGrid.opEQUALS, srchCustomer.Text });
+      if (!string.IsNullOrEmpty(txtOrder.Text))
+        criteria.Add("OrderID", new string[] { ctlSearchGrid.opEQUALS, txtOrder.Text });
+      srchFollowUps.SearchCriteria = criteria;
+      srchFollowUps.ReLoad();    
+    }
+    private void loadFields(DataGridViewRow row)
+    {
+      txtID.Text = CommonFunctions.CString(row.Cells["ID"].Value);
+      srchAssignedTo.Text = CommonFunctions.CString(row.Cells["AssignedTo"].Value);
+      srchCustomer.Text = CommonFunctions.CString(row.Cells["CustomerID"].Value);
+      txtCompletedDateTime.Text = CommonFunctions.CString(row.Cells["CompleteDateTime"].Value);
+      txtCreatedDateTime.Text = CommonFunctions.CString(row.Cells["CreateDateTime"].Value, string.Empty, CommonData.FORMATLONGDATETIME);
+      txtLastModifiedDateTime.Text = CommonFunctions.CString(row.Cells["LastModifiedDateTime"].Value);
+      txtNotes.Text = CommonFunctions.CString(row.Cells["Notes"].Value); ;
+      dtDueDate.Value = CommonFunctions.CDateTime(row.Cells["DueDate"], DateTime.Today);
+      dtEffectiveDate.Value = CommonFunctions.CDateTime(row.Cells["AsOfDate"], DateTime.Today);
+      txtDescription.Text = CommonFunctions.CString(row.Cells["Description"].Value);
+      txtOrder.Text = CommonFunctions.CString(row.Cells["OrderID"].Value);
+    }
+    private void clearFields()
+    {
+      txtID.Text = string.Empty;
+      srchAssignedTo.Text = string.Empty;
+      if (string.IsNullOrEmpty(CustomerID))
+      {
+        srchCustomer.Text = string.Empty;
+        srchCustomer.Enabled = true;
+      }
+      else
+      {
+        srchCustomer.Text = CustomerID;
+        srchCustomer.Enabled = false;
+      }
+      txtCompletedDateTime.Text = string.Empty;
+      txtCreatedDateTime.Text = string.Empty;
+      txtLastModifiedDateTime.Text = string.Empty;
+      txtNotes.Text = string.Empty;
+      dtDueDate.Value = DateTime.Today;
+      dtEffectiveDate.Value = DateTime.Today;
+      txtDescription.Text = string.Empty;
+      if (string.IsNullOrEmpty(OrderID))
+      {
+        txtOrder.Text = string.Empty;
+        txtOrder.Enabled = true;
+      }
+      else
+      {
+        txtOrder.Text = OrderID;
+        txtOrder.Enabled = false;
+      }
+    }
+
+    private void srchFollowUps_RowSelected(object sender, ACG.CommonForms.MaintenanceGridRowSelectedArgs e)
+    {
+      DataGridViewRow row = e.SelectedRow;
+      loadFields(row);
+    }
+
+    private void srchAssignedTo_OnSelected(object sender, EventArgs e)
+    {
+      loadGrid();
+    }
+
+    private void srchCustomer_OnSelected(object sender, EventArgs e)
+    {
+      loadGrid();
+    }
+
+    private void btnSave_Click(object sender, EventArgs e)
+    {
+      string[] fieldValues = new string[] { txtID.Text, srchAssignedTo.Text, srchCustomer.Text, txtOrder.Text, 
+        CommonFunctions.fixUpStringForSQL(txtDescription.Text), CommonFunctions.fixUpStringForSQL(txtNotes.Text), dtEffectiveDate.Value.ToShortDateString(), dtDueDate.Value.ToShortDateString(), DateTime.Now.ToString(CommonData.FORMATLONGDATETIME), 
+        txtCompletedDateTime.Text, cboDispositionCode.Text, txtSource.Text, _securityContext.User, DateTime.Now.ToString(CommonData.FORMATLONGDATETIME) };
+      int? ret = _dataSource.updateFollowUp(fieldValues);
+      if (ret == -1)
+        MessageBox.Show("Error saving followup");
+      else
+        if (string.IsNullOrEmpty(txtID.Text))
+          txtID.Text = ((int)ret).ToString();
+      loadGrid();
+    }
+
+    private void ckCompleted_CheckedChanged(object sender, EventArgs e)
+    {
+      if (ckCompleted.Checked)
+        txtCompletedDateTime.Text = DateTime.Now.ToString(CommonData.FORMATLONGDATETIME);
+      else
+        txtCompletedDateTime.Text = string.Empty;
+    }
+
+    private void btnAddNew_Click(object sender, EventArgs e)
+    {
+      clearFields();
+    }
+
+    private void btnDelete_Click(object sender, EventArgs e)
+    {
+      if (string.IsNullOrEmpty(txtID.Text))
+        MessageBox.Show("You cannot delete an empty record or one that has not yet been added");
+      else
+        _dataSource.deleteFollowUp(CommonFunctions.CInt(txtID.Text));
+    }
+
+    private void txtOrder_Leave(object sender, EventArgs e)
+    {
+      loadGrid();
+    }
+  }
+}

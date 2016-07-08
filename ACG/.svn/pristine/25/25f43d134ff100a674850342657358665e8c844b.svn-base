@@ -1,0 +1,541 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Data;
+using System.Text;
+using System.Windows.Forms;
+
+using ACG.Common;
+
+namespace ACG.CommonForms
+{
+  public partial class ctlSearch : UserControl
+  {
+
+    #region module data
+    private bool _searching = true;
+    private bool _selecting = false;
+    private bool _collapsed = true;
+    private bool _uparrowing = false;
+    private bool _navigatingFromList = false;
+    private bool _displayOnlyID = false;
+    private bool _displayOnlyDescription = false;
+    private bool _createdNewItem = false;
+    private bool _addNewMode = false;
+    private bool _autoAddNewMode = false;
+    private bool _autoTabToNextControlOnSelect = true;
+    private int _collapsedHeight;
+    private int _expandedHeight;
+    private int _margin = 5;
+    private int _maxHeight = 0;
+    string _id = string.Empty;
+    private bool _mustExistInList = false;
+    private string _mustExistMessage = "You must enter a valid value";
+    DateTime _effectiveDate = DateTime.Today;
+    string _Name = string.Empty;
+   
+    #endregion
+    public ISearchDataSource SearchExec = null;
+    #region public properties
+    public int MaxHeight 
+    { 
+      get { return _maxHeight; } 
+      set 
+      { 
+        _maxHeight = value; 
+        _expandedHeight = Math.Min(_expandedHeight, _maxHeight);
+          lstSearchList.Height = _expandedHeight - lstSearchList.Top - _margin;
+      } 
+    }
+    public bool Collapsed
+    {
+      get { return _collapsed; }
+      set
+      {
+        if (_collapsed != value)
+        {
+          _collapsed = value;
+          if (_collapsed)
+            this.Height = _collapsedHeight;
+          else
+          {
+            if (_maxHeight > 0)
+              _expandedHeight = Math.Min(_expandedHeight, _maxHeight);
+            this.Height = _expandedHeight;
+            lstSearchList.Height = _expandedHeight - lstSearchList.Top - _margin;
+          }
+        }
+      }
+    }
+    public new string Text 
+    { 
+      get { return _id; } 
+      set 
+      { 
+        _id = value;
+        _searching = false; // disable text changed event so we dont generate circular events
+        if (string.IsNullOrEmpty(_id))
+          txtSearch.Text = string.Empty;
+        else
+        {
+          string desc = getFromID(_id);
+          setIDandDescription(desc);
+
+          if (ShowCustomerNameWhenSet)
+            if (DisplayOnlyID)
+              txtSearch.Text = getID(desc);
+            else if (DisplayOnlyDescription)
+              txtSearch.Text = getDescription(desc);
+            else
+              txtSearch.Text = desc;
+        }
+      } 
+    }
+    public string ID { get { return _id; } set { _id = value; } }
+    public string Description { get { return _Name; }  }
+    public bool ClearSearchWhenComplete { get; set; }
+    public bool AutoSelectWhenMatch { get; set; }
+    public bool ShowTermedCheckBox 
+    { 
+      get { return ckIncludeTermed.Visible; } 
+      set 
+      { 
+        ckIncludeTermed.Visible = value; 
+        int margin = this.Width - (lstSearchList.Left + lstSearchList.Width);
+        if (ckIncludeTermed.Visible)
+          txtSearch.Width = ckIncludeTermed.Left - margin - txtSearch.Left;
+        else
+          if (ckNew.Visible)
+            txtSearch.Width = ckNew.Left - txtSearch.Left - margin;
+          else
+            txtSearch.Width = btnExpand.Left - txtSearch.Left - margin ;
+      } 
+    }
+    public bool ShowCustomerNameWhenSet { get; set; }
+    public bool AddNewMode 
+    { 
+      get { return _addNewMode; }
+      set
+      {
+        _addNewMode = value;
+        ckNew.Visible = _addNewMode;
+        ckNew.Checked = _addNewMode;
+      }
+    }
+
+    public bool AutoAddNewMode
+    {
+      get { return _autoAddNewMode; }
+      set { _autoAddNewMode = value; }
+    }
+    // flags to only show either the id or the description. These can both be false, but only one can be true
+    public bool DisplayOnlyID { get { return _displayOnlyID; } set { _displayOnlyID = value; if (_displayOnlyID) _displayOnlyDescription = false; } }
+    public bool DisplayOnlyDescription { get { return _displayOnlyDescription; } set { _displayOnlyDescription = value; if (_displayOnlyDescription) _displayOnlyID = false; } }
+    public SortedDictionary<string, string> AdditionalValues = new SortedDictionary<string, string>(StringComparer.CurrentCultureIgnoreCase); // non DB items to add to pick list at the top
+    public bool CreatedNewItem
+    {
+      get { return _createdNewItem; }
+      set { _createdNewItem = value; }
+    }
+    public bool AutoTabToNextControlOnSelect
+    {
+      get { return _autoTabToNextControlOnSelect; }
+      set { _autoTabToNextControlOnSelect = value; }
+    }
+    public bool MustExistInList
+    {
+      get { return _mustExistInList; }
+      set { _mustExistInList = value; }
+    }
+
+    public string MustExistMessage
+    {
+      get { return _mustExistMessage; }
+      set { _mustExistMessage = value; }
+    }
+    #endregion
+    public ctlSearch()
+    {
+      InitializeComponent();
+      AddNewMode = false;
+      _collapsedHeight = txtSearch.Top + txtSearch.Height + _margin - 2;
+      _maxHeight = _expandedHeight = lstSearchList.Top + lstSearchList.Height + _margin;
+      if (this.Parent != null)
+        MaxHeight = this.Parent.Height - this.Top;
+    }
+    #region events
+
+    private void txtSearch_Enter(object sender, EventArgs e)
+    {
+      //_searching = !AddNewMode;
+      _searching = true;
+      _navigatingFromList = false;
+    }
+    private void txtSearch_TextChanged(object sender, EventArgs e)
+    {
+      //if (!AddNewMode)
+      //{
+          if (_searching)
+            if (string.IsNullOrEmpty(txtSearch.Text))
+            {
+              _id = string.Empty;
+              selectItem(_id);
+            }
+            else
+              search(txtSearch.Text, AutoSelectWhenMatch, false);
+      //}
+        _navigatingFromList = false;
+
+    }
+    private void txtSearch_Leave(object sender, EventArgs e)
+    {
+      if (string.IsNullOrEmpty(txtSearch.Text))
+      {
+        _id = string.Empty;
+        _Name = string.Empty;
+      }
+      else if (AddNewMode)
+      {
+        _id = _Name = txtSearch.Text;
+        //return;
+      }
+      bool extendSearchList = true;
+      if (_searching)
+      {
+        if (!string.IsNullOrEmpty(txtSearch.Text))
+        {
+          bool gotOne = search(txtSearch.Text, true);
+          if (gotOne)
+            extendSearchList = false;
+        }
+      }
+      if (extendSearchList)
+      {
+        lstSearchList.Focus();
+        if (lstSearchList.Items.Count > 0)
+          lstSearchList.SelectedIndex = 0;
+      }
+      else
+      //if (!lstSearchList.Focused)
+      {
+        if (lstSearchList.Visible)
+          lstSearchList.Visible = false;
+        if (!_collapsed)
+          Collapsed = true;
+      }
+      _navigatingFromList = false;
+
+    }
+    private void lstSearchList_DoubleClick(object sender, EventArgs e)
+    {
+      if (lstSearchList.SelectedItem != null)
+      {
+        _selecting = false;
+        selectItem((string)lstSearchList.SelectedItem);
+      }
+    }
+    private void lstSearchList_Leave(object sender, EventArgs e)
+    {
+      if (_uparrowing)
+        _uparrowing = false;
+      else
+        if (lstSearchList.SelectedItem != null)
+        {
+          _selecting = false;
+          selectItem((string)lstSearchList.SelectedItem);
+        }
+        else
+          if (lstSearchList.Items.Count == 0) // there are no items to select
+            Collapsed = true; // so collapse the list
+      _navigatingFromList = true;
+    }
+    public event EventHandler<EventArgs> OnSelected;
+    private void btnExpand_Click(object sender, EventArgs e)
+    {
+      /*
+       * the problem is that when we press the expand button, if we are coming from the list, we have already selected the item and collapsed, so we don't want to do it again
+       */
+      if (!_navigatingFromList) 
+        expandList(false);
+      _navigatingFromList = false;
+      if (Collapsed)
+        txtSearch.Focus();
+    }
+    private void txtSearch_KeyUp(object sender, KeyEventArgs e)
+    {
+      if (e.KeyCode == Keys.Down)
+        expandList(true);
+    }
+    private void lstSearchList_KeyUp(object sender, KeyEventArgs e)
+    {
+      if (e.KeyCode == Keys.Up)
+      {
+        if (lstSearchList.Items.Count == 0 || lstSearchList.SelectedIndex == 0)
+        {
+          e.SuppressKeyPress = true;
+          txtSearch.Focus();
+          txtSearch.SelectionStart = txtSearch.Text.Length;
+          _uparrowing = true;
+        }
+      }
+
+    }
+    private void lstSearchList_Enter(object sender, EventArgs e)
+    {
+      _navigatingFromList = true;
+    }
+    private void ctlSearch_Enter(object sender, EventArgs e)
+    {
+      //txtSearch.Focus(); // always go to this control when ctlSearch gets the focus
+    }
+    #endregion
+    #region private methods
+    private bool search(string criteria, bool autoSelect)
+    {
+      return search(criteria, autoSelect, true);
+    }
+    /// <summary>
+    /// Returns true if it found and selected an entity
+    /// </summary>
+    /// <param name="criteria"></param>
+    /// <param name="autoSelect"></param>
+    /// <returns></returns>
+    private bool search(string criteria, bool autoSelect, bool forceChangeFocus)
+    {
+
+      string[] dataResults = SearchExec.Search(criteria, false); // results = get data here
+      string[] results;
+      if (AdditionalValues.Count == 0)
+        results = dataResults;
+      else
+      {
+        ArrayList resultList = new ArrayList();
+        // insert the additional values at the top of the list
+        int iNew = 0;
+        foreach (KeyValuePair<string, string> val in AdditionalValues)
+        {
+          string newItem;
+          if (DisplayOnlyID)
+            newItem = val.Key;
+          else
+            newItem = string.Format("{0}: {1}", val.Key, val.Value);
+          if (criteria.Equals(newItem, StringComparison.CurrentCultureIgnoreCase))
+          {
+            // exact match
+            _selecting = false;
+            selectItem(newItem);
+            return true;
+          }
+          else
+          {
+            // add the additional value if it matches the criteria
+            int criteriaPos = newItem.IndexOf(criteria, StringComparison.CurrentCultureIgnoreCase);
+            if (criteria == "*" || criteriaPos >= 0)
+              resultList.Add(newItem);
+          }
+        }
+        // now we add the rest of the list from the database
+        for (int i = 0; i < dataResults.GetLength(0); i++)
+          resultList.Add(dataResults[i]);
+        results = (string[])resultList.ToArray(typeof(string));
+      }
+      lstSearchList.Items.Clear();
+      if (_mustExistInList && results.GetLength(0) == 0)
+      {
+        MessageBox.Show("You must enter a valid value");
+        ID = string.Empty;
+        return false;
+      }
+      if (_autoAddNewMode && results.GetLength(0) == 0) // we entered a value and got no results, and autoaddnewmode is set, so we just select it as new
+      {
+        selectItem(criteria, forceChangeFocus); // just make this item what we entered
+        _createdNewItem = true; // allow calling program to know the selected item is not an existing item
+        _searching = true;
+        return true;
+      }
+      if (AddNewMode)
+        if (results.GetLength(0) == 0) // we are adding new, and didn't find a match
+        {
+          //_id = _Name = criteria;
+          selectItem(criteria, forceChangeFocus); // just make this item what we entered
+          _createdNewItem = true; // allow calling program to know the selected item is not an existing item
+          _searching = true;
+          return true;
+        }
+        else
+        {
+          if (ckNew.Checked)
+          {
+            selectItem(criteria, forceChangeFocus); // just make this item what we entered
+            _createdNewItem = true; // allow calling program to know the selected item is not an existing item
+            _searching = true;
+            return true;
+          }
+          else
+            _createdNewItem = false;
+        }
+      else
+        _createdNewItem = false;
+      if (results.GetLength(0) == 1 && autoSelect && !AddNewMode) // there are exactly one result
+      {
+        _selecting = false;
+        selectItem((string)results[0]);
+        return true;
+      }
+      else
+      {
+        _searching = true;
+        Collapsed = false;
+        lstSearchList.Visible = !ckNew.Checked;
+        lstSearchList.SuspendLayout();
+        string[] displayResults;
+        if (DisplayOnlyDescription)
+        {
+          displayResults = new string[results.GetLength(0)];
+          for (int i = 0; i < results.GetLength(0); i++)
+            displayResults[i] = getDescription(results[i]);
+        }
+        else if (DisplayOnlyID)
+        {
+          displayResults = new string[results.GetLength(0)];
+          for (int i = 0; i < results.GetLength(0); i++)
+            displayResults[i] = getID(results[i]);
+        }
+        else
+          displayResults = results;
+        lstSearchList.Items.AddRange(displayResults);
+        lstSearchList.ResumeLayout();
+        lstSearchList.Refresh();
+        return false;
+      }
+    }
+    private string getFromID(string id)
+    {
+      if (AdditionalValues.ContainsKey(id)) // we have additional, non-db items in the list, so we search those first
+        return string.Format("{0}: {1}",id, AdditionalValues[id]);
+      // now we search the DB
+      string[] list = SearchExec.Search(id, true);
+      if (list != null && list.GetLength(0) > 0)
+        return list[0];
+      // ok neither had it, so we return nothing
+      return string.Empty;
+    }
+    private void selectItem(string s)
+    {
+      selectItem(s, true);
+    }
+    private void selectItem(string s, bool changeFocus)
+    {
+      if (!_selecting)
+      {
+        setIDandDescription(s);
+        if (ClearSearchWhenComplete)
+          txtSearch.Text = string.Empty;
+        else
+          if (ShowCustomerNameWhenSet)
+            if (DisplayOnlyID)
+              txtSearch.Text = _id;
+            else if (DisplayOnlyDescription)
+              txtSearch.Text = Description;
+            else
+              txtSearch.Text = s;
+        Collapsed = true;
+        if (OnSelected != null)
+          OnSelected(this, new EventArgs());
+        if (changeFocus)
+          moveFocusToNextParentControl();
+        _selecting = false;
+      }
+    }
+    private void setIDandDescription(string s)
+    {
+      _selecting = true;
+      if (DisplayOnlyDescription) // our list just contains descriptions, not ids
+      {
+        // only some of the SearchExec instances can lookup the id from the name. 
+        // so we look and see if it is there, and call it if it is. Otherwise we display an error
+        System.Reflection.MethodInfo[] methods = SearchExec.GetType().GetMethods();
+        bool hasDescriptionLookup = false;
+        foreach (System.Reflection.MethodInfo methodinfo in methods)
+        {
+          if (methodinfo.Name.Equals("GetIDFromDescription"))
+          {
+            hasDescriptionLookup = true;
+            _id = (string)methodinfo.Invoke(SearchExec, new object[] { s });
+            _Name = s;
+            break;
+          }
+        }
+        if (!hasDescriptionLookup)
+          MessageBox.Show("This search does not support DisplayOnlyDescription");
+        return;
+
+      }
+      if (s.Contains(":"))// we have a delimiter
+      {
+        string[] parts = s.Split(new char[] { ':' });
+        if (parts == null)
+          _id = _Name = s;
+        else
+        {
+          _id = parts[0];
+          _Name = parts[1];
+        }
+      }
+      else
+        _id = _Name = s;
+      _searching = false;
+
+    }
+    private void expandList(bool forceExpand)
+    {
+      if (forceExpand)
+        Collapsed = false;
+      else
+        if (Collapsed)
+          search("*", AutoSelectWhenMatch);
+        else
+          Collapsed = true;
+      if (Collapsed)
+        txtSearch.Focus();
+      else
+      {
+        lstSearchList.Focus();
+        if (!string.IsNullOrEmpty(txtSearch.Text) && lstSearchList.Items.Contains(txtSearch.Text)) // we already had an item selected
+          lstSearchList.Text = txtSearch.Text; // then set the item in the list
+        else
+          if (lstSearchList.Items.Count > 0)
+            lstSearchList.SelectedIndex = 0;
+      }
+    }
+    private void moveFocusToNextParentControl()
+    {
+      if (this.Parent != null && _autoTabToNextControlOnSelect)
+        this.Parent.SelectNextControl(this, true, true, false, true);
+    }
+    private string getDescription(string entry)
+    {
+      if (string.IsNullOrEmpty(entry))
+        return string.Empty;
+      int pos = entry.IndexOf(":");
+      if (pos <= 0)
+        return entry;
+      return entry.Substring(pos + 1).Trim();
+    }
+    private string getID(string entry)
+    {
+      if (string.IsNullOrEmpty(entry))
+        return string.Empty;
+      int pos = entry.IndexOf(":");
+      if (pos <= 0)
+        return entry;
+      if (pos == entry.Length - 1)
+        return string.Empty;
+      return entry.Substring(0, pos).Trim();
+    }
+    #endregion
+
+  }
+}

@@ -1,0 +1,93 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Data;
+using System.Text;
+using System.Windows.Forms;
+
+using CCI.Common;
+using CCI.Sys.Data;
+
+namespace CCI.DesktopClient.Common
+{
+  public partial class ctlException : UserControl
+  {
+    private DataSource _ds = null;
+    private DataSource _dataSource { get { if (_ds == null) _ds = new DataSource(); return _ds; } }
+    public ACG.Common.ISecurityContext SecurityContext { get; set; }
+    public string CustomerID { get { return txtCustomerID.Text; } set { txtCustomerID.Text = value; txtCustomerID.Collapsed = true;  } }
+    public string ExceptionType { get { return txtExceptionType.Text; } set { txtExceptionType.Text = value; } }
+    public string ReasonCode { get { return txtReasonCode.Text; } set { txtReasonCode.Text = value; } }
+    public string Source { get { return txtSource.Text; } set { txtSource.Text = value; } }
+    public string Destination { get { return txtDestination.Text; } set { txtDestination.Text = value; } }
+    public string To { get { return txtTo.Text; } set { txtTo.Text = value; } }
+    public string From { get { return txtFrom.Text; } set { txtFrom.Text = value; } }
+    public string Comments { get { return txtComments.Text; } set { txtComments.Text = value; } }
+
+    public bool CustomerIDVisible { get { return txtCustomerID.Visible; } set { txtCustomerID.Visible = value; lblCustomer.Visible = value; } }
+    public bool ExceptionTypeVisible { get { return txtExceptionType.Visible; } set { txtExceptionType.Visible = value; lblExceptionType.Visible = value; } }
+    public bool ReasonCodeVisible { get { return txtReasonCode.Visible; } set { txtReasonCode.Visible = value; lblReasonCode.Visible = value; } }
+    public bool SourceVisible { get { return txtSource.Visible; } set { txtSource.Visible = value; lblSource.Visible = value; } }
+    public bool DestinationVisible { get { return txtDestination.Visible; } set { txtDestination.Visible = value; lblDestination.Visible = value; } }
+    public bool ToVisible { get { return txtTo.Visible; } set { txtTo.Visible = value; lblTo.Visible = value; } }
+    public bool FromVisible { get { return txtFrom.Visible; } set { txtFrom.Visible = value; lblFrom.Visible = value; } }
+    public bool CommentsVisible { get { return txtComments.Visible; } set { txtComments.Visible = value; lblComments.Visible = value; } }
+
+    public bool CustomerIDEnabled { get { return txtCustomerID.Enabled; } set { txtCustomerID.Enabled = value; } }
+    public bool ExceptionTypeEnabled { get { return txtExceptionType.Enabled; } set { txtExceptionType.Enabled = value; } }
+    public bool ReasonCodeEnabled { get { return txtReasonCode.Enabled; } set { txtReasonCode.Enabled = value; } }
+    public bool SourceEnabled { get { return txtSource.Enabled; } set { txtSource.Enabled = value; } }
+    public bool DestinationEnabled { get { return txtDestination.Enabled; } set { txtDestination.Enabled = value; } }
+    public bool ToEnabled { get { return txtTo.Enabled; } set { txtTo.Enabled = value; } }
+    public bool FromEnabled { get { return txtFrom.Enabled; } set { txtFrom.Enabled = value; } }
+    public bool CommentsEnabled { get { return txtComments.Enabled; } set { txtComments.Enabled = value; } }
+
+    public string NextControlToFocus { get; set; }
+
+    public ctlException()
+    {
+      InitializeComponent();
+    }
+
+    public void Save()
+    {
+      _dataSource.addExceptionLog(ExceptionType, ReasonCode, Source, Destination, CustomerID, From, To, Comments, SecurityContext.User);
+      Clear(false);
+      if (this.Parent.Controls.ContainsKey(NextControlToFocus))
+      {
+        this.Parent.Controls[NextControlToFocus].Focus();
+        this.Visible = false;
+      }
+    }
+    public void Clear(bool clearAll)
+    {
+      CustomerID = null;
+      From = null;
+      To = null;
+      Comments = null;
+      if (clearAll)
+      {
+        ExceptionType = null;
+        ReasonCode = null;
+        Source = null;
+        Destination = null;
+      }
+    }
+    private void populatePickLists()
+    {
+      if (ExceptionTypeVisible && txtExceptionType.Items.Count == 0)
+        txtExceptionType.Items.AddRange(_dataSource.getCodeList("ExceptionType"));
+      if (ReasonCodeVisible && txtReasonCode.Items.Count == 0)
+        txtReasonCode.Items.AddRange(_dataSource.getCodeList("ReasonCode"));
+
+    }
+
+    private void ctlException_Load(object sender, EventArgs e)
+    {
+      NextControlToFocus = "splitMain";
+      txtCustomerID.ShowCustomerNameWhenSet = true;
+    }
+
+  }
+}

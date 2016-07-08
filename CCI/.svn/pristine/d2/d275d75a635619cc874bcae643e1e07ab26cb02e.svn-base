@@ -1,0 +1,165 @@
+﻿namespace CCI.DesktopClient.Screens
+{
+  partial class frmDealerPricing
+  {
+    /// <summary>
+    /// Required designer variable.
+    /// </summary>
+    private System.ComponentModel.IContainer components = null;
+
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
+    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+    protected override void Dispose(bool disposing)
+    {
+      if (disposing && (components != null))
+      {
+        components.Dispose();
+      }
+      base.Dispose(disposing);
+    }
+
+    #region Windows Form Designer generated code
+
+    /// <summary>
+    /// Required method for Designer support - do not modify
+    /// the contents of this method with the code editor.
+    /// </summary>
+    private void InitializeComponent()
+    {
+      this.ctlDealerPricingMaintenance = new CCI.DesktopClient.Common.ctlMaintenanceBase();
+      this.label1 = new System.Windows.Forms.Label();
+      this.cboLevel = new System.Windows.Forms.ComboBox();
+      this.btnCloneLevel = new System.Windows.Forms.Button();
+      this.txtToLevel = new System.Windows.Forms.TextBox();
+      this.label2 = new System.Windows.Forms.Label();
+      this.dtStartDate = new System.Windows.Forms.DateTimePicker();
+      this.label3 = new System.Windows.Forms.Label();
+      this.btnDeleteLevel = new System.Windows.Forms.Button();
+      this.SuspendLayout();
+      // 
+      // ctlDealerPricingMaintenance
+      // 
+      this.ctlDealerPricingMaintenance.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.ctlDealerPricingMaintenance.ExtendedFieldCaptionColumn = null;
+      this.ctlDealerPricingMaintenance.ExtendedFieldName = null;
+      this.ctlDealerPricingMaintenance.FireRowSelectedOnSearch = true;
+      this.ctlDealerPricingMaintenance.Location = new System.Drawing.Point(3, 33);
+      this.ctlDealerPricingMaintenance.Name = "ctlDealerPricingMaintenance";
+      this.ctlDealerPricingMaintenance.NoteLabel = "Note for";
+      this.ctlDealerPricingMaintenance.ReadOnly = false;
+      this.ctlDealerPricingMaintenance.SecurityContext = null;
+      this.ctlDealerPricingMaintenance.ShowExtendedField = false;
+      this.ctlDealerPricingMaintenance.Size = new System.Drawing.Size(1173, 656);
+      this.ctlDealerPricingMaintenance.TabIndex = 0;
+      this.ctlDealerPricingMaintenance.UniqueIdentifier = null;
+      // 
+      // label1
+      // 
+      this.label1.AutoSize = true;
+      this.label1.Location = new System.Drawing.Point(5, 5);
+      this.label1.Name = "label1";
+      this.label1.Size = new System.Drawing.Size(33, 13);
+      this.label1.TabIndex = 1;
+      this.label1.Text = "Level";
+      // 
+      // cboLevel
+      // 
+      this.cboLevel.FormattingEnabled = true;
+      this.cboLevel.Location = new System.Drawing.Point(44, 2);
+      this.cboLevel.Name = "cboLevel";
+      this.cboLevel.Size = new System.Drawing.Size(121, 21);
+      this.cboLevel.TabIndex = 2;
+      this.cboLevel.SelectedIndexChanged += new System.EventHandler(this.cboLevel_SelectedIndexChanged);
+      // 
+      // btnCloneLevel
+      // 
+      this.btnCloneLevel.Location = new System.Drawing.Point(680, 1);
+      this.btnCloneLevel.Name = "btnCloneLevel";
+      this.btnCloneLevel.Size = new System.Drawing.Size(117, 23);
+      this.btnCloneLevel.TabIndex = 3;
+      this.btnCloneLevel.Text = "Clone Pricing Level ";
+      this.btnCloneLevel.UseVisualStyleBackColor = true;
+      this.btnCloneLevel.Click += new System.EventHandler(this.btnCloneLevel_Click);
+      // 
+      // txtToLevel
+      // 
+      this.txtToLevel.Location = new System.Drawing.Point(347, 2);
+      this.txtToLevel.Name = "txtToLevel";
+      this.txtToLevel.Size = new System.Drawing.Size(100, 20);
+      this.txtToLevel.TabIndex = 4;
+      // 
+      // label2
+      // 
+      this.label2.AutoSize = true;
+      this.label2.Location = new System.Drawing.Point(261, 5);
+      this.label2.Name = "label2";
+      this.label2.Size = new System.Drawing.Size(80, 13);
+      this.label2.TabIndex = 5;
+      this.label2.Text = "To  New Level:";
+      // 
+      // dtStartDate
+      // 
+      this.dtStartDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+      this.dtStartDate.Location = new System.Drawing.Point(568, 3);
+      this.dtStartDate.Name = "dtStartDate";
+      this.dtStartDate.Size = new System.Drawing.Size(106, 20);
+      this.dtStartDate.TabIndex = 6;
+      // 
+      // label3
+      // 
+      this.label3.AutoSize = true;
+      this.label3.Location = new System.Drawing.Point(453, 5);
+      this.label3.Name = "label3";
+      this.label3.Size = new System.Drawing.Size(109, 13);
+      this.label3.TabIndex = 7;
+      this.label3.Text = "New Level Start Date";
+      // 
+      // btnDeleteLevel
+      // 
+      this.btnDeleteLevel.Location = new System.Drawing.Point(803, 1);
+      this.btnDeleteLevel.Name = "btnDeleteLevel";
+      this.btnDeleteLevel.Size = new System.Drawing.Size(124, 23);
+      this.btnDeleteLevel.TabIndex = 8;
+      this.btnDeleteLevel.Text = "Delete Pricing Level";
+      this.btnDeleteLevel.UseVisualStyleBackColor = true;
+      this.btnDeleteLevel.Click += new System.EventHandler(this.btnDeleteLevel_Click);
+      // 
+      // frmDealerPricing
+      // 
+      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.ClientSize = new System.Drawing.Size(1179, 691);
+      this.Controls.Add(this.btnDeleteLevel);
+      this.Controls.Add(this.label3);
+      this.Controls.Add(this.dtStartDate);
+      this.Controls.Add(this.label2);
+      this.Controls.Add(this.txtToLevel);
+      this.Controls.Add(this.btnCloneLevel);
+      this.Controls.Add(this.cboLevel);
+      this.Controls.Add(this.label1);
+      this.Controls.Add(this.ctlDealerPricingMaintenance);
+      this.Name = "frmDealerPricing";
+      this.Text = "frmDealerPricing";
+      this.Load += new System.EventHandler(this.frmDealerPricing_Load);
+      this.ResumeLayout(false);
+      this.PerformLayout();
+
+    }
+
+    #endregion
+
+    private Common.ctlMaintenanceBase ctlDealerPricingMaintenance;
+    private System.Windows.Forms.Label label1;
+    private System.Windows.Forms.ComboBox cboLevel;
+    private System.Windows.Forms.Button btnCloneLevel;
+    private System.Windows.Forms.TextBox txtToLevel;
+    private System.Windows.Forms.Label label2;
+    private System.Windows.Forms.DateTimePicker dtStartDate;
+    private System.Windows.Forms.Label label3;
+    private System.Windows.Forms.Button btnDeleteLevel;
+  }
+}

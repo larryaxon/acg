@@ -1,0 +1,45 @@
+﻿@model CCIWebClient.Models.CustomerInformationModel
+<table id="InternetAccessTable" class="QuoteTable">
+    <thead>
+        <tr>
+            <th>
+                Qty
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Sales Price
+            </th>
+            <th>
+                Your Cost
+            </th>
+        </tr>
+    </thead>
+    @{
+        for (int i = 0; i < Model.InternetAccess.Count; i++)
+        {
+            
+        <tr>
+            <td style="display: none">
+                @Html.HiddenFor(model => Model.InternetAccess[i].ItemId)
+                 @Html.HiddenFor(model => Model.InternetAccess[i].DetailId)
+                 @Html.HiddenFor(model => Model.InternetAccess[i].DealerCost)
+            </td>
+            <td>
+                @Html.TextBoxFor(model => Model.InternetAccess[i].Quantity)
+            </td>
+            <td>
+                @Model.InternetAccess[i].Description
+            </td>
+            <td>
+                @Html.DropDownListFor(model => Model.InternetAccess[i].RetailItemId, Model.InternetAccess[i].MRCRetailList, new {@class = "phone-dropdown" })
+            </td>
+            <td>
+                @Model.InternetAccess[i].DealerCost
+            </td>
+         
+        </tr>
+        }
+    }
+</table>

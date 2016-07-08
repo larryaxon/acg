@@ -1,0 +1,191 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Data;
+using System.Text;
+using System.Windows.Forms;
+
+using CCI.Common;
+using CCI.Sys.Data;
+using CCI.Sys.SecurityEngine;
+
+namespace CCI.DesktopClient.Common
+{
+  public partial class ctlContactsLocations : UserControl
+  {
+    private const string custTabName = "tabSaddlebackCustomer";
+    private const string networkInventoryTabName = "tabNetworkInventory";
+    private const string networkInventoryGridname = "srchNetworkInventory";
+    private string _entityOwnerType = null;
+    private string _entityOwner = null;
+    private string _locationSelected = null;
+    private SecurityContext _securityContext = null;
+    public string EntityOwnerType 
+    {
+      get { return _entityOwnerType; }
+      set
+      {
+        _entityOwnerType = value;
+        ctlContacts1.EntityOwnerType = _entityOwnerType;
+        ctlLocations1.EntityOwnerType = _entityOwnerType;
+      }
+    }
+    public string EntityOwner
+    {
+      get { return _entityOwner; }
+      set
+      {
+        _entityOwner = value;
+        ctlContacts1.EntityOwner = _entityOwner;
+        ctlLocations1.EntityOwner = _entityOwner;
+        reloadNetworkInventory();
+      }
+    }
+    public SecurityContext SecurityContext
+    {
+      get { return _securityContext; }
+      set
+      {
+        _securityContext = value;
+        ctlLocations1.SecurityContext = _securityContext;
+        ctlContacts1.SecurityContext = _securityContext;
+        ctlLocationContacts.SecurityContext = _securityContext;
+      }
+    }
+    public string[] StateList { get { return ctlContacts1.StateList; } set { ctlContacts1.StateList = value; ctlLocations1.StateList = value; ctlLocationContacts.StateList = value; } }
+    public bool ShowLocations 
+    {
+      get { return tabLocations.Visible; } 
+      set { tabLocations.Visible = value; } 
+    }
+    public void reloadNetworkInventory()
+    {
+      if (tabMain.Controls.ContainsKey(networkInventoryTabName))
+        if (tabMain.Controls[networkInventoryTabName].Controls.ContainsKey(networkInventoryGridname))
+        {
+          if (!string.IsNullOrEmpty(_entityOwner))
+          {
+            ctlSearchGrid srch = (ctlSearchGrid)tabMain.Controls[networkInventoryTabName].Controls[networkInventoryGridname];
+            Dictionary<string, string[]> criteria = new Dictionary<string, string[]>(StringComparer.CurrentCultureIgnoreCase);
+            criteria.Add("Customer", new string[] { ctlSearchGrid.opEQUALS, _entityOwner });
+            srch.SearchCriteria = criteria;
+            srch.ReLoad();
+          }
+        }
+    }
+    public ctlContactsLocations()
+    {
+      InitializeComponent();
+      ctlLocations1.ColumnNames = new string[] { "LegalName", "Address1", "Address2", "City", "State", "Zip", "Phone", "Entity", "EntityOwner", "EntityType" };
+      
+    }
+
+    public void Init(string entityOwner, string entityOwnerType)
+    {
+      _entityOwner = entityOwner;
+      if (!string.IsNullOrEmpty(entityOwner))
+      {
+        ctlContacts1.Init(entityOwner, entityOwnerType);
+        ctlLocations1.Init(entityOwner, entityOwnerType);
+      }
+      if (entityOwnerType.Equals("Customer", StringComparison.CurrentCultureIgnoreCase)) // if this is a customer
+      {
+        // then add the CHS customer tab
+        if (!tabMain.TabPages.ContainsKey(custTabName)) // only add this the first time through
+        {
+          tabMain.TabPages.Add(custTabName, "Saddleback Customer Info");
+          TabPage cust = tabMain.TabPages[custTabName];
+          Label labelAltID = new Label();
+          labelAltID.Name = "lblAlternateID";
+          labelAltID.Text = "Saddleback Customer ID";
+          Label labelPaymentType = new Label();
+          labelPaymentType.Name = "lblPaymentType";
+          labelPaymentType.Text = "Payment Type";
+          TextBox textAltID = new TextBox();
+          textAltID.Name = "txtAlternateID";
+          ComboBox comboPaymentType = new ComboBox();
+          comboPaymentType.Name = "txtPaymentType";
+          comboPaymentType.Items.AddRange(new string[] { "ACH", "Check", "CreditCard" });
+          //comboPaymentType.Text = "ACH";
+          cust.Controls.Add(labelAltID);
+          cust.Controls.Add(textAltID);
+          cust.Controls.Add(labelPaymentType);
+          cust.Controls.Add(comboPaymentType);
+          int margin = 10;
+          int labelleft = 10;
+          int top = 20;
+          int labelwidth = 135;
+          int textwidth = 135;
+          int textleft = labelleft + labelwidth + margin;
+          labelAltID.Left = labelleft;
+          labelAltID.Top = top;
+          labelAltID.Width = labelwidth;
+          textAltID.Left = textleft;
+          textAltID.Top = top;
+          textAltID.Width = textwidth;
+          labelPaymentType.Left = labelleft;
+          labelPaymentType.Top = labelAltID.Top + labelAltID.Height + margin;
+          labelPaymentType.Width = labelwidth;
+          comboPaymentType.Top = labelPaymentType.Top;
+          comboPaymentType.Left = textleft;
+          comboPaymentType.Width = textwidth;
+          
+        }
+        if (!tabMain.TabPages.ContainsKey(networkInventoryTabName))
+        {
+          tabMain.TabPages.Add(networkInventoryTabName, "Network Inventory");
+          TabPage netinv = tabMain.TabPages[networkInventoryTabName];
+          ctlSearchGrid srch = new ctlSearchGrid();
+          srch.Name = networkInventoryGridname;
+          netinv.Controls.Add(srch);
+          srch.DisplaySearchCriteria = false;
+          srch.HiddenColumns.Add("Customer", null);
+          srch.Init(CommonData.UnmatchedNameTypes.CustomerNetworkInventory, networkInventoryGridname);
+          srch.Dock = DockStyle.Fill;
+        }
+        reloadNetworkInventory();
+        
+      }
+    }
+
+    public void Save()
+    {
+      ctlContacts1.Save();
+      ctlLocations1.Save();
+      ctlLocationContacts.Save();
+    }
+
+    public void Clear()
+    {
+      ctlContacts1.Clear();
+      ctlLocations1.Clear();
+      ctlLocationContacts.Clear();
+    }
+
+    public void AddDefaultValue(string key, object val)
+    {
+      if (ctlContacts1.DefaultValues.ContainsKey(key))
+        ctlContacts1.DefaultValues[key] = val;
+      else
+        ctlContacts1.DefaultValues.Add(key, val);
+      if (ctlLocations1.DefaultValues.ContainsKey(key))
+        ctlLocations1.DefaultValues[key] = val;
+      else
+        ctlLocations1.DefaultValues.Add(key, val);
+      if (ctlLocationContacts.DefaultValues.ContainsKey(key))
+        ctlLocationContacts.DefaultValues[key] = val;
+      else
+        ctlLocationContacts.DefaultValues.Add(key, val);
+    }
+
+    private void ctlLocations1_RowSelected(object sender, ACG.CommonForms.MaintenanceGridRowSelectedArgs e)
+    {
+      _locationSelected = CommonFunctions.CString(e.SelectedRow.Cells["Entity"].Value);
+      ctlLocationContacts.Init(_locationSelected, "Location");
+
+    }
+
+
+  }
+}

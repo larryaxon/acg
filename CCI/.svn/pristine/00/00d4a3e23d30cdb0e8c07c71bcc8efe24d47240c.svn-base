@@ -1,0 +1,458 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Text;
+
+using CCI.Common;
+using CCI.Sys.SecurityEngine;
+using TAGBOSS.Common.Model;
+
+
+namespace CCI.Sys.Data
+{
+  public partial class DataSource
+  {
+    public DataAdapterContainer getMaintenanceAdapter(string tablename, Dictionary<string, string> parameters)
+    {
+      if (string.IsNullOrEmpty(tablename))
+        throw new Exception("getMaintenanceAdapter must have a valid table name");
+      bool updateable = true;
+      string sql = null;
+      bool validTable = false;
+      //      bool hasAutoID = false;
+      //      string autoIDName = "ID";
+      //      if (parameters.ContainsKey("AutoIDName"))
+      //      {
+      //          autoIDName = parameters["AutoIDName"];
+      //          hasAutoID = true;
+      //      }
+      string updateSQL, insertSQL, deleteSQL;
+      SqlCommand cmdUpdate, cmdInsert, cmdDelete;
+      updateSQL = insertSQL = deleteSQL = string.Empty;
+      cmdUpdate = cmdInsert = cmdDelete = null;
+      switch (tablename.ToLower())
+      {
+        case "itemcategories":
+        #region itemCategories
+          sql = "Select * from ItemSubCategories order by ItemCategory, ItemSubCategory";
+          validTable = true;
+          break;
+        #endregion
+        case "codemaster":
+          #region codemaster
+          if (parameters != null && parameters.Count == 1)
+          {
+            validTable = true;
+            string codetype = parameters["CodeType"];
+            sql = string.Format("Select CodeType, CodeValue, Description, StartDate, EndDate, LastModifiedBy, LastModifiedDateTime from CodeMaster where CodeType ='{0}'", codetype);
+          }
+          break;
+          #endregion
+        case "screendefinition":
+          #region screen definition
+          validTable = true;
+          updateable = false;
+          string section = string.Empty;
+          string screen = string.Empty;
+          if (parameters != null && parameters.Count > 0)
+          {
+            if (parameters.ContainsKey("screen"))
+              screen = string.Format("and s.Screen = '{0}'", parameters["screen"]);
+            if (parameters.ContainsKey("section"))
+              section = string.Format("and s.ScreenSection = '{0}'", parameters["section"]);
+          }
+          sql = @"select s.Screen, sec.IntVal1 SectionSequence, s.ScreenSection Section, s.Sequence ItemSequence, s.ItemID, m.Name, s.IsRecommended, s.ImagePath, description from ScreenDefinition s
+            inner join MasterProductList m on s.ItemID = m.ItemID
+            inner join ProductList p on p.ItemID = s.ItemID and p.Carrier = 'saddleback'
+            inner join CodeMaster sec on sec.CodeValue =  s.ScreenSection
+            where GETDATE() between s.StartDate and ISNULL(s.EndDate, '{3}') and GETDATE() between ISNULL(p.StartDate, '{2}') and ISNULL(p.EndDate, '{3}') {0} {1}
+            order by Screen, sec.IntVal1, s.Sequence, s.ItemID";
+          sql = string.Format(sql, screen, section, CommonData.PastDateTime.ToShortDateString(), CommonData.FutureDateTime.ToShortDateString());
+          break;
+          #endregion
+        #region temp, outdated, & misc tables
+        case "importCHPriceList":
+          validTable = true;
+          sql = "select * from importCHPriceList";
+          break;
+        case "opportunities":
+          if (parameters != null && parameters.Count == 1)
+          {
+            validTable = true;
+            string entity = parameters["Entity"];
+            sql = string.Format("Select * from Opportunities where Customer = '{0}'", entity);
+          }
+          break;
+        case "opportunitylineitems":
+          if (parameters != null && parameters.Count == 1)
+          {
+            validTable = true;
+            string opportunity = parameters["OpportunityID"];
+            sql = string.Format("Select * from OpportunityLineItems where OpportunityID = '{0}'", opportunity);
+          }
+          break;
+        case "hostedimportmrcwholesale":
+          {
+            validTable = true;
+            sql = "select * from HostedImportMRCWholesale where 1=0";
+          }
+          break;
+        case "hostedimportmrcretail":
+          {
+            validTable = true;
+            sql = "select * from HostedImportMRCRetail where 1=0";
+          }
+          break;
+        case "hostedimportoccwholesale":
+          {
+            validTable = true;
+            sql = "select * from HostedImportOCCWholesale where 1=0";
+          }
+          break;
+        case "hostedimportoccretail":
+          {
+            validTable = true;
+            sql = "select * from HostedImportOCCRetail where 1=0";
+          }
+          break;
+        case "hostedimporttollwholesale":
+          {
+            validTable = true;
+            sql = "select * from HostedImportTollWholesale where 1=0";
+          }
+          break;
+        case "hostedimporttollretail":
+          {
+            validTable = true;
+            sql = "select * from HostedImportTollRetail where 1=0";
+          }
+          break;
+        case "hostedimporttaxes":
+          {
+            validTable = true;
+            sql = "select * from HostedImportTaxes where 1=0";
+          }
+          break;
+        case "prospectfollowups":
+          if (parameters != null)
+          {
+            validTable = true;
+            DateTime startDate = CommonData.PastDateTime;
+            DateTime endDate = CommonData.FutureDateTime;
+            string rep = string.Empty;
+            if (parameters.ContainsKey("StartDate"))
+              startDate = CommonFunctions.CDateTime(parameters["StartDate"]);
+            if (parameters.ContainsKey("EndDate"))
+              endDate = CommonFunctions.CDateTime(parameters["EndDate"]);
+            string status = "active";
+            if (parameters.ContainsKey("Status"))
+              status = parameters["Status"];
+            StringBuilder sb = new StringBuilder();
+            sb.Append("select e.Entity, e.legalname [Customer Name], o.OpportunityName [Opportunity Name], o.EstimatedMRC MRC, ");
+            sb.Append("Dealer.LegalName Dealer, o.FollowUpDate Due ");
+            sb.Append("from Opportunities o inner join Entity e on o.customer = e.Entity ");
+            sb.Append("left join Entity Dealer on o.Dealer = Dealer.Entity ");
+            sb.Append("where isnull(o.FollowUpDate,'{2}') between '{0}' and '{1}' ");
+            sb.Append("and e.EntityType = 'Prospect' ");
+            switch (status.ToLower())
+            {
+              case "active":
+                sb.Append("and '{2}' between ISNULL(e.startdate, '{2}') and ISNULL(e.EndDate,'{2}')");
+                break;
+              case "inactive":
+                sb.Append("and '{2}' not between ISNULL(e.startdate, '{2}') and ISNULL(e.EndDate,'{2}')");
+                break;
+              case "all":
+                break;
+            }
+            if (parameters.ContainsKey("Rep"))
+              rep = parameters["Rep"];
+
+            sql = string.Format(sb.ToString(), startDate.ToShortDateString(), endDate.ToShortDateString(),
+              DateTime.Today.ToShortDateString());
+            // TO DO we seem to be getting rep short name instead of entity id so we need to fix that
+            if (!string.IsNullOrEmpty(rep))
+              sql += " and o.Rep = '" + rep + "'";
+            updateable = false;
+            break;
+          }
+          break;
+        case "ibpfollowups":
+          if (parameters != null)
+          {
+            validTable = true;
+            DateTime startDate = CommonData.PastDateTime;
+            DateTime endDate = CommonData.FutureDateTime;
+            string rep = string.Empty;
+            if (parameters.ContainsKey("StartDate"))
+              startDate = CommonFunctions.CDateTime(parameters["StartDate"]);
+            if (parameters.ContainsKey("EndDate"))
+              endDate = CommonFunctions.CDateTime(parameters["EndDate"]);
+            string status = "active";
+            if (parameters.ContainsKey("Status"))
+              status = parameters["Status"];
+            StringBuilder sb = new StringBuilder();
+            sb.Append("select e.Entity, e.legalname [Customer Name], o.OpportunityName [Opportunity Name], o.FollowUpDate Due ");
+            sb.Append("from Opportunities o inner join Entity e on o.customer = e.Entity ");
+            sb.Append("where isnull(o.FollowUpDate,'{2}') between '{0}' and '{1}' ");
+            sb.Append("and e.EntityType = 'IBPProspect' ");
+            switch (status.ToLower())
+            {
+              case "active":
+                sb.Append("and '{2}' between ISNULL(e.startdate, '{2}') and ISNULL(e.EndDate,'{2}')");
+                break;
+              case "inactive":
+                sb.Append("and '{2}' not between ISNULL(e.startdate, '{2}') and ISNULL(e.EndDate,'{2}')");
+                break;
+              case "all":
+                break;
+            }
+            if (parameters.ContainsKey("Rep"))
+              rep = parameters["Rep"];
+
+            sql = string.Format(sb.ToString(), startDate.ToShortDateString(), endDate.ToShortDateString(),
+              DateTime.Today.ToShortDateString());
+            // TO DO we seem to be getting rep short name instead of entity id so we need to fix that
+            if (!string.IsNullOrEmpty(rep))
+              sql += " and o.Rep = '" + rep + "'";
+            updateable = false;
+            break;
+          }
+          break;
+        case "funnel":
+          if (parameters != null)
+          {
+            validTable = true;
+            DateTime startDate = CommonData.PastDateTime;
+            DateTime endDate = CommonData.FutureDateTime;
+            string rep = string.Empty;
+            if (parameters.ContainsKey("StartDate"))
+              startDate = CommonFunctions.CDateTime(parameters["StartDate"]);
+            if (parameters.ContainsKey("EndDate"))
+              endDate = CommonFunctions.CDateTime(parameters["EndDate"]);
+            string status = "active";
+            if (parameters.ContainsKey("Status"))
+              status = parameters["Status"];
+            StringBuilder sb = new StringBuilder();
+            sb.Append("select e.Entity, e.legalname [Customer Name], o.OpportunityName [Opportunity Name], o.FollowUpDate Due ");
+            sb.Append("from Opportunities o inner join Entity e on o.customer = e.Entity ");
+            sb.Append("where isnull(o.FollowUpDate,'{2}') between '{0}' and '{1}' ");
+            sb.Append("and e.EntityType in ('IBPProspect','Prospect') ");
+            switch (status.ToLower())
+            {
+              case "active":
+                sb.Append("and '{2}' between ISNULL(e.startdate, '{2}') and ISNULL(e.EndDate,'{2}')");
+                break;
+              case "inactive":
+                sb.Append("and '{2}' not between ISNULL(e.startdate, '{2}') and ISNULL(e.EndDate,'{2}')");
+                break;
+              case "all":
+                break;
+            }
+            if (parameters.ContainsKey("Rep"))
+              rep = parameters["Rep"];
+
+            sql = string.Format(sb.ToString(), startDate.ToShortDateString(), endDate.ToShortDateString(),
+              DateTime.Today.ToShortDateString());
+            // TO DO we seem to be getting rep short name instead of entity id so we need to fix that
+            if (!string.IsNullOrEmpty(rep))
+              sql += " and o.Rep = '" + rep + "'";
+            updateable = false;
+            break;
+
+          }
+          break;
+        #endregion
+        #region products
+        case "products":
+          if (parameters != null && parameters.Count >= 1)
+          {
+            validTable = true;
+            string criteria = string.Empty;
+            string carrier = string.Empty;
+            if (parameters.ContainsKey("Criteria"))
+              criteria = parameters["Criteria"];
+            if (parameters.ContainsKey("Carrier"))
+              carrier = parameters["Carrier"];
+            sql = string.Format("select Carrier, ItemID, MRC, NRC, StartDate, EndDate, LastModifiedBy, LastModifiedDateTime from ProductList where ItemId in (select itemid from MasterProductList where Name like '%{0}%')", criteria);
+            if (!string.IsNullOrEmpty(carrier) && !carrier.Equals("None", StringComparison.CurrentCultureIgnoreCase))
+              sql += string.Format(" and Carrier = '{0}'", carrier);
+          }
+          else
+          {
+            if (parameters == null || parameters.Count == 0)
+            {
+              validTable = true;
+              sql = "select * from ProductList";
+            }
+          }
+          break;
+        case "masterproductlist":
+          if (parameters != null && parameters.Count == 1)
+          {
+            validTable = true;
+            string criteria = string.Empty;
+            if (parameters.ContainsKey("Criteria"))
+              criteria = parameters["Criteria"];
+            //sql = string.Format("select * from MasterProductList where ItemId in (select masteritemid from MasterProductList where Name like '%{0}%')", criteria);
+            sql = string.Format("select * from masterproductlist");
+          }
+          else
+          {
+            if (parameters == null || parameters.Count == 0)
+            {
+              validTable = true;
+              sql = "select * from MasterProductList";
+            }
+          }
+          break;
+        #endregion
+        case "networkinventory":
+          #region networkinventory
+          validTable = true;
+          sql = "select ID, Upper(NeedsReview) NeedsReview, NeedsReviewComments, Location, CityCareProdOrderID,  Upper(Carrier) Carrier, Upper(ItemID) ItemID, CommissionID, CityCareCommProfileID, VendorAccountID, VendorInvoiceNumber, CircuitID, BTN, MRC, EMU, CommissionMRC, Quantity, StartDate, EndDate, Customer, Upper(Payor) Payor, CycleCode, CityCareNetinvID, Comments, Scrubbed from NetworkInventory";
+          if (parameters != null && parameters.Count > 0)
+          {
+            string whereclause = string.Empty;
+            bool firstTime = true;
+            foreach (KeyValuePair<string, string> parm in parameters)
+            {
+              if (!string.IsNullOrEmpty(parm.Value))
+              {
+                if (firstTime)
+                  firstTime = false;
+                else
+                  whereclause += " AND ";
+                whereclause += string.Format("{0} = '{1}'", parm.Key, parm.Value);
+              }
+            }
+            sql = string.Format("{0} where {1}", sql, whereclause);
+
+          }
+          break;
+          #endregion
+        case "searchnetworkinventory":
+          #region searchnetworkinventory
+          if (parameters != null && parameters.Count > 0)
+          {
+            string whereClause = string.Empty;
+            if (parameters.ContainsKey("WhereClause"))
+              whereClause = "WHERE " + parameters["WhereClause"]; // get the where clause
+            // NeedsReview	 NeedsReviewComments	 CustomerName	Carrier	 ItemID	 MRC	 CommissionMRC	 CircuitID	 StartDate	 EndDate	 
+            //CommissionID	 citycareCommProfileID	 CityCareProdOrderID	 BTN	 Location	 LocationName	 OldNetworkInventoryID	VendorAccountID	 Quantity	 VendorInvoiceNumber	 
+            //LastModifiedBy	 LastModifiedDateTime	 NRC	 Payor	 CycleCode	 Customer	ID
+            // IMPORTANT: any changes to this must also be made in DataSource.SearchGrid.getResearchData.SearchNetworkInventory
+            sql = string.Format(@"Select Upper(NeedsReview) NeedsReview, NeedsReviewComments, Customer, Upper(Payor) Payor, Upper(Carrier) Carrier, Upper(ItemID) ItemID,  MRC, CommissionMRC, 
+CircuitID, StartDate, EndDate, CommissionID, CityCareCommProfileID, 
+CityCareProdOrderID,  BTN, Location, CityCareNetInvID,  VendorAccountID, Quantity, VendorInvoiceNumber, LastModifiedBy, LastModifiedDateTime, NRC,   
+CycleCode, ID, Case when InActive is null then 'No' else 'Yes' end InActiveFlag from NetworkInventory {0} order by Customer, ItemID ", whereClause);
+            validTable = true;
+            tablename = "NetworkInventory"; // reset table name to the correct table since this is a special case
+            updateSQL = @"update NetworkInventory set [NeedsReview] = @NeedsReview, NeedsReviewComments = @NeedsReviewComments, Location = @Location, CityCareProdOrderID = @CityCareProdOrderID, 
+              Carrier = @Carrier, ItemID = @ItemID, CommissionID = @CommissionID, CityCareCommProfileID = @CityCareCommProfileID, VendorAccountID = @VendorAccountID, VendorInvoiceNumber = @VendorInvoiceNumber, 
+              CircuitID = @CircuitID, BTN = @BTN, MRC = @MRC, CommissionMRC = @CommissionMRC, Quantity = @Quantity, StartDate = @StartDate, EndDate = @EndDate, Customer = @Customer, 
+              Payor = @Payor, CycleCode = @CycleCode, CityCareNetinvID = @CityCareNetinvID, Inactive = Case When @InactiveFlag = 'Yes' then getdate() else null end
+              WHERE ID = @ID";
+            insertSQL = @"insert into NetworkInventory ([NeedsReview], NeedsReviewComments, Location, CityCareProdOrderID, Carrier, ItemID, CommissionID, 
+              CityCareCommProfileID, VendorAccountID, VendorInvoiceNumber, CircuitID, BTN, MRC, CommissionMRC, Quantity, StartDate, EndDate, Customer, 
+              Payor, CycleCode, CityCareNetinvID, Inactive) 
+              Values (@NeedsReview, @NeedsReviewComments, @Location, @CityCareProdOrderID,@Carrier, @ItemID, @CommissionID, 
+              @CityCareCommProfileID, @VendorAccountID, @VendorInvoiceNumber, @CircuitID, @BTN, @MRC, @CommissionMRC, @Quantity, @StartDate, @EndDate, @Customer,
+              @Payor, @CycleCode, @CityCareNetinvID, Case When @InactiveFlag = 'Yes' then getdate() else null end)";
+            deleteSQL = "Delete from NetworkInventory where ID = @ID";
+            cmdUpdate = new SqlCommand(updateSQL);
+            cmdUpdate = AddParameters(cmdUpdate, tablename);
+            cmdInsert = new SqlCommand(insertSQL);
+            cmdInsert = AddParameters(cmdInsert, tablename);
+            cmdDelete = new SqlCommand(deleteSQL);
+            cmdDelete.Parameters.Add("ID", System.Data.SqlDbType.Int, 8, "ID");
+
+          }
+          break;
+          #endregion
+        case "hosteddealercosts":
+          validTable = true;
+          updateable = true;
+          string dealer = string.Empty;
+          if (parameters != null && parameters.Count > 0)
+          {
+            if (parameters.ContainsKey("dealer"))
+              dealer = string.Format(" where dealer = '{0}' ", parameters["dealer"]);
+            sql = string.Format("Select * from HostedDealerCosts {0}", dealer);
+          } 
+          break;
+        case "hostedimportledger":
+          validTable = true;
+          updateable = true;
+          sql = "select * from HostedImportLedger where 1=0";
+          break;
+      }
+      if (validTable)
+      {
+        DataAdapterContainer da = (DataAdapterContainer)getDataAdapterFromSQL(sql);
+        SqlCommandBuilder builder = new SqlCommandBuilder(da.DataAdapter);
+        if (updateable)
+        {
+          if (cmdDelete == null)
+            builder.GetDeleteCommand(true);
+          else
+          {
+            builder.GetDeleteCommand(true);
+            da.DataAdapter.DeleteCommand = cmdDelete;
+          }
+          if (cmdUpdate == null)
+            builder.GetUpdateCommand(true);
+          else
+          {
+            builder.GetUpdateCommand(true);
+            da.DataAdapter.UpdateCommand = cmdUpdate;
+          }
+          if (cmdInsert == null)
+            builder.GetInsertCommand(true);
+          else
+          {
+            builder.GetInsertCommand(true);
+            da.DataAdapter.InsertCommand = cmdInsert;
+          }
+        }
+        if (da.DataSet.Tables.Count > 0)
+          da.DataSet.Tables[0].TableName = tablename;
+        return da;
+      }
+      else
+        throw new Exception("getMaintenanceAdapter must have a valid table name");
+    }
+    private SqlCommand AddParameters(SqlCommand cmd, string tablename)
+    {
+      cmd.Parameters.Add("NeedsReview", System.Data.SqlDbType.NVarChar, 50, "NeedsReview");
+      cmd.Parameters.Add("NeedsReviewComments", System.Data.SqlDbType.NVarChar, -1, "NeedsReviewComments");
+      cmd.Parameters.Add("Location", System.Data.SqlDbType.NVarChar, 50, "Location");
+      cmd.Parameters.Add("CityCareProdOrderID", System.Data.SqlDbType.Int, 8, "CityCareProdOrderID");
+      cmd.Parameters.Add("Carrier", System.Data.SqlDbType.NVarChar, 50, "Carrier");
+      cmd.Parameters.Add("ItemID", System.Data.SqlDbType.NVarChar, 75, "ItemID");
+      cmd.Parameters.Add("CommissionID", System.Data.SqlDbType.NVarChar, 128, "CommissionID");
+      cmd.Parameters.Add("CityCareCommProfileID", System.Data.SqlDbType.Int, 8, "CityCareCommProfileID");
+      cmd.Parameters.Add("VendorAccountID", System.Data.SqlDbType.NVarChar, 50, "VendorAccountID");
+      cmd.Parameters.Add("VendorInvoiceNumber", System.Data.SqlDbType.NVarChar, 50, "VendorInvoiceNumber");
+      cmd.Parameters.Add("CircuitID", System.Data.SqlDbType.NVarChar, 50, "CircuitID");
+      cmd.Parameters.Add("BTN", System.Data.SqlDbType.NVarChar, 50, "BTN");
+      cmd.Parameters.Add("MRC", System.Data.SqlDbType.Decimal, 18, "MRC");
+      cmd.Parameters.Add("CommissionMRC", System.Data.SqlDbType.Decimal, 18, "CommissionMRC");
+      cmd.Parameters.Add("Quantity", System.Data.SqlDbType.Decimal, 18, "Quantity");
+      cmd.Parameters.Add("StartDate", System.Data.SqlDbType.Date, 4, "StartDate");
+      cmd.Parameters.Add("EndDate", System.Data.SqlDbType.Date, 4, "EndDate");
+      cmd.Parameters.Add("Customer", System.Data.SqlDbType.NVarChar, 50, "Customer");
+      cmd.Parameters.Add("Payor", System.Data.SqlDbType.NVarChar, 50, "Payor");
+      cmd.Parameters.Add("CycleCode", System.Data.SqlDbType.NVarChar, 50, "CycleCode");
+      cmd.Parameters.Add("CityCareNetinvID", System.Data.SqlDbType.Int, 8, "CityCareNetinvID");
+      cmd.Parameters.Add("InactiveFlag", System.Data.SqlDbType.NVarChar, 4, "InActiveFlag");
+      //cmd.Parameters.Add("Comments", System.Data.SqlDbType.NVarChar, -1, "Comments");
+      //cmd.Parameters.Add("Scrubbed", System.Data.SqlDbType.Bit, 1, "Scrubbed");
+      cmd.Parameters.Add("ID", System.Data.SqlDbType.Int, 8, "ID");
+      return cmd;
+    }
+  }
+}

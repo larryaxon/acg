@@ -1,0 +1,74 @@
+﻿@model CCIWebClient.Models.QuoteTotalsModel
+<div class="qs-main">
+    <div class="qs-info">
+        <div class="qs-numbers">
+            <div class="quote-numbers-colL">
+                Profit P/m:<br />
+                Profit:
+            </div>
+            <div class="quote-numbers-col">
+                <strong>
+                    @{if (Model.ProfitMonthly != "$0.00")
+                      {@Html.Raw(Model.ProfitMonthly)}}
+                </strong>
+                <br />
+                @{if (Model.ProfitOneTime != "$0.00")
+                  {@Html.Raw(Model.ProfitOneTime)}}
+            </div>
+        </div>
+        <!-- End qs-numbers -->
+    </div>
+    <!-- End qs-main -->
+ @*   <div id="qs-dealer-summary">
+        <table id="DealerSummaryTable">
+            <tr>
+                <th>
+                    MRC
+                </th>
+                <th>
+                    NRC
+                </th>
+                <th>
+                </th>
+            </tr>
+            @for (int i = 0; i < Model.DealerSummary.Count; i++)
+            {
+                <tr>
+                    <td>
+                        <span class="re-charge">
+                            @{if (Model.DealerSummary[i].TotalMonthly != "$0.00")
+                              {@Model.DealerSummary[i].TotalMonthly}
+                            }
+                        </span>
+                    </td>
+                    <td>
+                        <span class="re-charge">
+                            @{if (Model.DealerSummary[i].TotalOneTime != "$0.00")
+                              {@Model.DealerSummary[i].TotalOneTime}
+                            }
+                        </span>
+                    </td>
+                    <td>
+                        <span class="qs-sum-title>">
+                            @{if (Model.DealerSummary[i].TotalOneTime != "$0.00")
+                              {@Model.DealerSummary[i].ScreenSection}
+                            }
+                        </span>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>*@
+    <!-- End qs-main -->
+    <div class="qs-dealer-header">
+        <div class="qs-title">
+            Have Questions?</div>
+    </div>
+    <!-- End qs-header -->
+    <div class="qs-main">
+        <div class="qs-contact-phone">
+            (800) 289-1828</div>
+        <!-- <div class="qs-contact-email"><a href="mailto:info@citycommunications.com">Email Us</a></div> -->
+    </div>
+    <!-- End qs-main -->
+</div>

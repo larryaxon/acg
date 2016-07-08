@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<publishData>
+  <publishProfile publishUrl="F:\Stages\CCI\CCIBusinessServer" deleteExistingFiles="False" ftpAnonymousLogin="False" ftpPassiveMode="True" msdeploySite="" msdeploySiteID="" msdeployRemoteSitePhysicalPath="" msdeployAllowUntrustedCertificate="False" msdeploySkipExtraFilesOnServer="True" msdeployMarkAsApp="False" profileName="Stage" publishMethod="FileSystem" replaceMatchingFiles="True" userName="" savePWD="False" userPWD="" SelectedForPublish="False">
+    <file relUrl="bin/TAGBOSS.Common.pdb" publishTime="01/23/2013 16:47:22" />
+    <file relUrl="bin/ATKBusinessServer.pdb" publishTime="01/23/2013 16:58:42" />
+    <file relUrl="bin/CCI.Sys.pdb" publishTime="01/23/2013 16:58:41" />
+    <file relUrl="DB.config" publishTime="11/19/2012 11:20:23" />
+    <file relUrl="bin/log4net.dll" publishTime="11/19/2012 11:20:28" />
+    <file relUrl="bin/DB.config" publishTime="11/19/2012 11:20:23" />
+    <file relUrl="bin/CCI.Common.pdb" publishTime="01/23/2013 16:47:22" />
+    <file relUrl="bin/TAGBOSS.AttributeEngine2.pdb" publishTime="01/23/2013 16:47:22" />
+    <file relUrl="bin/CCI.Sys.dll" publishTime="01/23/2013 16:58:41" />
+    <file relUrl="bin/CCI.Common.dll" publishTime="01/23/2013 16:47:23" />
+    <file relUrl="bin/ACG.dll" publishTime="01/23/2013 16:47:21" />
+    <file relUrl="bin/TAGBOSS.Common.dll" publishTime="01/23/2013 16:47:22" />
+    <file relUrl="bin/ATKBusinessServer.dll" publishTime="01/23/2013 16:58:42" />
+    <file relUrl="Web.config" publishTime="11/19/2012 11:20:21" />
+    <file relUrl="Default.aspx" publishTime="11/19/2012 11:20:23" />
+    <file relUrl="bin/ACG.pdb" publishTime="01/23/2013 16:47:21" />
+    <file relUrl="bin/TAGBOSS.AttributeEngine2.dll" publishTime="01/23/2013 16:47:22" />
+  </publishProfile>
+  <publishProfile publishUrl="ftp://184.183.10.116/CCIBusinessServer" deleteExistingFiles="False" ftpAnonymousLogin="False" ftpPassiveMode="True" msdeploySite="" msdeploySiteID="" msdeployRemoteSitePhysicalPath="" msdeployAllowUntrustedCertificate="False" msdeploySkipExtraFilesOnServer="True" msdeployMarkAsApp="False" profileName="Profile1" publishMethod="FTP" replaceMatchingFiles="True" userName="juancarlos" savePWD="True" userPWD="AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAGhHgseHl8kqud9ok8NU9owAAAAACAAAAAAAQZgAAAAEAACAAAACLuYQrBu6wL8+ofh+J2Ae0V9ZW6beFWukubbDPrjgVGAAAAAAOgAAAAAIAACAAAAB1b5juLRn5LA19vtfIqNq38hDpXQDxdGzb2xKVrgs+MiAAAADu1VQ6PT30f5eZvBDbFJW3W/9aq3OFX04JN7B5HM8YwEAAAAB8nDgvqSOr7cDZ+XlbGjdQDvMbmp+074SDZmoYg/5eUM7bKK6MCGjySqGgrkg9y68Co9b02FF7XB8XbqVFe07Y" SelectedForPublish="True">
+    <file relUrl="bin/TAGBOSS.Common.pdb" publishTime="04/08/2013 16:03:13" />
+    <file relUrl="bin/ATKBusinessServer.pdb" publishTime="04/08/2013 16:03:16" />
+    <file relUrl="bin/CCI.Sys.pdb" publishTime="04/08/2013 16:03:15" />
+    <file relUrl="DB.config" publishTime="01/28/2013 09:04:49" />
+    <file relUrl="bin/log4net.dll" publishTime="01/28/2013 09:49:52" />
+    <file relUrl="bin/DB.config" publishTime="01/28/2013 09:04:49" />
+    <file relUrl="bin/CCI.Common.pdb" publishTime="04/08/2013 16:03:15" />
+    <file relUrl="bin/TAGBOSS.AttributeEngine2.pdb" publishTime="04/08/2013 16:03:14" />
+    <file relUrl="bin/CCI.Sys.dll" publishTime="04/08/2013 16:03:15" />
+    <file relUrl="bin/CCI.Common.dll" publishTime="04/08/2013 16:03:15" />
+    <file relUrl="bin/ACG.dll" publishTime="04/08/2013 16:03:12" />
+    <file relUrl="bin/TAGBOSS.Common.dll" publishTime="04/08/2013 16:03:13" />
+    <file relUrl="bin/ATKBusinessServer.dll" publishTime="04/08/2013 16:03:16" />
+    <file relUrl="Web.config" publishTime="01/28/2013 09:04:40" />
+    <file relUrl="Default.aspx" publishTime="01/28/2013 09:04:49" />
+    <file relUrl="bin/ACG.pdb" publishTime="04/08/2013 16:03:12" />
+    <file relUrl="bin/TAGBOSS.AttributeEngine2.dll" publishTime="04/08/2013 16:03:14" />
+  </publishProfile>
+</publishData>

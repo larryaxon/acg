@@ -1,0 +1,58 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Text;
+
+using ACG.Common;
+
+namespace ACG.Common.Data
+{
+  public class DataSourceGenericMaintenanceSetup : DataAccessBase
+  {
+    private string _tableName = "MaintenanceDataSources";
+    private string[] _keyFields = new string[] { "DataSource" };
+    public DataSet getScreenRecord(string screen)
+    {
+      if (existsTable(_tableName))
+      {
+        return getDataFromSQL(string.Format("Select * from {0} where DataSource = '{1}'", _tableName, screen));
+      }
+      else
+        return null;
+    }
+    public int? updateScreenRecord(string screen, string description, string tableName, string gridSource, string searchDataSource, string indexFields,
+      string hiddenFields, string readonlyFields, bool canAdd, bool canEdit, bool canDelete, string user)
+    {
+      string sql;
+      if (existsTable(_tableName))
+      {
+        if (existsRecord(_tableName, _keyFields, new string[] { screen }))
+          sql = string.Format(@"Update {0} set Description = '{1}', TableName = '{2}', GridSource = '{3}', SearchDataSource = '{4}', 
+                  IndexFields = '{5}', HiddenFields = '{6}', ReadonlyFields = '{7}', CanAddNew = {8}, CanEdit = {9}, CanDelete = {10},
+                  LastModifiedBy = '{11}', LastModifiedDateTime = getdate() WHERE DataSource = '{12}'",
+            _tableName, description, tableName, gridSource, searchDataSource, indexFields, hiddenFields, readonlyFields, canAdd ? "1" : "0", canEdit ? "1" : "0",
+            canDelete ? "1" : "0", user, screen);
+        else
+          sql = string.Format(@"INSERT INTO {0} (DataSource, Description, TableName, GridSource, SearchDataSource, 
+                  IndexFields, HiddenFields, ReadonlyFields, CanAddNew, CanEdit, CanDelete, LastModifiedBy, LastModifiedDateTime)
+                  VALUES ('{12}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', {8}, {9}, {10}, '{11}', getdate())",
+            _tableName, description, tableName, gridSource, searchDataSource, indexFields, hiddenFields, readonlyFields, canAdd ? "1" : "0", canEdit ? "1" : "0",
+            canDelete ? "1" : "0", user, screen);
+        return updateDataFromSQL(sql);                                             
+      }
+      else
+        return -1;
+    }
+    public int? deleteScreenRecord(string dataSource)
+    {
+      if (existsRecord(_tableName, _keyFields, new string[] { dataSource }))
+      {
+        string sql = string.Format("Delete from {0} where DataSource = '{1}'", _tableName, dataSource);
+        return updateDataFromSQL(sql);
+      }
+      else
+        return null;
+    }
+  }
+}

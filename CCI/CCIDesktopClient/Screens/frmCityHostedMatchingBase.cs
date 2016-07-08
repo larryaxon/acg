@@ -1,0 +1,234 @@
+﻿using System;
+using System.Reflection;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Text;
+using System.Windows.Forms;
+
+using CCI.Common;
+using CCI.Sys.Data;
+using CCI.DesktopClient.Common;
+
+namespace CCI.DesktopClient.Screens
+{
+  public partial class frmCityHostedMatchingBase : ScreenBase
+  {
+    #region module data
+    private DataSource _ds = null;
+    private DataSource _dataSource { get { if (_ds == null) _ds = new DataSource(); return _ds; } }
+    private DateTime _billDate { get { return dtBillDate.Value; } set { dtBillDate.Value = value; } }
+    private MainForm _main { get { return CommonFormFunctions.getMainForm(this); } }
+    private DataGridViewRow _selectedRow = null;
+    private bool _autoRefresh = false;
+    private string _exceptionFollowupMessage = string.Empty;
+    private CommonData.UnmatchedNameTypes _nameType = CommonData.UnmatchedNameTypes.None;
+    #endregion
+
+    #region public properties
+    public CommonData.UnmatchedNameTypes NameType
+    {
+      get { return _nameType; }
+      set 
+      { 
+        _nameType = value;
+      }
+    }
+    public string ExceptionFollowupMessage
+    {
+      get { return _exceptionFollowupMessage; }
+      set { _exceptionFollowupMessage = value; }
+    }
+    public bool AutoRefresh
+    {
+      get { return _autoRefresh; }
+      set { _autoRefresh = value; }
+    }
+    public Dictionary<string, string> ColumnCaptions { get; set; }
+    #endregion
+
+    #region constructors
+    public frmCityHostedMatchingBase(CommonData.UnmatchedNameTypes nameType)
+    {
+      ColumnCaptions = null;
+      InitializeComponent();
+      NameType = nameType;
+    }
+    public frmCityHostedMatchingBase()
+    {
+      ColumnCaptions = null;
+      InitializeComponent();  
+    }
+    #endregion
+
+    #region form events
+
+    private void frmCityHostedMatchingBase_Load(object sender, EventArgs e)
+    {
+      if (!this.DesignMode)
+      {
+        srchMatching.Init(_nameType, null);
+        if (string.IsNullOrEmpty(_exceptionFollowupMessage))
+          _exceptionFollowupMessage = _nameType.ToString();
+        ctlCityHostedDetail1.Load(SecurityContext, null);
+        dtBillDate.Value = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+        cboSource.Text = "Unmatched";
+        splitMain.Panel2Collapsed = !ckShowResearch.Checked;
+        loadCombos();
+        txtComment.Visible = false;
+      }
+    }
+    private void dtBillDate_ValueChanged(object sender, EventArgs e)
+    {
+      loadMatching(false);
+    }
+    private void cboSource_SelectedIndexChanged(object sender, EventArgs e)
+    {
+      loadMatching(false);
+
+    }
+    private void srchMatching_RowSelected(object sender, ACG.CommonForms.MaintenanceGridRowSelectedArgs e)
+    {
+      _selectedRow = e.SelectedRow;
+      lblRowSelected.Visible = true;
+      string name = CommonFunctions.CString(_selectedRow.Cells["CustomerName"].Value);
+      name = name.Substring(0, Math.Min(name.Length, 12));
+      lblRowSelected.Text = name;
+      refreshDetail(e.SelectedRow);
+      if (CommonFunctions.CString(_selectedRow.Cells["ExceptionLogged"].Value) == "Yes")
+      {
+        this.btnExecute.Visible = false;
+        this.btnUndo.Visible = true;
+      }
+      else
+      {
+        this.btnExecute.Visible = true;
+        this.btnUndo.Visible = false;
+      }
+    }
+    private void ckShowResearch_CheckedChanged(object sender, EventArgs e)
+    {
+      splitMain.Panel2Collapsed = !ckShowResearch.Checked;
+    }
+    private void txtCommentButton_Click(object sender, EventArgs e)
+    {
+      if (this.txtComment.Visible == true)
+      {
+        txtComment.Visible = false;
+        txtCommentButton.Text = txtComment.Text;
+      }
+      else
+      {
+        txtComment.Visible = true;
+        txtComment.Focus();
+      }
+    }
+    private void txtComment_Leave(object sender, EventArgs e)
+    {
+      txtCommentButton.Text = txtComment.Text;
+      txtComment.Visible = false;
+    }
+    private void btnExecute_Click(object sender, EventArgs e)
+    {
+      if (srchMatching.SelectedRow == null)
+      {
+        MessageBox.Show("You must have a row selected");
+        return;
+      }
+      DataRow dRow = ((DataRowView)srchMatching.SelectedRow.DataBoundItem).Row;
+      string rowData = CommonFunctions.dbRowToText(dRow, srchMatching.DataColumns, ColumnCaptions);
+      if (cboDisposition.SelectedIndex >= 0) // only process if a disposition is selected
+      {
+        _dataSource.executeDisposition(srchMatching.NameType,
+          cboDisposition.Text,
+          CommonFunctions.CString(srchMatching.SelectedRow.Cells["CustomerID"].Value),
+          ExceptionFollowupMessage,
+          CommonFunctions.CString(srchMatching.SelectedRow.Cells["Exception"].Value),
+          _billDate,
+          srchMatching.Columns.Contains("RetailUSOC") ? CommonFunctions.CString(srchMatching.SelectedRow.Cells["RetailUSOC"].Value) : null,
+          srchMatching.Columns.Contains("WholesaleUSOC") ? CommonFunctions.CString(srchMatching.SelectedRow.Cells["WholesaleUSOC"].Value) : null,
+          SecurityContext.User, string.Format("{0}: \r\n{1}", this.txtComment.Text, rowData));
+        loadMatching(true);
+      }
+    }
+    private void btnUndo_Click(object sender, EventArgs e)
+    {
+      if (srchMatching.SelectedRow == null)
+      {
+        MessageBox.Show("You must have a row selected");
+        return;
+      }
+      DataRow dRow = ((DataRowView)srchMatching.SelectedRow.DataBoundItem).Row;
+      string rowData = CommonFunctions.dbRowToText(dRow, srchMatching.DataColumns, ColumnCaptions);
+      _dataSource.executeUndoException(srchMatching.NameType,
+        cboDisposition.Text,
+        CommonFunctions.CString(srchMatching.SelectedRow.Cells["CustomerID"].Value),
+        ExceptionFollowupMessage,
+        CommonFunctions.CString(srchMatching.SelectedRow.Cells["Exception"].Value),
+        _billDate,
+        srchMatching.Columns.Contains("RetailUSOC") ? CommonFunctions.CString(srchMatching.SelectedRow.Cells["RetailUSOC"].Value) : null,
+        srchMatching.Columns.Contains("WholesaleUSOC") ? CommonFunctions.CString(srchMatching.SelectedRow.Cells["WholesaleUSOC"].Value) : null,
+        SecurityContext.User, string.Format("{0}: \r\n{1}", this.txtComment.Text, rowData));
+      srchMatching.ReLoad();
+      this.btnExecute.Visible = true;
+      this.btnUndo.Visible = false;
+    }
+
+    #endregion
+
+    #region private methods
+
+    private void loadMatching(bool forceRefresh)
+    {
+      if (_autoRefresh || forceRefresh)
+      {
+        if (string.IsNullOrEmpty(cboSource.Text))
+          return;
+        Dictionary<string, string[]> criteria = new Dictionary<string, string[]>(StringComparer.CurrentCultureIgnoreCase);
+        if (cboSource.Text.Equals("Unmatched", StringComparison.CurrentCultureIgnoreCase))
+          criteria.Add("Exception", new string[] { ctlSearchGrid.opNOTEQUALS, "Matched" });
+        else
+          if (!cboSource.Text.Equals("All", StringComparison.CurrentCultureIgnoreCase))
+            criteria.Add("Exception", new string[] { ctlSearchGrid.opEQUALS, cboSource.Text });
+        criteria.Add("BillDate", new string[] { ctlSearchGrid.opEQUALS, dtBillDate.Value.ToShortDateString() });
+        if (!ckIncludeExceptions.Checked)
+          criteria.Add("ExceptionLogged", new string[] { ctlSearchGrid.opEQUALS, "No" });
+        srchMatching.SearchCriteria = criteria;
+        this.txtComment.Text = string.Empty;
+        this.txtCommentButton.Text = string.Empty;
+        this.btnExecute.Visible = true;
+        this.btnUndo.Visible = false;
+        srchMatching.ReLoad();
+      }
+    }
+    private void loadCombos()
+    {
+      cboDisposition.Items.Clear();
+      cboDisposition.Items.AddRange(_dataSource.getDispositionList());
+      cboDisposition.SelectedIndex = 0;
+    }
+    private void refreshDetail(DataGridViewRow row)
+    {
+      if (ckShowResearch.Checked)
+      {
+        string customerID = CommonFunctions.CString(row.Cells["CustomerID"].Value);
+        ctlCityHostedDetail1.CustomerID = customerID;
+        ctlCityHostedDetail1.ReLoad();
+      }
+    }
+
+    #endregion
+
+    private void ckIncludeExceptions_CheckedChanged(object sender, EventArgs e)
+    {
+      loadMatching(false);
+    }
+
+    private void btnLoad_Click(object sender, EventArgs e)
+    {
+      loadMatching(true);
+    }
+  }
+}

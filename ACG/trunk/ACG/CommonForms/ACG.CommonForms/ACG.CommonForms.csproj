@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C0C1F164-3925-40FA-BCB4-B20B9475F452}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ACG.CommonForms</RootNamespace>
+    <AssemblyName>ACG.CommonForms</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\McK\lib\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AttributeSaveEventArgs.cs" />
+    <Compile Include="CommonFormFunctions.cs" />
+    <Compile Include="ctlExceptionsTreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ctlExceptionsTreeView.designer.cs">
+      <DependentUpon>ctlExceptionsTreeView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ctlMaintenanceBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ctlMaintenanceBase.designer.cs">
+      <DependentUpon>ctlMaintenanceBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ctlSearchGrid.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ctlSearchGrid.designer.cs">
+      <DependentUpon>ctlSearchGrid.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ctlTreeBase.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ctlTreeBase.designer.cs">
+      <DependentUpon>ctlTreeBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmLogin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmLogin.designer.cs">
+      <DependentUpon>frmLogin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmMessage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmMessage.designer.cs">
+      <DependentUpon>frmMessage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MaintenanceGridRowSelectedArgs.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="ctlMaintenanceBase.resx">
+      <DependentUpon>ctlMaintenanceBase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ctlSearchGrid.resx">
+      <DependentUpon>ctlSearchGrid.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ctlTreeBase.resx">
+      <DependentUpon>ctlTreeBase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmLogin.resx">
+      <DependentUpon>frmLogin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmMessage.resx">
+      <DependentUpon>frmMessage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\McK\trunk\MCK\ACG.Sys\ACG.Sys.csproj">
+      <Project>{BA061F0A-308D-4F29-9B3D-BAE123E0438A}</Project>
+      <Name>ACG.Sys</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\McK\trunk\MCK\MCK.Common\MCK.Common.csproj">
+      <Project>{7DC7FB58-A08E-4BF7-8CA7-6E5C85DBB6FD}</Project>
+      <Name>MCK.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ACG.csproj">
+      <Project>{A9E993B0-A25A-4F36-9339-1D7F6E6F5ADA}</Project>
+      <Name>ACG</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

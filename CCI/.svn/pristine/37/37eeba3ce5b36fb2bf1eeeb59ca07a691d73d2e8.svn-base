@@ -1,0 +1,190 @@
+﻿@model CCIWebClient.Models.QuoteHeaderModel
+@using CCIWebClient.Models
+@using System.Collections
+@{
+    ViewData.TemplateInfo.HtmlFieldPrefix = "Header";
+}
+@* START TITLE: Customer Info *@ <a href="#" id="customer-info-title" class="quote-content-title">
+    Customer Info</a>
+<!-- START SECTION: Customer Information -->
+<div class="quote-content-block">
+    <div class="quote-content-left">
+        <img src="/images/customers.png" class="quote-content-image" alt="" />
+    </div>
+    <div class="quote-content-right">
+        <div class="quote-right-top">
+            <h3>
+                Customer Information</h3>
+            <p>
+                Get amazingly simple business-quality lines.</p>
+            <a href="#" class="learn-more-drop">» Learn More</a>
+            <div class="learn-more-drop-content">
+                <p>
+                Please use the customer’s <b>Legal Name</b>, and <b>Full Business Address</b> as this will be 
+                used for generating the contracts and for billing purposes.
+                </p>
+            </div>
+        </div>
+        <div class="quote-customerform-bottom">
+            <div class="quote-custinfo-colL">
+                @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.Customer)
+                <span>Customer Name</span>
+                @Html.TextBoxFor(model => model.LegalName)
+                <span>City</span>
+                @Html.TextBoxFor(model => model.City)
+            </div>
+            <div class="quote-custinfo-col">
+                <span>Service Address</span>
+                @Html.TextBoxFor(model => model.Address1)
+                <div class="form-half-contL">
+                    <span>State</span><br />
+                    @Html.TextBoxFor(model => model.State, new { @Class = "quote-half-field" })<br />
+                </div>
+                <div class="form-half-cont">
+                    <span>Zip</span><br />
+                    @Html.TextBoxFor(model => model.Zip, new { @Class = "quote-half-field" })<br />
+                </div>
+            </div>
+            <div class="quote-custinfo-colR">
+                <span>Suite</span><br />
+                @Html.TextBoxFor(model => model.Address2, new { @Class = "quote-half-field" })<br />
+            </div>
+        </div>
+    </div>
+    <!-- quote-content-right -->
+</div>
+<!-- #quote-content-block -->
+<!-- END SECTION: Customer Information -->
+<img src="/images/quote-spacer.png" class="quote-spacer" alt="" />
+<!-- START SECTION: Term Length -->
+<div class="quote-content-block">
+    <div class="quote-content-left">
+        <img src="/images/quote-term.png" class="quote-content-image" alt="" />
+    </div>
+    <div class="quote-content-right">
+        <div class="quote-right-top">
+            <h3>
+                Term Length</h3>
+            <p>
+                Lock in pricing for a longer term to maximize savings.</p>
+            <a href="#" class="learn-more-drop">» Learn More</a>
+            <div class="learn-more-drop-content">
+                <p>
+                Please choose from 1, 2, or 3 year term for your customer.  Your dealer cost is not 
+                affected by term length, but in general you should have a lower price and/or lower 
+                setup costs in exchange for a longer term.  If you need a longer or shorter term than 
+                what is listed, please consult with your sales representative.
+                </p>
+            </div>
+        </div>
+        <div class="quote-term-bottom">
+            <div class="quote-term-col">
+                <label for="Header_ContractTerm1" style="cursor: pointer;">
+                    <span>1 Year</span></label>
+                @Html.RadioButtonFor(model => model.ContractTerm, 1, new { id = "Header_ContractTerm1", @class = "term-radial", style = "cursor: pointer;" })
+            </div>
+            <div class="quote-term-col">
+                <label for="Header_ContractTerm2" style="cursor: pointer;">
+                    <span>2 Years</span></label>
+                @Html.RadioButtonFor(model => model.ContractTerm, 2, new { id = "Header_ContractTerm2", @class = "term-radial", style = "cursor: pointer;" })
+            </div>
+            <div class="quote-term-col">
+                <label for="Header_ContractTerm3" style="cursor: pointer;">
+                    <span>3 Years</span></label>
+                @Html.RadioButtonFor(model => model.ContractTerm, 3, new { id = "Header_ContractTerm3", @class = "term-radial", style = "cursor: pointer;" })
+            </div>
+        </div>
+        <!-- #quote-term-bottom -->
+    </div>
+    <!-- quote-term-right -->
+</div>
+<!-- END SECTION: Term Length -->
+<img src="/images/quote-spacer.png" class="quote-spacer" alt="" />
+<!-- START SECTION: Installation Fee -->
+<div class="quote-content-block">
+    <div class="quote-content-left">
+        @* <img src="/images/quote-term.png" class="quote-content-image" />*@
+    </div>
+    <div class="quote-content-right">
+        <div class="quote-right-top">
+            <h3>
+                One Time Charges</h3>
+            <p>
+                Would you like to pay for some of the one time charges?</p>
+            <a href="#" class="learn-more-drop">» Learn More</a>
+            <div class="learn-more-drop-content">
+                <p>
+                This section allows you to determine how you will cover the installation fees for the 
+                items you have selected.  You may elect to charge them to the customer, pay all of the 
+                fees yourself, or a combination of both.
+                </p>
+            </div>
+
+        </div>
+        <div class="quote-term-bottom">
+            <div class="quote-installation-col" style="float: left; margin-left: 20px;">
+                <label for="installationcost-dealer" style="cursor: pointer;">
+                    Yes</label>
+                @Html.RadioButtonFor(model => Model.InstallationCosts, "Dealer", new { @id = "installationcost-dealer", style = "cursor: pointer;" })
+            </div>
+            <div class="quote-installation-col" style="float: left; margin-left: 20px;">
+                <label for="installationcost-me" style="cursor: pointer;">
+                    <strong>No</strong></label>
+                @Html.RadioButtonFor(model => Model.InstallationCosts, "Me", new { @id = "installationcost-me", @Checked = "yes", style = "cursor: pointer;" })
+            </div>
+           
+                <label style="margin-left:10px;">
+                    Your Cost
+                </label>
+                <label id="totaldealer">
+                    $0.00</label>
+                <label style="margin-left:10px;">
+                    Retail</label>
+                    <label id="totalretail">$0.00</label>
+           
+        </div>
+    </div>
+    <!-- #quote-term-bottom -->
+</div>
+<!-- END SECTION: Installation Fee -->
+<img src="/images/quote-spacer.png" class="quote-spacer" alt="" />
+<!-- START SECTION: Credit Card Information -->
+<div id="creditcardinfo" class="quote-content-block" @(Model.InstallationCosts == "Dealer" ? "" : "style = display:none;")>
+    <div class="quote-content-left">
+        @* <img src="/images/quote-term.png" class="quote-content-image" />*@
+    </div>
+    <div class="quote-content-right">
+        <div class="quote-right-top">
+            <h3>
+                Credit Card Information</h3>
+            <p>
+                You are paying using a credit card</p>
+            <a href="#" class="learn-more-drop">» Learn More</a>
+        </div>
+        <div id="creditinfo" class="quote-term-bottom">
+            <label class="creditcard-label" for="Header.CreditCardName">
+                Credit Card Name</label>
+            @Html.TextBoxFor(model => Model.CreditCardName)
+            <br />
+            <label class="creditcard-label" for="Header.CreditCardNumber">
+                Credit Card Number</label>
+            @Html.TextBoxFor(model => Model.CreditCardNumber)
+            <br />
+            <label class="creditcard-label" for="Header.ExpirationDate">
+                Expiration Date</label>
+            @Html.TextBoxFor(model => Model.ExpirationDate)
+            <br />
+            <label class="creditcard-label" for="Header.SecurityCode">
+                Security Code</label>
+            @Html.TextBoxFor(model => Model.SecurityCode)
+            <br />
+            <label class="creditcard-label" for="Header.Amount">
+                Amount to Pay</label>
+            @Html.TextBoxFor(model => Model.AmountToPay)
+            <br />
+        </div>
+    </div>
+</div>
+<!-- END SECTION: Credit Card Information -->
+@* END TITLE: Customer Info *@

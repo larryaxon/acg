@@ -1,0 +1,369 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Data;
+using System.Text;
+using System.Windows.Forms;
+
+using CCI.Common;
+using CCI.Sys.Data;
+
+using TAGBOSS.Common;
+using TAGBOSS.Common.Model;
+
+namespace CCI.DesktopClient.Common
+{
+  public partial class ctlEntityGridBase : UserControl
+  {
+    #region private method data
+    private const string colCONTACTTYPE = "ContactType";
+    private const string colSTATE = "State";
+    private bool _dirty = false;
+    private DataSource _dSource = null;
+    private string _entityType = "Contact";
+    private int _selectedRowIndex = -1;
+    private string _selectedID = string.Empty;
+    private bool _searching = false;
+    private string _uniqueIdentifer = "Entity";
+    #endregion
+
+    #region protected method data
+
+    protected DataSource _dataSource { get { if (_dSource == null) _dSource = new DataSource(); return _dSource; } }
+    protected DateTime _effectiveDate = DateTime.Today;
+    protected SearchResultCollection _entityList = null;
+    protected string[] _contactTypes = null;
+    protected DataGridViewComboBoxCell _contactTypeCol = new DataGridViewComboBoxCell();
+    protected string[] _states = null;
+    protected DataGridViewComboBoxCell _stateCol = new DataGridViewComboBoxCell();
+    protected string[] _columnNames = new string[] { "LegalName","Phone","Address1","Address2","City","State","Zip","Entity","EntityOwner","EntityType"};
+    protected EntityAttributesCollection _eac = null;
+    protected DataSet _ds = null;
+
+    #endregion
+    #region public properties and data
+
+    public string[] ColumnNames { get { return _columnNames; } set { _columnNames = value; } }
+    public string[] StateList { get { return _states; } set { _states = value; } }
+    public string EntityOwnerType { get; set; }
+    public string EntityOwner { get; set; }
+    public SecurityContext SecurityContext { get; set; }
+    public string EntityType { get { return _entityType; } set { _entityType = value; } }
+    public Dictionary<string, object> DefaultValues = new Dictionary<string, object>(StringComparer.CurrentCultureIgnoreCase);
+    public bool Dirty { get { return _dirty; } }
+
+    #endregion
+
+    public ctlEntityGridBase()
+    {
+      InitializeComponent();
+    }
+
+    public void Init(string entityOwner, string entityOwnerType)
+    {
+      if (_contactTypes == null && CommonFunctions.inList(_columnNames, colCONTACTTYPE))
+        _contactTypes = _dataSource.getCodeList("ContactTypes");
+      EntityOwner = entityOwner;
+      EntityOwnerType = entityOwnerType;
+      if (string.IsNullOrEmpty(entityOwner))
+      {
+        grdEntities.DataSource = null;
+      }
+      else
+      {
+        _entityList = _dataSource.getEntityList(entityOwner, entityOwnerType, _entityType);
+        StringBuilder sbEntityList = new StringBuilder();
+        bool firstTime = true;
+        foreach (SearchResult s in _entityList)
+        {
+          if (firstTime)
+            firstTime = false;
+          else
+            sbEntityList.Append(",");
+          sbEntityList.Append(s.EntityID);
+        }
+        _eac = _dataSource.getAttributes(sbEntityList.ToString(), "Entity", _entityType, null, _effectiveDate);
+        loadGrid();
+      }
+
+    }
+    public void Save()
+    {
+      saveFromGrid();
+    }
+    public void Clear()
+    {
+      //try { grdEntities.Rows.Clear(); }
+      //catch { }
+      if (grdEntities.DataSource != null)
+        ((DataView)grdEntities.DataSource).Table.Rows.Clear();
+      DefaultValues.Clear();
+    }
+    private void loadGrid()
+    {
+      
+      _ds = new DataSet(EntityType);
+      DataTable dt = new DataTable(EntityType);
+      bool firstOne = true;
+      if (_eac == null || _eac.Entities.Count == 0)
+      {
+        // there were no contacts for the Entity Owner, but we still want to present an empty grid with the correct columns,
+        // so we get a virtual item. It will not contain any usefull values but it will have the right columns
+        EntityAttributesCollection eac = _dataSource.getDummyEntityRecord(EntityOwner, "Contact");
+        Item iDummy = (Item)eac.getValue(string.Format("{0}.Entity.Contact", EntityOwner));
+        if (iDummy != null)
+          loadColumns(dt, iDummy);
+      }
+      else
+      {
+        foreach (Entity e in _eac.Entities)
+        {
+          if (e.ItemTypes.Contains("Entity") && e.ItemTypes["Entity"].Items.Contains(EntityType))
+          {
+            Item item = e.ItemTypes["Entity"].Items[EntityType];
+            string entity = e.OriginalID;
+            if (firstOne)
+            {
+              firstOne = false;
+              loadColumns(dt, item);
+            }
+            DataRow row = dt.NewRow();
+            for (int i = 0; i < _columnNames.GetLength(0); i++)
+            {
+              string aID = _columnNames[i];
+              if (item.Attributes.Contains(aID))
+                row[aID] = CommonFunctions.CString(item.Attributes[aID].Value);
+              else
+                if (aID.Equals("Entity", StringComparison.CurrentCultureIgnoreCase))
+                  row[aID] = e.OriginalID;
+                else
+                  row[aID] = null;
+            }
+            dt.Rows.Add(row);
+          }
+        }
+      }
+      _ds.Tables.Add(dt);
+      CommonFormFunctions.displayDataSetGrid(grdEntities, _ds);
+      if (grdEntities.Columns.Count > 0)
+      {
+        grdEntities.Columns["Entity"].Visible = false;
+        grdEntities.Columns["EntityOwner"].Visible = false;
+        grdEntities.Columns["EntityType"].Visible = false;
+        if (grdEntities.Columns.Contains("LegalName"))
+          if (_entityType.Equals("Contact", StringComparison.CurrentCultureIgnoreCase))
+            grdEntities.Columns["LegalName"].HeaderText = "LastName";
+          else
+            if (_entityType.Equals("Location", StringComparison.CurrentCultureIgnoreCase))
+              grdEntities.Columns["LegalName"].HeaderText = "Location";
+        if (grdEntities.Columns.Contains(colCONTACTTYPE))
+        {
+          // we must populate the ContactType column with a pick list
+          if (_contactTypeCol.Items.Count == 0 && _contactTypes != null)
+            _contactTypeCol.Items.AddRange(_contactTypes);
+          if (_stateCol.Items.Count == 0 && _states != null)
+            _stateCol.Items.AddRange(_states);
+          foreach (DataGridViewRow row in grdEntities.Rows)
+          {
+            DataGridViewComboBoxCell cell;
+            if (row.Cells[colCONTACTTYPE].GetType() != typeof(DataGridViewComboBoxCell))
+            {
+              cell = (DataGridViewComboBoxCell)_contactTypeCol.Clone();
+              CommonFormFunctions.setComboBoxCell(cell, row.Cells[colCONTACTTYPE].Value);
+              row.Cells[colCONTACTTYPE] = cell;
+            }
+            if (row.Cells[colSTATE].GetType() != typeof(DataGridViewComboBoxCell))
+            {
+              cell = (DataGridViewComboBoxCell)_stateCol.Clone();
+              CommonFormFunctions.setComboBoxCell(cell, row.Cells[colSTATE].Value);
+              row.Cells[colSTATE] = cell;
+            }
+          }
+        }
+      }
+      else
+      {
+        // we have no data, so we add the columns by themselves.
+        foreach (string name in _columnNames)
+        {
+          DataGridViewColumn col = new DataGridViewColumn(new DataGridViewTextBoxCell());
+          col.Name = name;
+          grdEntities.Columns.Add(col);
+        }
+      }
+      
+    }
+    private void saveFromGrid()
+    {
+      if (_eac == null)
+      {
+        _eac = new EntityAttributesCollection();
+      }
+      if (_ds != null && _ds.Tables.Count > 0)
+      {
+        foreach (DataRow row in _ds.Tables[0].Rows)
+        {
+          string entity  = CommonFunctions.CString(row["Entity"]);
+          if (row.RowState == DataRowState.Deleted && !string.IsNullOrEmpty(entity))
+          {
+            _dataSource.terminateEntity(entity);
+          }
+          else
+          {
+            if (row.RowState == DataRowState.Modified || row.RowState == DataRowState.Added)
+            {
+              if (row.RowState == DataRowState.Added)
+              {
+                if (string.IsNullOrEmpty(entity)) // this is a new row, so we autogenerate an entity id as EntityOwner-LastName, with an index suffix if it is not unique
+                {
+                  int cnt = 0;
+                  bool existsEntity = false;
+                  do
+                  {
+                    string strCount = string.Empty;
+                    if (cnt > 0)
+                      strCount = cnt.ToString();
+                    entity = string.Format("{0}-{1}{2}", EntityOwner, CommonFunctions.CString(row["LegalName"]).Replace(" ","").Replace('/','-'), strCount);
+                    existsEntity = _dataSource.ExistsEntity(entity);
+                    cnt++;
+                  } while (existsEntity);
+                  row["Entity"] = entity; // now update the entity column to match
+                }
+              }
+              foreach (DataColumn col in _ds.Tables[0].Columns)
+              {
+                // set default values:
+                object val = row[col.ColumnName];
+                if (col.ColumnName.Equals("EntityType", StringComparison.CurrentCultureIgnoreCase))
+                  val = EntityType;
+                else
+                  if (col.ColumnName.Equals("EntityOwner", StringComparison.CurrentCultureIgnoreCase))
+                    val = EntityOwner;
+                  else
+                    if (col.ColumnName.Equals("Entity", StringComparison.CurrentCultureIgnoreCase))
+                      val = entity;
+                if (_dataSource.IsEntityField(col.ColumnName))
+                  _eac.setValue(string.Format("{0}.{1}", entity, col.ColumnName), val);
+                else
+                  _eac.setValue(string.Format("{0}.Entity.{1}.{2}", entity, EntityType, col.ColumnName), val);
+              }
+              if (_eac.Entities.Dirty)
+                _dataSource.saveEntity(_eac);            
+            }
+          }
+        }
+      }
+      _dirty = false;
+
+    }
+    private void loadColumns(DataTable dt, Item item)
+    {
+      for (int i = 0; i < _columnNames.GetLength(0); i++)
+      {
+        string aID = _columnNames[i];
+        DataColumn col = new DataColumn(aID, typeof(string));
+        if (aID.Equals("LegalName", StringComparison.CurrentCultureIgnoreCase))
+        {
+          if (_entityType.Equals("Contact", StringComparison.CurrentCultureIgnoreCase))
+            col.Caption = "Last Name";
+          else
+            if (_entityType.Equals("Location", StringComparison.CurrentCultureIgnoreCase))
+              col.Caption = "Location Name";
+        }
+        dt.Columns.Add(col);
+      }
+    }
+
+    private void grdEntities_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+    {
+      _dirty = true;
+    }
+
+    private void grdEntities_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+    {
+    }
+
+    private void grdEntities_DataError(object sender, DataGridViewDataErrorEventArgs e)
+    {
+      ;
+    }
+
+    private void grdEntities_UserAddedRow(object sender, DataGridViewRowEventArgs e)
+    {
+      _dirty = true;
+      int index = e.Row.Index - 1;
+      DataGridViewRow row = grdEntities.Rows[index];
+      DataGridViewRow newRow = e.Row;      
+      foreach (KeyValuePair<string, object> defaultValue in DefaultValues)
+      {
+        if (grdEntities.Columns.Contains(defaultValue.Key)
+          && !string.IsNullOrEmpty(CommonFunctions.CString(defaultValue.Value)))
+        {
+          index = grdEntities.Columns[defaultValue.Key].Index;
+          if (row.Cells[index] != null)
+          {
+            DataGridViewCell c = row.Cells[index];
+            if (string.IsNullOrEmpty(CommonFunctions.CString(c.Value)))
+            {
+              if (c.GetType() == typeof(DataGridViewComboBoxCell))
+                CommonFormFunctions.setComboBoxCell(c, defaultValue.Value);
+              else
+                c.Value = defaultValue.Value; // so add to the new row
+            }
+          }
+        }
+      }      
+      if (grdEntities.Columns.Contains(colCONTACTTYPE))
+      {
+        if (newRow.Cells[colCONTACTTYPE].GetType() != typeof(DataGridViewComboBoxCell))
+        {
+          DataGridViewComboBoxCell cell = (DataGridViewComboBoxCell)_contactTypeCol.Clone();
+          if (newRow.Cells[colCONTACTTYPE].Value != null)
+            CommonFormFunctions.setComboBoxCell(cell, newRow.Cells[colCONTACTTYPE].Value);
+          newRow.Cells[colCONTACTTYPE] = cell;
+        }
+      }
+
+
+    }
+
+    private void grdEntities_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+    {
+      if (grdEntities.SelectedRows != null && grdEntities.SelectedRows.Count > 0)
+      {
+        //if (grdEntities.SelectedRows[0].Index != 0 || _selectedRowIndex == -1)
+        if (e.RowIndex == grdEntities.SelectedRows[0].Index)
+        {
+          _selectedRowIndex = e.RowIndex;  // only select the first row selected
+          if (grdEntities.Columns.Contains(_uniqueIdentifer))
+            _selectedID = CommonFunctions.CString(grdEntities.Rows[_selectedRowIndex].Cells[_uniqueIdentifer].Value);
+          raiseRowChangedEvent(grdEntities.SelectedRows[0]);
+        }
+      }
+      if (grdEntities.Rows.Count == 1) // selected thanged deoesnt fire if there is only one row so we make sure it does
+        raiseRowChangedEvent(grdEntities.Rows[e.RowIndex]);
+    }
+    #region custom events
+    public delegate void RowSelectedHandler(object sender, MaintenanceGridRowSelectedArgs e);
+    public event RowSelectedHandler RowSelected;
+    protected void OnRowSelected(MaintenanceGridRowSelectedArgs e)
+    {
+      if (RowSelected != null)
+      {
+        RowSelected(this, e);
+      }
+    }
+    private void raiseRowChangedEvent(DataGridViewRow row)
+    {
+      if (!_searching)
+      {
+        MaintenanceGridRowSelectedArgs e = new MaintenanceGridRowSelectedArgs();
+        e.SelectedRow = row;
+        OnRowSelected(e);
+      }
+    }
+    #endregion
+  }
+}

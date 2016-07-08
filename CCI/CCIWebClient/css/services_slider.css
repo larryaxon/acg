@@ -1,0 +1,60 @@
+/* slider stuff */
+.icon_slider {
+	float:left;
+	margin-right:5px;
+	margin-left:50px;
+}
+
+.bx-prev {
+	position: absolute;
+	top: 15px;
+	width: 31px;
+	height: 31px;
+	text-indent: -999999px;
+	background: url(../images/icon_arrow_left.png) no-repeat 0 -31px;
+}
+
+.bx-next {
+	position: absolute;
+	top: 15px;
+	right: -50px;
+	width: 31px;
+	height: 31px;
+	text-indent: -999999px;
+	background: url(../images/icon_arrow_right.png) no-repeat 0 -31px;
+}
+
+.bx-next:hover,
+.bx-prev:hover {
+	background-position: 0 0;
+}
+
+.field .field-label {
+	font-size: 14px;
+	color: #838383;
+	font-weight: normal;
+	margin-bottom: 5px;
+}
+
+.bx-wrapper {
+	float:left;
+	margin-top:30px;
+	margin-left:20px;
+	margin-bottom:15px;
+}
+
+#slider1 {
+	width:865px;
+}
+
+#slider1 h2 {
+	font-size:18px;
+	color:#777;
+}
+
+#slider1 ul {
+	margin-top:20px;
+}
+
+/* end slider stuff */
+	

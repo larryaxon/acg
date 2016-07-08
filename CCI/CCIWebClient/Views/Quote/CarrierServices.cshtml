@@ -1,0 +1,123 @@
+﻿@model CCIWebClient.Models.CustomerInformationModel
+<div class="carrier-question">
+    <span>Where will you get your Carrier Services?</span>
+    <br />
+    <div style="font-size: 11px">
+        You will need approximately 80k of bandwdith for each concurrent call for the phone
+        service. (Example:8 hosted seats would require approximately 640k of bandwidth up
+        and down just for the phones).</div>
+    <a href="http://www.citycommunications.com" style="font-size: 10px">Check Your Current
+        Internet Connection</a>
+    <br />
+    <label for="carrier-hide" style="cursor: pointer;">
+        <strong>CityHosted</strong></label>
+    @Html.RadioButtonFor(model => model.Header.CarrierServices, "cityhosted", new { id = "carrier-hide", @class = "phone-question-radial learn-more-drop", style = "cursor: pointer;" })
+    <label for="carrier-existing" style="cursor: pointer;">
+        Use Existing</label>
+    @Html.RadioButtonFor(model => model.Header.CarrierServices, "existing", new { id = "carrier-existing", @class = "phone-question-radial learn-more-drop", style = "cursor: pointer;" })
+    <label for="carrier-elsewhere" style="cursor: pointer;">
+        Purchase Elsewhere</label>
+    @Html.RadioButtonFor(model => model.Header.CarrierServices, "elsewhere", new { id = "carrier-elsewhere", @class = "phone-question-radial learn-more-drop", style = "cursor: pointer;" })
+    <div class="learn-more-content carrier-existing" @(Model.Header.CarrierServices == "existing" ? "" : "style=display:none;")>
+        <p class="learn-drop-p" />
+        <br />
+        <table id="CurrentCarrierTable">
+            <thead>
+                <tr>
+                    <th>
+                        <strong style="margin-right: 18px;">Current Carrier</strong>
+                    </th>
+                    <th>
+                        <strong>Connection Type</strong>
+                    </th>
+                    <th>
+                        <strong>Contract Exp Date</strong>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    for (int i = 0; i < Model.CarrierServices.Count; i++)
+                    {
+                    <tr>
+                        <td style="display: none">
+                            @Html.HiddenFor(model => Model.CarrierServices[i].DetailId)
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(model => Model.CarrierServices[i].CarrierDescription, new { @class = "quote-drop-heading" })
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(model => Model.CarrierServices[i].ConectionType, new { @class = "quote-drop-heading" })
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(model => Model.CarrierServices[i].ContractExpirationDate, new { @class = "quote-drop-heading" })
+                        </td>
+                    </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        <a href="#" class="quote-bolda add-currentCarrier">Add New Row</a>
+        <br />
+    </div>
+    <!-- .carrier-existing -->
+    <div class="learn-more-content carrier-elsewhere" @(Model.Header.CarrierServices == "elsewhere" ? "" : "style=display:none;")>
+        <!-- For Purchase Elsewhere -->
+        <div style="font-size: 11px">
+            <strong>Warning: </strong>All VOIP phone service is dependant on a quality Internet
+            connection with enough bandwidth up and down to support call sessions that take
+            up to 80k per concurrent call. Any additional trouble shooting, configuration work,
+            or testing may increase your costs. PLEASE MAKE SURE THAT YOUR CONNECTION IS INSTALLED
+            AND TESTED AT LEAST 3 DAYS PRIOR TO THE INSTALLATION OF YOUR CITYHOSTED PHONES.</div>
+        <p class="learn-drop-p" />
+        <br />
+        <table id="OtherCarriersTable">
+            <thead>
+                <tr>
+                    <th>
+                        <strong style="margin-right: 18px;">Carrier Name</strong>
+                    </th>
+                    <th>
+                        <strong>Contact Name</strong>
+                    </th>
+                    <th>
+                        <strong>Carrier Email</strong>
+                    </th>
+                    <th>
+                        <strong>Carrier Phone</strong>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    for (int i = 0; i < Model.OtherCarrier.Count; i++)
+                    {
+                    <tr>
+                        <td style="display: none">
+                            @Html.HiddenFor(model => Model.OtherCarrier[i].DetailId)
+                        </td>
+
+                        <td>
+                            @Html.TextBoxFor(model => Model.OtherCarrier[i].CarrierDescription, new { @class = "quote-drop-heading" })
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(model => Model.OtherCarrier[i].ContactName, new { @class = "quote-drop-heading" })
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(model => Model.OtherCarrier[i].CarrierEmail, new { @class = "quote-drop-heading" })
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(model => Model.OtherCarrier[i].CarrierPhone, new { @class = "quote-drop-heading" })
+                        </td>
+                    </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        <a href="#" class="quote-bolda add-otherCarriers">Add New Row</a>
+        <div class="add-spacer">
+        </div>
+    </div>
+    <!-- .carrier-elsewhere -->
+</div>
+<!-- .carrier-question -->

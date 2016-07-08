@@ -1,0 +1,225 @@
+﻿namespace ACG.DesktopClient.Common
+{
+  partial class ctlSearchGrid
+  {
+    /// <summary> 
+    /// Required designer variable.
+    /// </summary>
+    private System.ComponentModel.IContainer components = null;
+
+    /// <summary> 
+    /// Clean up any resources being used.
+    /// </summary>
+    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+    protected override void Dispose(bool disposing)
+    {
+      if (disposing && (components != null))
+      {
+        components.Dispose();
+      }
+      base.Dispose(disposing);
+    }
+
+    #region Component Designer generated code
+
+    /// <summary> 
+    /// Required method for Designer support - do not modify 
+    /// the contents of this method with the code editor.
+    /// </summary>
+    private void InitializeComponent()
+    {
+      this.components = new System.ComponentModel.Container();
+      this.splitMain = new System.Windows.Forms.SplitContainer();
+      this.btnExport = new System.Windows.Forms.Button();
+      this.lblMRCTotal = new System.Windows.Forms.Label();
+      this.lblTitle = new System.Windows.Forms.Label();
+      this.btnSearch = new System.Windows.Forms.Button();
+      this.grdSearch = new System.Windows.Forms.DataGridView();
+      this.grdResearch = new System.Windows.Forms.DataGridView();
+      this.mnuGridContext = new System.Windows.Forms.ContextMenuStrip(this.components);
+      this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.copyCellToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.copyAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.btnCollapseSearch = new System.Windows.Forms.Button();
+      ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
+      this.splitMain.Panel1.SuspendLayout();
+      this.splitMain.Panel2.SuspendLayout();
+      this.splitMain.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.grdSearch)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.grdResearch)).BeginInit();
+      this.mnuGridContext.SuspendLayout();
+      this.SuspendLayout();
+      // 
+      // splitMain
+      // 
+      this.splitMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.splitMain.Location = new System.Drawing.Point(18, 0);
+      this.splitMain.Name = "splitMain";
+      // 
+      // splitMain.Panel1
+      // 
+      this.splitMain.Panel1.Controls.Add(this.btnExport);
+      this.splitMain.Panel1.Controls.Add(this.lblMRCTotal);
+      this.splitMain.Panel1.Controls.Add(this.lblTitle);
+      this.splitMain.Panel1.Controls.Add(this.btnSearch);
+      this.splitMain.Panel1.Controls.Add(this.grdSearch);
+      // 
+      // splitMain.Panel2
+      // 
+      this.splitMain.Panel2.Controls.Add(this.grdResearch);
+      this.splitMain.Size = new System.Drawing.Size(1086, 453);
+      this.splitMain.SplitterDistance = 362;
+      this.splitMain.TabIndex = 0;
+      // 
+      // btnExport
+      // 
+      this.btnExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnExport.Location = new System.Drawing.Point(265, 430);
+      this.btnExport.Name = "btnExport";
+      this.btnExport.Size = new System.Drawing.Size(94, 20);
+      this.btnExport.TabIndex = 10;
+      this.btnExport.Text = "Export";
+      this.btnExport.UseVisualStyleBackColor = true;
+      this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
+      // 
+      // lblMRCTotal
+      // 
+      this.lblMRCTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.lblMRCTotal.AutoSize = true;
+      this.lblMRCTotal.Location = new System.Drawing.Point(135, 1);
+      this.lblMRCTotal.Name = "lblMRCTotal";
+      this.lblMRCTotal.Size = new System.Drawing.Size(58, 13);
+      this.lblMRCTotal.TabIndex = 9;
+      this.lblMRCTotal.Text = "Total MRC";
+      this.lblMRCTotal.Visible = false;
+      // 
+      // lblTitle
+      // 
+      this.lblTitle.AutoSize = true;
+      this.lblTitle.Location = new System.Drawing.Point(4, 1);
+      this.lblTitle.Name = "lblTitle";
+      this.lblTitle.Size = new System.Drawing.Size(132, 13);
+      this.lblTitle.TabIndex = 7;
+      this.lblTitle.Text = "Search (0 Records Found)";
+      // 
+      // btnSearch
+      // 
+      this.btnSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnSearch.Location = new System.Drawing.Point(3, 430);
+      this.btnSearch.Name = "btnSearch";
+      this.btnSearch.Size = new System.Drawing.Size(256, 20);
+      this.btnSearch.TabIndex = 6;
+      this.btnSearch.Text = "Search";
+      this.btnSearch.UseVisualStyleBackColor = true;
+      this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
+      // 
+      // grdSearch
+      // 
+      this.grdSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.grdSearch.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+      this.grdSearch.Location = new System.Drawing.Point(3, 17);
+      this.grdSearch.Name = "grdSearch";
+      this.grdSearch.Size = new System.Drawing.Size(356, 410);
+      this.grdSearch.TabIndex = 5;
+      this.grdSearch.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.grdSearch_CellValidating);
+      this.grdSearch.DefaultValuesNeeded += new System.Windows.Forms.DataGridViewRowEventHandler(this.grdSearch_DefaultValuesNeeded);
+      this.grdSearch.RowValidating += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.grdSearch_RowValidating);
+      // 
+      // grdResearch
+      // 
+      this.grdResearch.AllowUserToAddRows = false;
+      this.grdResearch.AllowUserToDeleteRows = false;
+      this.grdResearch.AllowUserToOrderColumns = true;
+      this.grdResearch.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+      this.grdResearch.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.grdResearch.Location = new System.Drawing.Point(0, 0);
+      this.grdResearch.Name = "grdResearch";
+      this.grdResearch.Size = new System.Drawing.Size(720, 453);
+      this.grdResearch.TabIndex = 7;
+      this.grdResearch.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.grdResearch_CellValidating);
+      this.grdResearch.SelectionChanged += new System.EventHandler(this.grdResearch_SelectionChanged);
+      // 
+      // mnuGridContext
+      // 
+      this.mnuGridContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exportToolStripMenuItem,
+            this.copyCellToolStripMenuItem,
+            this.copyAllToolStripMenuItem});
+      this.mnuGridContext.Name = "contextMenuStrip1";
+      this.mnuGridContext.Size = new System.Drawing.Size(126, 70);
+      // 
+      // exportToolStripMenuItem
+      // 
+      this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
+      this.exportToolStripMenuItem.Size = new System.Drawing.Size(125, 22);
+      this.exportToolStripMenuItem.Text = "Export";
+      this.exportToolStripMenuItem.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
+      // 
+      // copyCellToolStripMenuItem
+      // 
+      this.copyCellToolStripMenuItem.Name = "copyCellToolStripMenuItem";
+      this.copyCellToolStripMenuItem.Size = new System.Drawing.Size(125, 22);
+      this.copyCellToolStripMenuItem.Text = "Copy Cell";
+      this.copyCellToolStripMenuItem.Click += new System.EventHandler(this.copyCellToolStripMenuItem_Click);
+      // 
+      // copyAllToolStripMenuItem
+      // 
+      this.copyAllToolStripMenuItem.Name = "copyAllToolStripMenuItem";
+      this.copyAllToolStripMenuItem.Size = new System.Drawing.Size(125, 22);
+      this.copyAllToolStripMenuItem.Text = "Copy All";
+      this.copyAllToolStripMenuItem.Click += new System.EventHandler(this.copyAllToolStripMenuItem_Click);
+      // 
+      // btnCollapseSearch
+      // 
+      this.btnCollapseSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnCollapseSearch.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.btnCollapseSearch.Location = new System.Drawing.Point(0, 0);
+      this.btnCollapseSearch.Name = "btnCollapseSearch";
+      this.btnCollapseSearch.Size = new System.Drawing.Size(18, 453);
+      this.btnCollapseSearch.TabIndex = 1;
+      this.btnCollapseSearch.Text = "<";
+      this.btnCollapseSearch.UseVisualStyleBackColor = true;
+      this.btnCollapseSearch.Click += new System.EventHandler(this.btnCollapseSearch_Click);
+      // 
+      // ctlSearchGrid
+      // 
+      this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+      this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.Controls.Add(this.btnCollapseSearch);
+      this.Controls.Add(this.splitMain);
+      this.Name = "ctlSearchGrid";
+      this.Size = new System.Drawing.Size(1107, 453);
+      this.splitMain.Panel1.ResumeLayout(false);
+      this.splitMain.Panel1.PerformLayout();
+      this.splitMain.Panel2.ResumeLayout(false);
+      ((System.ComponentModel.ISupportInitialize)(this.splitMain)).EndInit();
+      this.splitMain.ResumeLayout(false);
+      ((System.ComponentModel.ISupportInitialize)(this.grdSearch)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.grdResearch)).EndInit();
+      this.mnuGridContext.ResumeLayout(false);
+      this.ResumeLayout(false);
+
+    }
+
+    #endregion
+
+    private System.Windows.Forms.SplitContainer splitMain;
+    private System.Windows.Forms.DataGridView grdResearch;
+    private System.Windows.Forms.Button btnSearch;
+    private System.Windows.Forms.DataGridView grdSearch;
+    private System.Windows.Forms.Label lblTitle;
+    private System.Windows.Forms.Label lblMRCTotal;
+    private System.Windows.Forms.Button btnExport;
+    private System.Windows.Forms.ContextMenuStrip mnuGridContext;
+    private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem copyCellToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem copyAllToolStripMenuItem;
+    private System.Windows.Forms.Button btnCollapseSearch;
+  }
+}

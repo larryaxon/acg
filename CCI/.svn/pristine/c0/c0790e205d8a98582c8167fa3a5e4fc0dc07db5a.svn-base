@@ -1,0 +1,25 @@
+﻿@model CCIWebClient.Models.QuoteTotalsModel
+<div class="qs-numbers">
+    <table id="TableTotalValues" class="TotalTableStyle">
+        <tr>
+            <td class="TotalCellStyle">
+                Monthly:
+            </td>
+            <td>
+                <strong>
+                    @{if (Model.TotalMonthly != "$0.00")
+                      {@Html.Raw(Model.TotalMonthly)}}
+                </strong>
+            </td>
+        </tr>
+        <tr>
+            <td class="TotalCellStyle">
+                One Time:
+            </td>
+            <td>
+                @{if (Model.TotalOneTime != "$0.00")
+                  {@Html.Raw(Model.TotalOneTime)}}
+            </td>
+        </tr>
+    </table>
+</div>

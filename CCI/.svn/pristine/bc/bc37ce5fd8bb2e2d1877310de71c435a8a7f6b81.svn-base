@@ -1,0 +1,35 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Text;
+
+using ACG.Common;
+using CCI.Sys.Data;
+
+namespace CCI.Sys.Data
+{
+  public class SearchDataSourceProductList: DataAccessBase, ISearchDataSource 
+  {
+    public string IDName { get; set; }
+    public string NameName { get; set; }
+    public string SQL { get; set; }
+    public string OrderByClause { get; set; }
+    public string Carrier { get; set; }
+    public SearchDataSourceProductList()
+    {
+      SQL = "Select * from (select m.ItemID, m.Name from ProductList p inner join MasterProductList m on p.ItemId = m.ItemId {0}) p ";
+      OrderByClause = " order by Name ";
+      IDName = "ItemID";
+      NameName = "Name";
+
+    }
+    public string[] Search(string criteria, bool useExactID)
+    {
+      string carrierClause = string.Empty;
+      if (!string.IsNullOrEmpty(Carrier))
+        carrierClause = string.Format(" and Carrier = '{0}'", Carrier);
+      return getSearchList(string.Format(SQL, carrierClause), OrderByClause, criteria, IDName, new string[] { NameName }, useExactID);
+
+    }
+  }
+}

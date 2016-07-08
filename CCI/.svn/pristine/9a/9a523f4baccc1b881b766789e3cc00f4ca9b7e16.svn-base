@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>City Communications Integrated | Business Communication Systems</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <meta name="description" content="Business Communication Systems" />
+    <meta name="keywords" content="Business Communication Systems" />
+    <meta name="copyright" content="City Communications Integrated" />
+    <meta name="robots" content="all" />
+      <noscript>
+        This application requires javascript activated browser.</noscript>
+
+    <link rel="icon" type="image/png" href="@Url.Content("~/Content/images/favicon.png")"/>
+
+    <link href="@Url.Content("~/Content/style.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/main.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/menu.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/prettyPhoto.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/themes/base/jquery.ui.all.css")" rel="stylesheet" type="text/css" />
+
+    <script src="@Url.Content("~/Scripts/jquery-1.8.0.min.js")"  type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.ui/jquery.ui.core.js")"  type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.ui/jquery.ui.widget.js")"  type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.ui/jquery.ui.position.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.ui/jquery.ui.dialog.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.ui/jquery.ui.button.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.ui/jquery.ui.autocomplete.js")" type="text/javascript"></script>
+
+@*    <script src="@Url.Content("~/Scripts/Common/swfobject.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Plugins/jquery.prettyPhoto.js")"  type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Plugins/custom.js")"  type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Plugins/jquery.bxSlider.min.js")"  type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Plugins/jquery.sticky.js")" type="text/javascript"></script>*@
+    <script src="@Url.Content("~/Scripts/Common/jQuery.CCICommon.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/Views/_Layout.js")" type="text/javascript"></script>
+       <!--[if IE 6]>
+	<script src="js/DD_belatedPNG_0.0.8a-min.js"></script>
+	<script>
+		DD_belatedPNG.fix('img');
+	</script>
+<![endif]-->
+</head>
+<body>
+    <div id="DataPage">
+        <div id="header">
+            <div class="logo">
+                <a href="/" title="City Communications Integrated">
+                    <!--<img src="/images/city-hosted-logo.png" alt="City Communications Integrated" title="City Communications Integrated" /></a></div>-->
+                    <img src="/images/cityhosted.jpg" alt="City Communications Integrated" title="City Communications Integrated" /></a></div>
+            <div class="contact_header">
+                <img src="/images/phone.png" class="phone" alt="Contact City Communications Integrated"
+                    title="Contact City Communications Integrated" />
+                <span class="header_top">5425 E. Bell Road Suite 141</span> <span class="header_bottom">
+                    Phoenix, AZ 85254</span>
+            </div>
+        </div>
+        <ul id="nav">
+            <li><a id="home" href="http://www.citycommunications.com/index.html"><span>Home</span></a></li>
+            <li><a id="services" href="http://www.citycommunications.com/services.html"><span>Services</span></a></li>
+            <li><a id="citycare" href="http://www.citycommunications.com/citycare.html"><span>CityCare</span></a></li>
+            <li><a id="cityhosted" href="http://www.citycommunications.com/cityhosted.html"><span>Contact</span></a></li>
+            <li><a id="contactpage" href="http://www.citycommunications.com/contact.html"><span>Contact</span></a></li>
+            <li><a id="login" href="http://portal.citycommunications.com/Account.aspx" class="login"><span>Login</span></a></li>
+        </ul>
+        @RenderBody()
+        <div id="sidebar_industry">
+        </div>
+    </div>
+    <div id="orderItems" title="Order List" style="display: none">
+    </div>
+     @RenderSection("head", required: false)
+</body>
+</html>

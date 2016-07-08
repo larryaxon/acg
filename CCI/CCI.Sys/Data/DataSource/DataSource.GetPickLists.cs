@@ -1,0 +1,92 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Text;
+
+using CCI.Common;
+using CCI.Sys.SecurityEngine;
+
+using TAGBOSS.Common;
+using TAGBOSS.Common.Model;
+
+namespace CCI.Sys.Data
+{
+  public partial class DataSource : DataAccessBase
+  {
+    public CCIForm getDSPickLists(Hashtable context, ArrayList fieldnames, string securityAccount, string securityUser, string criteria)
+    {
+      CCIForm returnList = new CCIForm();
+
+      string sql = string.Empty;
+      string dealer, orderType;
+      foreach (object f in fieldnames)
+      {
+        sql = string.Empty;
+        string fld = CommonFunctions.CString(f).ToLower();
+        switch (fld)
+        {
+          case "dummy":
+            sql = string.Empty;
+            break;
+          case "state":
+            sql = string.Format(
+              @"SELECT Distinct CodeValue, Description
+                FROM CodeMaster
+                WHERE CodeType = '{0}'
+                {1} Order By Description"
+              , "state"
+              , (string.IsNullOrEmpty(criteria) ? string.Empty : string.Format(" And Description like '%{0}%' ", CommonFunctions.fixUpStringForSQL(criteria))));
+            break;
+          case "dealercustomer": // this is a picklist of customers for this dealer
+            dealer = _ea.EntityOwner(securityUser);
+            if (dealer.Equals("CCI", StringComparison.CurrentCultureIgnoreCase)) // this is not a dealer's user
+              sql = "select Entity Customer, LegalName CustomerName from Entity where 1 = 0"; // there can be not dealer customers, then, so we get an empty list
+            else
+            {
+              sql = string.Format(@"select distinct c.Entity Customer, c.LegalName CustomerName from entity d
+                    inner join salesordealercustomers dc on d.entity = dc.salesordealer
+                    inner join entity c on c.entity = dc.customer
+                    where d.entitytype = 'Dealer' and d.entity = '{0}' {1}"
+                , CommonFunctions.fixUpStringForSQL(dealer)
+                , (string.IsNullOrEmpty(criteria) ? string.Empty : string.Format(" And c.LegalName like '%{0}%' ", CommonFunctions.fixUpStringForSQL(criteria))));
+            }
+            break;
+          case "orders":
+            dealer = _ea.EntityOwner(securityUser);
+            if (dealer.Equals("CCI", StringComparison.CurrentCultureIgnoreCase))
+              dealer = securityUser;
+            orderType = "Quote";
+            if (context.ContainsKey("ordertype"))
+              orderType = CommonFunctions.CString(context["ordertype"]);
+            string sCriteria = string.Empty;
+            if (!string.IsNullOrEmpty(criteria))
+              sCriteria = string.Format(" AND ShortName like '%{0}%'", CommonFunctions.fixUpStringForSQL(criteria));
+            sql = string.Format(
+                  @"select distinct ID OrderID, substring(ShortName, charindex(':',ShortName) + 1, len(ShortName)) OrderName 
+                      from Orders where DealerOrSalesperson = '{0}' and OrderType = '{1}'{2}",
+              CommonFunctions.fixUpStringForSQL(dealer)
+              , CommonFunctions.fixUpStringForSQL(orderType)
+              , sCriteria);
+            break;
+        }
+
+        if (sql != string.Empty)
+        {
+          returnList.Add(
+            new CCIFormItem()
+            {
+              FormItemType = FormItemTypes.PickList,
+              OriginalID = fld,
+              Value = CommonFunctions.convertDataSetToCCITable(getDataFromSQL(sql))
+            }
+          );
+        }
+      }
+
+      return returnList;
+    }
+  }
+}

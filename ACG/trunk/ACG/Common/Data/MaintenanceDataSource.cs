@@ -1,0 +1,315 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Collections;
+using System.IO;
+using System.Text;
+using System.Data;
+using System.Data.Common;
+using System.Data.SqlClient;
+using System.Reflection;
+
+using ACG.Common;
+
+namespace ACG.Common.Data
+{
+  public class MaintenanceDataSource : DataAccessBase
+  {
+    #region private data
+    private string _user { get { if (securityContext != null) return securityContext.User; else return null; } }
+    private string[] _readOnlyFields = new string[] { "LastModifiedBy", "LastModifiedDateTime" };
+    private string[] _keyNames = new string[0];
+    private string[] _fieldNames = new string[0];
+
+    private string tableName;
+    private ISecurityContext securityContext;
+    private ISearchDataSource searchDataSource;
+    private string dataSource;
+    private string gridDataSource;
+    private Dictionary<string, string> indexFields = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase);
+    private Dictionary<string, string> hiddenFields = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase);
+    private Dictionary<string, string> readOnlyFields = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase);
+    private Dictionary<string, string> searchFields = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase);
+    private Dictionary<string, Dictionary<string, string>> fieldList = new Dictionary<string, Dictionary<string, string>>(StringComparer.CurrentCultureIgnoreCase);
+    private bool canAddRecord;
+    private bool canDeleteRecord;
+    private bool canUpdateRecord;
+    #endregion
+
+    #region public properties
+    //public string TableName { get; set; }
+    //public ISecurityContext SecurityContext { get; set; }
+    //public ISearchDataSource SearchDataSource { get; set; }
+    //public string DataSource { get; set; }
+    //public string GridDataSource { get; set; }
+    //public Dictionary<string, string> IndexFields = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase);
+    //public Dictionary<string, string> HiddenFields = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase);
+    //public Dictionary<string, string> ReadOnlyFields = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase);
+    //public Dictionary<string, string> SearchFields = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase);
+    //public Dictionary<string, Dictionary<string, string>> FieldList = new Dictionary<string, Dictionary<string, string>>(StringComparer.CurrentCultureIgnoreCase);
+    //public string[] FieldNames { get { return _fieldNames; } }
+    //public string[] KeyNames { get { return _keyNames; } }
+
+    //public bool CanAddRecord { get; set; }
+    //public bool CanDeleteRecord { get; set; }
+    //public bool CanUpdateRecord { get; set; }
+
+    public string TableName 
+    { 
+      get { return tableName; } 
+      set { tableName = value; } 
+    }
+    public ISecurityContext SecurityContext 
+    { 
+      get { return securityContext; } 
+      set { securityContext = value; } 
+    }
+    public ISearchDataSource SearchDataSource 
+    { 
+      get { return searchDataSource; } 
+      set { searchDataSource = value; } 
+    }
+    public string DataSource 
+    { 
+      get { return dataSource; } 
+      set { dataSource = value; } 
+    }
+    public string GridDataSource 
+    { 
+      get { return gridDataSource; } 
+      set { gridDataSource = value; } 
+    }
+    public Dictionary<string, string> IndexFields 
+    { 
+      get { return indexFields; } 
+      set { indexFields = value; } 
+    }
+    public Dictionary<string, string> HiddenFields 
+    { 
+      get { return hiddenFields; } 
+      set { hiddenFields = value; } 
+    }
+    public Dictionary<string, string> ReadOnlyFields 
+    { 
+      get { return readOnlyFields; } 
+      set { readOnlyFields = value; } 
+    }
+    public Dictionary<string, string> SearchFields 
+    { 
+      get { return searchFields; } 
+      set { searchFields = value; } 
+    }
+    public Dictionary<string, Dictionary<string, string>> FieldList 
+    { 
+      get { return fieldList; } 
+      set { fieldList = value; } 
+    }
+    public bool CanAddRecord 
+    { 
+      get { return canAddRecord; } 
+      set { canAddRecord = value; } 
+    }
+    public bool CanDeleteRecord 
+    { 
+      get { return canDeleteRecord; } 
+      set { canDeleteRecord = value; } 
+    }
+    public bool CanUpdateRecord 
+    { 
+      get { return canUpdateRecord; } 
+      set { canUpdateRecord = value; } 
+    }
+    public string[] FieldNames 
+    { 
+      get { return _fieldNames; } 
+    }
+    public string[] KeyNames 
+    { 
+      get { return _keyNames; } 
+    }
+    #endregion public properties
+
+    public MaintenanceDataSource() 
+    {
+      init();
+    }
+    public MaintenanceDataSource(string source, ISecurityContext securityContext)
+    {
+      if (!string.IsNullOrEmpty(source))
+        DataSource = source;
+      if (securityContext != null)
+        SecurityContext = securityContext;
+      init();
+    }
+
+    #region public methods
+    public void Init()
+    {
+      if (!string.IsNullOrEmpty(DataSource))
+        loadDataSource();
+    }
+    public void saveRecord(string[] values)
+    {
+      if (values == null || _fieldNames == null || values.GetLength(0) != _fieldNames.GetLength(0))
+        throw new Exception("Maintenance save record values do not match fieldnames");
+      ArrayList keyValues = new ArrayList();
+      foreach (string keyname in _keyNames)
+        for (int i = 0; i < _fieldNames.GetLength(0); i++)
+          if (_fieldNames[i].Equals(keyname, StringComparison.CurrentCultureIgnoreCase))
+            keyValues.Add(values[i]);
+      if (existsRecord(TableName, _keyNames, (string[])keyValues.ToArray(typeof(string))))
+        updateRecord(_fieldNames, values, _keyNames, TableName);
+      else
+        insertRecord(TableName, _fieldNames, values);
+    }
+    public void deleteRecord(string[] keyValues)
+    {
+      deleteRecords(_keyNames, keyValues, TableName);
+    }
+    public Dictionary<string, object> getRecord(string[] keyValues)
+    {
+      Dictionary<string, object> record = new Dictionary<string, object>(StringComparer.CurrentCultureIgnoreCase);
+      string sql = makeSelectSQL(_keyNames, keyValues, TableName);
+      using (DataSet ds = getDataFromSQL(sql))
+      {
+        if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+          return record;
+        DataRow row = ds.Tables[0].Rows[0];
+        foreach (DataColumn col in ds.Tables[0].Columns)
+          record.Add(col.ColumnName, row[col.ColumnName]);
+      }
+      return record;
+    }
+    public string getDataType(string fieldname)
+    {
+      if (string.IsNullOrEmpty(fieldname) || !FieldList.ContainsKey(fieldname))
+        return null;
+      Dictionary<string, string> field = FieldList[fieldname];
+      string dbtype = field["system_data_type"];
+      return CommonFunctions.MapSQLToVar(dbtype);
+    }
+
+    #endregion
+
+    #region private methods
+    private void loadDataSource()
+    {
+      string sql = string.Format("Select * from MaintenanceDataSources where DataSource = '{0}'", DataSource);
+      using (DataSet ds = getDataFromSQL(sql))
+      {
+        if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+        {
+          DataRow row = ds.Tables[0].Rows[0];
+          GridDataSource = CommonFunctions.CString(row["GridSource"]);
+          SearchDataSource = getSearchDataSource(CommonFunctions.CString(row["SearchDataSource"]));
+          CanAddRecord = CommonFunctions.CBoolean(row["CanAddNew"], true);
+          CanUpdateRecord = CommonFunctions.CBoolean(row["CanEdit"], true);
+          CanDeleteRecord = CommonFunctions.CBoolean(row["CanDelete"], true);
+          IndexFields = loadList(CommonFunctions.CString(row["IndexFields"]), null);
+          HiddenFields = loadList(CommonFunctions.CString(row["HiddenFields"]), null);
+          ReadOnlyFields = loadList(CommonFunctions.CString(row["ReadOnlyFields"]), _readOnlyFields);
+          TableName = CommonFunctions.CString(row["TableName"]);
+          loadFields();
+        }
+      }
+    }
+    private void loadFields()
+    {
+      if (string.IsNullOrEmpty(TableName))
+        return;
+      loadSearchFields();
+      FieldList.Clear();
+      ArrayList fieldNames = new ArrayList();
+      using (DataSet ds = getDataFromSQL(string.Format("Select * from vw_DBColumnDetail where table_name = '{0}' order by Column_Order",TableName)))
+      {
+        if (ds != null && ds.Tables.Count > 0)
+        {
+          DataTable dt = ds.Tables[0];
+          foreach (DataRow row in dt.Rows)
+          {
+            Dictionary<string, string> fields = new Dictionary<string,string>(StringComparer.CurrentCultureIgnoreCase);
+            foreach (DataColumn col in dt.Columns)
+            {
+              string val = CommonFunctions.CString(row[col.ColumnName]);
+              fields.Add(col.ColumnName, val);
+            }
+            string fld = CommonFunctions.CString(row["column_name"]);
+            FieldList.Add(fld, fields);
+            fieldNames.Add(fld);
+          }           
+        }
+      }
+      ArrayList keyNames = new ArrayList();
+      foreach (KeyValuePair<string, string> index in IndexFields)
+      {
+        if (FieldList.ContainsKey(index.Key))
+          keyNames.Add(index.Key);
+      }
+      _fieldNames = (string[])fieldNames.ToArray(typeof(string));
+      _keyNames = (string[])keyNames.ToArray(typeof(string));
+    }
+    private Dictionary<string, string> loadList(string strlist, string[] defaultEntries)
+    {
+      Dictionary<string, string> list = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase);
+
+      string[] parts = new string[1];
+      if (!string.IsNullOrEmpty(strlist))
+      {
+        if (strlist.Contains(","))
+          parts = strlist.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+        else
+          parts[0] = strlist;
+      }
+      List<string> defaults = new List<string>();
+      if (defaultEntries != null)
+        defaults = new List<string>(defaultEntries);
+      if (defaults.Count > 0)
+        parts = CommonFunctions.ConcatArrays(parts, defaults.ToArray());
+      foreach (string part in parts)
+      {
+        if (!string.IsNullOrEmpty(part))
+        {
+          string fld = part.Trim();
+          string defaultValue = null;
+          if (fld.Contains("("))
+          {
+            string parm;
+            fld = CommonFunctions.getFunctionName(fld, out parm);
+            if (!string.IsNullOrEmpty(parm))
+              defaultValue = parm;
+          }
+          if (!list.ContainsKey(fld))
+            list.Add(fld, defaultValue);
+        }
+      }
+      
+      return list;
+    }
+    private void loadSearchFields()
+    {
+      if (SearchFields.Count == 0)
+      {
+        string sql = "select CodeValue, Description from CodeMaster where CodeType = 'FieldSearchSource'";
+        using (DataSet ds = getDataFromSQL(sql))
+        {
+          if (ds != null && ds.Tables.Count > 0)
+          {
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+              string fld = CommonFunctions.CString(row["CodeValue"]);
+              if (!SearchFields.ContainsKey(fld))
+                SearchFields.Add(fld, CommonFunctions.CString(row["Description"]));
+            }
+          }
+        }
+      }
+    }
+    private void init()
+    {
+      AssemblyName = "ACG";
+      CanAddRecord = true;
+      CanDeleteRecord = true;
+      CanUpdateRecord = true;
+    }
+    #endregion
+  }
+}

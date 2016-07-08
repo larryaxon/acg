@@ -1,0 +1,52 @@
+﻿@model CCIWebClient.Models.CustomerInformationModel
+<table id="FeaturesTable" class="QuoteTable">
+    <thead>
+        <tr>
+            <th>
+                Qty
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Sales Price
+            </th>
+            <th>
+                Your Cost
+            </th>
+        </tr>
+    </thead>
+    @{
+        for (int i = 0; i < Model.Features.Count; i++)
+        {           
+        <tr>
+            <td style="display: none">
+                @Html.HiddenFor(model => Model.Features[i].ItemId)
+                @Html.HiddenFor(model => Model.Features[i].DetailId)
+                @Html.HiddenFor(model => Model.Features[i].DealerCost)
+            </td>
+            <td>@Html.TextBoxFor(model => Model.Features[i].Quantity)
+            </td>
+            <td>@Model.Features[i].Description
+            </td>
+            <td>
+                @Html.DropDownListFor(model => Model.Features[i].RetailItemId, Model.Features[i].MRCRetailList, new {@class = "phone-dropdown" })
+                $
+                @{if (string.IsNullOrEmpty(Model.Features[i].Quantity) || Model.Features[i].Variable == "0")
+                  {
+                      Model.Features[i].Variable = "";
+                  }
+                  else
+                  {
+                      Model.Features[i].Variable = (string.IsNullOrEmpty(Model.Features[i].RetailMRC) ? Model.Features[i].RetailNRC : Model.Features[i].RetailMRC);
+                  }
+                }
+                @Html.TextBoxFor(model => Model.Features[i].Variable, new { @style = "display:none" })
+                <!--<input type="text" id="@("Features_" + i + "__Variable")" name="@("Features[" + i + "].Variable")" style="display: none;" />-->
+            </td>
+            <td>@Model.Features[i].DealerCost
+            </td>
+        </tr>  
+        }
+    }
+</table>

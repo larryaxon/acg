@@ -1,0 +1,822 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Xml;
+using System.Linq;
+using System.Text;
+
+using TAGBOSS.Common.Interface;
+
+namespace TAGBOSS.Common
+{
+  /// <summary>
+  /// This is the generic base class for all collections. It allows a user to create a collection of type "T".
+  /// <para>
+  /// A class must implement IDataClassItem to be collected by this class. A class must implement IDataClassContainer if it
+  /// inherits from this class.</para>
+  /// <para>
+  /// DataClass inheritors implement several methods of accessing class members, including:
+  /// </para>
+  /// <para>foreach (IEnumerator)</para>
+  /// <para>for i = 0 to myDataClassCollection.Count - 1</para>
+  /// <para>myClass m = myDataClassCollection[int index];</para>
+  /// <para>myClass m = myDataClassCollection[string uniquekey];</para>
+  /// <para>"DAO-like" record navigation, including MoveFirst, MoveLast, MoveNext, MovePrev, EOF, BOF, and Current() (to retrieve current record)</para>
+  /// </summary>
+  /// <typeparam name="T"></typeparam>
+
+  [SerializableAttribute]
+  public class DataClass<T> : IDataClassContainer<T>, IDataClassItem, IEnumerable where T : IDataClassItem  
+  {
+    #region module data
+    protected Dictionary<string,  T> itemHash = new Dictionary<string, T>();  // now contains any history entries
+    //protected Dictionary<string, Dictionary<int, T>> itemHash = new Dictionary<string, Dictionary<int, T>>();  // now contains any history entries
+    //protected Hashtable itemHash = new Hashtable(); // pairs of Key (T.ID) and objects of type T
+    protected bool notFound = false;                // set if a lookup goes wrong
+    protected ArrayList items = new ArrayList();      // external list key (t.ID) items. Should be the same as itemHash keys. Used to support indexed access and key return value
+    //List<string> items = new List<string>();      // external list key (t.ID) items. Should be the same as itemHash keys. Used to support indexed access and key return value
+    private string id = null;                       // the ID of this instance
+    private string origID = null;                   // To preserve the original ID for saving back to the database
+    private string description = null;              // optional description of this instance
+    private int index = 0;                          // index to support Next, Prev, Current
+    private bool bof = false;                       // BOF to support Next, Prev, Current    
+    private bool eof = false;                       // EOF to support Next, Prev, Current
+    protected bool isDirty = false;                 // is this instance dirty?
+    private bool isDeleted = false;                 // has this instance been deleted?
+    private bool isSorted = false;
+    private bool markForDelete = true;              // When we Remove an item of the collection, if true just mark it as deleted,
+    private bool readOnly = false;                  // Flag to be able to make data read only
+    //private Dictionaries dictionary = null;
+
+    #endregion
+
+    #region public properties
+
+    public Dictionaries Dictionary
+    {
+      get { return DictionaryFactory.getInstance().getDictionary(); }
+    }
+
+    /// <summary>
+    /// What is the unique key of this collection? Note this is normalized ToLower() so that all compares are case insensitive
+    /// </summary>
+    public string ID
+    {
+      get { return id; }
+      set
+      {
+        if (value == null)
+        {
+          origID = null;
+          id = null;
+        }
+        else
+        {
+          isDirty = true;
+          string origid = value.Trim();
+          origID = origid;         // original copy to save back to the database
+          id = origid.ToLower();   // lowercased id to use for comparisons, indexing, etc.
+        }
+      }
+    }
+    /// <summary>
+    /// OriginalID: Preserving the original ID with case to save back to the database (read only)
+    /// </summary>
+    public string OriginalID
+    {
+      get { return origID; }
+      //set { origID = value; }
+    }
+    /// <summary>
+    /// What is the description of this collection?
+    /// </summary>
+    public string Description
+    {
+      get 
+      {
+        if (description == null)
+          return origID;
+        else
+          return description; 
+      }
+      set
+      {
+        isDirty = true;
+        description = value;
+      }
+    }
+    /// <summary>
+    /// Has a MovePrev navigated past the beginning of the list?
+    /// </summary>
+    public bool BOF
+    {
+      get { return bof; }
+    }
+    /// <summary>
+    /// Has MoveNext navigated past the end of the list
+    /// </summary>
+    public bool EOF
+    {
+      get { return eof; }
+    }
+    /// <summary>
+    /// has a request for an item by key failed because it is not found?
+    /// </summary>
+    public bool NotFound
+    {
+      get { return notFound; }
+    }
+    /// <summary>
+    /// Has this collection been modified?
+    /// </summary>
+    public bool Dirty
+    {
+      get 
+      {
+        /*
+         * Modified 11/25/08 by LLA:
+         * If a contained element is dirty, then the container is also dirty
+         */
+        if (!isDirty)           // if the container is not dirty
+        {
+          foreach (string key in items)
+          {
+            // ok sometimes the generic class property overrides the specific override of the property, so we use reflection to force selecting the correct method
+            object[] pList = new object[0];
+            T t1 = itemHash[key];
+            bool dirty = (bool)t1.GetType().GetProperty("Dirty").GetValue(t1, pList);
+            if (dirty) 
+              return true;
+          }
+        }
+          //foreach (T t in this) // then check its contained items
+          //{
+          //  if (t.Dirty)        // if one of them is dirty
+          //  {
+          //    return true;      // then report this container as dirty, too
+          //  }
+          //}
+        return isDirty;         // otherwise, just return the dirty flag, whatever it is
+      }
+      set
+      {
+        if (!value)               // if we are resetting the dirty flag to "clean"
+          foreach (T t in this)
+          {
+            // then set all of the children to clean, too
+            /*
+             * We had a problem that, when recursively calling this property, overridden versions (like in the Item 
+             * class) were not being selected. This worked fine if you created an Item Class and accessed this
+             * property from it, but when instantiating it using the generically typed foreach above, it was
+             * calling this version instead of the overriding version in the item class. Fred gave me
+             * this solution, where we are explicitly pointing to the correct version of the Dirty 
+             * property and then using the SetValue to set the value. It now works correctly.
+             * LLA: 12/9/2008
+             */
+            ((object)t).GetType().GetProperty("Dirty").SetValue(t, false , null);
+
+            //t.Dirty = false;  // this is the old version that did not work  
+          }
+        isDirty = value;            // set this instance to the value passed in
+      }
+    }
+    /// <summary>
+    /// Has this collection been sorted?
+    /// </summary>
+    public bool Sorted
+    {
+      get { return isSorted; }
+    }
+    /// <summary>
+    /// Is this collection Deleted? If set to true, then also flag all of its children as deleted.
+    /// </summary>
+    public bool Deleted
+    {
+      get { return isDeleted; }
+      set
+      {
+        if (value)                      // if we are setting Deleted to true
+          foreach (T t in this)
+            t.Deleted = true;       // then set it true for all children, too
+        isDeleted = value;              // now set this instance's deleted flag to the value passed in
+      }
+    }
+    /// <summary>
+    /// By default, this property is false. This means when Remove is called to delete an item, the entry is deleted. If this 
+    /// property is overridden and set to true,
+    /// then don't delete the entry, but mark it for deletion. Note that, if the entry is marked for delete, so are all
+    /// of its children, if it has any.
+    /// </summary>
+    public bool MarkForDelete                       //      false means we really Remove it
+    {
+      get { return markForDelete; }
+      set { markForDelete = value; }
+    }
+    /// <summary>
+    /// Return or set an item of the collection indexed by numeric index
+    /// </summary>
+    /// <param name="index"></param>
+    /// <returns></returns>
+    public T this[int index]
+    {
+      get
+      {
+        notFound = false;
+        if (index < 0 || index >= items.Count)
+        {
+          notFound = true;
+          return default(T);
+        }
+        string key = items[index].ToString();        // use the ArrayList to find this key
+        if (itemHash.ContainsKey(key))
+          return (T)itemHash[key];       //return (T)itemHash[key][0];              // and return the object of type T for the key we found. Note that the most current entry is always index zero
+        notFound = true;
+        return default(T);
+      }
+      set
+      {
+        notFound = false;
+        if (index < 0 || index >= items.Count)
+          notFound = true;
+        else
+        {
+          string key = items[index].ToString();        // use the ArrayList to find this key
+          if (itemHash.ContainsKey(key))
+          {
+            //itemHash[key] = addHistory(itemHash[key], value);   // replace the current value with the new value, and move all the rest back one historically
+            itemHash[key] = value;
+            isDirty = true;
+          }
+          else
+            notFound = true;
+        }
+      }
+    }
+    /// <summary>
+    /// Return or set an item of the collection indexed by key value
+    /// </summary>
+    /// <param name="key"></param>
+    /// <returns></returns>
+    public T this[string key]
+    {
+      get
+      {
+        if (key == null)
+        {
+          notFound = true;
+          return default(T);                // had an error... just return a default reference
+        }
+        string compareKey = key.ToLower();
+        if (itemHash.ContainsKey(compareKey))
+        {
+          notFound = false;
+          return (T)itemHash[compareKey];          // return the object associated with this key. The zero index is the currene version
+          //return (T)itemHash[compareKey][0];          // return the object associated with this key. The zero index is the currene version
+        }
+        else
+        {
+          notFound = true;
+          return default(T);                // had an error... just return a default reference
+        }
+      }
+      set
+      {
+        try
+        {
+          this.Add(key, value);
+          notFound = false;
+          isDirty = true;
+        }
+        catch
+        {
+          notFound = true;
+        }
+      }
+    }
+    /// <summary>
+    /// Returns the Count, which is the number of members of this collection.
+    /// </summary>
+    public int Count
+    {
+      get { return itemHash.Count; }
+    }
+    /// <summary>
+    /// Is this object and its children read-only? Note that, if this property is set to true,
+    /// (the object is read-only), then all of the children and their childred are set to 
+    /// true, too.
+    /// </summary>
+    public bool ReadOnly
+    {
+      get { return readOnly; }
+      set 
+      {
+        if (value)               // if we are setting the ReadOnly flag to true
+          foreach (T t in this)
+            t.ReadOnly = true;    // then set all of the children to clean, too
+        readOnly = value;            // set this instance to the value passed in 
+      }
+    }
+    #endregion public properties
+
+    #region public methods
+    public string ToString()
+    {
+      string output = "{ " + OriginalID + ": ";
+      bool firstTime = true;
+      foreach (T t in this)
+      {
+        if (firstTime)
+          firstTime = false;
+        else
+          output += ", ";
+        output += t.ToString();
+      }
+      output += " }";
+      return output;
+    }
+    public string ToList()
+    {
+      return ToList(false);
+    }
+    public string ToList(bool stripIndex)
+    {
+      string[] delims = new string[] { TAGFunctions.TRANSCODEINDEXCHAR };
+      string returnList = string.Empty;
+      bool firstOne = true;
+      foreach (T t in this)
+      {
+        if (t.ID != null && !t.Deleted)
+        {
+          if (firstOne)
+            firstOne = false;
+          else
+            returnList += ", ";
+          string id = t.ID;
+          if (stripIndex && id != null && id.Contains(TAGFunctions.TRANSCODEINDEXCHAR))
+          {
+            string[] parts = (string[])TAGFunctions.evaluateFunction(TAGFunctions.EnumFunctions.parseString, id, delims);
+            id = parts[0];
+          }
+          returnList += id;
+        }
+      }
+      return returnList;
+    }
+    /// <summary>
+    /// True if an item in the collection matches unique key pKey
+    /// </summary>
+    /// <param name="pKey"></param>
+    /// <returns></returns>
+    public bool Contains(string pKey)
+    {
+      if (pKey == null)
+        return false;
+      return itemHash.ContainsKey(pKey.ToLower());
+    }
+
+    /// <summary>
+    /// Gets the key for this collections member, not based on the object ID, but on his position in the keys array...
+    /// Useful IF the key and the object ID key are NOT the same...
+    /// </summary>
+    /// <param name="Index"></param>
+    /// <returns></returns>
+    public string getKey(int Index)
+    {
+      if (Index >= 0 && Index < items.Count)
+      {
+        string itemKey = items[Index].ToString();
+        if (itemKey != null && origID != null && itemKey.StartsWith(origID, StringComparison.CurrentCultureIgnoreCase))
+        {
+          int colonLoc = itemKey.IndexOf(":");
+          if (colonLoc < 0)
+            return itemKey;
+          else
+            return string.Format("{0}{1}", origID, itemKey.Substring(colonLoc, itemKey.Length - colonLoc));
+        }
+        else
+          return itemKey;
+      }
+      else
+        return "";
+    }
+
+    /// <summary>
+    /// Single parameter Add that accepts just the T object
+    /// </summary>
+    /// <param name="pValue"></param>
+    public void Add(T pValue)                           // Single parameter Add that accepts just the T object
+    {
+      if (pValue != null)
+        Add(pValue.ID, pValue);
+    }
+    /// <summary>
+    /// Add an item to the collection using unique string key pKey. pValue is the item to be added. If the key is a dup (already exists), then
+    /// find the entry and update the item to be equal to pValue.
+    /// </summary>
+    /// <param name="pKey"></param>
+    /// <param name="pValue"></param>
+    public void Add(string pKey, T pValue)
+    {
+      if (pKey != null)
+      {
+        //if (dictionary != null)
+        //  pValue.Dictionary = dictionary;        
+        string key = pKey.ToLower();          // lowercase version to use for indexing/lookups
+        if (itemHash.ContainsKey(key))            // does this already exist?
+        {
+          itemHash[key] = pValue;  // then update the existing entry
+          //itemHash[key] = addHistory(itemHash[key], pValue);            // then update the existing entry
+        }
+        else
+        {
+          items.Add(key);                    // Add to both ArrayList and Hash table 
+          itemHash.Add(key, pValue);
+          //Dictionary<int, T> entry = new Dictionary<int, T>();
+          //entry.Add(0, pValue);
+          //itemHash.Add(key, entry);
+        }
+
+        isDirty = true;
+      }
+    }
+    /// <summary>
+    /// Remove an item of the collection referenced by unique key "key". If MarkForDelete is true, then don't
+    /// really remove it, but mark it for deletion. If the key does not exist, don't return an error,
+    /// just do nothing.
+    /// </summary>
+    /// <param name="key"></param>
+    public void Remove(string key)
+    {
+      string k = key.ToLower();
+      if (itemHash.ContainsKey(k))             // does this key exist
+      {
+        if (markForDelete)                  // do we just mark our records as deleted?
+        {
+          itemHash[k].Deleted = true;
+          itemHash[k].Dirty = true;
+          //itemHash[k][0].Deleted = true;
+        }
+        else
+        {
+          itemHash.Remove(k);               // the Remove it from both the hash and ArrayList
+          items.Remove(k);
+        }
+        isDirty = true;
+      }
+      // else don't do anything if the key does not exist
+    }
+
+    //lmv66: Deprecated, since we do not have a history anymore!
+    //public Dictionary<int, T> History(string pKey)
+    //{
+    //  if (pKey == null || !(itemHash.ContainsKey(pKey.ToLower())))
+    //    return new Dictionary<int, T>();
+    //  else
+    //    return itemHash[pKey.ToLower()];
+    //}
+
+    /// <summary>
+    /// Creates a clone of the current object and returns the object as the same type. 
+    /// Note that read only properties BOF, EOF, and NotFound, along with the current record pointer
+    /// for past DAO-style navigation are NOT perserved.
+    /// <para>This Cloning is recursive, so that all child classes, and all of those child classes' children
+    /// are also cloned. This results in a completely new copy with no references to the old object.</para>
+    /// <para>Also note that this method is not intended to be exposed by the concrete class. 
+    /// It is used by the concrete class inheriting from this generic class by its own
+    /// Clone() method (with no generic typing). The bad news is that each concrete class
+    /// MUST implement its own Clone() method by calling this method (see each class
+    /// for an example). The good news is that most of these implementations are trivial
+    /// if they do not have additional properties or collections in their class. At least
+    /// this approach centralizes the logic so it can always be maintained in one place.</para>
+    /// <para>Also note that the generically typed interface IDataClassContainer was created
+    /// to ensure that this Clone work properly. Therefore, all concrete classes that inherit
+    /// from DataClass must implement both the IDataClassContainer and the IDataClassItem
+    /// interfaces</para>
+    /// </summary>
+    /// <returns>A copy of the current object.</returns>
+    protected object Clone<TargetClass>(TargetClass d) where TargetClass : IDataClassContainer<T>
+    {
+      //foreach (T entry in this)
+      //{
+      //  object[] pList = new object[0];
+      //  T t = (T)entry.GetType().GetMethod("Clone").Invoke(entry, pList);
+      //  //T t = (T)entry.Clone();
+      //  d.Add(t);
+      //}
+      foreach (string key in items)   // for each unique key
+      {
+        object[] pList = new object[0];
+        T t1 = itemHash[key];
+        T t = (T)t1.GetType().GetMethod("Clone").Invoke(t1, pList);
+        // TODO: (LLA 5/10/2010)in the case of ItemType/Items, sometimes the ID in the add is NOT the same as the ID in the (T) object. 
+        // This does not hurt us right now, because the "big list", which uses this feature, is never cloned, but sometime  we may want to fix this.
+        d.Add(t);
+        //Dictionary<int, T> entry = itemHash[key];   // get the history for that key
+        //for (int i = entry.Count - 1; i >= 0; i--)  // start with oldest to newest, and add them. This is because add will assume new ones coming in are more current than old ones
+        //{
+        //  object[] pList = new object[0];
+        //  T t1 = entry[i];
+        //  T t = (T)t1.GetType().GetMethod("Clone").Invoke(t1, pList);
+        //  d.Add(t);
+        //}
+      }
+      d.Deleted = isDeleted;
+      d.Dirty = isDirty;
+      d.MarkForDelete = markForDelete;
+      //d.Dictionary = dictionary;
+      /*
+       * Although 99% of the time, a DataClass is both an item in a larger collection, and 
+       * a collection itself, sometimes (like in the EntitiesCollection of the EntityAttributesCollection
+       * class), it is just a collection. If it is not an item in another collection, there
+       * may be no ID to clone. If this ID is null, and we try to clone it, we get an error
+       * since the ID property does a .ToLower(). So, we check first, and don't try
+       * to clone it if it is null
+       */
+      if (origID != null)
+        d.ID = origID;                    // copy the original id to ID. there will be two copies made, one lowercased for the key, the other the original
+      else
+        if (id != null)
+          d.ID = id;                      // copy the regular id
+      // else                           // ok, so ID is not instantiated, don't copy it.
+      d.Description = description;
+      return d;
+    }
+    public virtual object Clone() 
+    {
+      throw new Exception("Must not execute this base Clone()");
+    }
+    /// <summary>
+    /// Take all of the items in newList and append them to the current instance. 
+    /// Note: Since Add looks for dups, it will update
+    /// the old ones rather than add if the key is the same.
+    /// </summary>
+    /// <param name="newList">Same object type with a collection of "sister" 
+    /// objects to be appended to this object</param>
+    public void Append(DataClass<T> newList)
+    {
+      // TODO: this does not include any history from the incoming list
+      // It is currently only used by EntityBase.LoadEntityChildren, so that is ok for now
+      foreach (T myEntry in newList)
+      {
+        Add(myEntry);
+      }
+    }
+    /// <summary>
+    /// Reset the collection. Clear/remove all entries, and reset all properties to their default values. Does not destroy the collection.
+    /// </summary>
+    public void Clear()
+    {
+      itemHash.Clear();
+      items.Clear();
+      id = null;
+      description = null;
+      isDirty = false;
+      notFound = false;
+      bof = true;
+      eof = true;
+    }
+    /// <summary>
+    /// Sorts the collection so that foreach, for, and DAO-like (MoveFirst, MoveNext, etc.) will iterate
+    /// through the collection sorted alphabetically by ID. Resets the current record pointer to the 
+    /// beginning of the list. This overload does not receives a parameter, so it sorts in alphabetical order
+    /// it has been keeped for compatibility with the written code
+    /// </summary>
+    public void Sort()
+    {
+      Sort(false);
+    }
+
+    /// <summary>
+    /// Sorts the collection so that foreach, for, and DAO-like (MoveFirst, MoveNext, etc.) will iterate
+    /// through the collection sorted alphabetically by ID. Resets the current record pointer to the 
+    /// beginning of the list.
+    /// This is the main Sort routine, it accepts a boolean parameter that, when set to true, sorts the arraylist in inverse order
+    /// </summary>
+    public void Sort(bool inverse)
+    {
+      if (inverse)
+      {
+        ArrayList newItems = (ArrayList)items.Clone();
+        newItems.Sort();
+        int maxsub = items.Count - 1;
+        for (int i = maxsub; i > -1; i--)
+          items[maxsub - i] = newItems[i];
+        index = 0;
+      }
+      else
+      {
+        items.Sort();   // sort the ArrayList of IDs. This list is used by for, foreach, etc.
+        index = 0;      // reset the current record pointer to the first record.
+      }
+      isSorted = true;
+    }
+    /// <summary>
+    /// Method which returns the current item as located by MoveFirst, MoveLast, MoveNext, or MovePrev.
+    /// </summary>
+    /// <returns></returns>
+    public T Current()
+    {
+      /*
+       * returns the object pointed to by the current index (manipulated by MoveFirst, MoveNext, etc.
+       */
+      if (Count == 0 || index < 0 || index >= Count)    // check for empty list or index out of range
+      {
+        if (index < 0)
+          bof = true;
+        if (index >= Count)
+          eof = true;
+        notFound = true;
+        return default(T);
+      }
+      else
+        return this[index];
+    }
+    /// <summary>
+    /// Moves the current pointer to the first item in the collection. If the collection is empty, set BOF to true.
+    /// </summary>
+    public void MoveFirst()
+    {
+      /*
+       * Move the record point to the first position
+       */
+      index = 0;
+      if (Count == 0)
+        bof = true;     // set BOF if the recordset is empty
+      else
+        bof = false;
+    }
+    /// <summary>
+    /// Moves the current pointer to the last item in the collection. If the collection is empty, set EOF to true.
+    /// </summary>
+    public void MoveLast()
+    {
+      /*
+       * Move the record point to the last position
+       */
+      if (Count > 0)
+      {
+        eof = false;
+        index = Count - 1;
+      }
+      else
+      {
+        eof = true;     // set EOF if the recordset is empty
+        index = 0;
+      }
+    }
+    /// <summary>
+    /// Moves the current pointer to the next item in the collection. If the collection is empty or the previous position was
+    /// the last item, set EOF to true.
+    /// </summary>
+    public void MoveNext()
+    {
+      /*
+       * Move the record point to the next position
+       */
+      if (index < Count - 1)
+      {
+        index++;
+        bof = false;
+        eof = false;
+      }
+      else
+        eof = true;     // set EOF if we move past the end of the list
+    }
+    /// <summary>
+    /// Moves the current pointer to the previous item in the collection. If the collection is empty or the previous position was
+    /// the first item, set BOF to true.
+    /// </summary>
+    public void MovePrev()
+    {
+      /*
+       * Move the record point to the previous position
+       */
+      if (index > 0)
+      {
+        index--;
+        bof = false;
+        eof = false;
+      }
+      else
+        bof = true;     // set BOF if we move past the beginning of the list
+    }
+    /// <summary>
+    /// returns the index of the entry that matches the object. If none is found, returns -1
+    /// </summary>
+    /// <param name="t"></param>
+    /// <returns></returns>
+    public int IndexOf(T t)
+    {
+      return IndexOf(t.ID);
+    }
+    /// <summary>
+    /// Inserts item into the list at location index
+    /// </summary>
+    /// <param name="index"></param>
+    /// <param name="item"></param>
+    public void Insert(int idx, T t)
+    {
+      if (idx >= Count)   // add to the end
+        Add(t);
+      else
+      {
+        //Dictionary<int, T> entry = new Dictionary<int, T>();
+        //entry.Add(0, t);
+        itemHash.Add(t.ID, t);  // add at the beginning
+        if (idx <= 0)
+          idx = 0;
+        int newSize = Count;
+        items.Add(items[newSize - 1]);
+        for (int i = newSize - 2; i >= idx; i--)
+          items[i + 1] = items[i];
+        items[idx] = t.ID;
+      }
+    }
+    public int IndexOf(string key)
+    {
+      string keyCheck = key.ToLower();
+      for (int i = 0; i < items.Count; i++)
+        if (items[i].ToString().ToLower() == keyCheck)
+          return i;
+      return -1;
+    }
+    /// <summary>
+    /// Support enumeration (supports foreach).
+    /// </summary>
+    /// <returns></returns>
+    public DataClassEnumerator GetEnumerator()
+    {
+      /*
+       * support the standard GetEnumerator() method from IEnumerator interface so we support foreach
+       */
+      return new DataClassEnumerator(this);
+    }
+    #endregion public methods
+
+    #region private methods
+
+    //lmv66: Depere
+    private Dictionary<int, T> addHistory(Dictionary<int, T> oldValue, T newValue)
+    {
+      Dictionary<int, T> returnValue = new Dictionary<int, T>();
+      foreach (KeyValuePair<int, T> entry in oldValue)
+        returnValue.Add(entry.Key + 1, entry.Value);
+      returnValue.Add(0, newValue);
+      return returnValue;
+    }
+    #endregion
+
+    #region class definitions
+    /// <summary>
+    /// Class definition to support enumeration.
+    /// </summary>
+    [SerializableAttribute]
+    public class DataClassEnumerator : IEnumerator 
+    {
+      int nIndex;
+      DataClass<T> collection;
+      public DataClassEnumerator(DataClass<T> coll)
+      {
+        collection = coll;
+        nIndex = -1;
+      }
+      public bool MoveNext()
+      {
+        nIndex++;
+        return (nIndex < collection.Count);
+      }
+      public object Current
+      {
+        get
+        {
+          return (collection[nIndex]);
+        }
+      }
+      public void Dispose() { ;}
+      public void Reset() { ;}
+
+    }
+    #endregion
+
+
+    #region IEnumerable Members
+
+    /// <summary>
+    /// Support enumeration (supports foreach).
+    /// Enumerator overload to support LINQ use in Reports and other modules
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+      return (IEnumerator)new DataClassEnumerator(this);
+    }
+
+
+    #endregion
+
+
+  }
+
+
+}

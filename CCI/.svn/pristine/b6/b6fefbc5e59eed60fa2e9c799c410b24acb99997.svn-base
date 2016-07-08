@@ -1,0 +1,72 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
+
+using CCI.Common;
+using CCI.DesktopClient.Common;
+
+namespace CCI.DesktopClient
+{
+  static class Program
+  {
+    /// <summary>
+    /// The main entry point for the application.
+    /// </summary>
+    [STAThread]
+    static void Main()
+    {
+      Application.EnableVisualStyles();
+      Application.SetCompatibleTextRenderingDefault(false);
+      SecurityContext securityContext = new SecurityContext();
+      Form fLogin = null;
+      if (CommonFunctions.hasProdToken()) // this is a prod instance
+        CommonData.SERVERCONFIGFILENAME = CommonData.SERVERCONFIGFILEPROD;
+      else
+        CommonData.SERVERCONFIGFILENAME = CommonData.SERVERCONFIGFILEDEFAULT;
+      while (!securityContext.Cancelled && !securityContext.IsLoggedIn)
+      {
+
+        fLogin = new frmLogin(securityContext);
+        Application.Run(fLogin);
+        if (securityContext.IsLoggedIn)
+        {
+          try
+          {
+            /*
+             * There is a file called Prod.Dat that should exists in the program folder for prod instances only. 
+             * If this file is present, then the database access uses the config file CommonData.SERVERCONFIGFILEPROD (usually DbProd.config).
+             * Otherwise it uses the CommonData.SERVERCONFIGFILEDEFAULT config file (usually db.config). This works by putting either
+             * file name into CommonData.SERVERCONFIGFILENAME.
+             * 
+             * While we don't know for sure what the contents of these files are, we assume that the prod config file points to the prod db,
+             * and the other one points to development. 
+             * 
+             * This is a security check to make sure we don't accidentally point the prod users to the development database.
+             * 
+             * Dev users have a security access CanAccessDevelopment that bypasses this check         
+             */
+            DialogResult runProgram = DialogResult.Yes;
+            if (!securityContext.Security.HasObjectAccess("CanAccessDevelopment")    // if we can't access the dev db
+              && CommonData.SERVERCONFIGFILENAME != CommonData.SERVERCONFIGFILEPROD) // and we aren't using the prod config file
+              runProgram = MessageBox.Show("This program is attached to the Development Database. Any work you do will NOT be saved into the production database. Do you want to Continue?", "Verify Production Database", MessageBoxButtons.YesNo);
+            if (runProgram == DialogResult.Yes)
+            {
+              MainForm frm = new MainForm(securityContext);
+              if (frm != null)
+                Application.Run(frm);
+              securityContext.IsLoggedIn = false;
+            }
+            else
+              securityContext.Cancelled = true;
+          }
+          catch(Exception ex)
+          {
+            securityContext.Cancelled = true;
+          }
+        }
+        fLogin = null;
+      }
+    }
+  }
+}

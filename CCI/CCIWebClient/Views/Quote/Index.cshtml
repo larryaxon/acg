@@ -1,0 +1,56 @@
+﻿@using CCIWebClient.Models
+@using System.Collections
+@{
+    ViewBag.Title = "Index";
+}
+<link href="@Url.Content("~/Content/Views/quote.css?ver=01")" rel="stylesheet" type="text/css" />
+<link href="@Url.Content("~/Content/Views/QuoteTable.css")" rel="stylesheet" type="text/css" />
+
+@using CCIWebClient.Common
+@using (Html.BeginForm("Index", "Quote", FormMethod.Post))
+{
+    <div id="QuotePage">
+        <div id="quote-container">
+            <div id="quote-primary">
+                <div id="quote-header">
+                    <img src="/images/quote-header-logo.jpg" class="quote-header-logo" alt="" />
+                    <h2>Configure your CityHosted Quote</h2>
+                    <div id="quote-header-links">
+                        <a href="#customer-info-title" class="quote-header-linkL">Customer Info</a>|<a href="#hosted-services-title">Hosted Services</a>|<a
+                         href="#equipment-title">Phones</a>|<a href="#equipment-title">Equipment</a>|<a href="#equipment-title">Other Equipment</a>|<a href="#carrier-services-title">Carrier Services</a>
+                    </div>
+                </div><!-- #quote-header -->
+                <div id="quote-content">
+                    <div id="Quote_CustomerInfo">
+                        @* Customer Information Title: Customer Information & Term Length sections *@
+                        @{Html.RenderAction("CustomerData", "Quote");}
+                    </div>
+                    <div id="Quote_Detail">
+                        @{Html.RenderAction("Detail", "Quote");}
+                    </div>
+                </div>
+            </div><!-- #quote-primary -->
+            <div id="Total">
+                @{Html.RenderAction("Total", "Quote");}
+            </div>
+        </div><!-- #quote-container -->
+        <img src="/Content/images/quote-full-spacer.png" alt="" />
+        <div class="footer_copyright-overview">
+            Copyright &copy; 2012 City Communications Integrated. All rights reserved.&nbsp;&nbsp;&nbsp;&nbsp;
+            <a title="Terms and Conditions" href="/Documents/TermsAndConditions.pdf">Terms of Use</a> | 
+            <a title="Privacy Policy" href="/Documents/PrivacyPolicy.pdf">Privacy Policy</a>
+        </div>
+    </div>
+    <div id="orderitems">
+    </div>
+    <div id="ModelLoading" style="display: none">
+        
+    </div>
+    
+   
+    
+
+}
+    <script src="@Url.Content("~/Scripts/Views/Quote.js?ver=01")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/Views/Totals.js")" type="text/javascript"></script>
+

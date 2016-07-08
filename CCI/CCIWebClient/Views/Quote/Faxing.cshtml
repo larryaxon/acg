@@ -1,0 +1,52 @@
+﻿@model CCIWebClient.Models.CustomerInformationModel
+<table id="FaxingTable" class="QuoteTable">
+    <thead>
+        <tr>
+            <th>
+                Qty
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Sales Price
+            </th>
+            <th>
+                Your Cost
+            </th>
+        </tr>
+    </thead>
+    @{
+        for (int i = 0; i < Model.Faxing.Count; i++)
+        {
+            
+        <tr>
+            <td style="display: none">
+                @Html.HiddenFor(model => Model.Faxing[i].ItemId)
+                @Html.HiddenFor(model => Model.Faxing[i].DetailId)
+                @Html.HiddenFor(model => Model.Faxing[i].DealerCost)
+            </td>
+            <td>@Html.TextBoxFor(model => Model.Faxing[i].Quantity)
+            </td>
+            <td>@Model.Faxing[i].Description
+            </td>
+            <td>
+                @Html.DropDownListFor(model => Model.Faxing[i].RetailItemId, Model.Faxing[i].MRCRetailList, new {@class = "phone-dropdown" })
+                $
+                @{if (string.IsNullOrEmpty(Model.Faxing[i].Quantity) || Model.Faxing[i].Variable == "0")
+                  {
+                      Model.Faxing[i].Variable = "";
+                  }
+                  else
+                  {
+                      Model.Faxing[i].Variable = (string.IsNullOrEmpty(Model.Faxing[i].RetailMRC) ? Model.Faxing[i].RetailNRC : Model.Faxing[i].RetailMRC);
+                  }
+                }
+                @Html.TextBoxFor(model => Model.Faxing[i].Variable, new { @style = "display:none" })
+            </td>
+            <td>@Model.Faxing[i].DealerCost
+            </td>
+        </tr>  
+        }
+    }
+</table>

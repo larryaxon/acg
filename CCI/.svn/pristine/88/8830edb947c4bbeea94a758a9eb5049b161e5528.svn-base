@@ -1,0 +1,794 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{92376387-0818-4D74-AE7B-54297D3A79D0}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CCI.DesktopClient</RootNamespace>
+    <AssemblyName>CCCIMain</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.Common, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.ReportViewer.WinForms, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common\ctlEntityEdit.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Common\ctlEntityEdit.Designer.cs">
+      <DependentUpon>ctlEntityEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\frmUnmatchedNames.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Common\frmUnmatchedNames.Designer.cs">
+      <DependentUpon>frmUnmatchedNames.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\AttributeSaveEventArgs.cs" />
+    <Compile Include="Common\CommonFormFunctions.cs" />
+    <Compile Include="Common\ctlAttributeEntry.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Common\ctlAttributeEntry.designer.cs">
+      <DependentUpon>ctlAttributeEntry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\ctlCityHostedDetail.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Common\ctlCityHostedDetail.Designer.cs">
+      <DependentUpon>ctlCityHostedDetail.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\ctlContacts.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Common\ctlContacts.Designer.cs">
+      <DependentUpon>ctlContacts.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\ctlContactsLocations.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Common\ctlContactsLocations.Designer.cs">
+      <DependentUpon>ctlContactsLocations.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\ctlEntityGroupMembers.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Common\ctlEntityGroupMembers.Designer.cs">
+      <DependentUpon>ctlEntityGroupMembers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\ctlEntitySearch.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Common\ctlEntitySearch.Designer.cs">
+      <DependentUpon>ctlEntitySearch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\ctlException.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Common\ctlException.Designer.cs">
+      <DependentUpon>ctlException.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\ctlFollowUps.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Common\ctlFollowUps.Designer.cs">
+      <DependentUpon>ctlFollowUps.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\ctlGroupMembers.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Common\ctlGroupMembers.Designer.cs">
+      <DependentUpon>ctlGroupMembers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\ctlMasterProducts.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Common\ctlMasterProducts.Designer.cs">
+      <DependentUpon>ctlMasterProducts.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\ctlNetworkInventory.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Common\ctlNetworkInventory.Designer.cs">
+      <DependentUpon>ctlNetworkInventory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\ctlOpportunityLineItems.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Common\ctlOpportunityLineItems.Designer.cs">
+      <DependentUpon>ctlOpportunityLineItems.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\ctlAttributeEntryOld.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Common\ctlAttributeEntryOld.designer.cs">
+      <DependentUpon>ctlAttributeEntryOld.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\ctlAttributeValue.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Common\ctlAttributeValue.designer.cs">
+      <DependentUpon>ctlAttributeValue.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\ctlEntityGridBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Common\ctlEntityGridBase.Designer.cs">
+      <DependentUpon>ctlEntityGridBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\ctlEntityAttributeTree.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Common\ctlEntityAttributeTree.Designer.cs">
+      <DependentUpon>ctlEntityAttributeTree.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\ctlEntityPicker.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Common\ctlEntityPicker.designer.cs">
+      <DependentUpon>ctlEntityPicker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\ctlExceptionsTreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Common\ctlExceptionsTreeView.Designer.cs">
+      <DependentUpon>ctlExceptionsTreeView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\ctlOpportunities.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Common\ctlOpportunities.Designer.cs">
+      <DependentUpon>ctlOpportunities.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\ctlProducts.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Common\ctlProducts.Designer.cs">
+      <DependentUpon>ctlProducts.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\ctlProspectFollowUp.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Common\ctlProspectFollowUp.Designer.cs">
+      <DependentUpon>ctlProspectFollowUp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\ctlScreenDefinitions.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Common\ctlScreenDefinitions.Designer.cs">
+      <DependentUpon>ctlScreenDefinitions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\ctlSearchGrid.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Common\ctlSearchGrid.Designer.cs">
+      <DependentUpon>ctlSearchGrid.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\ctlTreeBase.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Common\ctlTreeBase.designer.cs">
+      <DependentUpon>ctlTreeBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\frmLogin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Common\frmLogin.Designer.cs">
+      <DependentUpon>frmLogin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Common\ctlMaintenanceBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Common\ctlMaintenanceBase.Designer.cs">
+      <DependentUpon>ctlMaintenanceBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\dlgEntityEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\dlgEntityEdit.Designer.cs">
+      <DependentUpon>dlgEntityEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\dlgMergeCustomer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\dlgMergeCustomer.Designer.cs">
+      <DependentUpon>dlgMergeCustomer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmAdminDeveloper.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmAdminDeveloper.Designer.cs">
+      <DependentUpon>frmAdminDeveloper.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmAnalysisReport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmAnalysisReport.Designer.cs">
+      <DependentUpon>frmAnalysisReport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmAttributes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmAttributes.Designer.cs">
+      <DependentUpon>frmAttributes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmCarrierMaintenance.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmCarrierMaintenance.Designer.cs">
+      <DependentUpon>frmCarrierMaintenance.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmCashReceipts.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmCashReceipts.Designer.cs">
+      <DependentUpon>frmCashReceipts.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmCityHostedDealerRetailPriceMaintenance.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmCityHostedDealerRetailPriceMaintenance.Designer.cs">
+      <DependentUpon>frmCityHostedDealerRetailPriceMaintenance.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmCityHostedLedgerCashMatching.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmCityHostedLedgerCashMatching.Designer.cs">
+      <DependentUpon>frmCityHostedLedgerCashMatching.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmCityHostedLedgerInvoiceMatching.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmCityHostedLedgerInvoiceMatching.Designer.cs">
+      <DependentUpon>frmCityHostedLedgerInvoiceMatching.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmCityHostedMatchingBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmCityHostedMatchingBase.Designer.cs">
+      <DependentUpon>frmCityHostedMatchingBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmCityHostedOCCMaintenance.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmCityHostedOCCMaintenance.Designer.cs">
+      <DependentUpon>frmCityHostedOCCMaintenance.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmCityHostedOCCUSOCMatching.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmCityHostedOCCUSOCMatching.Designer.cs">
+      <DependentUpon>frmCityHostedOCCUSOCMatching.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmGroupMaintenance.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmGroupMaintenance.Designer.cs">
+      <DependentUpon>frmGroupMaintenance.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmGroups.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmGroups.Designer.cs">
+      <DependentUpon>frmGroups.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmItemCategories.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmItemCategories.Designer.cs">
+      <DependentUpon>frmItemCategories.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmNetworkInventory.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmNetworkInventory.Designer.cs">
+      <DependentUpon>frmNetworkInventory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmCityHostedCustomerUSOCMatching.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmCityHostedCustomerUSOCMatching.Designer.cs">
+      <DependentUpon>frmCityHostedCustomerUSOCMatching.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmCityHostedProcess.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmCityHostedProcess.Designer.cs">
+      <DependentUpon>frmCityHostedProcess.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmCityHostedUSOCMaintenance.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmCityHostedUSOCMaintenance.Designer.cs">
+      <DependentUpon>frmCityHostedUSOCMaintenance.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmCodeMaster.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmCodeMaster.Designer.cs">
+      <DependentUpon>frmCodeMaster.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmCustomers.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmCustomers.Designer.cs">
+      <DependentUpon>frmCustomers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmDealerPricing.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmDealerPricing.Designer.cs">
+      <DependentUpon>frmDealerPricing.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmDealers.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmDealers.Designer.cs">
+      <DependentUpon>frmDealers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmEntityMaintenance.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmEntityMaintenance.Designer.cs">
+      <DependentUpon>frmEntityMaintenance.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmException.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmException.Designer.cs">
+      <DependentUpon>frmException.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmFollowUps.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmFollowUps.Designer.cs">
+      <DependentUpon>frmFollowUps.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmImports.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmImports.Designer.cs">
+      <DependentUpon>frmImports.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmMaintenanceBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmMaintenanceBase.Designer.cs">
+      <DependentUpon>frmMaintenanceBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Common\ctlEntityEdit.resx">
+      <DependentUpon>ctlEntityEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\frmUnmatchedNames.resx">
+      <DependentUpon>frmUnmatchedNames.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\ctlAttributeEntry.resx">
+      <DependentUpon>ctlAttributeEntry.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\ctlAttributeEntryOld.resx">
+      <DependentUpon>ctlAttributeEntryOld.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\ctlAttributeValue.resx">
+      <DependentUpon>ctlAttributeValue.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\ctlCityHostedDetail.resx">
+      <DependentUpon>ctlCityHostedDetail.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\ctlContactsLocations.resx">
+      <DependentUpon>ctlContactsLocations.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\ctlEntityGridBase.resx">
+      <DependentUpon>ctlEntityGridBase.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\ctlEntityAttributeTree.resx">
+      <DependentUpon>ctlEntityAttributeTree.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\ctlEntityGroupMembers.resx">
+      <DependentUpon>ctlEntityGroupMembers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\ctlEntityPicker.resx">
+      <DependentUpon>ctlEntityPicker.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\ctlEntitySearch.resx">
+      <DependentUpon>ctlEntitySearch.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\ctlException.resx">
+      <DependentUpon>ctlException.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\ctlFollowUps.resx">
+      <DependentUpon>ctlFollowUps.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\ctlGroupMembers.resx">
+      <DependentUpon>ctlGroupMembers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\ctlOpportunityLineItems.resx">
+      <DependentUpon>ctlOpportunityLineItems.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\ctlSearchGrid.resx">
+      <DependentUpon>ctlSearchGrid.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\ctlTreeBase.resx">
+      <DependentUpon>ctlTreeBase.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\frmLogin.resx">
+      <DependentUpon>frmLogin.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\ctlMaintenanceBase.resx">
+      <DependentUpon>ctlMaintenanceBase.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\dlgEntityEdit.resx">
+      <DependentUpon>dlgEntityEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\dlgMergeCustomer.resx">
+      <DependentUpon>dlgMergeCustomer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmAdminDeveloper.resx">
+      <DependentUpon>frmAdminDeveloper.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NorthwindsIBPrpt.rdlc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmAnalysisReport.resx">
+      <DependentUpon>frmAnalysisReport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmAttributes.resx">
+      <DependentUpon>frmAttributes.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmCashReceipts.resx">
+      <DependentUpon>frmCashReceipts.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmCityHostedDealerRetailPriceMaintenance.resx">
+      <DependentUpon>frmCityHostedDealerRetailPriceMaintenance.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmCityHostedLedgerInvoiceMatching.resx">
+      <DependentUpon>frmCityHostedLedgerInvoiceMatching.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmCityHostedMatchingBase.resx">
+      <DependentUpon>frmCityHostedMatchingBase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmCityHostedOCCMaintenance.resx">
+      <DependentUpon>frmCityHostedOCCMaintenance.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmCityHostedOCCUSOCMatching.resx">
+      <DependentUpon>frmCityHostedOCCUSOCMatching.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmGroupMaintenance.resx">
+      <DependentUpon>frmGroupMaintenance.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmGroups.resx">
+      <DependentUpon>frmGroups.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmNetworkInventory.resx">
+      <DependentUpon>frmNetworkInventory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmCityHostedCustomerUSOCMatching.resx">
+      <DependentUpon>frmCityHostedCustomerUSOCMatching.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmCityHostedProcess.resx">
+      <DependentUpon>frmCityHostedProcess.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmCityHostedUSOCMaintenance.resx">
+      <DependentUpon>frmCityHostedUSOCMaintenance.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmCodeMaster.resx">
+      <DependentUpon>frmCodeMaster.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmCustomers.resx">
+      <DependentUpon>frmCustomers.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmDealerPricing.resx">
+      <DependentUpon>frmDealerPricing.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmDealers.resx">
+      <DependentUpon>frmDealers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmEntityMaintenance.resx">
+      <DependentUpon>frmEntityMaintenance.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmException.resx">
+      <DependentUpon>frmException.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmFollowUps.resx">
+      <DependentUpon>frmFollowUps.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmImports.resx">
+      <DependentUpon>frmImports.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmMaintenanceBase.resx">
+      <DependentUpon>frmMaintenanceBase.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmMasterProductList.resx">
+      <DependentUpon>frmMasterProductList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmMissingSaddlebackCustomerInfo.resx">
+      <DependentUpon>frmMissingSaddlebackCustomerInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmMRCNetworkInventoryMatching.resx">
+      <DependentUpon>frmMRCNetworkInventoryMatching.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmOrderEntry.resx">
+      <DependentUpon>frmOrderEntry.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmProductList.resx">
+      <DependentUpon>frmProductList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmScreenDefinitionMaintenance.resx">
+      <DependentUpon>frmScreenDefinitionMaintenance.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmUserMaintenance.resx">
+      <DependentUpon>frmUserMaintenance.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="DB.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="DBProd.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="TAGBOSS.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="log4net.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Screens\frmMasterProductList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmMasterProductList.Designer.cs">
+      <DependentUpon>frmMasterProductList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmMissingSaddlebackCustomerInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmMissingSaddlebackCustomerInfo.Designer.cs">
+      <DependentUpon>frmMissingSaddlebackCustomerInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmMRCNetworkInventoryMatching.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmMRCNetworkInventoryMatching.Designer.cs">
+      <DependentUpon>frmMRCNetworkInventoryMatching.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmOrderEntry.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmOrderEntry.Designer.cs">
+      <DependentUpon>frmOrderEntry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmProductList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmProductList.Designer.cs">
+      <DependentUpon>frmProductList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmScreenDefinitionMaintenance.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmScreenDefinitionMaintenance.Designer.cs">
+      <DependentUpon>frmScreenDefinitionMaintenance.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmUserMaintenance.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmUserMaintenance.Designer.cs">
+      <DependentUpon>frmUserMaintenance.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\ScreenBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\ScreenBase.Designer.cs">
+      <DependentUpon>ScreenBase.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\ACG\trunk\ACG.CommonForms\ACG.CommonForms.csproj">
+      <Project>{F65C74CD-A49C-4A91-8278-55C5B9E98A51}</Project>
+      <Name>ACG.CommonForms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ACG\trunk\ACG\ACG.csproj">
+      <Project>{A9E993B0-A25A-4F36-9339-1D7F6E6F5ADA}</Project>
+      <Name>ACG</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ACG\trunk\ACG\ACG.csproj">
+      <Project>{A9E993B0-A25A-4F36-9339-1D7F6E6F5ADA}</Project>
+      <Name>ACG</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\acg\trunk\TAGBOSS.AttributeEngine2\TAGBOSS.AttributeEngine2\TAGBOSS.AttributeEngine2.csproj">
+      <Project>{2FAFFE05-61F2-4873-83F0-6F9F5D3FA76B}</Project>
+      <Name>TAGBOSS.AttributeEngine2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\acg\trunk\TAGBOSS.Common\TAGBOSS.Common.csproj">
+      <Project>{6658BCCB-A3D9-4C18-9D0F-3BEC1AE752CC}</Project>
+      <Name>TAGBOSS.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CCI.Common\CCI.Common.csproj">
+      <Project>{50D6E879-46C7-4930-8573-1763988A74CF}</Project>
+      <Name>CCI.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CCI.Sys\CCI.Sys.csproj">
+      <Project>{1F9DC330-9EE4-4FDF-9F24-8ED23E516381}</Project>
+      <Name>CCI.Sys</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\MagnifyingGlass.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Resources\EXPLORER.BMP" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.ReportViewer.8.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft Visual Studio 2008 Report Viewer</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

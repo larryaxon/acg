@@ -1,0 +1,64 @@
+﻿@model CCIWebClient.Models.CustomerInformationModel
+<div class="phone-question">
+    Where will you get your phones?</div>
+<label for="phones-hide" style="cursor: pointer;">
+    <strong>CityHosted</strong></label>
+@Html.RadioButtonFor(model => model.Header.PhonesFrom, "cityhosted", new { id = "phones-hide", @class = "phone-question-radial learn-more-drop", style = "cursor: pointer;"/*, @checked = "checked"*/ })
+<label for="phones-show" style="cursor: pointer;">
+    Other</label>
+@Html.RadioButtonFor(model => model.Header.PhonesFrom, "other", new { id = "phones-show", @class = "phone-question-radial learn-more-drop", style = "cursor: pointer;" })
+<div class="learn-more-content" @(Model.Header.PhonesFrom == "cityhosted" ? "style=display:none;" : "")>
+    <p class="learn-drop-p" />
+    <br />
+    <div style="font-size: 11px">
+        <strong>Warning: </strong>If your phone is not on the list of CityHosted VOIP approved
+        phones, there is no guarantee that they will work correctly with the service. Any
+        additional trouble shooting, configuration work, or testing may increase your costs.</div>
+    <br />
+    <table id="OtherPhonesTable">
+        <thead>
+            <tr>
+                <th>
+                    <span style="margin-right: 18px;">Phone Make/Model</span>
+                </th>
+                <th>
+                    Vendor Name
+                </th>
+                <th>
+                    Vendor Email
+                </th>
+                <th>
+                    Vendor Phone
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                for (int i = 0; i < Model.ManualPhones.Count; i++)
+                {
+                <tr>
+                    <td style="display:none">
+                     @Html.HiddenFor(model => Model.ManualPhones[i].DetailId)
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => Model.ManualPhones[i].PhoneMakeModel, new { @class = "quote-drop-heading" })
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => Model.ManualPhones[i].VendorDescription, new { @class = "quote-drop-heading" })
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => Model.ManualPhones[i].VendorEmail, new { @class = "quote-drop-heading" })
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => Model.ManualPhones[i].VendorPhone, new { @class = "quote-drop-heading" })
+                    </td>
+                </tr>
+                }
+            }
+        </tbody>
+    </table>
+    <a href="#" class="quote-bolda add-otherPhones">Add New Row</a>
+    <div class="add-spacer">
+    </div>
+</div>
+<!-- .learn-more-content -->

@@ -1,0 +1,19 @@
+﻿
+.mailform input, label
+{
+    display:block;
+}
+
+input 
+{
+    width: 100%;
+}
+#content
+{
+    width: 300px;
+    height: 200px;
+}
+
+
+
+

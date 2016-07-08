@@ -1,0 +1,56 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Text;
+using System.Windows.Forms;
+
+using CCI.Sys.Data;
+
+namespace CCI.DesktopClient.Screens
+{
+  public partial class frmOrderEntry : ScreenBase
+  {
+    public frmOrderEntry()
+    {
+      InitializeComponent();
+      srchOrder.SearchExec = new SearchDataSourceOrder();
+    }
+
+    private void srchOrder_OnSelected(object sender, EventArgs e)
+    {
+      loadEntityGrid();
+    }
+
+    private void cboEntityType_SelectedIndexChanged(object sender, EventArgs e)
+    {
+      loadEntityGrid();
+    }
+
+    private void loadEntityGrid()
+    {
+      string entityType;
+      switch (cboEntityType.Text)
+      {
+        case "Vendor":
+          entityType = "Payor";
+          break;
+        case "CCI Resource":
+          entityType = "User";
+          break;
+        default:
+          entityType = cboEntityType.Text;
+          break;
+      }
+      ctlEntities.EntityType = entityType;
+      ctlEntities.EntityOwner = srchOrder.ID;
+      ctlEntities.Init(srchOrder.ID, "Order");
+    }
+
+    private void frmOrderEntry_Load(object sender, EventArgs e)
+    {
+      cboEntityType.Text = "Contact";
+    }
+  }
+}

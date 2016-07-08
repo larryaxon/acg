@@ -1,0 +1,184 @@
+﻿@model CCIWebClient.Models.QuoteTotalsModel
+@using CCIWebClient.Models
+@using System.Collections
+@{
+    ViewBag.Title = "Total";
+    ViewData.TemplateInfo.HtmlFieldPrefix = "Header";
+}
+@using CCIWebClient.Common
+<!-- Start Quote Sidebar -->
+<div id="quote-sidebar" class=" ">
+    <div class="qs-header">
+        <div class="qs-title">
+            Order Summary</div>
+        <div id="qs-info">
+            <div id="QuoteIdSection">
+                @Html.HiddenFor(model => model.QuoteId)
+                 @Html.HiddenFor(model => model.TotalDealerOneTime)
+                 @Html.HiddenFor(model => model.TotalOneTime)
+                <div class="quote-info-colL">
+                    Quote ID:<br />
+                </div>
+                <div class="quote-info-col">
+                    <span id="quote-id" class="quote-id">@Html.Raw(Model.QuoteId)</span>
+                </div>
+            </div>
+            <div class="quote-info-colL-full">
+                Quote Name:
+            </div>
+            <div class="quote-info-colL-full">
+                <span id="quote-name">@Html.TextBoxFor(model => Model.ShortName, new { style = "width: 99%;" })</span>
+            </div>
+        </div>
+        <!-- End qs-info -->
+    </div>
+    <!-- End qs-header -->
+    <div class="qs-main">
+        <div id="TotalValueArea">
+            <div class="qs-numbers">
+                <table id="TableTotalValues" class="TotalTableStyle">
+                    <thead>
+                        <tr>
+                            <th>
+                            </th>
+                            <th>
+                                One
+                            </th>
+                            <th>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>
+                            </th>
+                            <th>
+                                Time
+                            </th>
+                            <th>
+                                Montly
+                            </th>
+                        </tr>
+                    </thead>
+                    <tr>
+                        <td class="TotalCellStyle">
+                            Total:
+                        </td>
+                        <td>
+                            <strong>
+                                @{if (Model.TotalMonthly != "$0.00")
+                                  {@Html.Raw(Model.TotalMonthly)}}
+                            </strong>
+                        </td>
+                        <td>
+                            @{if (Model.TotalOneTime != "$0.00")
+                              {@Html.Raw(Model.TotalOneTime)}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="TotalCellStyle">
+                            Dealer:
+                        </td>
+                        <td>
+                            @{if (Model.TotalDealerMonthly != "$0.00")
+                              {@Html.Raw(Model.TotalDealerMonthly)}}
+                        </td>
+                        <td>
+                            @{if (Model.TotalDealerOneTime != "$0.00")
+                              {@Html.Raw(Model.TotalDealerOneTime)}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="TotalCellStyle">
+                            Margin:
+                        </td>
+                        <td>
+                            @{if (Model.ProfitMonthly != "$0.00")
+                              {@Html.Raw(Model.ProfitMonthly)}}
+                        </td>
+                        <td>
+                            @{if (Model.ProfitOneTime != "$0.00")
+                              {@Html.Raw(Model.ProfitOneTime)}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="TotalCellStyle">
+                            DlrCont:
+                        </td>
+                        <td>
+                            @{if (Model.DealerContribution != "$0.00")
+                              {@Html.Raw(Model.DealerContribution)}}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <!-- End qs-numbers -->
+        <div id="qs-cta">
+            <div class="qs-cta-col">
+                <a id="emailquote" class="qs-email" href="#"></a><span class="qs-cta-title">Email</span>
+            </div>
+            <div class="qs-cta-colM">
+                <a id="printquote" class="qs-print" href="#"></a><span class="qs-cta-title">Print</span>
+            </div>
+            <div class="qs-cta-col">
+                <a id="savequote" class="qs-save" href="#"></a><span class="qs-cta-title">Save</span>
+            </div>
+        </div>
+        <!-- End qs-cta -->
+        <a class="clone-quote" href="#"></a><a class="new-quote" href="#"></a>
+    </div>
+    <!-- End qs-main -->
+    <div class="qs-dealer-header">
+        <div class="qs-title">
+            Have Questions?</div>
+    </div>
+    <!-- End qs-header -->
+    <div class="qs-main">
+        <div class="qs-contact-phone">
+            (800) 289-1828</div>
+    </div>
+    <!-- End qs-main -->
+</div>
+<!-- End Quote Sidebar -->
+<div id="QuoteAlertMSG" style="display: none">@*Set dialog title in JS using dialog options!*@</div>
+<div id="TotalLoading" style="display: none">
+</div>
+<div id="loadingmsg">
+    <span id="msg"></span>
+    <img src="/Content/images/Loading.gif" alt="" />
+</div>
+@*<table id="DealerSummaryTable">
+    <tr>
+        <th>
+            MRC
+        </th>
+        <th>
+            NRC
+        </th>
+        <th>
+        </th>
+    </tr>
+    @for (int i = 0; i < Model.DealerSummary.Count; i++)
+    {
+    <tr>
+        <td>
+            <span class="re-charge">
+                @{if (Model.DealerSummary[i].TotalMonthly != "$0.00")
+                    {@Model.DealerSummary[i].TotalMonthly}
+                }
+            </span>
+        </td>
+        <td>
+            <span class="re-charge">
+                @{if (Model.DealerSummary[i].TotalOneTime != "$0.00")
+                    {@Model.DealerSummary[i].TotalOneTime}
+                }
+            </span>
+        </td>
+        <td>
+            <span class="qs-sum-title>">
+                @Model.DealerSummary[i].ScreenSection}
+            </span>
+        </td>
+    </tr>
+    }
+</table>*@

@@ -1,0 +1,72 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Collections;
+using System.IO;
+using System.Text;
+using System.Data;
+using System.Data.Common;
+using System.Data.SqlClient;
+
+using TAGBOSS.Common;
+using TAGBOSS.Common.Model;
+
+using CCI.Common;
+
+namespace CCI.Sys.Data
+{
+  public abstract class DataAccessBase : ACG.Common.Data.DataAccessBase
+  {
+    protected new DataAdapterContainer getDataAdapterFromSQL(string mySQL)
+    {
+      ACG.Common.Data.DataAdapterContainer c = base.getDataAdapterFromSQL(mySQL);
+      DataAdapterContainer da = new DataAdapterContainer();
+      da.DataAdapter = c.DataAdapter;
+      da.DataSet = c.DataSet;
+      return da;
+    }
+    /// <summary>
+    /// Takes Table[0] from a dataset (if there is one), and loads rows and cols, including the header row
+    /// into a 2D AttributeTable format object array
+    /// </summary>
+    /// <param name="ds">Any open DataSet</param>
+    /// <returns>object [,] 2D Array</returns>
+    /// 
+    public TableHeader ToTable(DataSet ds, Dictionaries dictionary)
+    {
+      TableHeader returnTable;
+      if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+        return new TableHeader();
+      DataColumnCollection cols = ds.Tables[0].Columns;
+      DataRowCollection rows = ds.Tables[0].Rows;
+      int nbrCols = cols.Count;
+      int nbrRows = rows.Count + 1;
+      returnTable = new TableHeader();
+
+      TableHeaderColumnsCollection returnTableCols = new TableHeaderColumnsCollection();
+
+      foreach (DataColumn col in cols)
+      {
+        TableHeaderColumn returnTableCol = new TableHeaderColumn();
+        returnTableCol.Caption = col.Caption;
+        returnTableCol.DataType = col.DataType.Name;
+        returnTableCol.ID = col.ColumnName;
+        returnTableCols.Add(col.ColumnName, returnTableCol);
+      }
+      returnTable.Columns = returnTableCols;
+      returnTable.KeyNames = new string[] { returnTableCols[0].OriginalID };
+      foreach (DataRow row in rows)
+      {
+        int iCol = 0;
+        object[] colValues = new object[nbrCols];
+        foreach (DataColumn col in cols)
+        {
+          colValues[iCol] = row[cols[iCol].ColumnName];
+          iCol++;
+        }
+        TableHeaderRow returnTableRow = new TableHeaderRow(returnTableCols, colValues);
+        returnTable.AddNewRow(returnTableRow);
+      }
+      return returnTable;
+    }
+  }
+}

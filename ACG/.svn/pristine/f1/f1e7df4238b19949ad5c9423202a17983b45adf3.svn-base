@@ -1,0 +1,506 @@
+ERROR  | wrapper  | 2012/08/24 13:42:10 | Startup failed: Timed out waiting for a signal from the JVM.
+ADVICE | wrapper  | 2012/08/24 13:42:10 | 
+ADVICE | wrapper  | 2012/08/24 13:42:10 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:42:10 | Advice:
+ADVICE | wrapper  | 2012/08/24 13:42:10 | The Wrapper consists of a native component as well as a set of classes
+ADVICE | wrapper  | 2012/08/24 13:42:10 | which run within the JVM that it launches.  The Java component of the
+ADVICE | wrapper  | 2012/08/24 13:42:10 | Wrapper must be initialized promptly after the JVM is launched or the
+ADVICE | wrapper  | 2012/08/24 13:42:10 | Wrapper will timeout, as just happened.  Most likely the main class
+ADVICE | wrapper  | 2012/08/24 13:42:10 | specified in the Wrapper configuration file is not correctly initializing
+ADVICE | wrapper  | 2012/08/24 13:42:10 | the Wrapper classes:
+ADVICE | wrapper  | 2012/08/24 13:42:10 |     com.Firstcallusa.SdmrReader
+ADVICE | wrapper  | 2012/08/24 13:42:10 | While it is possible to do so manually, the Wrapper ships with helper
+ADVICE | wrapper  | 2012/08/24 13:42:10 | classes to make this initialization processes automatic.
+ADVICE | wrapper  | 2012/08/24 13:42:10 | Please review the integration section of the Wrapper's documentation
+ADVICE | wrapper  | 2012/08/24 13:42:10 | for the various methods which can be employed to launch an application
+ADVICE | wrapper  | 2012/08/24 13:42:10 | within the Wrapper:
+ADVICE | wrapper  | 2012/08/24 13:42:10 |     http://wrapper.tanukisoftware.com/doc/english/integrate.html
+ADVICE | wrapper  | 2012/08/24 13:42:10 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:42:10 | 
+ERROR  | wrapper  | 2012/08/24 13:42:10 | JVM did not exit on request, terminated
+STATUS | wrapper  | 2012/08/24 13:42:15 | Launching a JVM...
+INFO   | jvm 4    | 2012/08/24 13:42:16 | Listening ip = 192.168.0.4 and port 1752... Press Enter to terminate 
+ERROR  | wrapper  | 2012/08/24 13:42:45 | Startup failed: Timed out waiting for a signal from the JVM.
+ADVICE | wrapper  | 2012/08/24 13:42:45 | 
+ADVICE | wrapper  | 2012/08/24 13:42:45 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:42:45 | Advice:
+ADVICE | wrapper  | 2012/08/24 13:42:45 | The Wrapper consists of a native component as well as a set of classes
+ADVICE | wrapper  | 2012/08/24 13:42:45 | which run within the JVM that it launches.  The Java component of the
+ADVICE | wrapper  | 2012/08/24 13:42:45 | Wrapper must be initialized promptly after the JVM is launched or the
+ADVICE | wrapper  | 2012/08/24 13:42:45 | Wrapper will timeout, as just happened.  Most likely the main class
+ADVICE | wrapper  | 2012/08/24 13:42:45 | specified in the Wrapper configuration file is not correctly initializing
+ADVICE | wrapper  | 2012/08/24 13:42:45 | the Wrapper classes:
+ADVICE | wrapper  | 2012/08/24 13:42:45 |     com.Firstcallusa.SdmrReader
+ADVICE | wrapper  | 2012/08/24 13:42:45 | While it is possible to do so manually, the Wrapper ships with helper
+ADVICE | wrapper  | 2012/08/24 13:42:45 | classes to make this initialization processes automatic.
+ADVICE | wrapper  | 2012/08/24 13:42:45 | Please review the integration section of the Wrapper's documentation
+ADVICE | wrapper  | 2012/08/24 13:42:45 | for the various methods which can be employed to launch an application
+ADVICE | wrapper  | 2012/08/24 13:42:45 | within the Wrapper:
+ADVICE | wrapper  | 2012/08/24 13:42:45 |     http://wrapper.tanukisoftware.com/doc/english/integrate.html
+ADVICE | wrapper  | 2012/08/24 13:42:45 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:42:45 | 
+ERROR  | wrapper  | 2012/08/24 13:42:45 | JVM did not exit on request, terminated
+STATUS | wrapper  | 2012/08/24 13:42:50 | Launching a JVM...
+INFO   | jvm 5    | 2012/08/24 13:42:50 | Listening ip = 192.168.0.4 and port 1752... Press Enter to terminate 
+ERROR  | wrapper  | 2012/08/24 13:43:19 | Startup failed: Timed out waiting for a signal from the JVM.
+ADVICE | wrapper  | 2012/08/24 13:43:19 | 
+ADVICE | wrapper  | 2012/08/24 13:43:19 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:43:19 | Advice:
+ADVICE | wrapper  | 2012/08/24 13:43:19 | The Wrapper consists of a native component as well as a set of classes
+ADVICE | wrapper  | 2012/08/24 13:43:19 | which run within the JVM that it launches.  The Java component of the
+ADVICE | wrapper  | 2012/08/24 13:43:19 | Wrapper must be initialized promptly after the JVM is launched or the
+ADVICE | wrapper  | 2012/08/24 13:43:19 | Wrapper will timeout, as just happened.  Most likely the main class
+ADVICE | wrapper  | 2012/08/24 13:43:19 | specified in the Wrapper configuration file is not correctly initializing
+ADVICE | wrapper  | 2012/08/24 13:43:19 | the Wrapper classes:
+ADVICE | wrapper  | 2012/08/24 13:43:19 |     com.Firstcallusa.SdmrReader
+ADVICE | wrapper  | 2012/08/24 13:43:19 | While it is possible to do so manually, the Wrapper ships with helper
+ADVICE | wrapper  | 2012/08/24 13:43:19 | classes to make this initialization processes automatic.
+ADVICE | wrapper  | 2012/08/24 13:43:19 | Please review the integration section of the Wrapper's documentation
+ADVICE | wrapper  | 2012/08/24 13:43:19 | for the various methods which can be employed to launch an application
+ADVICE | wrapper  | 2012/08/24 13:43:19 | within the Wrapper:
+ADVICE | wrapper  | 2012/08/24 13:43:19 |     http://wrapper.tanukisoftware.com/doc/english/integrate.html
+ADVICE | wrapper  | 2012/08/24 13:43:19 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:43:19 | 
+ERROR  | wrapper  | 2012/08/24 13:43:19 | JVM did not exit on request, terminated
+STATUS | wrapper  | 2012/08/24 13:43:24 | Launching a JVM...
+INFO   | jvm 6    | 2012/08/24 13:43:25 | Listening ip = 192.168.0.4 and port 1752... Press Enter to terminate 
+ERROR  | wrapper  | 2012/08/24 13:43:54 | Startup failed: Timed out waiting for a signal from the JVM.
+ADVICE | wrapper  | 2012/08/24 13:43:54 | 
+ADVICE | wrapper  | 2012/08/24 13:43:54 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:43:54 | Advice:
+ADVICE | wrapper  | 2012/08/24 13:43:54 | The Wrapper consists of a native component as well as a set of classes
+ADVICE | wrapper  | 2012/08/24 13:43:54 | which run within the JVM that it launches.  The Java component of the
+ADVICE | wrapper  | 2012/08/24 13:43:54 | Wrapper must be initialized promptly after the JVM is launched or the
+ADVICE | wrapper  | 2012/08/24 13:43:54 | Wrapper will timeout, as just happened.  Most likely the main class
+ADVICE | wrapper  | 2012/08/24 13:43:54 | specified in the Wrapper configuration file is not correctly initializing
+ADVICE | wrapper  | 2012/08/24 13:43:54 | the Wrapper classes:
+ADVICE | wrapper  | 2012/08/24 13:43:54 |     com.Firstcallusa.SdmrReader
+ADVICE | wrapper  | 2012/08/24 13:43:54 | While it is possible to do so manually, the Wrapper ships with helper
+ADVICE | wrapper  | 2012/08/24 13:43:54 | classes to make this initialization processes automatic.
+ADVICE | wrapper  | 2012/08/24 13:43:54 | Please review the integration section of the Wrapper's documentation
+ADVICE | wrapper  | 2012/08/24 13:43:54 | for the various methods which can be employed to launch an application
+ADVICE | wrapper  | 2012/08/24 13:43:54 | within the Wrapper:
+ADVICE | wrapper  | 2012/08/24 13:43:54 |     http://wrapper.tanukisoftware.com/doc/english/integrate.html
+ADVICE | wrapper  | 2012/08/24 13:43:54 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:43:54 | 
+ERROR  | wrapper  | 2012/08/24 13:43:54 | JVM did not exit on request, terminated
+STATUS | wrapper  | 2012/08/24 13:43:58 | Launching a JVM...
+INFO   | jvm 7    | 2012/08/24 13:43:59 | Listening ip = 192.168.0.4 and port 1752... Press Enter to terminate 
+ERROR  | wrapper  | 2012/08/24 13:44:28 | Startup failed: Timed out waiting for a signal from the JVM.
+ADVICE | wrapper  | 2012/08/24 13:44:28 | 
+ADVICE | wrapper  | 2012/08/24 13:44:28 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:44:28 | Advice:
+ADVICE | wrapper  | 2012/08/24 13:44:28 | The Wrapper consists of a native component as well as a set of classes
+ADVICE | wrapper  | 2012/08/24 13:44:28 | which run within the JVM that it launches.  The Java component of the
+ADVICE | wrapper  | 2012/08/24 13:44:28 | Wrapper must be initialized promptly after the JVM is launched or the
+ADVICE | wrapper  | 2012/08/24 13:44:28 | Wrapper will timeout, as just happened.  Most likely the main class
+ADVICE | wrapper  | 2012/08/24 13:44:28 | specified in the Wrapper configuration file is not correctly initializing
+ADVICE | wrapper  | 2012/08/24 13:44:28 | the Wrapper classes:
+ADVICE | wrapper  | 2012/08/24 13:44:28 |     com.Firstcallusa.SdmrReader
+ADVICE | wrapper  | 2012/08/24 13:44:28 | While it is possible to do so manually, the Wrapper ships with helper
+ADVICE | wrapper  | 2012/08/24 13:44:28 | classes to make this initialization processes automatic.
+ADVICE | wrapper  | 2012/08/24 13:44:28 | Please review the integration section of the Wrapper's documentation
+ADVICE | wrapper  | 2012/08/24 13:44:28 | for the various methods which can be employed to launch an application
+ADVICE | wrapper  | 2012/08/24 13:44:28 | within the Wrapper:
+ADVICE | wrapper  | 2012/08/24 13:44:28 |     http://wrapper.tanukisoftware.com/doc/english/integrate.html
+ADVICE | wrapper  | 2012/08/24 13:44:28 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:44:28 | 
+ERROR  | wrapper  | 2012/08/24 13:44:28 | JVM did not exit on request, terminated
+STATUS | wrapper  | 2012/08/24 13:44:33 | Launching a JVM...
+INFO   | jvm 8    | 2012/08/24 13:44:34 | Listening ip = 192.168.0.4 and port 1752... Press Enter to terminate 
+ERROR  | wrapper  | 2012/08/24 13:45:02 | Startup failed: Timed out waiting for a signal from the JVM.
+ADVICE | wrapper  | 2012/08/24 13:45:02 | 
+ADVICE | wrapper  | 2012/08/24 13:45:02 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:45:02 | Advice:
+ADVICE | wrapper  | 2012/08/24 13:45:02 | The Wrapper consists of a native component as well as a set of classes
+ADVICE | wrapper  | 2012/08/24 13:45:02 | which run within the JVM that it launches.  The Java component of the
+ADVICE | wrapper  | 2012/08/24 13:45:02 | Wrapper must be initialized promptly after the JVM is launched or the
+ADVICE | wrapper  | 2012/08/24 13:45:02 | Wrapper will timeout, as just happened.  Most likely the main class
+ADVICE | wrapper  | 2012/08/24 13:45:02 | specified in the Wrapper configuration file is not correctly initializing
+ADVICE | wrapper  | 2012/08/24 13:45:02 | the Wrapper classes:
+ADVICE | wrapper  | 2012/08/24 13:45:02 |     com.Firstcallusa.SdmrReader
+ADVICE | wrapper  | 2012/08/24 13:45:02 | While it is possible to do so manually, the Wrapper ships with helper
+ADVICE | wrapper  | 2012/08/24 13:45:02 | classes to make this initialization processes automatic.
+ADVICE | wrapper  | 2012/08/24 13:45:02 | Please review the integration section of the Wrapper's documentation
+ADVICE | wrapper  | 2012/08/24 13:45:02 | for the various methods which can be employed to launch an application
+ADVICE | wrapper  | 2012/08/24 13:45:02 | within the Wrapper:
+ADVICE | wrapper  | 2012/08/24 13:45:02 |     http://wrapper.tanukisoftware.com/doc/english/integrate.html
+ADVICE | wrapper  | 2012/08/24 13:45:02 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:45:02 | 
+ERROR  | wrapper  | 2012/08/24 13:45:03 | JVM did not exit on request, terminated
+STATUS | wrapper  | 2012/08/24 13:45:07 | Launching a JVM...
+INFO   | jvm 9    | 2012/08/24 13:45:08 | Listening ip = 192.168.0.4 and port 1752... Press Enter to terminate 
+ERROR  | wrapper  | 2012/08/24 13:45:37 | Startup failed: Timed out waiting for a signal from the JVM.
+ADVICE | wrapper  | 2012/08/24 13:45:37 | 
+ADVICE | wrapper  | 2012/08/24 13:45:37 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:45:37 | Advice:
+ADVICE | wrapper  | 2012/08/24 13:45:37 | The Wrapper consists of a native component as well as a set of classes
+ADVICE | wrapper  | 2012/08/24 13:45:37 | which run within the JVM that it launches.  The Java component of the
+ADVICE | wrapper  | 2012/08/24 13:45:37 | Wrapper must be initialized promptly after the JVM is launched or the
+ADVICE | wrapper  | 2012/08/24 13:45:37 | Wrapper will timeout, as just happened.  Most likely the main class
+ADVICE | wrapper  | 2012/08/24 13:45:37 | specified in the Wrapper configuration file is not correctly initializing
+ADVICE | wrapper  | 2012/08/24 13:45:37 | the Wrapper classes:
+ADVICE | wrapper  | 2012/08/24 13:45:37 |     com.Firstcallusa.SdmrReader
+ADVICE | wrapper  | 2012/08/24 13:45:37 | While it is possible to do so manually, the Wrapper ships with helper
+ADVICE | wrapper  | 2012/08/24 13:45:37 | classes to make this initialization processes automatic.
+ADVICE | wrapper  | 2012/08/24 13:45:37 | Please review the integration section of the Wrapper's documentation
+ADVICE | wrapper  | 2012/08/24 13:45:37 | for the various methods which can be employed to launch an application
+ADVICE | wrapper  | 2012/08/24 13:45:37 | within the Wrapper:
+ADVICE | wrapper  | 2012/08/24 13:45:37 |     http://wrapper.tanukisoftware.com/doc/english/integrate.html
+ADVICE | wrapper  | 2012/08/24 13:45:37 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:45:37 | 
+ERROR  | wrapper  | 2012/08/24 13:45:37 | JVM did not exit on request, terminated
+STATUS | wrapper  | 2012/08/24 13:45:42 | Launching a JVM...
+INFO   | jvm 10   | 2012/08/24 13:45:43 | Listening ip = 192.168.0.4 and port 1752... Press Enter to terminate 
+ERROR  | wrapper  | 2012/08/24 13:46:11 | Startup failed: Timed out waiting for a signal from the JVM.
+ADVICE | wrapper  | 2012/08/24 13:46:11 | 
+ADVICE | wrapper  | 2012/08/24 13:46:11 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:46:11 | Advice:
+ADVICE | wrapper  | 2012/08/24 13:46:11 | The Wrapper consists of a native component as well as a set of classes
+ADVICE | wrapper  | 2012/08/24 13:46:11 | which run within the JVM that it launches.  The Java component of the
+ADVICE | wrapper  | 2012/08/24 13:46:11 | Wrapper must be initialized promptly after the JVM is launched or the
+ADVICE | wrapper  | 2012/08/24 13:46:11 | Wrapper will timeout, as just happened.  Most likely the main class
+ADVICE | wrapper  | 2012/08/24 13:46:11 | specified in the Wrapper configuration file is not correctly initializing
+ADVICE | wrapper  | 2012/08/24 13:46:11 | the Wrapper classes:
+ADVICE | wrapper  | 2012/08/24 13:46:11 |     com.Firstcallusa.SdmrReader
+ADVICE | wrapper  | 2012/08/24 13:46:11 | While it is possible to do so manually, the Wrapper ships with helper
+ADVICE | wrapper  | 2012/08/24 13:46:11 | classes to make this initialization processes automatic.
+ADVICE | wrapper  | 2012/08/24 13:46:11 | Please review the integration section of the Wrapper's documentation
+ADVICE | wrapper  | 2012/08/24 13:46:11 | for the various methods which can be employed to launch an application
+ADVICE | wrapper  | 2012/08/24 13:46:11 | within the Wrapper:
+ADVICE | wrapper  | 2012/08/24 13:46:11 |     http://wrapper.tanukisoftware.com/doc/english/integrate.html
+ADVICE | wrapper  | 2012/08/24 13:46:11 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:46:11 | 
+ERROR  | wrapper  | 2012/08/24 13:46:12 | JVM did not exit on request, terminated
+STATUS | wrapper  | 2012/08/24 13:46:16 | Launching a JVM...
+INFO   | jvm 11   | 2012/08/24 13:46:17 | Listening ip = 192.168.0.4 and port 1752... Press Enter to terminate 
+STATUS | wrapper  | 2012/08/24 13:46:35 | TERM trapped.  Shutting down.
+ERROR  | wrapper  | 2012/08/24 13:47:10 | Shutdown failed: Timed out waiting for signal from JVM.
+ERROR  | wrapper  | 2012/08/24 13:47:10 | JVM did not exit on request, terminated
+STATUS | wrapper  | 2012/08/24 13:47:10 | <-- Wrapper Stopped
+STATUS | wrapper  | 2012/08/24 13:47:15 | --> Wrapper Started as Daemon
+STATUS | wrapper  | 2012/08/24 13:47:15 | Java Service Wrapper Community Edition 32-bit 3.5.15
+STATUS | wrapper  | 2012/08/24 13:47:15 |   Copyright (C) 1999-2012 Tanuki Software, Ltd. All Rights Reserved.
+STATUS | wrapper  | 2012/08/24 13:47:15 |     http://wrapper.tanukisoftware.com
+STATUS | wrapper  | 2012/08/24 13:47:15 | 
+STATUS | wrapper  | 2012/08/24 13:47:15 | Launching a JVM...
+INFO   | jvm 1    | 2012/08/24 13:47:16 | Listening ip = 192.168.0.4 and port 1752... Press Enter to terminate 
+ERROR  | wrapper  | 2012/08/24 13:47:45 | Startup failed: Timed out waiting for a signal from the JVM.
+ADVICE | wrapper  | 2012/08/24 13:47:45 | 
+ADVICE | wrapper  | 2012/08/24 13:47:45 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:47:45 | Advice:
+ADVICE | wrapper  | 2012/08/24 13:47:45 | The Wrapper consists of a native component as well as a set of classes
+ADVICE | wrapper  | 2012/08/24 13:47:45 | which run within the JVM that it launches.  The Java component of the
+ADVICE | wrapper  | 2012/08/24 13:47:45 | Wrapper must be initialized promptly after the JVM is launched or the
+ADVICE | wrapper  | 2012/08/24 13:47:45 | Wrapper will timeout, as just happened.  Most likely the main class
+ADVICE | wrapper  | 2012/08/24 13:47:45 | specified in the Wrapper configuration file is not correctly initializing
+ADVICE | wrapper  | 2012/08/24 13:47:45 | the Wrapper classes:
+ADVICE | wrapper  | 2012/08/24 13:47:45 |     com.Firstcallusa.SdmrReader
+ADVICE | wrapper  | 2012/08/24 13:47:45 | While it is possible to do so manually, the Wrapper ships with helper
+ADVICE | wrapper  | 2012/08/24 13:47:45 | classes to make this initialization processes automatic.
+ADVICE | wrapper  | 2012/08/24 13:47:45 | Please review the integration section of the Wrapper's documentation
+ADVICE | wrapper  | 2012/08/24 13:47:45 | for the various methods which can be employed to launch an application
+ADVICE | wrapper  | 2012/08/24 13:47:45 | within the Wrapper:
+ADVICE | wrapper  | 2012/08/24 13:47:45 |     http://wrapper.tanukisoftware.com/doc/english/integrate.html
+ADVICE | wrapper  | 2012/08/24 13:47:45 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:47:45 | 
+ERROR  | wrapper  | 2012/08/24 13:47:45 | JVM did not exit on request, terminated
+STATUS | wrapper  | 2012/08/24 13:47:49 | Launching a JVM...
+INFO   | jvm 2    | 2012/08/24 13:47:50 | Listening ip = 192.168.0.4 and port 1752... Press Enter to terminate 
+ERROR  | wrapper  | 2012/08/24 13:48:19 | Startup failed: Timed out waiting for a signal from the JVM.
+ADVICE | wrapper  | 2012/08/24 13:48:19 | 
+ADVICE | wrapper  | 2012/08/24 13:48:19 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:48:19 | Advice:
+ADVICE | wrapper  | 2012/08/24 13:48:19 | The Wrapper consists of a native component as well as a set of classes
+ADVICE | wrapper  | 2012/08/24 13:48:19 | which run within the JVM that it launches.  The Java component of the
+ADVICE | wrapper  | 2012/08/24 13:48:19 | Wrapper must be initialized promptly after the JVM is launched or the
+ADVICE | wrapper  | 2012/08/24 13:48:19 | Wrapper will timeout, as just happened.  Most likely the main class
+ADVICE | wrapper  | 2012/08/24 13:48:19 | specified in the Wrapper configuration file is not correctly initializing
+ADVICE | wrapper  | 2012/08/24 13:48:19 | the Wrapper classes:
+ADVICE | wrapper  | 2012/08/24 13:48:19 |     com.Firstcallusa.SdmrReader
+ADVICE | wrapper  | 2012/08/24 13:48:19 | While it is possible to do so manually, the Wrapper ships with helper
+ADVICE | wrapper  | 2012/08/24 13:48:19 | classes to make this initialization processes automatic.
+ADVICE | wrapper  | 2012/08/24 13:48:19 | Please review the integration section of the Wrapper's documentation
+ADVICE | wrapper  | 2012/08/24 13:48:19 | for the various methods which can be employed to launch an application
+ADVICE | wrapper  | 2012/08/24 13:48:19 | within the Wrapper:
+ADVICE | wrapper  | 2012/08/24 13:48:19 |     http://wrapper.tanukisoftware.com/doc/english/integrate.html
+ADVICE | wrapper  | 2012/08/24 13:48:19 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:48:19 | 
+ERROR  | wrapper  | 2012/08/24 13:48:19 | JVM did not exit on request, terminated
+STATUS | wrapper  | 2012/08/24 13:48:24 | Launching a JVM...
+INFO   | jvm 3    | 2012/08/24 13:48:25 | Listening ip = 192.168.0.4 and port 1752... Press Enter to terminate 
+ERROR  | wrapper  | 2012/08/24 13:48:53 | Startup failed: Timed out waiting for a signal from the JVM.
+ADVICE | wrapper  | 2012/08/24 13:48:53 | 
+ADVICE | wrapper  | 2012/08/24 13:48:53 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:48:53 | Advice:
+ADVICE | wrapper  | 2012/08/24 13:48:53 | The Wrapper consists of a native component as well as a set of classes
+ADVICE | wrapper  | 2012/08/24 13:48:53 | which run within the JVM that it launches.  The Java component of the
+ADVICE | wrapper  | 2012/08/24 13:48:53 | Wrapper must be initialized promptly after the JVM is launched or the
+ADVICE | wrapper  | 2012/08/24 13:48:53 | Wrapper will timeout, as just happened.  Most likely the main class
+ADVICE | wrapper  | 2012/08/24 13:48:53 | specified in the Wrapper configuration file is not correctly initializing
+ADVICE | wrapper  | 2012/08/24 13:48:53 | the Wrapper classes:
+ADVICE | wrapper  | 2012/08/24 13:48:53 |     com.Firstcallusa.SdmrReader
+ADVICE | wrapper  | 2012/08/24 13:48:53 | While it is possible to do so manually, the Wrapper ships with helper
+ADVICE | wrapper  | 2012/08/24 13:48:53 | classes to make this initialization processes automatic.
+ADVICE | wrapper  | 2012/08/24 13:48:53 | Please review the integration section of the Wrapper's documentation
+ADVICE | wrapper  | 2012/08/24 13:48:53 | for the various methods which can be employed to launch an application
+ADVICE | wrapper  | 2012/08/24 13:48:53 | within the Wrapper:
+ADVICE | wrapper  | 2012/08/24 13:48:53 |     http://wrapper.tanukisoftware.com/doc/english/integrate.html
+ADVICE | wrapper  | 2012/08/24 13:48:53 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:48:53 | 
+ERROR  | wrapper  | 2012/08/24 13:48:54 | JVM did not exit on request, terminated
+STATUS | wrapper  | 2012/08/24 13:48:58 | Launching a JVM...
+INFO   | jvm 4    | 2012/08/24 13:48:59 | Listening ip = 192.168.0.4 and port 1752... Press Enter to terminate 
+ERROR  | wrapper  | 2012/08/24 13:49:28 | Startup failed: Timed out waiting for a signal from the JVM.
+ADVICE | wrapper  | 2012/08/24 13:49:28 | 
+ADVICE | wrapper  | 2012/08/24 13:49:28 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:49:28 | Advice:
+ADVICE | wrapper  | 2012/08/24 13:49:28 | The Wrapper consists of a native component as well as a set of classes
+ADVICE | wrapper  | 2012/08/24 13:49:28 | which run within the JVM that it launches.  The Java component of the
+ADVICE | wrapper  | 2012/08/24 13:49:28 | Wrapper must be initialized promptly after the JVM is launched or the
+ADVICE | wrapper  | 2012/08/24 13:49:28 | Wrapper will timeout, as just happened.  Most likely the main class
+ADVICE | wrapper  | 2012/08/24 13:49:28 | specified in the Wrapper configuration file is not correctly initializing
+ADVICE | wrapper  | 2012/08/24 13:49:28 | the Wrapper classes:
+ADVICE | wrapper  | 2012/08/24 13:49:28 |     com.Firstcallusa.SdmrReader
+ADVICE | wrapper  | 2012/08/24 13:49:28 | While it is possible to do so manually, the Wrapper ships with helper
+ADVICE | wrapper  | 2012/08/24 13:49:28 | classes to make this initialization processes automatic.
+ADVICE | wrapper  | 2012/08/24 13:49:28 | Please review the integration section of the Wrapper's documentation
+ADVICE | wrapper  | 2012/08/24 13:49:28 | for the various methods which can be employed to launch an application
+ADVICE | wrapper  | 2012/08/24 13:49:28 | within the Wrapper:
+ADVICE | wrapper  | 2012/08/24 13:49:28 |     http://wrapper.tanukisoftware.com/doc/english/integrate.html
+ADVICE | wrapper  | 2012/08/24 13:49:28 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:49:28 | 
+ERROR  | wrapper  | 2012/08/24 13:49:28 | JVM did not exit on request, terminated
+STATUS | wrapper  | 2012/08/24 13:49:33 | Launching a JVM...
+INFO   | jvm 5    | 2012/08/24 13:49:34 | Listening ip = 192.168.0.4 and port 1752... Press Enter to terminate 
+STATUS | wrapper  | 2012/08/24 13:49:43 | TERM trapped.  Shutting down.
+ERROR  | wrapper  | 2012/08/24 13:50:18 | Shutdown failed: Timed out waiting for signal from JVM.
+ERROR  | wrapper  | 2012/08/24 13:50:18 | JVM did not exit on request, terminated
+STATUS | wrapper  | 2012/08/24 13:50:18 | <-- Wrapper Stopped
+STATUS | wrapper  | 2012/08/24 13:51:22 | --> Wrapper Started as Daemon
+STATUS | wrapper  | 2012/08/24 13:51:22 | Java Service Wrapper Community Edition 32-bit 3.5.15
+STATUS | wrapper  | 2012/08/24 13:51:22 |   Copyright (C) 1999-2012 Tanuki Software, Ltd. All Rights Reserved.
+STATUS | wrapper  | 2012/08/24 13:51:22 |     http://wrapper.tanukisoftware.com
+STATUS | wrapper  | 2012/08/24 13:51:22 | 
+STATUS | wrapper  | 2012/08/24 13:51:22 | Launching a JVM...
+INFO   | jvm 1    | 2012/08/24 13:51:23 | Listening ip = 192.168.0.4 and port 1752... Press Enter to terminate 
+ERROR  | wrapper  | 2012/08/24 13:51:51 | Startup failed: Timed out waiting for a signal from the JVM.
+ADVICE | wrapper  | 2012/08/24 13:51:51 | 
+ADVICE | wrapper  | 2012/08/24 13:51:51 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:51:51 | Advice:
+ADVICE | wrapper  | 2012/08/24 13:51:51 | The Wrapper consists of a native component as well as a set of classes
+ADVICE | wrapper  | 2012/08/24 13:51:51 | which run within the JVM that it launches.  The Java component of the
+ADVICE | wrapper  | 2012/08/24 13:51:51 | Wrapper must be initialized promptly after the JVM is launched or the
+ADVICE | wrapper  | 2012/08/24 13:51:51 | Wrapper will timeout, as just happened.  Most likely the main class
+ADVICE | wrapper  | 2012/08/24 13:51:51 | specified in the Wrapper configuration file is not correctly initializing
+ADVICE | wrapper  | 2012/08/24 13:51:51 | the Wrapper classes:
+ADVICE | wrapper  | 2012/08/24 13:51:51 |     com.Firstcallusa.SdmrReader
+ADVICE | wrapper  | 2012/08/24 13:51:51 | While it is possible to do so manually, the Wrapper ships with helper
+ADVICE | wrapper  | 2012/08/24 13:51:51 | classes to make this initialization processes automatic.
+ADVICE | wrapper  | 2012/08/24 13:51:51 | Please review the integration section of the Wrapper's documentation
+ADVICE | wrapper  | 2012/08/24 13:51:51 | for the various methods which can be employed to launch an application
+ADVICE | wrapper  | 2012/08/24 13:51:51 | within the Wrapper:
+ADVICE | wrapper  | 2012/08/24 13:51:51 |     http://wrapper.tanukisoftware.com/doc/english/integrate.html
+ADVICE | wrapper  | 2012/08/24 13:51:51 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:51:51 | 
+ERROR  | wrapper  | 2012/08/24 13:51:52 | JVM did not exit on request, terminated
+STATUS | wrapper  | 2012/08/24 13:51:56 | Launching a JVM...
+INFO   | jvm 2    | 2012/08/24 13:51:57 | Listening ip = 192.168.0.4 and port 1752... Press Enter to terminate 
+ERROR  | wrapper  | 2012/08/24 13:52:26 | Startup failed: Timed out waiting for a signal from the JVM.
+ADVICE | wrapper  | 2012/08/24 13:52:26 | 
+ADVICE | wrapper  | 2012/08/24 13:52:26 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:52:26 | Advice:
+ADVICE | wrapper  | 2012/08/24 13:52:26 | The Wrapper consists of a native component as well as a set of classes
+ADVICE | wrapper  | 2012/08/24 13:52:26 | which run within the JVM that it launches.  The Java component of the
+ADVICE | wrapper  | 2012/08/24 13:52:26 | Wrapper must be initialized promptly after the JVM is launched or the
+ADVICE | wrapper  | 2012/08/24 13:52:26 | Wrapper will timeout, as just happened.  Most likely the main class
+ADVICE | wrapper  | 2012/08/24 13:52:26 | specified in the Wrapper configuration file is not correctly initializing
+ADVICE | wrapper  | 2012/08/24 13:52:26 | the Wrapper classes:
+ADVICE | wrapper  | 2012/08/24 13:52:26 |     com.Firstcallusa.SdmrReader
+ADVICE | wrapper  | 2012/08/24 13:52:26 | While it is possible to do so manually, the Wrapper ships with helper
+ADVICE | wrapper  | 2012/08/24 13:52:26 | classes to make this initialization processes automatic.
+ADVICE | wrapper  | 2012/08/24 13:52:26 | Please review the integration section of the Wrapper's documentation
+ADVICE | wrapper  | 2012/08/24 13:52:26 | for the various methods which can be employed to launch an application
+ADVICE | wrapper  | 2012/08/24 13:52:26 | within the Wrapper:
+ADVICE | wrapper  | 2012/08/24 13:52:26 |     http://wrapper.tanukisoftware.com/doc/english/integrate.html
+ADVICE | wrapper  | 2012/08/24 13:52:26 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:52:26 | 
+ERROR  | wrapper  | 2012/08/24 13:52:26 | JVM did not exit on request, terminated
+STATUS | wrapper  | 2012/08/24 13:52:31 | Launching a JVM...
+INFO   | jvm 3    | 2012/08/24 13:52:32 | Listening ip = 192.168.0.4 and port 1752... Press Enter to terminate 
+ERROR  | wrapper  | 2012/08/24 13:53:00 | Startup failed: Timed out waiting for a signal from the JVM.
+ADVICE | wrapper  | 2012/08/24 13:53:00 | 
+ADVICE | wrapper  | 2012/08/24 13:53:00 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:53:00 | Advice:
+ADVICE | wrapper  | 2012/08/24 13:53:00 | The Wrapper consists of a native component as well as a set of classes
+ADVICE | wrapper  | 2012/08/24 13:53:00 | which run within the JVM that it launches.  The Java component of the
+ADVICE | wrapper  | 2012/08/24 13:53:00 | Wrapper must be initialized promptly after the JVM is launched or the
+ADVICE | wrapper  | 2012/08/24 13:53:00 | Wrapper will timeout, as just happened.  Most likely the main class
+ADVICE | wrapper  | 2012/08/24 13:53:00 | specified in the Wrapper configuration file is not correctly initializing
+ADVICE | wrapper  | 2012/08/24 13:53:00 | the Wrapper classes:
+ADVICE | wrapper  | 2012/08/24 13:53:00 |     com.Firstcallusa.SdmrReader
+ADVICE | wrapper  | 2012/08/24 13:53:00 | While it is possible to do so manually, the Wrapper ships with helper
+ADVICE | wrapper  | 2012/08/24 13:53:00 | classes to make this initialization processes automatic.
+ADVICE | wrapper  | 2012/08/24 13:53:00 | Please review the integration section of the Wrapper's documentation
+ADVICE | wrapper  | 2012/08/24 13:53:00 | for the various methods which can be employed to launch an application
+ADVICE | wrapper  | 2012/08/24 13:53:00 | within the Wrapper:
+ADVICE | wrapper  | 2012/08/24 13:53:00 |     http://wrapper.tanukisoftware.com/doc/english/integrate.html
+ADVICE | wrapper  | 2012/08/24 13:53:00 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:53:00 | 
+ERROR  | wrapper  | 2012/08/24 13:53:01 | JVM did not exit on request, terminated
+STATUS | wrapper  | 2012/08/24 13:53:05 | Launching a JVM...
+INFO   | jvm 4    | 2012/08/24 13:53:06 | Listening ip = 192.168.0.4 and port 1752... Press Enter to terminate 
+ERROR  | wrapper  | 2012/08/24 13:53:35 | Startup failed: Timed out waiting for a signal from the JVM.
+ADVICE | wrapper  | 2012/08/24 13:53:35 | 
+ADVICE | wrapper  | 2012/08/24 13:53:35 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:53:35 | Advice:
+ADVICE | wrapper  | 2012/08/24 13:53:35 | The Wrapper consists of a native component as well as a set of classes
+ADVICE | wrapper  | 2012/08/24 13:53:35 | which run within the JVM that it launches.  The Java component of the
+ADVICE | wrapper  | 2012/08/24 13:53:35 | Wrapper must be initialized promptly after the JVM is launched or the
+ADVICE | wrapper  | 2012/08/24 13:53:35 | Wrapper will timeout, as just happened.  Most likely the main class
+ADVICE | wrapper  | 2012/08/24 13:53:35 | specified in the Wrapper configuration file is not correctly initializing
+ADVICE | wrapper  | 2012/08/24 13:53:35 | the Wrapper classes:
+ADVICE | wrapper  | 2012/08/24 13:53:35 |     com.Firstcallusa.SdmrReader
+ADVICE | wrapper  | 2012/08/24 13:53:35 | While it is possible to do so manually, the Wrapper ships with helper
+ADVICE | wrapper  | 2012/08/24 13:53:35 | classes to make this initialization processes automatic.
+ADVICE | wrapper  | 2012/08/24 13:53:35 | Please review the integration section of the Wrapper's documentation
+ADVICE | wrapper  | 2012/08/24 13:53:35 | for the various methods which can be employed to launch an application
+ADVICE | wrapper  | 2012/08/24 13:53:35 | within the Wrapper:
+ADVICE | wrapper  | 2012/08/24 13:53:35 |     http://wrapper.tanukisoftware.com/doc/english/integrate.html
+ADVICE | wrapper  | 2012/08/24 13:53:35 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:53:35 | 
+ERROR  | wrapper  | 2012/08/24 13:53:35 | JVM did not exit on request, terminated
+STATUS | wrapper  | 2012/08/24 13:53:40 | Launching a JVM...
+INFO   | jvm 5    | 2012/08/24 13:53:40 | Listening ip = 192.168.0.4 and port 1752... Press Enter to terminate 
+ERROR  | wrapper  | 2012/08/24 13:54:09 | Startup failed: Timed out waiting for a signal from the JVM.
+ADVICE | wrapper  | 2012/08/24 13:54:09 | 
+ADVICE | wrapper  | 2012/08/24 13:54:09 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:54:09 | Advice:
+ADVICE | wrapper  | 2012/08/24 13:54:09 | The Wrapper consists of a native component as well as a set of classes
+ADVICE | wrapper  | 2012/08/24 13:54:09 | which run within the JVM that it launches.  The Java component of the
+ADVICE | wrapper  | 2012/08/24 13:54:09 | Wrapper must be initialized promptly after the JVM is launched or the
+ADVICE | wrapper  | 2012/08/24 13:54:09 | Wrapper will timeout, as just happened.  Most likely the main class
+ADVICE | wrapper  | 2012/08/24 13:54:09 | specified in the Wrapper configuration file is not correctly initializing
+ADVICE | wrapper  | 2012/08/24 13:54:09 | the Wrapper classes:
+ADVICE | wrapper  | 2012/08/24 13:54:09 |     com.Firstcallusa.SdmrReader
+ADVICE | wrapper  | 2012/08/24 13:54:09 | While it is possible to do so manually, the Wrapper ships with helper
+ADVICE | wrapper  | 2012/08/24 13:54:09 | classes to make this initialization processes automatic.
+ADVICE | wrapper  | 2012/08/24 13:54:09 | Please review the integration section of the Wrapper's documentation
+ADVICE | wrapper  | 2012/08/24 13:54:09 | for the various methods which can be employed to launch an application
+ADVICE | wrapper  | 2012/08/24 13:54:09 | within the Wrapper:
+ADVICE | wrapper  | 2012/08/24 13:54:09 |     http://wrapper.tanukisoftware.com/doc/english/integrate.html
+ADVICE | wrapper  | 2012/08/24 13:54:09 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:54:09 | 
+ERROR  | wrapper  | 2012/08/24 13:54:09 | JVM did not exit on request, terminated
+STATUS | wrapper  | 2012/08/24 13:54:14 | Launching a JVM...
+INFO   | jvm 6    | 2012/08/24 13:54:15 | Listening ip = 192.168.0.4 and port 1752... Press Enter to terminate 
+ERROR  | wrapper  | 2012/08/24 13:54:44 | Startup failed: Timed out waiting for a signal from the JVM.
+ADVICE | wrapper  | 2012/08/24 13:54:44 | 
+ADVICE | wrapper  | 2012/08/24 13:54:44 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:54:44 | Advice:
+ADVICE | wrapper  | 2012/08/24 13:54:44 | The Wrapper consists of a native component as well as a set of classes
+ADVICE | wrapper  | 2012/08/24 13:54:44 | which run within the JVM that it launches.  The Java component of the
+ADVICE | wrapper  | 2012/08/24 13:54:44 | Wrapper must be initialized promptly after the JVM is launched or the
+ADVICE | wrapper  | 2012/08/24 13:54:44 | Wrapper will timeout, as just happened.  Most likely the main class
+ADVICE | wrapper  | 2012/08/24 13:54:44 | specified in the Wrapper configuration file is not correctly initializing
+ADVICE | wrapper  | 2012/08/24 13:54:44 | the Wrapper classes:
+ADVICE | wrapper  | 2012/08/24 13:54:44 |     com.Firstcallusa.SdmrReader
+ADVICE | wrapper  | 2012/08/24 13:54:44 | While it is possible to do so manually, the Wrapper ships with helper
+ADVICE | wrapper  | 2012/08/24 13:54:44 | classes to make this initialization processes automatic.
+ADVICE | wrapper  | 2012/08/24 13:54:44 | Please review the integration section of the Wrapper's documentation
+ADVICE | wrapper  | 2012/08/24 13:54:44 | for the various methods which can be employed to launch an application
+ADVICE | wrapper  | 2012/08/24 13:54:44 | within the Wrapper:
+ADVICE | wrapper  | 2012/08/24 13:54:44 |     http://wrapper.tanukisoftware.com/doc/english/integrate.html
+ADVICE | wrapper  | 2012/08/24 13:54:44 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:54:44 | 
+ERROR  | wrapper  | 2012/08/24 13:54:44 | JVM did not exit on request, terminated
+STATUS | wrapper  | 2012/08/24 13:54:49 | Launching a JVM...
+INFO   | jvm 7    | 2012/08/24 13:54:49 | Listening ip = 192.168.0.4 and port 1752... Press Enter to terminate 
+ERROR  | wrapper  | 2012/08/24 13:55:18 | Startup failed: Timed out waiting for a signal from the JVM.
+ADVICE | wrapper  | 2012/08/24 13:55:18 | 
+ADVICE | wrapper  | 2012/08/24 13:55:18 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:55:18 | Advice:
+ADVICE | wrapper  | 2012/08/24 13:55:18 | The Wrapper consists of a native component as well as a set of classes
+ADVICE | wrapper  | 2012/08/24 13:55:18 | which run within the JVM that it launches.  The Java component of the
+ADVICE | wrapper  | 2012/08/24 13:55:18 | Wrapper must be initialized promptly after the JVM is launched or the
+ADVICE | wrapper  | 2012/08/24 13:55:18 | Wrapper will timeout, as just happened.  Most likely the main class
+ADVICE | wrapper  | 2012/08/24 13:55:18 | specified in the Wrapper configuration file is not correctly initializing
+ADVICE | wrapper  | 2012/08/24 13:55:18 | the Wrapper classes:
+ADVICE | wrapper  | 2012/08/24 13:55:18 |     com.Firstcallusa.SdmrReader
+ADVICE | wrapper  | 2012/08/24 13:55:18 | While it is possible to do so manually, the Wrapper ships with helper
+ADVICE | wrapper  | 2012/08/24 13:55:18 | classes to make this initialization processes automatic.
+ADVICE | wrapper  | 2012/08/24 13:55:18 | Please review the integration section of the Wrapper's documentation
+ADVICE | wrapper  | 2012/08/24 13:55:18 | for the various methods which can be employed to launch an application
+ADVICE | wrapper  | 2012/08/24 13:55:18 | within the Wrapper:
+ADVICE | wrapper  | 2012/08/24 13:55:18 |     http://wrapper.tanukisoftware.com/doc/english/integrate.html
+ADVICE | wrapper  | 2012/08/24 13:55:18 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:55:18 | 
+ERROR  | wrapper  | 2012/08/24 13:55:18 | JVM did not exit on request, terminated
+STATUS | wrapper  | 2012/08/24 13:55:23 | Launching a JVM...
+INFO   | jvm 8    | 2012/08/24 13:55:24 | Listening ip = 192.168.0.4 and port 1752... Press Enter to terminate 
+ERROR  | wrapper  | 2012/08/24 13:55:53 | Startup failed: Timed out waiting for a signal from the JVM.
+ADVICE | wrapper  | 2012/08/24 13:55:53 | 
+ADVICE | wrapper  | 2012/08/24 13:55:53 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:55:53 | Advice:
+ADVICE | wrapper  | 2012/08/24 13:55:53 | The Wrapper consists of a native component as well as a set of classes
+ADVICE | wrapper  | 2012/08/24 13:55:53 | which run within the JVM that it launches.  The Java component of the
+ADVICE | wrapper  | 2012/08/24 13:55:53 | Wrapper must be initialized promptly after the JVM is launched or the
+ADVICE | wrapper  | 2012/08/24 13:55:53 | Wrapper will timeout, as just happened.  Most likely the main class
+ADVICE | wrapper  | 2012/08/24 13:55:53 | specified in the Wrapper configuration file is not correctly initializing
+ADVICE | wrapper  | 2012/08/24 13:55:53 | the Wrapper classes:
+ADVICE | wrapper  | 2012/08/24 13:55:53 |     com.Firstcallusa.SdmrReader
+ADVICE | wrapper  | 2012/08/24 13:55:53 | While it is possible to do so manually, the Wrapper ships with helper
+ADVICE | wrapper  | 2012/08/24 13:55:53 | classes to make this initialization processes automatic.
+ADVICE | wrapper  | 2012/08/24 13:55:53 | Please review the integration section of the Wrapper's documentation
+ADVICE | wrapper  | 2012/08/24 13:55:53 | for the various methods which can be employed to launch an application
+ADVICE | wrapper  | 2012/08/24 13:55:53 | within the Wrapper:
+ADVICE | wrapper  | 2012/08/24 13:55:53 |     http://wrapper.tanukisoftware.com/doc/english/integrate.html
+ADVICE | wrapper  | 2012/08/24 13:55:53 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:55:53 | 
+ERROR  | wrapper  | 2012/08/24 13:55:53 | JVM did not exit on request, terminated
+STATUS | wrapper  | 2012/08/24 13:55:57 | Launching a JVM...
+INFO   | jvm 9    | 2012/08/24 13:55:58 | Listening ip = 192.168.0.4 and port 1752... Press Enter to terminate 
+ERROR  | wrapper  | 2012/08/24 13:56:27 | Startup failed: Timed out waiting for a signal from the JVM.
+ADVICE | wrapper  | 2012/08/24 13:56:27 | 
+ADVICE | wrapper  | 2012/08/24 13:56:27 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:56:27 | Advice:
+ADVICE | wrapper  | 2012/08/24 13:56:27 | The Wrapper consists of a native component as well as a set of classes
+ADVICE | wrapper  | 2012/08/24 13:56:27 | which run within the JVM that it launches.  The Java component of the
+ADVICE | wrapper  | 2012/08/24 13:56:27 | Wrapper must be initialized promptly after the JVM is launched or the
+ADVICE | wrapper  | 2012/08/24 13:56:27 | Wrapper will timeout, as just happened.  Most likely the main class
+ADVICE | wrapper  | 2012/08/24 13:56:27 | specified in the Wrapper configuration file is not correctly initializing
+ADVICE | wrapper  | 2012/08/24 13:56:27 | the Wrapper classes:
+ADVICE | wrapper  | 2012/08/24 13:56:27 |     com.Firstcallusa.SdmrReader
+ADVICE | wrapper  | 2012/08/24 13:56:27 | While it is possible to do so manually, the Wrapper ships with helper
+ADVICE | wrapper  | 2012/08/24 13:56:27 | classes to make this initialization processes automatic.
+ADVICE | wrapper  | 2012/08/24 13:56:27 | Please review the integration section of the Wrapper's documentation
+ADVICE | wrapper  | 2012/08/24 13:56:27 | for the various methods which can be employed to launch an application
+ADVICE | wrapper  | 2012/08/24 13:56:27 | within the Wrapper:
+ADVICE | wrapper  | 2012/08/24 13:56:27 |     http://wrapper.tanukisoftware.com/doc/english/integrate.html
+ADVICE | wrapper  | 2012/08/24 13:56:27 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:56:27 | 
+ERROR  | wrapper  | 2012/08/24 13:56:27 | JVM did not exit on request, terminated
+STATUS | wrapper  | 2012/08/24 13:56:32 | Launching a JVM...
+INFO   | jvm 10   | 2012/08/24 13:56:33 | Listening ip = 192.168.0.4 and port 1752... Press Enter to terminate 
+ERROR  | wrapper  | 2012/08/24 13:57:01 | Startup failed: Timed out waiting for a signal from the JVM.
+ADVICE | wrapper  | 2012/08/24 13:57:01 | 
+ADVICE | wrapper  | 2012/08/24 13:57:01 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:57:01 | Advice:
+ADVICE | wrapper  | 2012/08/24 13:57:01 | The Wrapper consists of a native component as well as a set of classes
+ADVICE | wrapper  | 2012/08/24 13:57:01 | which run within the JVM that it launches.  The Java component of the
+ADVICE | wrapper  | 2012/08/24 13:57:01 | Wrapper must be initialized promptly after the JVM is launched or the
+ADVICE | wrapper  | 2012/08/24 13:57:01 | Wrapper will timeout, as just happened.  Most likely the main class
+ADVICE | wrapper  | 2012/08/24 13:57:01 | specified in the Wrapper configuration file is not correctly initializing
+ADVICE | wrapper  | 2012/08/24 13:57:01 | the Wrapper classes:
+ADVICE | wrapper  | 2012/08/24 13:57:01 |     com.Firstcallusa.SdmrReader
+ADVICE | wrapper  | 2012/08/24 13:57:01 | While it is possible to do so manually, the Wrapper ships with helper
+ADVICE | wrapper  | 2012/08/24 13:57:01 | classes to make this initialization processes automatic.
+ADVICE | wrapper  | 2012/08/24 13:57:01 | Please review the integration section of the Wrapper's documentation
+ADVICE | wrapper  | 2012/08/24 13:57:01 | for the various methods which can be employed to launch an application
+ADVICE | wrapper  | 2012/08/24 13:57:01 | within the Wrapper:
+ADVICE | wrapper  | 2012/08/24 13:57:01 |     http://wrapper.tanukisoftware.com/doc/english/integrate.html
+ADVICE | wrapper  | 2012/08/24 13:57:01 | ------------------------------------------------------------------------
+ADVICE | wrapper  | 2012/08/24 13:57:01 | 
+ERROR  | wrapper  | 2012/08/24 13:57:02 | JVM did not exit on request, terminated
+STATUS | wrapper  | 2012/08/24 13:57:06 | Launching a JVM...
+INFO   | jvm 11   | 2012/08/24 13:57:07 | Listening ip = 192.168.0.4 and port 1752... Press Enter to terminate 
