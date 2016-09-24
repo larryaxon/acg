@@ -7,7 +7,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
-using Excel = Microsoft.Office.;
+using Excel = Microsoft.Office.Interop.Excel;
 using ACG.Common;
 
 namespace ACG.CommonForms
