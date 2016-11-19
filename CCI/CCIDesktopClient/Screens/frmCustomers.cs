@@ -128,17 +128,25 @@ namespace CCI.DesktopClient.Screens
     }
     private void textAltID_Validating(object sender, CancelEventArgs e)
     {
-      string msg = "SaddlebackID must be in the form: 00000999 where 999 is the saddleback Customer Number";
+    /*
+    * Make changes to allow for the new vendor
+    * 
+    * old style: numeric changed to numeric text with leading zeros and a length of 8
+    * 
+    * new style: 'R' followed by a number
+    */
+      string msg = "SaddlebackID must be in the form: 00000999 where 999 is the saddleback Customer Number or in the form R999";
       string altID = ((TextBox)sender).Text;
       if (!string.IsNullOrEmpty(altID)) // only perform this check if there is one
       {
-        if (!CommonFunctions.IsNumeric(altID))
+        if (!CommonFunctions.IsNumeric(altID) &&  // not old
+            !altID.StartsWith("R", StringComparison.CurrentCultureIgnoreCase)) // and not new
         {
           e.Cancel = true;
           ((TextBox)sender).Undo();
           MessageBox.Show(msg);
         }
-        if (altID.Length < 8)
+        if (altID.Length < 8 && !altID.StartsWith("R", StringComparison.CurrentCultureIgnoreCase))
         {
           altID = CommonFunctions.CInt(altID).ToString("00000000");
         }
