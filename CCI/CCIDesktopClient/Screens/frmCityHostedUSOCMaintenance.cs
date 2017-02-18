@@ -111,18 +111,30 @@ namespace CCI.DesktopClient.Screens
 
       if (operation == CommonData.USOCMaintenanceOperation.SwitchWholesale)
       {
-        DialogResult ans = MessageBox.Show(string.Format("You are connecting RetailUSOC <{0}> to WholesaleUSOC <{1}>. All other updates on this screen will be ignored unless you press Save again. Is that what you want to do?",
+        DialogResult ans = MessageBox.Show(string.Format(@"It looks like You are connecting RetailUSOC <{0}> to WholesaleUSOC <{1}>. 
+If you choose Yes, all other updates on this screen will be ignored unless you press Save again. Is that what you want to do?",
           retailUSOC, wholesaleUSOC), "Connect Retail to Wholesale USOC", MessageBoxButtons.YesNo);
-        if (ans == System.Windows.Forms.DialogResult.Yes)
-        {
-          _oldRetailUSOC = retailUSOC;
-          _oldWholesaleUSOC = wholesaleUSOC;
-          _dataSource.reassignWholesaleUSOC(retailUSOC, wholesaleUSOC);
-          reloadUsocList(false); // refresh the screen
-          loadFields(srchUSOCList.SelectedRow);
-          MessageBox.Show("USOCs reassigned");
-        }
-        return;
+                if (ans == System.Windows.Forms.DialogResult.Yes)
+                {
+                    _oldRetailUSOC = retailUSOC;
+                    _oldWholesaleUSOC = wholesaleUSOC;
+                    _dataSource.reassignWholesaleUSOC(retailUSOC, wholesaleUSOC);
+                    reloadUsocList(false); // refresh the screen
+                    loadFields(srchUSOCList.SelectedRow);
+                    MessageBox.Show("USOCs reassigned");
+                }
+                else
+                {
+                    ans = MessageBox.Show(string.Format(@"OK, so you just want to update the data on the screen instead. Is that what you want to do?",
+  retailUSOC, wholesaleUSOC), "Update USOC Data", MessageBoxButtons.YesNo);
+                    if (ans == DialogResult.Yes)
+                        operation = CommonData.USOCMaintenanceOperation.UpdateExisting;
+                    else
+                    {
+                        MessageBox.Show("No save operation was performed", "Save was Cancelled");
+                        return;
+                    }
+                }
       }
       #endregion
 
@@ -519,7 +531,7 @@ namespace CCI.DesktopClient.Screens
       clear(true);
 
       #region Wholesale data
-      string wholesaleUSOC = _oldWholesaleUSOC = txtWholesaleUSOC.Text = CommonFunctions.CString(row.Cells[colWholesaleUSOC].Value);
+      string wholesaleUSOC = _oldWholesaleUSOC = txtWholesaleUSOC.Text = CommonFunctions.CString(row.Cells[colWholesaleUSOC].Value).Trim();
       if (string.IsNullOrEmpty(wholesaleUSOC))
         txtWholesaleUSOC.AddNewMode = true;
       else
@@ -546,7 +558,7 @@ namespace CCI.DesktopClient.Screens
       #endregion
 
       #region Retail data
-      _oldRetailUSOC = txtRetailUSOC.Text = CommonFunctions.CString(row.Cells[colRetailUSOC].Value);
+      _oldRetailUSOC = txtRetailUSOC.Text = CommonFunctions.CString(row.Cells[colRetailUSOC].Value).Trim();
       _oldRetailDescrition = txtRetailDescription.Text = CommonFunctions.CString(row.Cells[colRetailDescription].Value);
       txtExternalDescription.Text = CommonFunctions.CString(row.Cells[colExternalDescription].Value);
       cboRITCategory.Text = CommonFunctions.CString(row.Cells["RIT Category"].Value);

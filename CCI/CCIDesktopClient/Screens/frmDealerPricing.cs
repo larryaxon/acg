@@ -23,7 +23,7 @@ namespace CCI.DesktopClient.Screens
       cboLevel.Items.AddRange(new DataSource().getDealerPricingLevels());
       ctlDealerPricingMaintenance.TableName = "HostedDealerCosts";
       ctlDealerPricingMaintenance.SecurityContext = SecurityContext;
-      ctlDealerPricingMaintenance.HiddenColumns.Add("Dealer", null);      
+      ctlDealerPricingMaintenance.HiddenColumns.Add("Dealer", null);
       cboLevel.Text = "Bronze"; // also fires cboLevel_SelectedIndexChanged, which loads the grid
     }
 
@@ -33,12 +33,13 @@ namespace CCI.DesktopClient.Screens
     }
     private void loadGrid()
     {
-      Dictionary<string, string> parameters = new Dictionary<string,string>(StringComparer.CurrentCultureIgnoreCase);
+      Dictionary<string, string> parameters = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase);
       parameters.Add("dealer", cboLevel.Text);
       if (ctlDealerPricingMaintenance.DefaultValues.ContainsKey("dealer"))
         ctlDealerPricingMaintenance.DefaultValues["dealer"] = cboLevel.Text;
       else
         ctlDealerPricingMaintenance.DefaultValues.Add("dealer", cboLevel.Text);
+      parameters.Add("includecloseditems", ckIncludeClosedItems.Checked.ToString());
       ctlDealerPricingMaintenance.load(parameters);
     }
 
@@ -60,11 +61,11 @@ namespace CCI.DesktopClient.Screens
     {
       string pricingLevel = cboLevel.Text;
       if (string.IsNullOrEmpty(pricingLevel))
-      if (string.IsNullOrEmpty(txtToLevel.Text) || string.IsNullOrEmpty(cboLevel.Text))
-      {
-        MessageBox.Show("You must have a Level Selected to delete it");
-        return;
-      }
+        if (string.IsNullOrEmpty(txtToLevel.Text) || string.IsNullOrEmpty(cboLevel.Text))
+        {
+          MessageBox.Show("You must have a Level Selected to delete it");
+          return;
+        }
       DialogResult ans = MessageBox.Show(string.Format("Are you sure you want to delete pricing level {0}", pricingLevel), "Delete Pricing Level", MessageBoxButtons.YesNo);
       if (ans == DialogResult.Yes) // if they said yes
       {
@@ -75,6 +76,11 @@ namespace CCI.DesktopClient.Screens
       cboLevel.Items.Clear();
       cboLevel.Items.AddRange(new DataSource().getDealerPricingLevels());
       cboLevel.Text = string.Empty;
+      loadGrid();
+    }
+
+    private void ckIncludeClosedItems_CheckedChanged(object sender, EventArgs e)
+    {
       loadGrid();
     }
   }

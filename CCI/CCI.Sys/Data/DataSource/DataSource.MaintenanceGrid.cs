@@ -376,12 +376,18 @@ CycleCode, ID, Case when InActive is null then 'No' else 'Yes' end InActiveFlag 
         case "hosteddealercosts":
           validTable = true;
           updateable = true;
-          string dealer = string.Empty;
+          string dealerClause = string.Empty;
+          bool includeClosedItems = false;
+                    
           if (parameters != null && parameters.Count > 0)
           {
             if (parameters.ContainsKey("dealer"))
-              dealer = string.Format(" where dealer = '{0}' ", parameters["dealer"]);
-            sql = string.Format("Select * from HostedDealerCosts {0}", dealer);
+              dealerClause = string.Format(" where dealer = '{0}' ", parameters["dealer"]);
+            if (parameters.ContainsKey("includecloseditems"))
+              includeClosedItems = CommonFunctions.CBoolean(parameters["includecloseditems"]);
+            if (!includeClosedItems) // exclude all items with an enddate in the past
+              dealerClause = dealerClause + string.Format(" and isnull(EndDate,'{0}') > getdate() ", CommonData.FutureDateTime.ToShortDateString());
+            sql = "Select * from HostedDealerCosts " + dealerClause;
           } 
           break;
         case "hostedimportledger":
