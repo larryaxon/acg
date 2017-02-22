@@ -337,13 +337,14 @@ where (item =  'user' and name = 'salesperson' and Value = 'Yes')  order by firs
       if (string.IsNullOrEmpty(oldLevel) || string.IsNullOrEmpty(newLevel))
         return "Error: Must have old level and new level";
       // first delete any ones that may already be there for this new level
-      string sql = string.Format(@"DELETE FROM [dbo].[HostedDealerCosts] WHERE Dealer = '{0}'", newLevel);
+      string sql = string.Format(@"DELETE FROM [HostedDealerCosts] WHERE Dealer = '{0}'", newLevel);
       updateDataFromSQL(sql);
       // now add the new ones by cloning from an old one
       sql = @"insert into [HostedDealerCosts]
 select '{1}' Dealer, ItemID, '{2}' StartDate, null EndDate, DealerCost, Install, '{3}', getdate()
-from [Commisions].[dbo].[HostedDealerCosts]
-where dealer = '{0}'";
+from [HostedDealerCosts]
+where dealer = '{0}'
+and EndDate is null";
       sql = string.Format(sql, oldLevel, newLevel, startDate.ToShortDateString(), user);
       updateDataFromSQL(sql);
       // now add the code to the list if it is not already there
