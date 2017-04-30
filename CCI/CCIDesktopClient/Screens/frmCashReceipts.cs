@@ -34,6 +34,7 @@ namespace CCI.DesktopClient.Screens
     private const string COLUMNBILL = "Current Bill";
     private const string COLUMNID = "ID";
     private const string STATUSEXPORTED = "Exported";
+    private string _rootPath = "C:\\Data\\Saddleback Imports";
     private bool _fromDetail = false;
     private DateTime _startDate = (new DateTime(DateTime.Today.Year, DateTime.Today.AddMonths(-1).Month, 1));
     private DateTime _endDate = DateTime.Today;
@@ -443,6 +444,52 @@ namespace CCI.DesktopClient.Screens
         unpaidClause = "'All'";
       return string.Format("'{0}', {1}, {2}", billDate.ToShortDateString(), postClause, unpaidClause);
     }
+    private string getImportFileName()
+    {
+      OpenFileDialog openFileDialog1 = new OpenFileDialog();
+      openFileDialog1.Title = "Open Payments Import File";
+      openFileDialog1.Filter = "TXT files|*.txt";
+      openFileDialog1.InitialDirectory = _rootPath;
+
+      DialogResult result = openFileDialog1.ShowDialog(); // Show the dialog.
+      if (result == DialogResult.OK) // Test result.
+      {
+        return openFileDialog1.FileName;
+      }
+      else
+        return null;
+    }
+    private void importPaymentFile()
+    {
+      string fileName = getImportFileName();
+      if (string.IsNullOrEmpty(fileName))
+        CommonFormFunctions.showMessage("No file was chosen, Import was not run.");
+      else
+      {
+        string storedproc = "ImportPayments";
+        DateTime billDate = CommonFunctions.CDateTime(tbBillingPeriod.Text);
+        string criteria = String.Format(",'{0}'", billDate.ToString("yyyyMMdd"));
+        Exception returnmsg = _dataSource.executestoredproc(storedproc, fileName, criteria);
+        if (returnmsg != null)
+          CommonFormFunctions.showException(returnmsg);
+        else
+          Init();
+      }
+    }
+    private void undoImportPayments()
+    {
+      DateTime billDate = CommonFunctions.CDateTime(tbBillingPeriod.Text);
+      _dataSource.undoImportPayments(billDate);
+      Init();
+    }
+    private Dictionary<string, object> getValues(DataGridViewRow row)
+    {
+      Dictionary<string, object> fields = new Dictionary<string, object>(StringComparer.CurrentCultureIgnoreCase);
+      foreach (DataGridViewCell cell in row.Cells)
+        fields.Add(cell.OwningColumn.Name, cell.Value);
+      return fields;
+    }
+
     #endregion
 
     #region form events
@@ -615,16 +662,6 @@ namespace CCI.DesktopClient.Screens
         }
       }
     }
-    private Dictionary<string, object> getValues(DataGridViewRow row)
-    {
-      Dictionary<string, object> fields = new Dictionary<string, object>(StringComparer.CurrentCultureIgnoreCase);
-      foreach (DataGridViewCell cell in row.Cells)
-        fields.Add(cell.OwningColumn.Name, cell.Value);
-      return fields;
-    }
-
-    #endregion
-
     private void cboCustomer_OnSelected_1(object sender, EventArgs e)
     {
       EntityAttributesCollection eac = _ea.getAttributes(cboCustomer.Text, "Entity", "Customer", null, DateTime.Today);
@@ -645,16 +682,24 @@ namespace CCI.DesktopClient.Screens
       }
 
     }
-
     private void tbBillingPeriod_Leave(object sender, EventArgs e)
     {
       DateTime billingDate = Convert.ToDateTime(tbBillingPeriod.Text);
       _startDate = new DateTime(billingDate.Year, billingDate.Month - 1, 1);
     }
-
     private void radioBill_CheckedChanged(object sender, EventArgs e)
     {
       testPaymentType();
+    }
+    private void btnImportPayments_Click(object sender, EventArgs e)
+    {
+      importPaymentFile();
+    }
+    #endregion
+
+    private void btnUndoImport_Click(object sender, EventArgs e)
+    {
+      undoImportPayments();
     }
   }
 }

@@ -296,6 +296,13 @@ group by customerID) m on ar.ID = m.lastID", customerID);
       ds = null;
       return returnDate;
     }
+    public void undoImportPayments(DateTime billDate)
+    {
+      string sql = string.Format("DELETE FROM HostedImportPayments where BillDate = '{0}'", billDate.ToShortDateString());
+      updateDataFromSQL(sql);
+      sql = string.Format("DELETE FROM ARTransactions WHERE Comment = 'Import Payments' AND BillDate = '{0}'", billDate.ToShortDateString());
+      updateDataFromSQL(sql);
+    }
 
   }
 }
