@@ -34,10 +34,12 @@ namespace CCI.DesktopClient.Screens
     private const string COLUMNBILL = "Current Bill";
     private const string COLUMNID = "ID";
     private const string STATUSEXPORTED = "Exported";
-    private string _rootPath = "C:\\Data\\Saddleback Imports";
+    private string _rootPath = "C:\\Data\\Payment Imports";
     private bool _fromDetail = false;
     private DateTime _startDate = (new DateTime(DateTime.Today.Year, DateTime.Today.AddMonths(-1).Month, 1));
     private DateTime _endDate = DateTime.Today;
+    private DateTime? _postDateTime = null;
+    private DateTime? _previousPostDateTime = null;
     public frmCashReceipts()
     {
       InitializeComponent();
@@ -466,21 +468,46 @@ namespace CCI.DesktopClient.Screens
         CommonFormFunctions.showMessage("No file was chosen, Import was not run.");
       else
       {
+        if (_postDateTime != null)
+        {
+          DialogResult ans = MessageBox.Show(@"You are importing another Paymebt file. Please note you will not be able to Un-Import that last one you imported when you do this. Press Ok to continue, or Cancel to cancel",
+            "Posting a new Payment File", MessageBoxButtons.OKCancel);
+          if (ans == DialogResult.Cancel)
+            return;
+        }
+        lblProcessing.Visible = true;
+        _postDateTime = DateTime.Now;
         string storedproc = "ImportPayments";
         DateTime billDate = CommonFunctions.CDateTime(tbBillingPeriod.Text);
-        string criteria = String.Format(",'{0}'", billDate.ToString("yyyyMMdd"));
+        
+        string criteria = String.Format(",'{0}', '{1}'", billDate.ToString("yyyyMMdd"), _postDateTime.ToString());
         Exception returnmsg = _dataSource.executestoredproc(storedproc, fileName, criteria);
+        lblProcessing.Visible = false;
         if (returnmsg != null)
           CommonFormFunctions.showException(returnmsg);
         else
+        {
+          btnUndoImport.Visible = true; // turn on the undo import button
           Init();
+        }
       }
     }
     private void undoImportPayments()
     {
-      DateTime billDate = CommonFunctions.CDateTime(tbBillingPeriod.Text);
-      _dataSource.undoImportPayments(billDate);
-      Init();
+      if (_postDateTime == null)
+        MessageBox.Show("There is no Payment import to undo", "Undo Payment Import");
+      else
+      {
+        DialogResult ans = MessageBox.Show(string.Format("Undo last Payment Import from {0}? OK to continue, Cancel to Cancel",
+          _postDateTime.ToString()), "Undo Payment Import", MessageBoxButtons.OKCancel);
+        if (ans == DialogResult.Cancel)
+          return;
+        lblProcessing.Visible = true;
+        DateTime billDate = CommonFunctions.CDateTime(tbBillingPeriod.Text);
+        _dataSource.undoImportPayments(billDate, (DateTime)_postDateTime);
+        lblProcessing.Visible = false;
+        Init();
+      }
     }
     private Dictionary<string, object> getValues(DataGridViewRow row)
     {

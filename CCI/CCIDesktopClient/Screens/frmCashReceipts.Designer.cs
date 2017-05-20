@@ -51,6 +51,8 @@
       this.toolStripLabel4 = new System.Windows.Forms.ToolStripLabel();
       this.tbTotalPaid = new System.Windows.Forms.ToolStripTextBox();
       this.btnImportPayments = new System.Windows.Forms.ToolStripButton();
+      this.btnUndoImport = new System.Windows.Forms.ToolStripButton();
+      this.lblProcessing = new System.Windows.Forms.ToolStripLabel();
       this.splitMain = new System.Windows.Forms.SplitContainer();
       this.srchCashReceipts = new CCI.DesktopClient.Common.ctlSearchGrid();
       this.radioBill = new System.Windows.Forms.RadioButton();
@@ -78,7 +80,6 @@
       this.lblQBExportMsg = new System.Windows.Forms.Label();
       this.radioACH = new System.Windows.Forms.RadioButton();
       this.btnCancel = new System.Windows.Forms.Button();
-      this.btnUndoImport = new System.Windows.Forms.ToolStripButton();
       tbPost = new System.Windows.Forms.ToolStripButton();
       this.toolStrip1.SuspendLayout();
       this.splitMain.Panel1.SuspendLayout();
@@ -114,10 +115,11 @@
             this.toolStripLabel4,
             this.tbTotalPaid,
             this.btnImportPayments,
-            this.btnUndoImport});
+            this.btnUndoImport,
+            this.lblProcessing});
       this.toolStrip1.Location = new System.Drawing.Point(0, 0);
       this.toolStrip1.Name = "toolStrip1";
-      this.toolStrip1.Size = new System.Drawing.Size(1385, 25);
+      this.toolStrip1.Size = new System.Drawing.Size(1140, 25);
       this.toolStrip1.TabIndex = 24;
       this.toolStrip1.Text = "toolStrip1";
       // 
@@ -272,6 +274,27 @@
       this.btnImportPayments.Text = "Import Payments";
       this.btnImportPayments.Click += new System.EventHandler(this.btnImportPayments_Click);
       // 
+      // btnUndoImport
+      // 
+      this.btnUndoImport.BackColor = System.Drawing.SystemColors.ControlLight;
+      this.btnUndoImport.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+      this.btnUndoImport.Image = ((System.Drawing.Image)(resources.GetObject("btnUndoImport.Image")));
+      this.btnUndoImport.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.btnUndoImport.Name = "btnUndoImport";
+      this.btnUndoImport.Size = new System.Drawing.Size(79, 22);
+      this.btnUndoImport.Text = "Undo Import";
+      this.btnUndoImport.Visible = false;
+      this.btnUndoImport.Click += new System.EventHandler(this.btnUndoImport_Click);
+      // 
+      // lblProcessing
+      // 
+      this.lblProcessing.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+      this.lblProcessing.ForeColor = System.Drawing.Color.Red;
+      this.lblProcessing.Name = "lblProcessing";
+      this.lblProcessing.Size = new System.Drawing.Size(75, 22);
+      this.lblProcessing.Text = "Processing...";
+      this.lblProcessing.Visible = false;
+      // 
       // splitMain
       // 
       this.splitMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -312,7 +335,7 @@
       this.splitMain.Panel2.Controls.Add(this.lblQBExportMsg);
       this.splitMain.Panel2.Controls.Add(this.radioACH);
       this.splitMain.Panel2.Controls.Add(this.btnCancel);
-      this.splitMain.Size = new System.Drawing.Size(1380, 489);
+      this.splitMain.Size = new System.Drawing.Size(1135, 489);
       this.splitMain.SplitterDistance = 305;
       this.splitMain.TabIndex = 4;
       // 
@@ -336,7 +359,7 @@
       this.srchCashReceipts.Name = "srchCashReceipts";
       this.srchCashReceipts.NameType = CCI.Common.CommonData.UnmatchedNameTypes.Customer;
       this.srchCashReceipts.SearchCriteria = null;
-      this.srchCashReceipts.Size = new System.Drawing.Size(1380, 305);
+      this.srchCashReceipts.Size = new System.Drawing.Size(1135, 305);
       this.srchCashReceipts.TabIndex = 0;
       this.srchCashReceipts.Title = "Search (0 Records Found)";
       this.srchCashReceipts.UniqueIdentifier = "ID";
@@ -415,7 +438,7 @@
       this.srchCashDetail.Name = "srchCashDetail";
       this.srchCashDetail.NameType = CCI.Common.CommonData.UnmatchedNameTypes.CashReceiptsDetail;
       this.srchCashDetail.SearchCriteria = null;
-      this.srchCashDetail.Size = new System.Drawing.Size(1380, 84);
+      this.srchCashDetail.Size = new System.Drawing.Size(1135, 84);
       this.srchCashDetail.TabIndex = 18;
       this.srchCashDetail.Title = "Search (0 Records Found)";
       this.srchCashDetail.UniqueIdentifier = "ID";
@@ -449,7 +472,7 @@
       this.txtComment.Location = new System.Drawing.Point(496, 30);
       this.txtComment.Multiline = true;
       this.txtComment.Name = "txtComment";
-      this.txtComment.Size = new System.Drawing.Size(835, 38);
+      this.txtComment.Size = new System.Drawing.Size(590, 38);
       this.txtComment.TabIndex = 13;
       // 
       // txtAmount
@@ -600,7 +623,7 @@
       // 
       this.lblQBExportMsg.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.lblQBExportMsg.AutoSize = true;
-      this.lblQBExportMsg.Location = new System.Drawing.Point(550, 41);
+      this.lblQBExportMsg.Location = new System.Drawing.Point(305, 41);
       this.lblQBExportMsg.Name = "lblQBExportMsg";
       this.lblQBExportMsg.Size = new System.Drawing.Size(0, 13);
       this.lblQBExportMsg.TabIndex = 7;
@@ -627,22 +650,11 @@
       this.btnCancel.UseVisualStyleBackColor = true;
       this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
       // 
-      // btnUndoImport
-      // 
-      this.btnUndoImport.BackColor = System.Drawing.SystemColors.ControlLight;
-      this.btnUndoImport.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-      this.btnUndoImport.Image = ((System.Drawing.Image)(resources.GetObject("btnUndoImport.Image")));
-      this.btnUndoImport.ImageTransparentColor = System.Drawing.Color.Magenta;
-      this.btnUndoImport.Name = "btnUndoImport";
-      this.btnUndoImport.Size = new System.Drawing.Size(79, 22);
-      this.btnUndoImport.Text = "Undo Import";
-      this.btnUndoImport.Click += new System.EventHandler(this.btnUndoImport_Click);
-      // 
       // frmCashReceipts
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(1385, 519);
+      this.ClientSize = new System.Drawing.Size(1140, 519);
       this.Controls.Add(this.toolStrip1);
       this.Controls.Add(this.splitMain);
       this.Name = "frmCashReceipts";
@@ -710,5 +722,6 @@
     private System.Windows.Forms.RadioButton radioBill;
     private System.Windows.Forms.ToolStripButton btnImportPayments;
     private System.Windows.Forms.ToolStripButton btnUndoImport;
+    private System.Windows.Forms.ToolStripLabel lblProcessing;
   }
 }
