@@ -33,10 +33,22 @@ namespace CCI.DesktopClient.Screens
     private string _basePath = string.Empty;
     bool hasValidFiles = false;
     bool importfileinvaliddate = false;
+    private string _sourceFolder = "Saddleback Imports";
     bool _importLedgerOnly = false;
-    string _rootPath = "Y:\\City Hosted Solutions\\Saddleback Imports";
+    private string _rootPath
+    {
+      get
+      {
+        return "C:\\Data\\" + _sourceFolder;
+      }
+      set
+      {
+        ;
+      }
+    }
     private bool useNewImport = true;
-   
+    private enum ImportSource {  Saddleback, RedRock }
+    private ImportSource _importSource = ImportSource.Saddleback;
     private class SaddleBackFTPInfo
     {
       private const string URIKEY = "SaddlebackFTPUri";
@@ -53,10 +65,39 @@ namespace CCI.DesktopClient.Screens
     private int[] _skipLines = new int[] { 4, 4, 4, 4, 0, 0, 0, 0 };
     //private string[] _fileTypeSuffixes = new string[] { "xls", "xls", "xls", "xls", "csv", "csv", "csv", "xls" };
     private const string FILENOTFOUNDPREFIX = "NOT FOUND: ";
+
+    public string Source
+    {
+      get { return _importSource.ToString();  }
+      set
+      {
+        if (string.IsNullOrEmpty(value))
+        {
+          CommonFormFunctions.showMessage("I don't know which source to import from");
+          this.Close();
+        }
+        if (value.Equals("Saddleback", StringComparison.CurrentCultureIgnoreCase))
+        {
+          _importSource = ImportSource.Saddleback;
+          _sourceFolder = "Saddleback Imports";
+        }
+        else if (value.Equals("RedRock", StringComparison.CurrentCultureIgnoreCase))
+        {
+          _importSource = ImportSource.RedRock;
+          _sourceFolder = "Red Rock Imports";
+        }
+        else
+        {
+          CommonFormFunctions.showMessage("I don't know which source to import from");
+          this.Close();
+        }
+      }
+    }
     public frmImports()
     {
+
       InitializeComponent();
-//            CheckForPreviousImports();
+      //            CheckForPreviousImports();
       RefreshImportLog();
       txtBillDate.Value = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
       string filetype = "Posted";
