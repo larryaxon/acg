@@ -399,6 +399,24 @@ where m.itemid = '{0}'";
     {
       return updateScreenDefinition(CommonData.DEALERQUOTESCREEN, section, usoc, null, "99", isRecommended.ToString(), useMRC.ToString(), null, user);
     }
+    public string[] getPrimaryCarriers()
+    {
+      string sql = @"select distinct PrimaryCarrier from ProductList WHERE PrimaryCarrier is not null";
+      DataSet ds = getDataFromSQL(sql);
+      if (ds == null)
+        return new string[0];
+      string[] carriers = new string[0];
+      if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+      {
+        carriers = new string[ds.Tables[0].Rows.Count];
+        int i = 0;
+        foreach (DataRow row in ds.Tables[0].Rows)
+          carriers[i++] = CommonFunctions.CString(row["PrimaryCarrier"]);
+      }
+      ds.Clear();
+      ds = null;
+      return carriers;
+    }
 
   }
 }

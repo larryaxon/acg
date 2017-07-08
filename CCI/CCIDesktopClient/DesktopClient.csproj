@@ -350,6 +350,12 @@
     <Compile Include="Screens\frmCityHostedOCCUSOCMatching.Designer.cs">
       <DependentUpon>frmCityHostedOCCUSOCMatching.cs</DependentUpon>
     </Compile>
+    <Compile Include="Screens\frmCityHostedUSOCMaintenanceNew.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmCityHostedUSOCMaintenanceNew.Designer.cs">
+      <DependentUpon>frmCityHostedUSOCMaintenanceNew.cs</DependentUpon>
+    </Compile>
     <Compile Include="Screens\frmGroupMaintenance.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -573,6 +579,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Screens\frmCityHostedOCCUSOCMatching.resx">
       <DependentUpon>frmCityHostedOCCUSOCMatching.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmCityHostedUSOCMaintenanceNew.resx">
+      <DependentUpon>frmCityHostedUSOCMaintenanceNew.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Screens\frmGroupMaintenance.resx">
       <DependentUpon>frmGroupMaintenance.cs</DependentUpon>
