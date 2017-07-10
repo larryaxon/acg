@@ -163,16 +163,22 @@ namespace CCI.DesktopClient.Common
         {
           bool isGridCombo = ctl.GetType() == typeof(DataGridViewComboBoxCell);
           bool isComboBox = ctl.GetType() == typeof(ComboBox);
+          bool isListBox = ctl.GetType() == typeof(ListBox);
           if ((isGridCombo && ((DataGridViewComboBoxCell)ctl).Items.Count > 0)
-              || (isComboBox && ((ComboBox)ctl).Items.Count > 0))
+              || (isComboBox && ((ComboBox)ctl).Items.Count > 0)
+              || (isListBox && ((ListBox)ctl).Items.Count > 0))
           {
             bool foundMatch = false;
             string strValue = val.ToString();
             IList items;
             if (isGridCombo)
               items = ((DataGridViewComboBoxCell)ctl).Items;
-            else
+            else if (isComboBox)
               items = ((ComboBox)ctl).Items;
+            else if (isListBox)
+              items = ((ListBox)ctl).Items;
+            else
+              return;
             for (int i = 0; i < items.Count; i++)
             {
               object item = items[i];
@@ -188,11 +194,20 @@ namespace CCI.DesktopClient.Common
                     pList = new object[0];
                     ((DataGridViewComboBoxCell)ctl).Value = item.GetType().GetProperty(((DataGridViewComboBoxCell)ctl).ValueMember).GetValue(item, pList);
                   }
-                  else
+                  else if (isComboBox)
                   {
                     ((ComboBox)ctl).Text = (string)item.GetType().GetProperty(((ComboBox)ctl).DisplayMember).GetValue(item, new object[] { });
                     ((ComboBox)ctl).SelectedIndex = i;
                     ((ComboBox)ctl).Refresh();
+                  }
+                  else
+                  {
+                    if (item.GetType() == typeof(string))
+                      ((ListBox)ctl).Text = item.ToString();
+                    else
+                      ((ListBox)ctl).Text = (string)item.GetType().GetProperty(((ListBox)ctl).DisplayMember).GetValue(item, new object[] { });
+                    ((ListBox)ctl).SelectedIndex = i;
+                    ((ListBox)ctl).Refresh();
                   }
                   foundMatch = true;
                   break;
@@ -203,8 +218,10 @@ namespace CCI.DesktopClient.Common
             {
               if (isGridCombo)
                 ((DataGridViewComboBoxCell)ctl).Value = items[0];
-              else
+              else if (isComboBox)
                 ((ComboBox)ctl).SelectedItem = items[0];
+              else
+                ((ListBox)ctl).SelectedItem = items[0];
             }
           }
 

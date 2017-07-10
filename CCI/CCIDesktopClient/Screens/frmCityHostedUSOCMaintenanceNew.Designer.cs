@@ -37,19 +37,24 @@
       this.ckRefresh = new System.Windows.Forms.CheckBox();
       this.ckIncludeInactive = new System.Windows.Forms.CheckBox();
       this.ckIncludeNonSaddleback = new System.Windows.Forms.CheckBox();
-      this.pnlRetail = new System.Windows.Forms.Panel();
+      this.tabMaintenance = new System.Windows.Forms.TabControl();
+      this.tabRetail = new System.Windows.Forms.TabPage();
+      this.btnNew = new System.Windows.Forms.Button();
+      this.btnCancel = new System.Windows.Forms.Button();
+      this.btnSave = new System.Windows.Forms.Button();
+      this.ckExcludeFromExceptions = new System.Windows.Forms.CheckBox();
+      this.ckSaddlebackUSOC = new System.Windows.Forms.CheckBox();
+      this.ckRetailInactivate = new System.Windows.Forms.CheckBox();
+      this.ckVariableRetailNRC = new System.Windows.Forms.CheckBox();
+      this.ckVariableRetailMRC = new System.Windows.Forms.CheckBox();
       this.label3 = new System.Windows.Forms.Label();
       this.txtRetailUSOC = new ACG.CommonForms.ctlSearch();
       this.cboTaxCode = new System.Windows.Forms.ComboBox();
       this.label12 = new System.Windows.Forms.Label();
-      this.ckRetailInactivate = new System.Windows.Forms.CheckBox();
       this.cboRITCategory = new System.Windows.Forms.ComboBox();
       this.label5 = new System.Windows.Forms.Label();
-      this.ckVariableRetailNRC = new System.Windows.Forms.CheckBox();
-      this.ckVariableRetailMRC = new System.Windows.Forms.CheckBox();
       this.txtExternalDescription = new System.Windows.Forms.TextBox();
       this.label11 = new System.Windows.Forms.Label();
-      this.ckSaddlebackUSOC = new System.Windows.Forms.CheckBox();
       this.txtRetailDescription = new System.Windows.Forms.TextBox();
       this.label6 = new System.Windows.Forms.Label();
       this.ckRetailOnly = new System.Windows.Forms.CheckBox();
@@ -62,18 +67,7 @@
       this.txtRetailMRC = new System.Windows.Forms.TextBox();
       this.label7 = new System.Windows.Forms.Label();
       this.cboCHSCategory = new System.Windows.Forms.ComboBox();
-      this.ckExcludeFromExceptions = new System.Windows.Forms.CheckBox();
-      this.btnCancel = new System.Windows.Forms.Button();
-      this.btnSave = new System.Windows.Forms.Button();
-      this.btnNew = new System.Windows.Forms.Button();
-      this.pnlMatching = new System.Windows.Forms.Panel();
-      this.lblUsocMatching = new System.Windows.Forms.Label();
-      this.lstWholesaleUsocs = new System.Windows.Forms.ListBox();
-      this.btnUnmatchUsoc = new System.Windows.Forms.Button();
-      this.btnMatchUsoc = new System.Windows.Forms.Button();
-      this.lstRetailUsocs = new System.Windows.Forms.ListBox();
-      this.label4 = new System.Windows.Forms.Label();
-      this.pnlWholesale = new System.Windows.Forms.Panel();
+      this.tabWholesale = new System.Windows.Forms.TabPage();
       this.label1 = new System.Windows.Forms.Label();
       this.txtWholesaleUSOC = new ACG.CommonForms.ctlSearch();
       this.ckWholesaleInactivate = new System.Windows.Forms.CheckBox();
@@ -90,12 +84,20 @@
       this.button1 = new System.Windows.Forms.Button();
       this.button2 = new System.Windows.Forms.Button();
       this.button3 = new System.Windows.Forms.Button();
+      this.tabMatching = new System.Windows.Forms.TabPage();
+      this.lblUsocMatching = new System.Windows.Forms.Label();
+      this.lstWholesaleUsocs = new System.Windows.Forms.ListBox();
+      this.btnUnmatchUsoc = new System.Windows.Forms.Button();
+      this.btnMatchUsoc = new System.Windows.Forms.Button();
+      this.lstRetailUsocs = new System.Windows.Forms.ListBox();
+      this.label4 = new System.Windows.Forms.Label();
       this.splitMain.Panel1.SuspendLayout();
       this.splitMain.Panel2.SuspendLayout();
       this.splitMain.SuspendLayout();
-      this.pnlRetail.SuspendLayout();
-      this.pnlMatching.SuspendLayout();
-      this.pnlWholesale.SuspendLayout();
+      this.tabMaintenance.SuspendLayout();
+      this.tabRetail.SuspendLayout();
+      this.tabWholesale.SuspendLayout();
+      this.tabMatching.SuspendLayout();
       this.SuspendLayout();
       // 
       // splitMain
@@ -118,8 +120,7 @@
       // 
       // splitMain.Panel2
       // 
-      this.splitMain.Panel2.Controls.Add(this.pnlMatching);
-      this.splitMain.Panel2.Controls.Add(this.pnlWholesale);
+      this.splitMain.Panel2.Controls.Add(this.tabMaintenance);
       this.splitMain.Size = new System.Drawing.Size(1171, 691);
       this.splitMain.SplitterDistance = 353;
       this.splitMain.TabIndex = 0;
@@ -231,49 +232,142 @@
       this.ckIncludeNonSaddleback.Text = "Include All USOCs";
       this.ckIncludeNonSaddleback.UseVisualStyleBackColor = true;
       // 
-      // pnlRetail
+      // tabMaintenance
       // 
-      this.pnlRetail.Controls.Add(this.label3);
-      this.pnlRetail.Controls.Add(this.txtRetailUSOC);
-      this.pnlRetail.Controls.Add(this.cboTaxCode);
-      this.pnlRetail.Controls.Add(this.label12);
-      this.pnlRetail.Controls.Add(this.ckRetailInactivate);
-      this.pnlRetail.Controls.Add(this.cboRITCategory);
-      this.pnlRetail.Controls.Add(this.label5);
-      this.pnlRetail.Controls.Add(this.ckVariableRetailNRC);
-      this.pnlRetail.Controls.Add(this.ckVariableRetailMRC);
-      this.pnlRetail.Controls.Add(this.txtExternalDescription);
-      this.pnlRetail.Controls.Add(this.label11);
-      this.pnlRetail.Controls.Add(this.ckSaddlebackUSOC);
-      this.pnlRetail.Controls.Add(this.txtRetailDescription);
-      this.pnlRetail.Controls.Add(this.label6);
-      this.pnlRetail.Controls.Add(this.ckRetailOnly);
-      this.pnlRetail.Controls.Add(this.dtRetailEndDate);
-      this.pnlRetail.Controls.Add(this.label8);
-      this.pnlRetail.Controls.Add(this.dtRetailStartDate);
-      this.pnlRetail.Controls.Add(this.label9);
-      this.pnlRetail.Controls.Add(this.label10);
-      this.pnlRetail.Controls.Add(this.txtRetailNRC);
-      this.pnlRetail.Controls.Add(this.txtRetailMRC);
-      this.pnlRetail.Controls.Add(this.label7);
-      this.pnlRetail.Controls.Add(this.cboCHSCategory);
-      this.pnlRetail.Controls.Add(this.ckExcludeFromExceptions);
-      this.pnlRetail.Controls.Add(this.btnCancel);
-      this.pnlRetail.Controls.Add(this.btnSave);
-      this.pnlRetail.Controls.Add(this.btnNew);
-      this.pnlRetail.Location = new System.Drawing.Point(34, 15);
-      this.pnlRetail.Name = "pnlRetail";
-      this.pnlRetail.Size = new System.Drawing.Size(610, 325);
-      this.pnlRetail.TabIndex = 1;
+      this.tabMaintenance.Controls.Add(this.tabRetail);
+      this.tabMaintenance.Controls.Add(this.tabWholesale);
+      this.tabMaintenance.Controls.Add(this.tabMatching);
+      this.tabMaintenance.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.tabMaintenance.Location = new System.Drawing.Point(0, 0);
+      this.tabMaintenance.Name = "tabMaintenance";
+      this.tabMaintenance.SelectedIndex = 0;
+      this.tabMaintenance.Size = new System.Drawing.Size(1171, 334);
+      this.tabMaintenance.TabIndex = 8;
+      // 
+      // tabRetail
+      // 
+      this.tabRetail.Controls.Add(this.btnNew);
+      this.tabRetail.Controls.Add(this.btnCancel);
+      this.tabRetail.Controls.Add(this.btnSave);
+      this.tabRetail.Controls.Add(this.ckExcludeFromExceptions);
+      this.tabRetail.Controls.Add(this.ckSaddlebackUSOC);
+      this.tabRetail.Controls.Add(this.ckRetailInactivate);
+      this.tabRetail.Controls.Add(this.ckVariableRetailNRC);
+      this.tabRetail.Controls.Add(this.ckVariableRetailMRC);
+      this.tabRetail.Controls.Add(this.label3);
+      this.tabRetail.Controls.Add(this.txtRetailUSOC);
+      this.tabRetail.Controls.Add(this.cboTaxCode);
+      this.tabRetail.Controls.Add(this.label12);
+      this.tabRetail.Controls.Add(this.cboRITCategory);
+      this.tabRetail.Controls.Add(this.label5);
+      this.tabRetail.Controls.Add(this.txtExternalDescription);
+      this.tabRetail.Controls.Add(this.label11);
+      this.tabRetail.Controls.Add(this.txtRetailDescription);
+      this.tabRetail.Controls.Add(this.label6);
+      this.tabRetail.Controls.Add(this.ckRetailOnly);
+      this.tabRetail.Controls.Add(this.dtRetailEndDate);
+      this.tabRetail.Controls.Add(this.label8);
+      this.tabRetail.Controls.Add(this.dtRetailStartDate);
+      this.tabRetail.Controls.Add(this.label9);
+      this.tabRetail.Controls.Add(this.label10);
+      this.tabRetail.Controls.Add(this.txtRetailNRC);
+      this.tabRetail.Controls.Add(this.txtRetailMRC);
+      this.tabRetail.Controls.Add(this.label7);
+      this.tabRetail.Controls.Add(this.cboCHSCategory);
+      this.tabRetail.Location = new System.Drawing.Point(4, 22);
+      this.tabRetail.Name = "tabRetail";
+      this.tabRetail.Padding = new System.Windows.Forms.Padding(3);
+      this.tabRetail.Size = new System.Drawing.Size(1163, 308);
+      this.tabRetail.TabIndex = 0;
+      this.tabRetail.Text = "Retail Usoc Maintenance";
+      this.tabRetail.UseVisualStyleBackColor = true;
+      // 
+      // btnNew
+      // 
+      this.btnNew.Location = new System.Drawing.Point(14, 242);
+      this.btnNew.Name = "btnNew";
+      this.btnNew.Size = new System.Drawing.Size(77, 23);
+      this.btnNew.TabIndex = 108;
+      this.btnNew.Text = "Add New";
+      this.btnNew.UseVisualStyleBackColor = true;
+      // 
+      // btnCancel
+      // 
+      this.btnCancel.Location = new System.Drawing.Point(97, 242);
+      this.btnCancel.Name = "btnCancel";
+      this.btnCancel.Size = new System.Drawing.Size(77, 23);
+      this.btnCancel.TabIndex = 110;
+      this.btnCancel.Text = "Cancel";
+      this.btnCancel.UseVisualStyleBackColor = true;
+      // 
+      // btnSave
+      // 
+      this.btnSave.Location = new System.Drawing.Point(180, 242);
+      this.btnSave.Name = "btnSave";
+      this.btnSave.Size = new System.Drawing.Size(77, 23);
+      this.btnSave.TabIndex = 107;
+      this.btnSave.Text = "Save";
+      this.btnSave.UseVisualStyleBackColor = true;
+      // 
+      // ckExcludeFromExceptions
+      // 
+      this.ckExcludeFromExceptions.AutoSize = true;
+      this.ckExcludeFromExceptions.Location = new System.Drawing.Point(414, 212);
+      this.ckExcludeFromExceptions.Name = "ckExcludeFromExceptions";
+      this.ckExcludeFromExceptions.Size = new System.Drawing.Size(172, 17);
+      this.ckExcludeFromExceptions.TabIndex = 106;
+      this.ckExcludeFromExceptions.Text = "Exclude from Retail Exceptions";
+      this.ckExcludeFromExceptions.UseVisualStyleBackColor = true;
+      // 
+      // ckSaddlebackUSOC
+      // 
+      this.ckSaddlebackUSOC.AccessibleDescription = " ";
+      this.ckSaddlebackUSOC.AutoSize = true;
+      this.ckSaddlebackUSOC.Location = new System.Drawing.Point(470, 161);
+      this.ckSaddlebackUSOC.Name = "ckSaddlebackUSOC";
+      this.ckSaddlebackUSOC.Size = new System.Drawing.Size(116, 17);
+      this.ckSaddlebackUSOC.TabIndex = 122;
+      this.ckSaddlebackUSOC.Text = "Saddleback USOC";
+      this.ckSaddlebackUSOC.UseVisualStyleBackColor = true;
+      // 
+      // ckRetailInactivate
+      // 
+      this.ckRetailInactivate.AutoSize = true;
+      this.ckRetailInactivate.Location = new System.Drawing.Point(364, 161);
+      this.ckRetailInactivate.Name = "ckRetailInactivate";
+      this.ckRetailInactivate.Size = new System.Drawing.Size(64, 17);
+      this.ckRetailInactivate.TabIndex = 121;
+      this.ckRetailInactivate.Text = "Inactive";
+      this.ckRetailInactivate.UseVisualStyleBackColor = true;
+      // 
+      // ckVariableRetailNRC
+      // 
+      this.ckVariableRetailNRC.AutoSize = true;
+      this.ckVariableRetailNRC.Location = new System.Drawing.Point(339, 129);
+      this.ckVariableRetailNRC.Name = "ckVariableRetailNRC";
+      this.ckVariableRetailNRC.Size = new System.Drawing.Size(64, 17);
+      this.ckVariableRetailNRC.TabIndex = 117;
+      this.ckVariableRetailNRC.Text = "Variable";
+      this.ckVariableRetailNRC.UseVisualStyleBackColor = true;
+      // 
+      // ckVariableRetailMRC
+      // 
+      this.ckVariableRetailMRC.AutoSize = true;
+      this.ckVariableRetailMRC.Location = new System.Drawing.Point(215, 129);
+      this.ckVariableRetailMRC.Name = "ckVariableRetailMRC";
+      this.ckVariableRetailMRC.Size = new System.Drawing.Size(64, 17);
+      this.ckVariableRetailMRC.TabIndex = 115;
+      this.ckVariableRetailMRC.Text = "Variable";
+      this.ckVariableRetailMRC.UseVisualStyleBackColor = true;
       // 
       // label3
       // 
       this.label3.AutoSize = true;
       this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.label3.Location = new System.Drawing.Point(13, 9);
+      this.label3.Location = new System.Drawing.Point(10, 3);
       this.label3.Name = "label3";
       this.label3.Size = new System.Drawing.Size(251, 24);
-      this.label3.TabIndex = 1;
+      this.label3.TabIndex = 105;
       this.label3.Text = "Retail USOC Maintenance";
       // 
       // txtRetailUSOC
@@ -290,7 +384,7 @@
       this.txtRetailUSOC.FixKeySpace = "-1";
       this.txtRetailUSOC.ID = "";
       this.txtRetailUSOC.ID_DescSplitter = ":";
-      this.txtRetailUSOC.Location = new System.Drawing.Point(154, 36);
+      this.txtRetailUSOC.Location = new System.Drawing.Point(151, 30);
       this.txtRetailUSOC.MaxHeight = 228;
       this.txtRetailUSOC.MustExistInList = false;
       this.txtRetailUSOC.MustExistMessage = "You must enter a valid value";
@@ -298,123 +392,83 @@
       this.txtRetailUSOC.SearchExec = null;
       this.txtRetailUSOC.ShowCustomerNameWhenSet = true;
       this.txtRetailUSOC.ShowTermedCheckBox = false;
-      this.txtRetailUSOC.Size = new System.Drawing.Size(434, 19);
-      this.txtRetailUSOC.TabIndex = 82;
+      this.txtRetailUSOC.Size = new System.Drawing.Size(434, 27);
+      this.txtRetailUSOC.TabIndex = 111;
       // 
       // cboTaxCode
       // 
       this.cboTaxCode.FormattingEnabled = true;
-      this.cboTaxCode.Location = new System.Drawing.Point(153, 216);
+      this.cboTaxCode.Location = new System.Drawing.Point(150, 210);
       this.cboTaxCode.Name = "cboTaxCode";
       this.cboTaxCode.Size = new System.Drawing.Size(176, 21);
-      this.cboTaxCode.TabIndex = 103;
+      this.cboTaxCode.TabIndex = 131;
       // 
       // label12
       // 
       this.label12.AutoSize = true;
-      this.label12.Location = new System.Drawing.Point(14, 220);
+      this.label12.Location = new System.Drawing.Point(11, 214);
       this.label12.Name = "label12";
       this.label12.Size = new System.Drawing.Size(68, 13);
-      this.label12.TabIndex = 104;
+      this.label12.TabIndex = 132;
       this.label12.Text = "RIT TranTax";
-      // 
-      // ckRetailInactivate
-      // 
-      this.ckRetailInactivate.AutoSize = true;
-      this.ckRetailInactivate.Location = new System.Drawing.Point(367, 167);
-      this.ckRetailInactivate.Name = "ckRetailInactivate";
-      this.ckRetailInactivate.Size = new System.Drawing.Size(64, 17);
-      this.ckRetailInactivate.TabIndex = 92;
-      this.ckRetailInactivate.Text = "Inactive";
-      this.ckRetailInactivate.UseVisualStyleBackColor = true;
       // 
       // cboRITCategory
       // 
       this.cboRITCategory.FormattingEnabled = true;
-      this.cboRITCategory.Location = new System.Drawing.Point(153, 191);
+      this.cboRITCategory.Location = new System.Drawing.Point(150, 185);
       this.cboRITCategory.Name = "cboRITCategory";
       this.cboRITCategory.Size = new System.Drawing.Size(176, 21);
-      this.cboRITCategory.TabIndex = 94;
+      this.cboRITCategory.TabIndex = 123;
       // 
       // label5
       // 
       this.label5.AutoSize = true;
-      this.label5.Location = new System.Drawing.Point(14, 195);
+      this.label5.Location = new System.Drawing.Point(11, 189);
       this.label5.Name = "label5";
       this.label5.Size = new System.Drawing.Size(70, 13);
-      this.label5.TabIndex = 102;
+      this.label5.TabIndex = 130;
       this.label5.Text = "RIT Category";
-      // 
-      // ckVariableRetailNRC
-      // 
-      this.ckVariableRetailNRC.AutoSize = true;
-      this.ckVariableRetailNRC.Location = new System.Drawing.Point(342, 135);
-      this.ckVariableRetailNRC.Name = "ckVariableRetailNRC";
-      this.ckVariableRetailNRC.Size = new System.Drawing.Size(64, 17);
-      this.ckVariableRetailNRC.TabIndex = 88;
-      this.ckVariableRetailNRC.Text = "Variable";
-      this.ckVariableRetailNRC.UseVisualStyleBackColor = true;
-      // 
-      // ckVariableRetailMRC
-      // 
-      this.ckVariableRetailMRC.AutoSize = true;
-      this.ckVariableRetailMRC.Location = new System.Drawing.Point(218, 135);
-      this.ckVariableRetailMRC.Name = "ckVariableRetailMRC";
-      this.ckVariableRetailMRC.Size = new System.Drawing.Size(64, 17);
-      this.ckVariableRetailMRC.TabIndex = 86;
-      this.ckVariableRetailMRC.Text = "Variable";
-      this.ckVariableRetailMRC.UseVisualStyleBackColor = true;
       // 
       // txtExternalDescription
       // 
-      this.txtExternalDescription.Location = new System.Drawing.Point(153, 102);
+      this.txtExternalDescription.Location = new System.Drawing.Point(150, 96);
       this.txtExternalDescription.Name = "txtExternalDescription";
       this.txtExternalDescription.Size = new System.Drawing.Size(436, 20);
-      this.txtExternalDescription.TabIndex = 84;
+      this.txtExternalDescription.TabIndex = 113;
       // 
       // label11
       // 
       this.label11.AutoSize = true;
-      this.label11.Location = new System.Drawing.Point(14, 105);
+      this.label11.Location = new System.Drawing.Point(11, 99);
       this.label11.Name = "label11";
       this.label11.Size = new System.Drawing.Size(133, 13);
-      this.label11.TabIndex = 101;
+      this.label11.TabIndex = 129;
       this.label11.Text = "RIT Retail Bill Presentation";
-      // 
-      // ckSaddlebackUSOC
-      // 
-      this.ckSaddlebackUSOC.AccessibleDescription = " ";
-      this.ckSaddlebackUSOC.AutoSize = true;
-      this.ckSaddlebackUSOC.Location = new System.Drawing.Point(473, 167);
-      this.ckSaddlebackUSOC.Name = "ckSaddlebackUSOC";
-      this.ckSaddlebackUSOC.Size = new System.Drawing.Size(116, 17);
-      this.ckSaddlebackUSOC.TabIndex = 93;
-      this.ckSaddlebackUSOC.Text = "Saddleback USOC";
-      this.ckSaddlebackUSOC.UseVisualStyleBackColor = true;
       // 
       // txtRetailDescription
       // 
-      this.txtRetailDescription.Location = new System.Drawing.Point(153, 69);
+      this.txtRetailDescription.Location = new System.Drawing.Point(150, 63);
       this.txtRetailDescription.Name = "txtRetailDescription";
       this.txtRetailDescription.Size = new System.Drawing.Size(436, 20);
-      this.txtRetailDescription.TabIndex = 83;
+      this.txtRetailDescription.TabIndex = 112;
       // 
       // label6
       // 
       this.label6.AutoSize = true;
-      this.label6.Location = new System.Drawing.Point(15, 40);
+      this.label6.Location = new System.Drawing.Point(12, 34);
       this.label6.Name = "label6";
       this.label6.Size = new System.Drawing.Size(67, 13);
-      this.label6.TabIndex = 97;
+      this.label6.TabIndex = 125;
       this.label6.Text = "Retail USOC";
       // 
       // ckRetailOnly
       // 
       this.ckRetailOnly.AutoSize = true;
-      this.ckRetailOnly.Location = new System.Drawing.Point(512, 135);
+      this.ckRetailOnly.ForeColor = System.Drawing.SystemColors.ControlText;
+      this.ckRetailOnly.Location = new System.Drawing.Point(509, 129);
       this.ckRetailOnly.Name = "ckRetailOnly";
       this.ckRetailOnly.Size = new System.Drawing.Size(77, 17);
-      this.ckRetailOnly.TabIndex = 89;
+      this.ckRetailOnly.TabIndex = 118;
       this.ckRetailOnly.Text = "Retail Only";
       this.ckRetailOnly.UseVisualStyleBackColor = true;
       // 
@@ -422,226 +476,120 @@
       // 
       this.dtRetailEndDate.Checked = false;
       this.dtRetailEndDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-      this.dtRetailEndDate.Location = new System.Drawing.Point(259, 165);
+      this.dtRetailEndDate.Location = new System.Drawing.Point(256, 159);
       this.dtRetailEndDate.MaxDate = new System.DateTime(2100, 12, 31, 0, 0, 0, 0);
       this.dtRetailEndDate.MinDate = new System.DateTime(1900, 1, 1, 0, 0, 0, 0);
       this.dtRetailEndDate.Name = "dtRetailEndDate";
       this.dtRetailEndDate.RightToLeftLayout = true;
       this.dtRetailEndDate.ShowCheckBox = true;
       this.dtRetailEndDate.Size = new System.Drawing.Size(98, 20);
-      this.dtRetailEndDate.TabIndex = 91;
+      this.dtRetailEndDate.TabIndex = 120;
       // 
       // label8
       // 
       this.label8.AutoSize = true;
-      this.label8.Location = new System.Drawing.Point(14, 71);
+      this.label8.Location = new System.Drawing.Point(11, 65);
       this.label8.Name = "label8";
       this.label8.Size = new System.Drawing.Size(60, 13);
-      this.label8.TabIndex = 98;
+      this.label8.TabIndex = 126;
       this.label8.Text = "Description";
       // 
       // dtRetailStartDate
       // 
       this.dtRetailStartDate.Checked = false;
       this.dtRetailStartDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-      this.dtRetailStartDate.Location = new System.Drawing.Point(153, 165);
+      this.dtRetailStartDate.Location = new System.Drawing.Point(150, 159);
       this.dtRetailStartDate.MaxDate = new System.DateTime(2100, 12, 31, 0, 0, 0, 0);
       this.dtRetailStartDate.MinDate = new System.DateTime(1900, 1, 1, 0, 0, 0, 0);
       this.dtRetailStartDate.Name = "dtRetailStartDate";
       this.dtRetailStartDate.ShowCheckBox = true;
       this.dtRetailStartDate.Size = new System.Drawing.Size(98, 20);
-      this.dtRetailStartDate.TabIndex = 90;
+      this.dtRetailStartDate.TabIndex = 119;
       this.dtRetailStartDate.Value = new System.DateTime(2012, 12, 7, 9, 11, 0, 0);
       // 
       // label9
       // 
       this.label9.AutoSize = true;
-      this.label9.Location = new System.Drawing.Point(14, 137);
+      this.label9.Location = new System.Drawing.Point(11, 131);
       this.label9.Name = "label9";
       this.label9.Size = new System.Drawing.Size(89, 13);
-      this.label9.TabIndex = 99;
+      this.label9.TabIndex = 127;
       this.label9.Text = "Retail MRC/NRC";
       // 
       // label10
       // 
       this.label10.AutoSize = true;
-      this.label10.Location = new System.Drawing.Point(14, 169);
+      this.label10.Location = new System.Drawing.Point(11, 163);
       this.label10.Name = "label10";
       this.label10.Size = new System.Drawing.Size(79, 13);
-      this.label10.TabIndex = 100;
+      this.label10.TabIndex = 128;
       this.label10.Text = "Start/End Date";
       // 
       // txtRetailNRC
       // 
-      this.txtRetailNRC.Location = new System.Drawing.Point(279, 133);
+      this.txtRetailNRC.Location = new System.Drawing.Point(276, 127);
       this.txtRetailNRC.Name = "txtRetailNRC";
       this.txtRetailNRC.Size = new System.Drawing.Size(57, 20);
-      this.txtRetailNRC.TabIndex = 87;
+      this.txtRetailNRC.TabIndex = 116;
       // 
       // txtRetailMRC
       // 
-      this.txtRetailMRC.Location = new System.Drawing.Point(153, 133);
+      this.txtRetailMRC.Location = new System.Drawing.Point(150, 127);
       this.txtRetailMRC.Name = "txtRetailMRC";
       this.txtRetailMRC.Size = new System.Drawing.Size(59, 20);
-      this.txtRetailMRC.TabIndex = 85;
+      this.txtRetailMRC.TabIndex = 114;
       // 
       // label7
       // 
       this.label7.AutoSize = true;
-      this.label7.Location = new System.Drawing.Point(332, 195);
+      this.label7.Location = new System.Drawing.Point(329, 189);
       this.label7.Name = "label7";
       this.label7.Size = new System.Drawing.Size(74, 13);
-      this.label7.TabIndex = 72;
+      this.label7.TabIndex = 109;
       this.label7.Text = "CHS Category";
       // 
       // cboCHSCategory
       // 
       this.cboCHSCategory.FormattingEnabled = true;
-      this.cboCHSCategory.Location = new System.Drawing.Point(412, 191);
+      this.cboCHSCategory.Location = new System.Drawing.Point(409, 185);
       this.cboCHSCategory.Name = "cboCHSCategory";
       this.cboCHSCategory.Size = new System.Drawing.Size(176, 21);
-      this.cboCHSCategory.TabIndex = 95;
+      this.cboCHSCategory.TabIndex = 124;
       // 
-      // ckExcludeFromExceptions
+      // tabWholesale
       // 
-      this.ckExcludeFromExceptions.AutoSize = true;
-      this.ckExcludeFromExceptions.Location = new System.Drawing.Point(417, 218);
-      this.ckExcludeFromExceptions.Name = "ckExcludeFromExceptions";
-      this.ckExcludeFromExceptions.Size = new System.Drawing.Size(172, 17);
-      this.ckExcludeFromExceptions.TabIndex = 69;
-      this.ckExcludeFromExceptions.Text = "Exclude from Retail Exceptions";
-      this.ckExcludeFromExceptions.UseVisualStyleBackColor = true;
-      // 
-      // btnCancel
-      // 
-      this.btnCancel.Location = new System.Drawing.Point(100, 248);
-      this.btnCancel.Name = "btnCancel";
-      this.btnCancel.Size = new System.Drawing.Size(77, 23);
-      this.btnCancel.TabIndex = 81;
-      this.btnCancel.Text = "Cancel";
-      this.btnCancel.UseVisualStyleBackColor = true;
-      // 
-      // btnSave
-      // 
-      this.btnSave.Location = new System.Drawing.Point(183, 248);
-      this.btnSave.Name = "btnSave";
-      this.btnSave.Size = new System.Drawing.Size(77, 23);
-      this.btnSave.TabIndex = 70;
-      this.btnSave.Text = "Save";
-      this.btnSave.UseVisualStyleBackColor = true;
-      // 
-      // btnNew
-      // 
-      this.btnNew.Location = new System.Drawing.Point(17, 248);
-      this.btnNew.Name = "btnNew";
-      this.btnNew.Size = new System.Drawing.Size(77, 23);
-      this.btnNew.TabIndex = 71;
-      this.btnNew.Text = "Add New";
-      this.btnNew.UseVisualStyleBackColor = true;
-      // 
-      // pnlMatching
-      // 
-      this.pnlMatching.Controls.Add(this.pnlRetail);
-      this.pnlMatching.Controls.Add(this.lblUsocMatching);
-      this.pnlMatching.Controls.Add(this.lstWholesaleUsocs);
-      this.pnlMatching.Controls.Add(this.btnUnmatchUsoc);
-      this.pnlMatching.Controls.Add(this.btnMatchUsoc);
-      this.pnlMatching.Controls.Add(this.lstRetailUsocs);
-      this.pnlMatching.Controls.Add(this.label4);
-      this.pnlMatching.Location = new System.Drawing.Point(0, 0);
-      this.pnlMatching.Name = "pnlMatching";
-      this.pnlMatching.Size = new System.Drawing.Size(824, 306);
-      this.pnlMatching.TabIndex = 2;
-      // 
-      // lblUsocMatching
-      // 
-      this.lblUsocMatching.AutoSize = true;
-      this.lblUsocMatching.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.lblUsocMatching.Location = new System.Drawing.Point(298, 15);
-      this.lblUsocMatching.Name = "lblUsocMatching";
-      this.lblUsocMatching.Size = new System.Drawing.Size(0, 20);
-      this.lblUsocMatching.TabIndex = 6;
-      // 
-      // lstWholesaleUsocs
-      // 
-      this.lstWholesaleUsocs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.lstWholesaleUsocs.FormattingEnabled = true;
-      this.lstWholesaleUsocs.Location = new System.Drawing.Point(453, 59);
-      this.lstWholesaleUsocs.Name = "lstWholesaleUsocs";
-      this.lstWholesaleUsocs.Size = new System.Drawing.Size(355, 238);
-      this.lstWholesaleUsocs.TabIndex = 5;
-      // 
-      // btnUnmatchUsoc
-      // 
-      this.btnUnmatchUsoc.Location = new System.Drawing.Point(354, 106);
-      this.btnUnmatchUsoc.Name = "btnUnmatchUsoc";
-      this.btnUnmatchUsoc.Size = new System.Drawing.Size(75, 23);
-      this.btnUnmatchUsoc.TabIndex = 4;
-      this.btnUnmatchUsoc.Text = "Unmatch";
-      this.btnUnmatchUsoc.UseVisualStyleBackColor = true;
-      // 
-      // btnMatchUsoc
-      // 
-      this.btnMatchUsoc.Location = new System.Drawing.Point(354, 72);
-      this.btnMatchUsoc.Name = "btnMatchUsoc";
-      this.btnMatchUsoc.Size = new System.Drawing.Size(75, 23);
-      this.btnMatchUsoc.TabIndex = 3;
-      this.btnMatchUsoc.Text = "Match";
-      this.btnMatchUsoc.UseVisualStyleBackColor = true;
-      // 
-      // lstRetailUsocs
-      // 
-      this.lstRetailUsocs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-      this.lstRetailUsocs.FormattingEnabled = true;
-      this.lstRetailUsocs.Location = new System.Drawing.Point(15, 59);
-      this.lstRetailUsocs.Name = "lstRetailUsocs";
-      this.lstRetailUsocs.Size = new System.Drawing.Size(326, 238);
-      this.lstRetailUsocs.TabIndex = 2;
-      // 
-      // label4
-      // 
-      this.label4.AutoSize = true;
-      this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.label4.Location = new System.Drawing.Point(11, 12);
-      this.label4.Name = "label4";
-      this.label4.Size = new System.Drawing.Size(262, 24);
-      this.label4.TabIndex = 1;
-      this.label4.Text = "Wholesale USOC Matching";
-      // 
-      // pnlWholesale
-      // 
-      this.pnlWholesale.Controls.Add(this.label1);
-      this.pnlWholesale.Controls.Add(this.txtWholesaleUSOC);
-      this.pnlWholesale.Controls.Add(this.ckWholesaleInactivate);
-      this.pnlWholesale.Controls.Add(this.txtWholesaleDescription);
-      this.pnlWholesale.Controls.Add(this.label13);
-      this.pnlWholesale.Controls.Add(this.ckWholesaleOnly);
-      this.pnlWholesale.Controls.Add(this.dtWholesaleEndDate);
-      this.pnlWholesale.Controls.Add(this.label14);
-      this.pnlWholesale.Controls.Add(this.dtWholesaleStartDate);
-      this.pnlWholesale.Controls.Add(this.label15);
-      this.pnlWholesale.Controls.Add(this.label16);
-      this.pnlWholesale.Controls.Add(this.txtWholesaleNRC);
-      this.pnlWholesale.Controls.Add(this.txtWholesaleMRC);
-      this.pnlWholesale.Controls.Add(this.button1);
-      this.pnlWholesale.Controls.Add(this.button2);
-      this.pnlWholesale.Controls.Add(this.button3);
-      this.pnlWholesale.Location = new System.Drawing.Point(302, 6);
-      this.pnlWholesale.Name = "pnlWholesale";
-      this.pnlWholesale.Size = new System.Drawing.Size(567, 322);
-      this.pnlWholesale.TabIndex = 3;
+      this.tabWholesale.Controls.Add(this.label1);
+      this.tabWholesale.Controls.Add(this.txtWholesaleUSOC);
+      this.tabWholesale.Controls.Add(this.ckWholesaleInactivate);
+      this.tabWholesale.Controls.Add(this.txtWholesaleDescription);
+      this.tabWholesale.Controls.Add(this.label13);
+      this.tabWholesale.Controls.Add(this.ckWholesaleOnly);
+      this.tabWholesale.Controls.Add(this.dtWholesaleEndDate);
+      this.tabWholesale.Controls.Add(this.label14);
+      this.tabWholesale.Controls.Add(this.dtWholesaleStartDate);
+      this.tabWholesale.Controls.Add(this.label15);
+      this.tabWholesale.Controls.Add(this.label16);
+      this.tabWholesale.Controls.Add(this.txtWholesaleNRC);
+      this.tabWholesale.Controls.Add(this.txtWholesaleMRC);
+      this.tabWholesale.Controls.Add(this.button1);
+      this.tabWholesale.Controls.Add(this.button2);
+      this.tabWholesale.Controls.Add(this.button3);
+      this.tabWholesale.Location = new System.Drawing.Point(4, 22);
+      this.tabWholesale.Name = "tabWholesale";
+      this.tabWholesale.Padding = new System.Windows.Forms.Padding(3);
+      this.tabWholesale.Size = new System.Drawing.Size(1163, 308);
+      this.tabWholesale.TabIndex = 1;
+      this.tabWholesale.Text = "Wholesale Usoc Maintenance";
+      this.tabWholesale.UseVisualStyleBackColor = true;
       // 
       // label1
       // 
       this.label1.AutoSize = true;
       this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-      this.label1.Location = new System.Drawing.Point(16, 9);
+      this.label1.Location = new System.Drawing.Point(8, 12);
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(297, 24);
-      this.label1.TabIndex = 0;
+      this.label1.TabIndex = 58;
       this.label1.Text = "Wholesale USOC Maintenance";
       // 
       // txtWholesaleUSOC
@@ -658,7 +606,7 @@
       this.txtWholesaleUSOC.FixKeySpace = "-1";
       this.txtWholesaleUSOC.ID = "";
       this.txtWholesaleUSOC.ID_DescSplitter = ":";
-      this.txtWholesaleUSOC.Location = new System.Drawing.Point(112, 37);
+      this.txtWholesaleUSOC.Location = new System.Drawing.Point(104, 40);
       this.txtWholesaleUSOC.MaxHeight = 228;
       this.txtWholesaleUSOC.MustExistInList = false;
       this.txtWholesaleUSOC.MustExistMessage = "You must enter a valid value";
@@ -666,42 +614,42 @@
       this.txtWholesaleUSOC.SearchExec = null;
       this.txtWholesaleUSOC.ShowCustomerNameWhenSet = true;
       this.txtWholesaleUSOC.ShowTermedCheckBox = false;
-      this.txtWholesaleUSOC.Size = new System.Drawing.Size(434, 19);
-      this.txtWholesaleUSOC.TabIndex = 27;
+      this.txtWholesaleUSOC.Size = new System.Drawing.Size(434, 27);
+      this.txtWholesaleUSOC.TabIndex = 59;
       // 
       // ckWholesaleInactivate
       // 
       this.ckWholesaleInactivate.AutoSize = true;
-      this.ckWholesaleInactivate.Location = new System.Drawing.Point(319, 134);
+      this.ckWholesaleInactivate.Location = new System.Drawing.Point(311, 137);
       this.ckWholesaleInactivate.Name = "ckWholesaleInactivate";
       this.ckWholesaleInactivate.Size = new System.Drawing.Size(64, 17);
-      this.ckWholesaleInactivate.TabIndex = 36;
+      this.ckWholesaleInactivate.TabIndex = 68;
       this.ckWholesaleInactivate.Text = "Inactive";
       this.ckWholesaleInactivate.UseVisualStyleBackColor = true;
       // 
       // txtWholesaleDescription
       // 
-      this.txtWholesaleDescription.Location = new System.Drawing.Point(113, 70);
+      this.txtWholesaleDescription.Location = new System.Drawing.Point(105, 73);
       this.txtWholesaleDescription.Name = "txtWholesaleDescription";
       this.txtWholesaleDescription.Size = new System.Drawing.Size(436, 20);
-      this.txtWholesaleDescription.TabIndex = 28;
+      this.txtWholesaleDescription.TabIndex = 60;
       // 
       // label13
       // 
       this.label13.AutoSize = true;
-      this.label13.Location = new System.Drawing.Point(16, 39);
+      this.label13.Location = new System.Drawing.Point(8, 42);
       this.label13.Name = "label13";
       this.label13.Size = new System.Drawing.Size(90, 13);
-      this.label13.TabIndex = 32;
+      this.label13.TabIndex = 64;
       this.label13.Text = "Wholesale USOC";
       // 
       // ckWholesaleOnly
       // 
       this.ckWholesaleOnly.AutoSize = true;
-      this.ckWholesaleOnly.Location = new System.Drawing.Point(437, 104);
+      this.ckWholesaleOnly.Location = new System.Drawing.Point(429, 107);
       this.ckWholesaleOnly.Name = "ckWholesaleOnly";
       this.ckWholesaleOnly.Size = new System.Drawing.Size(100, 17);
-      this.ckWholesaleOnly.TabIndex = 31;
+      this.ckWholesaleOnly.TabIndex = 63;
       this.ckWholesaleOnly.Text = "Wholesale Only";
       this.ckWholesaleOnly.UseVisualStyleBackColor = true;
       // 
@@ -709,95 +657,170 @@
       // 
       this.dtWholesaleEndDate.Checked = false;
       this.dtWholesaleEndDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-      this.dtWholesaleEndDate.Location = new System.Drawing.Point(215, 134);
+      this.dtWholesaleEndDate.Location = new System.Drawing.Point(207, 137);
       this.dtWholesaleEndDate.MaxDate = new System.DateTime(2100, 12, 31, 0, 0, 0, 0);
       this.dtWholesaleEndDate.MinDate = new System.DateTime(1900, 1, 1, 0, 0, 0, 0);
       this.dtWholesaleEndDate.Name = "dtWholesaleEndDate";
       this.dtWholesaleEndDate.RightToLeftLayout = true;
       this.dtWholesaleEndDate.ShowCheckBox = true;
       this.dtWholesaleEndDate.Size = new System.Drawing.Size(98, 20);
-      this.dtWholesaleEndDate.TabIndex = 34;
+      this.dtWholesaleEndDate.TabIndex = 66;
       // 
       // label14
       // 
       this.label14.AutoSize = true;
-      this.label14.Location = new System.Drawing.Point(16, 72);
+      this.label14.Location = new System.Drawing.Point(8, 75);
       this.label14.Name = "label14";
       this.label14.Size = new System.Drawing.Size(60, 13);
-      this.label14.TabIndex = 37;
+      this.label14.TabIndex = 69;
       this.label14.Text = "Description";
       // 
       // dtWholesaleStartDate
       // 
       this.dtWholesaleStartDate.Checked = false;
       this.dtWholesaleStartDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-      this.dtWholesaleStartDate.Location = new System.Drawing.Point(112, 134);
+      this.dtWholesaleStartDate.Location = new System.Drawing.Point(104, 137);
       this.dtWholesaleStartDate.MaxDate = new System.DateTime(2100, 12, 31, 0, 0, 0, 0);
       this.dtWholesaleStartDate.MinDate = new System.DateTime(1900, 1, 1, 0, 0, 0, 0);
       this.dtWholesaleStartDate.Name = "dtWholesaleStartDate";
       this.dtWholesaleStartDate.ShowCheckBox = true;
       this.dtWholesaleStartDate.Size = new System.Drawing.Size(98, 20);
-      this.dtWholesaleStartDate.TabIndex = 33;
+      this.dtWholesaleStartDate.TabIndex = 65;
       this.dtWholesaleStartDate.Value = new System.DateTime(2012, 12, 7, 9, 11, 0, 0);
       // 
       // label15
       // 
       this.label15.AutoSize = true;
-      this.label15.Location = new System.Drawing.Point(15, 101);
+      this.label15.Location = new System.Drawing.Point(7, 104);
       this.label15.Name = "label15";
       this.label15.Size = new System.Drawing.Size(92, 13);
-      this.label15.TabIndex = 35;
+      this.label15.TabIndex = 67;
       this.label15.Text = "Whsle MRC/NRC";
       // 
       // label16
       // 
       this.label16.AutoSize = true;
-      this.label16.Location = new System.Drawing.Point(15, 138);
+      this.label16.Location = new System.Drawing.Point(7, 141);
       this.label16.Name = "label16";
       this.label16.Size = new System.Drawing.Size(79, 13);
-      this.label16.TabIndex = 38;
+      this.label16.TabIndex = 70;
       this.label16.Text = "Start/End Date";
       // 
       // txtWholesaleNRC
       // 
-      this.txtWholesaleNRC.Location = new System.Drawing.Point(215, 101);
+      this.txtWholesaleNRC.Location = new System.Drawing.Point(207, 104);
       this.txtWholesaleNRC.Name = "txtWholesaleNRC";
       this.txtWholesaleNRC.Size = new System.Drawing.Size(90, 20);
-      this.txtWholesaleNRC.TabIndex = 30;
+      this.txtWholesaleNRC.TabIndex = 62;
       // 
       // txtWholesaleMRC
       // 
-      this.txtWholesaleMRC.Location = new System.Drawing.Point(112, 101);
+      this.txtWholesaleMRC.Location = new System.Drawing.Point(104, 104);
       this.txtWholesaleMRC.Name = "txtWholesaleMRC";
       this.txtWholesaleMRC.Size = new System.Drawing.Size(87, 20);
-      this.txtWholesaleMRC.TabIndex = 29;
+      this.txtWholesaleMRC.TabIndex = 61;
       // 
       // button1
       // 
-      this.button1.Location = new System.Drawing.Point(158, 169);
+      this.button1.Location = new System.Drawing.Point(150, 172);
       this.button1.Name = "button1";
       this.button1.Size = new System.Drawing.Size(77, 23);
-      this.button1.TabIndex = 57;
+      this.button1.TabIndex = 73;
       this.button1.Text = "Cancel";
       this.button1.UseVisualStyleBackColor = true;
       // 
       // button2
       // 
-      this.button2.Location = new System.Drawing.Point(254, 169);
+      this.button2.Location = new System.Drawing.Point(246, 172);
       this.button2.Name = "button2";
       this.button2.Size = new System.Drawing.Size(77, 23);
-      this.button2.TabIndex = 55;
+      this.button2.TabIndex = 71;
       this.button2.Text = "Save";
       this.button2.UseVisualStyleBackColor = true;
       // 
       // button3
       // 
-      this.button3.Location = new System.Drawing.Point(29, 165);
+      this.button3.Location = new System.Drawing.Point(21, 168);
       this.button3.Name = "button3";
       this.button3.Size = new System.Drawing.Size(77, 23);
-      this.button3.TabIndex = 56;
+      this.button3.TabIndex = 72;
       this.button3.Text = "Add New";
       this.button3.UseVisualStyleBackColor = true;
+      // 
+      // tabMatching
+      // 
+      this.tabMatching.Controls.Add(this.lblUsocMatching);
+      this.tabMatching.Controls.Add(this.lstWholesaleUsocs);
+      this.tabMatching.Controls.Add(this.btnUnmatchUsoc);
+      this.tabMatching.Controls.Add(this.btnMatchUsoc);
+      this.tabMatching.Controls.Add(this.lstRetailUsocs);
+      this.tabMatching.Controls.Add(this.label4);
+      this.tabMatching.Location = new System.Drawing.Point(4, 22);
+      this.tabMatching.Name = "tabMatching";
+      this.tabMatching.Size = new System.Drawing.Size(1163, 308);
+      this.tabMatching.TabIndex = 2;
+      this.tabMatching.Text = "Retail/Wholesale Matching";
+      this.tabMatching.UseVisualStyleBackColor = true;
+      // 
+      // lblUsocMatching
+      // 
+      this.lblUsocMatching.AutoSize = true;
+      this.lblUsocMatching.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.lblUsocMatching.Location = new System.Drawing.Point(300, 15);
+      this.lblUsocMatching.Name = "lblUsocMatching";
+      this.lblUsocMatching.Size = new System.Drawing.Size(0, 20);
+      this.lblUsocMatching.TabIndex = 12;
+      // 
+      // lstWholesaleUsocs
+      // 
+      this.lstWholesaleUsocs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.lstWholesaleUsocs.FormattingEnabled = true;
+      this.lstWholesaleUsocs.Location = new System.Drawing.Point(455, 59);
+      this.lstWholesaleUsocs.Name = "lstWholesaleUsocs";
+      this.lstWholesaleUsocs.Size = new System.Drawing.Size(694, 238);
+      this.lstWholesaleUsocs.TabIndex = 11;
+      // 
+      // btnUnmatchUsoc
+      // 
+      this.btnUnmatchUsoc.Location = new System.Drawing.Point(356, 106);
+      this.btnUnmatchUsoc.Name = "btnUnmatchUsoc";
+      this.btnUnmatchUsoc.Size = new System.Drawing.Size(75, 23);
+      this.btnUnmatchUsoc.TabIndex = 10;
+      this.btnUnmatchUsoc.Text = "Unmatch";
+      this.btnUnmatchUsoc.UseVisualStyleBackColor = true;
+      this.btnUnmatchUsoc.Click += new System.EventHandler(this.btnUnmatchUsoc_Click);
+      // 
+      // btnMatchUsoc
+      // 
+      this.btnMatchUsoc.Location = new System.Drawing.Point(356, 72);
+      this.btnMatchUsoc.Name = "btnMatchUsoc";
+      this.btnMatchUsoc.Size = new System.Drawing.Size(75, 23);
+      this.btnMatchUsoc.TabIndex = 9;
+      this.btnMatchUsoc.Text = "Match";
+      this.btnMatchUsoc.UseVisualStyleBackColor = true;
+      this.btnMatchUsoc.Click += new System.EventHandler(this.btnMatchUsoc_Click);
+      // 
+      // lstRetailUsocs
+      // 
+      this.lstRetailUsocs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+      this.lstRetailUsocs.FormattingEnabled = true;
+      this.lstRetailUsocs.Location = new System.Drawing.Point(17, 59);
+      this.lstRetailUsocs.Name = "lstRetailUsocs";
+      this.lstRetailUsocs.Size = new System.Drawing.Size(326, 238);
+      this.lstRetailUsocs.TabIndex = 8;
+      // 
+      // label4
+      // 
+      this.label4.AutoSize = true;
+      this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.label4.Location = new System.Drawing.Point(13, 12);
+      this.label4.Name = "label4";
+      this.label4.Size = new System.Drawing.Size(262, 24);
+      this.label4.TabIndex = 7;
+      this.label4.Text = "Wholesale USOC Matching";
       // 
       // frmCityHostedUSOCMaintenanceNew
       // 
@@ -812,12 +835,13 @@
       this.splitMain.Panel1.PerformLayout();
       this.splitMain.Panel2.ResumeLayout(false);
       this.splitMain.ResumeLayout(false);
-      this.pnlRetail.ResumeLayout(false);
-      this.pnlRetail.PerformLayout();
-      this.pnlMatching.ResumeLayout(false);
-      this.pnlMatching.PerformLayout();
-      this.pnlWholesale.ResumeLayout(false);
-      this.pnlWholesale.PerformLayout();
+      this.tabMaintenance.ResumeLayout(false);
+      this.tabRetail.ResumeLayout(false);
+      this.tabRetail.PerformLayout();
+      this.tabWholesale.ResumeLayout(false);
+      this.tabWholesale.PerformLayout();
+      this.tabMatching.ResumeLayout(false);
+      this.tabMatching.PerformLayout();
       this.ResumeLayout(false);
 
     }
@@ -833,25 +857,26 @@
     private System.Windows.Forms.Label lblMode;
     private System.Windows.Forms.ComboBox cboCarrier;
     private System.Windows.Forms.Label label2;
-    private System.Windows.Forms.Panel pnlMatching;
-    private System.Windows.Forms.Panel pnlRetail;
-    private System.Windows.Forms.Label label3;
-    private System.Windows.Forms.CheckBox ckExcludeFromExceptions;
+    private System.Windows.Forms.TabControl tabMaintenance;
+    private System.Windows.Forms.TabPage tabRetail;
+    private System.Windows.Forms.TabPage tabWholesale;
+    private System.Windows.Forms.TabPage tabMatching;
+    private System.Windows.Forms.Button btnNew;
     private System.Windows.Forms.Button btnCancel;
     private System.Windows.Forms.Button btnSave;
-    private System.Windows.Forms.Button btnNew;
-    private System.Windows.Forms.Label label7;
+    private System.Windows.Forms.CheckBox ckExcludeFromExceptions;
+    private System.Windows.Forms.CheckBox ckSaddlebackUSOC;
+    private System.Windows.Forms.CheckBox ckRetailInactivate;
+    private System.Windows.Forms.CheckBox ckVariableRetailNRC;
+    private System.Windows.Forms.CheckBox ckVariableRetailMRC;
+    private System.Windows.Forms.Label label3;
     private ACG.CommonForms.ctlSearch txtRetailUSOC;
     private System.Windows.Forms.ComboBox cboTaxCode;
     private System.Windows.Forms.Label label12;
-    private System.Windows.Forms.CheckBox ckRetailInactivate;
     private System.Windows.Forms.ComboBox cboRITCategory;
     private System.Windows.Forms.Label label5;
-    private System.Windows.Forms.CheckBox ckVariableRetailNRC;
-    private System.Windows.Forms.CheckBox ckVariableRetailMRC;
     private System.Windows.Forms.TextBox txtExternalDescription;
     private System.Windows.Forms.Label label11;
-    private System.Windows.Forms.CheckBox ckSaddlebackUSOC;
     private System.Windows.Forms.TextBox txtRetailDescription;
     private System.Windows.Forms.Label label6;
     private System.Windows.Forms.CheckBox ckRetailOnly;
@@ -862,9 +887,8 @@
     private System.Windows.Forms.Label label10;
     private System.Windows.Forms.TextBox txtRetailNRC;
     private System.Windows.Forms.TextBox txtRetailMRC;
+    private System.Windows.Forms.Label label7;
     private System.Windows.Forms.ComboBox cboCHSCategory;
-    private System.Windows.Forms.Label label4;
-    private System.Windows.Forms.Panel pnlWholesale;
     private System.Windows.Forms.Label label1;
     private ACG.CommonForms.ctlSearch txtWholesaleUSOC;
     private System.Windows.Forms.CheckBox ckWholesaleInactivate;
@@ -881,10 +905,11 @@
     private System.Windows.Forms.Button button1;
     private System.Windows.Forms.Button button2;
     private System.Windows.Forms.Button button3;
+    private System.Windows.Forms.Label lblUsocMatching;
+    private System.Windows.Forms.ListBox lstWholesaleUsocs;
+    private System.Windows.Forms.Button btnUnmatchUsoc;
     private System.Windows.Forms.Button btnMatchUsoc;
     private System.Windows.Forms.ListBox lstRetailUsocs;
-    private System.Windows.Forms.Button btnUnmatchUsoc;
-    private System.Windows.Forms.ListBox lstWholesaleUsocs;
-    private System.Windows.Forms.Label lblUsocMatching;
+    private System.Windows.Forms.Label label4;
   }
 }

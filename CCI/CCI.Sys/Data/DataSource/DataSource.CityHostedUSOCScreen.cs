@@ -417,6 +417,47 @@ where m.itemid = '{0}'";
       ds = null;
       return carriers;
     }
-
+    public string[] getRetailUsocs(string carrier)
+    {
+      if (string.IsNullOrEmpty(carrier))
+        return new string[0];
+      const string basesql = "SELECT distinct ItemID USOC from ProductList where Carrier = 'CityHosted' and PrimaryCarrier = '{0}'";
+      string sql = string.Format(basesql, carrier);
+      DataSet ds = getDataFromSQL(sql);
+      if (ds == null)
+        return new string[0];
+      string[] carriers = new string[0];
+      if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+      {
+        carriers = new string[ds.Tables[0].Rows.Count];
+        int i = 0;
+        foreach (DataRow row in ds.Tables[0].Rows)
+          carriers[i++] = CommonFunctions.CString(row["USOC"]);
+      }
+      ds.Clear();
+      ds = null;
+      return carriers;
+    }
+    public string[] getWholesaleUsocs(string carrier)
+    {
+      if (string.IsNullOrEmpty(carrier))
+        return new string[0];
+      const string basesql = "SELECT distinct ItemID USOC from ProductList where Carrier = '{0}'";
+      string sql = string.Format(basesql, carrier);
+      DataSet ds = getDataFromSQL(sql);
+      if (ds == null)
+        return new string[0];
+      string[] carriers = new string[0];
+      if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+      {
+        carriers = new string[ds.Tables[0].Rows.Count];
+        int i = 0;
+        foreach (DataRow row in ds.Tables[0].Rows)
+          carriers[i++] = CommonFunctions.CString(row["USOC"]);
+      }
+      ds.Clear();
+      ds = null;
+      return carriers;
+    }
   }
 }

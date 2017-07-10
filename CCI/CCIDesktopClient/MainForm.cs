@@ -556,5 +556,10 @@ namespace CCI.DesktopClient
       ShowForm((Form)frm, true);
     }
 
+    private void cityHostedUsocNewToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      ScreenBase frm = new frmCityHostedUSOCMaintenanceNew();
+      ShowForm(frm, true);
+    }
   }
 }
