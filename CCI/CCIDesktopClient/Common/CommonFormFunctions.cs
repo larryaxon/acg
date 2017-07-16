@@ -196,7 +196,11 @@ namespace CCI.DesktopClient.Common
                   }
                   else if (isComboBox)
                   {
-                    ((ComboBox)ctl).Text = (string)item.GetType().GetProperty(((ComboBox)ctl).DisplayMember).GetValue(item, new object[] { });
+                    
+                    if (item.GetType() == typeof(string))
+                      ((ComboBox)ctl).Text = item.ToString();
+                    else
+                      ((ComboBox)ctl).Text = (string)item.GetType().GetProperty(((ComboBox)ctl).DisplayMember).GetValue(item, new object[] { });
                     ((ComboBox)ctl).SelectedIndex = i;
                     ((ComboBox)ctl).Refresh();
                   }

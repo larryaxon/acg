@@ -33,10 +33,6 @@ namespace CCI.DesktopClient.Screens
     private const string colRetailEndDate = "retailenddate";
     private const string colRetailOnly = "retailonly";
     private const string colWholesaleDescription = "descriptionwholesale";
-    private const string colDQCategory = "DQCategory";
-    private const string colDealerQuote = "DealerQuoteYN";
-    private const string colIsRecommended = "DQLessScreenOnly";
-    private const string colUseMRC = "UseMRCinDQ";
     private const string colPrimaryCarrier = "PrimaryCarrier";
 
     private const string colIsSaddleback = "IsSaddlebackUSOC";
@@ -44,9 +40,11 @@ namespace CCI.DesktopClient.Screens
     private const string colWholesaleActive = "wholesaleactive";
     private const string colExcludeFromExceptions = "ExcludeFromExceptions";
 
-    bool? _lastDealerQuoteYNValue = null;
+    private const string modeRetail = "Edit Retail";
+    private const string modeWholesale = "Edit Wholesale";
+    private const string modeMatching = "Match Retail/Wholesale";
 
-    private bool _firstTime = true;
+    private string[] _modeList = new string[] { modeRetail, modeWholesale, modeMatching };
 
     private DataSource _ds = null;
     private DataSource _dataSource { get { if (_ds == null) _ds = new DataSource(); return _ds; } }
@@ -59,7 +57,8 @@ namespace CCI.DesktopClient.Screens
       ((SearchDataSourceProductList)txtRetailUSOC.SearchExec).Carrier = "CityHosted";
       ((SearchDataSourceProductList)txtWholesaleUSOC.SearchExec).Carrier = "Saddleback";
       srchUSOCList.CanChangeDisplayFields = true;
-
+      cboMode.Items.Clear();
+      cboMode.Items.AddRange(_modeList);
     }
     #region public methods
 
@@ -112,33 +111,19 @@ namespace CCI.DesktopClient.Screens
     {
       switch (mode)
       {
-        case "Edit Wholesale":
+        case modeWholesale:
           selectWholesaleRetail("wholesale");
           tabMaintenance.SelectedTab = tabWholesale;
-          //pnlRetail.Visible = false;
-          //pnlMatching.Visible = false;
-          //pnlWholesale.Dock = DockStyle.Fill;
-          //pnlWholesale.BringToFront();
-          //pnlWholesale.Visible = true;
           break;
-        case "Edit Retail":
+        case modeRetail:
           selectWholesaleRetail("retail");
           tabMaintenance.SelectedTab = tabRetail;
-          //pnlWholesale.Visible = false;
-          //pnlMatching.Visible = false;
-          //pnlRetail.Dock = DockStyle.Fill;
-          //pnlRetail.BringToFront();
-          //pnlRetail.Visible = true;
           break;
         default:
           tabMaintenance.SelectedTab = tabMatching;
-          //pnlWholesale.Visible = false;
-          //pnlRetail.Visible = false;
-          //pnlMatching.Dock = DockStyle.Fill;
-          //pnlMatching.BringToFront();
-          //pnlMatching.Visible = true;
           break;
       }
+      loadEditScreens(mode);
     }
     private void selectWholesaleRetail(string wholesaleRetail)
     {
@@ -298,6 +283,7 @@ namespace CCI.DesktopClient.Screens
       clear();
       string wholesaleUSOC = txtWholesaleUSOC.Text = CommonFunctions.CString(row.Cells[colWholesaleUSOC].Value).Trim();
       #region Wholesale data
+      txtWholesaleDescription.Text = CommonFunctions.CString(row.Cells[colWholesaleDescription].Value);
       if (string.IsNullOrEmpty(wholesaleUSOC))
         txtWholesaleUSOC.AddNewMode = true;
       else
@@ -336,19 +322,7 @@ namespace CCI.DesktopClient.Screens
         lstWholesaleUsocs.ClearSelected();
       else
         CommonFormFunctions.setComboBoxCell(lstWholesaleUsocs, wholesale);
-      setMatchingLabel();
-
-    }
-    private void setMatchingLabel()
-    {
-      string retail = lstRetailUsocs.Text;
-      string wholesale = lstWholesaleUsocs.Text;
-      lblUsocMatching.Text = string.Format("Retail {0} = Wholesale {1}", retail, wholesale);
-    }
-    private void unsetMatchingLabel()
-    {
-      lblUsocMatching.Text = string.Empty;
-
+      matchUsocs(false);
     }
     private DateTime? getDateValue(object o)
     {
@@ -363,14 +337,188 @@ namespace CCI.DesktopClient.Screens
         return null;
       return dt;
     }
-    private object getCellValueFromColumnHeader(DataGridViewCellCollection cells, string name)
+    private void loadEditScreens(string mode)
     {
-      IEnumerable<DataGridViewCell> notempty = cells.Cast<DataGridViewCell>().Where(c => c.Value != null);
-      DataGridViewCell cell = cells.Cast<DataGridViewCell>().FirstOrDefault(c => c.OwningColumn.Name.Equals(name, StringComparison.CurrentCulture));
-      if (cell == null)
-        return null;
-      return cell.Value;
+      DataGridViewRow row = srchUSOCList.SelectedRow;
+
+      loadEditScreens(mode, row);
     }
+    private void loadEditScreens(string mode, DataGridViewRow row)
+    {
+      if (row == null)
+        return;
+      if (string.IsNullOrEmpty(mode))
+        return;
+      if (mode.Equals(modeWholesale))
+      {
+        string wholesaleUsoc;
+        object w = row.Cells[colWholesaleUSOC];
+        if (w == null)
+          wholesaleUsoc = string.Empty;
+        else
+          wholesaleUsoc = CommonFunctions.CString(((DataGridViewCell)w).Value);
+        if (!txtWholesaleUSOC.Text.Equals(wholesaleUsoc, StringComparison.CurrentCultureIgnoreCase)) // only reload if this screen has not been loaded with this usoc
+          loadWholesaleFields(row);
+      }
+      else if (mode.Equals(modeRetail))
+      {
+        string retailUsoc;
+        object r = row.Cells[colRetailUSOC];
+        if (r == null)
+          retailUsoc = string.Empty;
+        else
+          retailUsoc = CommonFunctions.CString(((DataGridViewCell)r).Value);
+        if (!txtRetailUSOC.Text.Equals(retailUsoc, StringComparison.CurrentCultureIgnoreCase)) // only reload if this screen has not been loaded with this usoc
+          loadRetailFields(row);
+      }
+      else if (mode.Equals(modeMatching))
+        loadMatchingFields(row); // don;t worry about reload of this screen it is fast and simple
+    }
+    private void matchUsocs(bool save)
+    {
+      string retail = lstRetailUsocs.Text;
+      string wholesale = lstWholesaleUsocs.Text;
+      lblUsocMatching.Text = string.Format("Retail {0} = Wholesale {1}", retail, wholesale);
+      if (save)
+      {
+        int? ret = _dataSource.reassignWholesaleUSOC(retail, wholesale);
+        if (ret != null && ret == -1)
+          MessageBox.Show("Match Retail to Wholesale USOC was not successfull");
+      }
+    }
+    private void unmatchUsocs(bool save)
+    {
+      lblUsocMatching.Text = string.Empty;
+      string retail = lstRetailUsocs.Text;
+
+      if (save)
+      {
+        int? ret = _dataSource.reassignWholesaleUSOC(retail, retail, cboCarrier.Text);
+        if (ret != null && ret == -1)
+          MessageBox.Show("UnMatch Retail to Wholesale USOC was not successfull");
+      }
+    }
+    private void saveRetail()
+    {
+      save("retail");
+    }
+    private void saveWholesale()
+    {
+      save("wholesale");
+    }
+    private void save(string mode)
+    {
+      if (string.IsNullOrEmpty(mode))
+        return;
+      #region init fields
+      string retailUSOC, chsCategory, wholesaleUSOC, dqcategory,
+        retailDescription, wholesaleDescription, externalDescription, externalCategory, taxCode;
+      decimal retailMRC, retailNRC, wholesaleMRC, wholesaleNRC;
+      DateTime? retailStartDate, retailEndDate, wholesaleStartDate, wholesaleEndDate;
+      bool isSaddlebackUSOC, excludeFromException, retailOnly, wholesaleOnly, isRecommended, useMRC;
+      wholesaleUSOC = retailUSOC = wholesaleDescription = retailDescription = wholesaleDescription = chsCategory =
+        externalDescription = externalCategory = taxCode = dqcategory = string.Empty;
+      isSaddlebackUSOC = excludeFromException = retailOnly = wholesaleOnly = isRecommended = useMRC = false;
+      retailStartDate = retailEndDate = wholesaleStartDate = wholesaleEndDate = null;
+      retailMRC = retailNRC = wholesaleMRC = wholesaleNRC = 0;
+      int? retCode;
+      string primaryCarrier = cboCarrier.Text;
+      #endregion
+
+      #region set common fields
+
+      retailUSOC = txtRetailUSOC.Text;
+      wholesaleUSOC = txtWholesaleUSOC.Text;
+      bool isRetail = mode.Equals("retail", StringComparison.CurrentCultureIgnoreCase);
+      bool isWholesale = mode.Equals("wholesale", StringComparison.CurrentCultureIgnoreCase);
+      retailOnly = ckRetailOnly.Checked;
+      wholesaleOnly = ckWholesaleOnly.Checked;
+      chsCategory = cboCHSCategory.Text;
+      externalDescription = txtExternalDescription.Text;
+      excludeFromException = ckExcludeFromExceptions.Checked;
+      isSaddlebackUSOC = ckSaddlebackUSOC.Checked;
+      externalCategory = cboRITCategory.Text;
+      #endregion
+
+      #region update retail
+      if (isRetail)
+      {
+        // populate retail fields
+        if (string.IsNullOrEmpty(retailUSOC))
+        {
+          MessageBox.Show("You must have a valid USOC to save");
+          return;
+        }
+        if (string.IsNullOrEmpty(txtRetailDescription.Text))
+        {
+          MessageBox.Show("You must have a Description to save");
+          return;
+        }
+        retailDescription = txtRetailDescription.Text.Replace("'", "");
+        if (ckVariableRetailMRC.Checked)
+          retailMRC = -1;
+        else
+          retailMRC = CommonFunctions.CDecimal(txtRetailMRC.Text);
+        if (ckVariableRetailNRC.Checked)
+          retailNRC = -1;
+        else
+          retailNRC = CommonFunctions.CDecimal(txtRetailNRC.Text);
+
+        if (dtRetailStartDate.Checked)
+          retailStartDate = dtRetailStartDate.Value;
+        else
+          retailStartDate = null;
+        if (dtRetailEndDate.Checked)
+          retailEndDate = dtRetailEndDate.Value;
+        else
+          retailEndDate = null;
+        taxCode = cboTaxCode.Text;
+        retCode = _dataSource.updateMasterProduct(retailUSOC, retailDescription, chsCategory, retailUSOC, externalCategory, externalDescription, isRetail, isWholesale, isSaddlebackUSOC);
+        if (retCode == null || retCode >= 0)
+          retCode = _dataSource.updateProduct(primaryCarrier, retailUSOC, retailStartDate, retailEndDate, retailUSOC, retailMRC, retailNRC,
+            retailOnly, excludeFromException, taxCode, primaryCarrier);
+      }
+      #endregion
+
+      #region update wholesale 
+      if (isWholesale)
+      {
+        // populate wholesale fields
+        if (string.IsNullOrEmpty(wholesaleUSOC))
+        {
+          MessageBox.Show("You do not have a Wholesale USOC");
+          return;
+        }
+
+        if (string.IsNullOrEmpty(txtWholesaleDescription.Text))
+        {
+          MessageBox.Show("You must have a Description to save");
+          return;
+        }
+
+        wholesaleDescription = txtWholesaleDescription.Text.Replace("'", "");
+        wholesaleMRC = CommonFunctions.CDecimal(txtWholesaleMRC.Text);
+        wholesaleNRC = CommonFunctions.CDecimal(txtWholesaleNRC.Text);
+
+        if (dtWholesaleStartDate.Checked)
+          wholesaleStartDate = dtWholesaleStartDate.Value;
+        else
+          wholesaleStartDate = null;
+        if (dtWholesaleEndDate.Checked)
+          wholesaleEndDate = dtWholesaleEndDate.Value;
+        else
+          wholesaleEndDate = null;
+        retCode = _dataSource.updateMasterProduct(wholesaleUSOC, wholesaleDescription, chsCategory, wholesaleUSOC, externalCategory, externalDescription, isRetail, isWholesale, isSaddlebackUSOC);
+        if (retCode == null || retCode >= 0)
+          retCode = _dataSource.updateProduct(DataSource.HOSTEDWHOLESALECARRIER, wholesaleUSOC, wholesaleStartDate, wholesaleEndDate, SecurityContext.User, wholesaleMRC, wholesaleNRC,
+            wholesaleOnly, excludeFromException, taxCode);
+      }
+      if (ckRefresh.Checked)
+        reloadUsocList(false);
+      #endregion
+
+    }
+
     #endregion
 
     #region form events
@@ -379,7 +527,6 @@ namespace CCI.DesktopClient.Screens
       srchUSOCList.Init(CCI.Common.CommonData.UnmatchedNameTypes.CityHostedUSOCs, null);
       srchUSOCList.ColumnOrderSaveEnabled = false;
       ckIncludeInactive_CheckedChanged(this, new EventArgs()); // force load to use inactive flag
-      //reloadUsocList(true);
       refreshPickLists();
       srchUSOCList.ColumnOrderSaveEnabled = true;
       clear(true);
@@ -402,33 +549,63 @@ namespace CCI.DesktopClient.Screens
     {
       string carrier = cboCarrier.SelectedItem.ToString();
       selectCarrier(carrier);
+      loadEditScreens(cboMode.Text);
     }
     private void srchUSOCList_RowSelected(object sender, ACG.CommonForms.MaintenanceGridRowSelectedArgs e)
     {
-      string mode = cboMode.Text;
-      if (cboMode.Text.Equals("Edit Wholesale"))
-        loadWholesaleFields(e.SelectedRow);
-      else if (cboMode.Text.Equals("Edit Retail"))
-        loadRetailFields(e.SelectedRow);
-      else
-        loadMatchingFields(e.SelectedRow);
-
-      /*
-       * 
-
-Match Retail / Wholesale
-*/
+      loadEditScreens(cboMode.Text, e.SelectedRow);
     }
     private void btnMatchUsoc_Click(object sender, EventArgs e)
     {
-      setMatchingLabel();
+      matchUsocs(true);
     }
-
     private void btnUnmatchUsoc_Click(object sender, EventArgs e)
     {
-      unsetMatchingLabel();
+      unmatchUsocs(true);
+    }
+
+    private void tabMaintenance_SelectedIndexChanged(object sender, EventArgs e)
+    {
+      TabPage thisTab = tabMaintenance.SelectedTab;
+      string thisMode = cboMode.Text;
+      if (thisTab.Name.Equals(tabRetail.Name) && !thisMode.Equals(modeRetail))
+        CommonFormFunctions.setComboBoxCell(cboMode, modeRetail);
+      else if (thisTab.Name.Equals(tabWholesale.Name) && !thisMode.Equals(modeWholesale))
+        CommonFormFunctions.setComboBoxCell(cboMode, modeWholesale);
+      else if (thisTab.Name.Equals(tabMatching.Name) && !thisMode.Equals(modeMatching))
+        CommonFormFunctions.setComboBoxCell(cboMode, modeMatching);
+    }
+
+    private void btnRetailNew_Click(object sender, EventArgs e)
+    {
+      clearTabPage(tabRetail);
+    }
+
+    private void btnRetailCancel_Click(object sender, EventArgs e)
+    {
+      if (srchUSOCList.SelectedRow != null)
+        loadRetailFields(srchUSOCList.SelectedRow);
+      else
+        clearTabPage(tabRetail);
+    }
+
+    private void btnRetailSave_Click(object sender, EventArgs e)
+    {
+      saveRetail();
     }
     #endregion
 
+    private void btnWholesaleNew_Click(object sender, EventArgs e)
+    {
+      clearTabPage(tabWholesale);
+    }
+
+    private void btnWholesaleCancel_Click(object sender, EventArgs e)
+    {
+      if (srchUSOCList.SelectedRow != null)
+        loadWholesaleFields(srchUSOCList.SelectedRow);
+      else
+        clearTabPage(tabWholesale);
+    }
   }
 }

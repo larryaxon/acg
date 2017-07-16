@@ -308,6 +308,11 @@ w.UnMatched = 1
     }
     public int? reassignWholesaleUSOC(string retailusoc, string wholesaleusoc)
     {
+      return reassignWholesaleUSOC(retailusoc, wholesaleusoc, HOSTEDWHOLESALECARRIER);
+    }
+
+    public int? reassignWholesaleUSOC(string retailusoc, string wholesaleusoc, string primarycarrier)
+    {
       string wusoc = wholesaleusoc;
       string rusoc = retailusoc;
       int? retCode = 0;
@@ -331,9 +336,9 @@ w.UnMatched = 1
       //else
       unmatched = "0";
       if (retCode >= 0 && !string.IsNullOrEmpty(wusoc))
-        retCode = updateDataFromSQL(string.Format(sql, unmatched, wusoc, HOSTEDWHOLESALECARRIER)); // make sure new wholesale is NOT wholesaleonly 
+        retCode = updateDataFromSQL(string.Format(sql, unmatched, wusoc, primarycarrier)); // make sure new wholesale is NOT wholesaleonly 
       if (retCode >= 0 && numberRetailUSOCs(oldWholesaleUSOC, false) == 0) // there are no more "daughters"  
-        retCode = updateDataFromSQL(string.Format(sql, "1", oldWholesaleUSOC, HOSTEDWHOLESALECARRIER)); // reset wholesale to wholesaleonly
+        retCode = updateDataFromSQL(string.Format(sql, "1", oldWholesaleUSOC, primarycarrier)); // reset wholesale to wholesaleonly
       return retCode;
     }
     public string getWholesaleUSOC(string usoc)

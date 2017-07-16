@@ -39,9 +39,9 @@
       this.ckIncludeNonSaddleback = new System.Windows.Forms.CheckBox();
       this.tabMaintenance = new System.Windows.Forms.TabControl();
       this.tabRetail = new System.Windows.Forms.TabPage();
-      this.btnNew = new System.Windows.Forms.Button();
-      this.btnCancel = new System.Windows.Forms.Button();
-      this.btnSave = new System.Windows.Forms.Button();
+      this.btnRetailNew = new System.Windows.Forms.Button();
+      this.btnRetailCancel = new System.Windows.Forms.Button();
+      this.btnRetailSave = new System.Windows.Forms.Button();
       this.ckExcludeFromExceptions = new System.Windows.Forms.CheckBox();
       this.ckSaddlebackUSOC = new System.Windows.Forms.CheckBox();
       this.ckRetailInactivate = new System.Windows.Forms.CheckBox();
@@ -81,9 +81,9 @@
       this.label16 = new System.Windows.Forms.Label();
       this.txtWholesaleNRC = new System.Windows.Forms.TextBox();
       this.txtWholesaleMRC = new System.Windows.Forms.TextBox();
-      this.button1 = new System.Windows.Forms.Button();
-      this.button2 = new System.Windows.Forms.Button();
-      this.button3 = new System.Windows.Forms.Button();
+      this.btnWholesaleCancel = new System.Windows.Forms.Button();
+      this.btnWholesaleSave = new System.Windows.Forms.Button();
+      this.btnWholesaleNew = new System.Windows.Forms.Button();
       this.tabMatching = new System.Windows.Forms.TabPage();
       this.lblUsocMatching = new System.Windows.Forms.Label();
       this.lstWholesaleUsocs = new System.Windows.Forms.ListBox();
@@ -122,7 +122,7 @@
       // 
       this.splitMain.Panel2.Controls.Add(this.tabMaintenance);
       this.splitMain.Size = new System.Drawing.Size(1171, 691);
-      this.splitMain.SplitterDistance = 353;
+      this.splitMain.SplitterDistance = 383;
       this.splitMain.TabIndex = 0;
       // 
       // cboCarrier
@@ -189,7 +189,7 @@
       this.srchUSOCList.Name = "srchUSOCList";
       this.srchUSOCList.NameType = CCI.Common.CommonData.UnmatchedNameTypes.Customer;
       this.srchUSOCList.SearchCriteria = null;
-      this.srchUSOCList.Size = new System.Drawing.Size(1171, 325);
+      this.srchUSOCList.Size = new System.Drawing.Size(1171, 355);
       this.srchUSOCList.TabIndex = 6;
       this.srchUSOCList.Title = "Search (0 Records Found)";
       this.srchUSOCList.UniqueIdentifier = "ID";
@@ -241,14 +241,15 @@
       this.tabMaintenance.Location = new System.Drawing.Point(0, 0);
       this.tabMaintenance.Name = "tabMaintenance";
       this.tabMaintenance.SelectedIndex = 0;
-      this.tabMaintenance.Size = new System.Drawing.Size(1171, 334);
+      this.tabMaintenance.Size = new System.Drawing.Size(1171, 304);
       this.tabMaintenance.TabIndex = 8;
+      this.tabMaintenance.SelectedIndexChanged += new System.EventHandler(this.tabMaintenance_SelectedIndexChanged);
       // 
       // tabRetail
       // 
-      this.tabRetail.Controls.Add(this.btnNew);
-      this.tabRetail.Controls.Add(this.btnCancel);
-      this.tabRetail.Controls.Add(this.btnSave);
+      this.tabRetail.Controls.Add(this.btnRetailNew);
+      this.tabRetail.Controls.Add(this.btnRetailCancel);
+      this.tabRetail.Controls.Add(this.btnRetailSave);
       this.tabRetail.Controls.Add(this.ckExcludeFromExceptions);
       this.tabRetail.Controls.Add(this.ckSaddlebackUSOC);
       this.tabRetail.Controls.Add(this.ckRetailInactivate);
@@ -277,37 +278,40 @@
       this.tabRetail.Location = new System.Drawing.Point(4, 22);
       this.tabRetail.Name = "tabRetail";
       this.tabRetail.Padding = new System.Windows.Forms.Padding(3);
-      this.tabRetail.Size = new System.Drawing.Size(1163, 308);
+      this.tabRetail.Size = new System.Drawing.Size(1163, 278);
       this.tabRetail.TabIndex = 0;
       this.tabRetail.Text = "Retail Usoc Maintenance";
       this.tabRetail.UseVisualStyleBackColor = true;
       // 
-      // btnNew
+      // btnRetailNew
       // 
-      this.btnNew.Location = new System.Drawing.Point(14, 242);
-      this.btnNew.Name = "btnNew";
-      this.btnNew.Size = new System.Drawing.Size(77, 23);
-      this.btnNew.TabIndex = 108;
-      this.btnNew.Text = "Add New";
-      this.btnNew.UseVisualStyleBackColor = true;
+      this.btnRetailNew.Location = new System.Drawing.Point(14, 242);
+      this.btnRetailNew.Name = "btnRetailNew";
+      this.btnRetailNew.Size = new System.Drawing.Size(77, 23);
+      this.btnRetailNew.TabIndex = 108;
+      this.btnRetailNew.Text = "Add New";
+      this.btnRetailNew.UseVisualStyleBackColor = true;
+      this.btnRetailNew.Click += new System.EventHandler(this.btnRetailNew_Click);
       // 
-      // btnCancel
+      // btnRetailCancel
       // 
-      this.btnCancel.Location = new System.Drawing.Point(97, 242);
-      this.btnCancel.Name = "btnCancel";
-      this.btnCancel.Size = new System.Drawing.Size(77, 23);
-      this.btnCancel.TabIndex = 110;
-      this.btnCancel.Text = "Cancel";
-      this.btnCancel.UseVisualStyleBackColor = true;
+      this.btnRetailCancel.Location = new System.Drawing.Point(97, 242);
+      this.btnRetailCancel.Name = "btnRetailCancel";
+      this.btnRetailCancel.Size = new System.Drawing.Size(77, 23);
+      this.btnRetailCancel.TabIndex = 110;
+      this.btnRetailCancel.Text = "Cancel";
+      this.btnRetailCancel.UseVisualStyleBackColor = true;
+      this.btnRetailCancel.Click += new System.EventHandler(this.btnRetailCancel_Click);
       // 
-      // btnSave
+      // btnRetailSave
       // 
-      this.btnSave.Location = new System.Drawing.Point(180, 242);
-      this.btnSave.Name = "btnSave";
-      this.btnSave.Size = new System.Drawing.Size(77, 23);
-      this.btnSave.TabIndex = 107;
-      this.btnSave.Text = "Save";
-      this.btnSave.UseVisualStyleBackColor = true;
+      this.btnRetailSave.Location = new System.Drawing.Point(180, 242);
+      this.btnRetailSave.Name = "btnRetailSave";
+      this.btnRetailSave.Size = new System.Drawing.Size(77, 23);
+      this.btnRetailSave.TabIndex = 107;
+      this.btnRetailSave.Text = "Save";
+      this.btnRetailSave.UseVisualStyleBackColor = true;
+      this.btnRetailSave.Click += new System.EventHandler(this.btnRetailSave_Click);
       // 
       // ckExcludeFromExceptions
       // 
@@ -571,13 +575,13 @@
       this.tabWholesale.Controls.Add(this.label16);
       this.tabWholesale.Controls.Add(this.txtWholesaleNRC);
       this.tabWholesale.Controls.Add(this.txtWholesaleMRC);
-      this.tabWholesale.Controls.Add(this.button1);
-      this.tabWholesale.Controls.Add(this.button2);
-      this.tabWholesale.Controls.Add(this.button3);
+      this.tabWholesale.Controls.Add(this.btnWholesaleCancel);
+      this.tabWholesale.Controls.Add(this.btnWholesaleSave);
+      this.tabWholesale.Controls.Add(this.btnWholesaleNew);
       this.tabWholesale.Location = new System.Drawing.Point(4, 22);
       this.tabWholesale.Name = "tabWholesale";
       this.tabWholesale.Padding = new System.Windows.Forms.Padding(3);
-      this.tabWholesale.Size = new System.Drawing.Size(1163, 308);
+      this.tabWholesale.Size = new System.Drawing.Size(1163, 278);
       this.tabWholesale.TabIndex = 1;
       this.tabWholesale.Text = "Wholesale Usoc Maintenance";
       this.tabWholesale.UseVisualStyleBackColor = true;
@@ -720,32 +724,34 @@
       this.txtWholesaleMRC.Size = new System.Drawing.Size(87, 20);
       this.txtWholesaleMRC.TabIndex = 61;
       // 
-      // button1
+      // btnWholesaleCancel
       // 
-      this.button1.Location = new System.Drawing.Point(150, 172);
-      this.button1.Name = "button1";
-      this.button1.Size = new System.Drawing.Size(77, 23);
-      this.button1.TabIndex = 73;
-      this.button1.Text = "Cancel";
-      this.button1.UseVisualStyleBackColor = true;
+      this.btnWholesaleCancel.Location = new System.Drawing.Point(120, 168);
+      this.btnWholesaleCancel.Name = "btnWholesaleCancel";
+      this.btnWholesaleCancel.Size = new System.Drawing.Size(77, 23);
+      this.btnWholesaleCancel.TabIndex = 73;
+      this.btnWholesaleCancel.Text = "Cancel";
+      this.btnWholesaleCancel.UseVisualStyleBackColor = true;
+      this.btnWholesaleCancel.Click += new System.EventHandler(this.btnWholesaleCancel_Click);
       // 
-      // button2
+      // btnWholesaleSave
       // 
-      this.button2.Location = new System.Drawing.Point(246, 172);
-      this.button2.Name = "button2";
-      this.button2.Size = new System.Drawing.Size(77, 23);
-      this.button2.TabIndex = 71;
-      this.button2.Text = "Save";
-      this.button2.UseVisualStyleBackColor = true;
+      this.btnWholesaleSave.Location = new System.Drawing.Point(219, 168);
+      this.btnWholesaleSave.Name = "btnWholesaleSave";
+      this.btnWholesaleSave.Size = new System.Drawing.Size(77, 23);
+      this.btnWholesaleSave.TabIndex = 71;
+      this.btnWholesaleSave.Text = "Save";
+      this.btnWholesaleSave.UseVisualStyleBackColor = true;
       // 
-      // button3
+      // btnWholesaleNew
       // 
-      this.button3.Location = new System.Drawing.Point(21, 168);
-      this.button3.Name = "button3";
-      this.button3.Size = new System.Drawing.Size(77, 23);
-      this.button3.TabIndex = 72;
-      this.button3.Text = "Add New";
-      this.button3.UseVisualStyleBackColor = true;
+      this.btnWholesaleNew.Location = new System.Drawing.Point(21, 168);
+      this.btnWholesaleNew.Name = "btnWholesaleNew";
+      this.btnWholesaleNew.Size = new System.Drawing.Size(77, 23);
+      this.btnWholesaleNew.TabIndex = 72;
+      this.btnWholesaleNew.Text = "Add New";
+      this.btnWholesaleNew.UseVisualStyleBackColor = true;
+      this.btnWholesaleNew.Click += new System.EventHandler(this.btnWholesaleNew_Click);
       // 
       // tabMatching
       // 
@@ -757,7 +763,7 @@
       this.tabMatching.Controls.Add(this.label4);
       this.tabMatching.Location = new System.Drawing.Point(4, 22);
       this.tabMatching.Name = "tabMatching";
-      this.tabMatching.Size = new System.Drawing.Size(1163, 308);
+      this.tabMatching.Size = new System.Drawing.Size(1163, 278);
       this.tabMatching.TabIndex = 2;
       this.tabMatching.Text = "Retail/Wholesale Matching";
       this.tabMatching.UseVisualStyleBackColor = true;
@@ -779,7 +785,7 @@
       this.lstWholesaleUsocs.FormattingEnabled = true;
       this.lstWholesaleUsocs.Location = new System.Drawing.Point(455, 59);
       this.lstWholesaleUsocs.Name = "lstWholesaleUsocs";
-      this.lstWholesaleUsocs.Size = new System.Drawing.Size(694, 238);
+      this.lstWholesaleUsocs.Size = new System.Drawing.Size(694, 212);
       this.lstWholesaleUsocs.TabIndex = 11;
       // 
       // btnUnmatchUsoc
@@ -809,7 +815,7 @@
       this.lstRetailUsocs.FormattingEnabled = true;
       this.lstRetailUsocs.Location = new System.Drawing.Point(17, 59);
       this.lstRetailUsocs.Name = "lstRetailUsocs";
-      this.lstRetailUsocs.Size = new System.Drawing.Size(326, 238);
+      this.lstRetailUsocs.Size = new System.Drawing.Size(326, 212);
       this.lstRetailUsocs.TabIndex = 8;
       // 
       // label4
@@ -861,9 +867,9 @@
     private System.Windows.Forms.TabPage tabRetail;
     private System.Windows.Forms.TabPage tabWholesale;
     private System.Windows.Forms.TabPage tabMatching;
-    private System.Windows.Forms.Button btnNew;
-    private System.Windows.Forms.Button btnCancel;
-    private System.Windows.Forms.Button btnSave;
+    private System.Windows.Forms.Button btnRetailNew;
+    private System.Windows.Forms.Button btnRetailCancel;
+    private System.Windows.Forms.Button btnRetailSave;
     private System.Windows.Forms.CheckBox ckExcludeFromExceptions;
     private System.Windows.Forms.CheckBox ckSaddlebackUSOC;
     private System.Windows.Forms.CheckBox ckRetailInactivate;
@@ -902,9 +908,9 @@
     private System.Windows.Forms.Label label16;
     private System.Windows.Forms.TextBox txtWholesaleNRC;
     private System.Windows.Forms.TextBox txtWholesaleMRC;
-    private System.Windows.Forms.Button button1;
-    private System.Windows.Forms.Button button2;
-    private System.Windows.Forms.Button button3;
+    private System.Windows.Forms.Button btnWholesaleCancel;
+    private System.Windows.Forms.Button btnWholesaleSave;
+    private System.Windows.Forms.Button btnWholesaleNew;
     private System.Windows.Forms.Label lblUsocMatching;
     private System.Windows.Forms.ListBox lstWholesaleUsocs;
     private System.Windows.Forms.Button btnUnmatchUsoc;

@@ -45,8 +45,20 @@ namespace CCI.DesktopClient
     {
       createCodeMenu();
       createGenericMaintenanceMenu();
+      string gotoForm = ConfigurationManager.AppSettings["AutoLoginScreen"];
+      if (!string.IsNullOrEmpty(gotoForm))
+      {
+        Form frm = getFormFromName(gotoForm);
+        if (frm != null)
+          ShowForm(frm, true);
+      }
     }
     #region generic menu and tool strip events
+    private Form getFormFromName(string name)
+    {
+      string nmspace = this.GetType().Namespace + ".Screens";
+      return (Form)Activator.CreateInstance(Type.GetType(nmspace + "." + name)); 
+    }
     private void ShowNewForm(object sender, EventArgs e)
     {
       Form childForm = new Form();
