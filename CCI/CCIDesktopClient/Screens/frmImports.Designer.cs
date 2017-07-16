@@ -539,17 +539,21 @@ namespace CCI.DesktopClient.Screens
       this.ckImportLedgerOnly.TabIndex = 29;
       this.ckImportLedgerOnly.Text = "Import Ledger Only";
       this.ckImportLedgerOnly.UseVisualStyleBackColor = true;
+      this.ckImportLedgerOnly.Visible = false;
       this.ckImportLedgerOnly.CheckedChanged += new System.EventHandler(this.ckImportLedgerOnly_CheckedChanged);
       // 
       // ckRequireLedger
       // 
       this.ckRequireLedger.AutoSize = true;
+      this.ckRequireLedger.Checked = true;
+      this.ckRequireLedger.CheckState = System.Windows.Forms.CheckState.Checked;
       this.ckRequireLedger.Location = new System.Drawing.Point(6, 56);
       this.ckRequireLedger.Name = "ckRequireLedger";
       this.ckRequireLedger.Size = new System.Drawing.Size(131, 17);
       this.ckRequireLedger.TabIndex = 28;
       this.ckRequireLedger.Text = "Require Ledger Import";
       this.ckRequireLedger.UseVisualStyleBackColor = true;
+      this.ckRequireLedger.Visible = false;
       // 
       // label13
       // 
@@ -648,6 +652,7 @@ namespace CCI.DesktopClient.Screens
       this.Controls.Add(this.splitMain);
       this.Name = "frmImports";
       this.Text = "Imports";
+      this.Load += new System.EventHandler(this.frmImports_Load);
       this.panel4.ResumeLayout(false);
       this.panel4.PerformLayout();
       this.panel3.ResumeLayout(false);

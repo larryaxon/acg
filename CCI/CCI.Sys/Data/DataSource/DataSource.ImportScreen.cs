@@ -234,7 +234,7 @@ where e.entitytype = 'customer'";
       return "";
     }
 
-    public string processUndoPost(DateTime billdate, string user)
+    public string processUndoPost(DateTime billdate, string user, string source)
     {
       Exception returnmsg;
       string errmsg;
@@ -274,7 +274,7 @@ where e.entitytype = 'customer'";
         errmsg = "Error removing invoice transactions.";
         return errmsg;
       }
-      returnmsg = insertAcctImportLog(user, "UnPost", null, billdate);
+      returnmsg = insertAcctImportLog(user, "UnPost", null, billdate, source);
       if (returnmsg != null)
       {
         errmsg = "Error on updating log file.";

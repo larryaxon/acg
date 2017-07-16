@@ -47,21 +47,25 @@ namespace CCI.DesktopClient.Screens
       }
     }
     private bool useNewImport = true;
-    private enum ImportSource {  Saddleback, RedRock }
+    private enum ImportSource { Saddleback, RedRock }
     private ImportSource _importSource = ImportSource.Saddleback;
     private class SaddleBackFTPInfo
     {
       private const string URIKEY = "SaddlebackFTPUri";
       private const string UIDKEY = "SaddlebackFTPUsername";
       private const string PWKEY = "SaddlebackFTPPassword";
-      public string Uri = ConfigurationSettings.AppSettings[URIKEY];
-      public string Uid = ConfigurationSettings.AppSettings[UIDKEY];
-      public string Pw = ConfigurationSettings.AppSettings[PWKEY];
+      public string Uri = ConfigurationManager.AppSettings[URIKEY];
+      public string Uid = ConfigurationManager.AppSettings[UIDKEY];
+      public string Pw = ConfigurationManager.AppSettings[PWKEY];
     }
 
     private enum ImportFileTypes { MRCWholesale, MRCRetail, OCCWholesale, OCCRetail, TollWholesale, TollRetail, Tax, Ledger };
-    private string[] _fileTypePrefixes = new string[] { "MRC WHLSL-", "MRC Retail-", "OCC WHLSL-", "OCC Retail-", "Toll WHLSL-",  "Toll Retail-", "TAX-", "Ledger-" };
-    private string[] _fileTypeSuffixes = new string[] { "csv", "csv", "csv", "csv", "csv", "csv", "csv", "xls" };
+    private string[] _saddlebackFileTypePrefixes = new string[] { "MRC WHLSL-", "MRC Retail-", "OCC WHLSL-", "OCC Retail-", "Toll WHLSL-", "Toll Retail-", "TAX-", "Ledger-" };
+    private string[] _redRockFileTypePrefixes = new string[] { "Wholesale MRC Red Rock-", "Retail MRC Red Rock-", "Wholesale OCC Red Rock-", "Retail OCC Red Rock-", "Wholesale Toll Red Rock-", "Retail Toll Red Rock-", "TAX Red Rock-", "Ledger Red Rock-" };
+    private string[] _fileTypePrefixes = new string[] { };
+    private string[] _fileTypeSuffixes = new string[] { };
+    private string[] _saddlebackFileTypeSuffixes = new string[] { "csv", "csv", "csv", "csv", "csv", "csv", "csv", "xls" };
+    private string[] _redRockFileTypeSuffixes = new string[] { "txt", "txt", "txt", "txt", "txt", "txt", "txt", "txt" };
     private int[] _skipLines = new int[] { 4, 4, 4, 4, 0, 0, 0, 0 };
     //private string[] _fileTypeSuffixes = new string[] { "xls", "xls", "xls", "xls", "csv", "csv", "csv", "xls" };
     private const string FILENOTFOUNDPREFIX = "NOT FOUND: ";
@@ -80,11 +84,16 @@ namespace CCI.DesktopClient.Screens
         {
           _importSource = ImportSource.Saddleback;
           _sourceFolder = "Saddleback Imports";
+          _fileTypePrefixes = _saddlebackFileTypePrefixes;
+          _fileTypeSuffixes = _saddlebackFileTypeSuffixes;
         }
         else if (value.Equals("RedRock", StringComparison.CurrentCultureIgnoreCase))
         {
           _importSource = ImportSource.RedRock;
           _sourceFolder = "Red Rock Imports";
+          _fileTypePrefixes = _redRockFileTypePrefixes;
+          _fileTypeSuffixes = _redRockFileTypeSuffixes;
+          ckDownload.Visible = false;
         }
         else
         {
@@ -98,55 +107,32 @@ namespace CCI.DesktopClient.Screens
 
       InitializeComponent();
       //            CheckForPreviousImports();
-      RefreshImportLog();
-      txtBillDate.Value = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
-      string filetype = "Posted";
-      string importfiletype = "Tax Detail";
-      DateTime billdate = txtBillDate.Value;
-      if (ValidImport(billdate, importfiletype) == true && ValidPost(billdate, filetype) == false)
-      {
-        this.btnPostDetails.Enabled = true;
-      }
-      if (ValidPost(billdate, filetype) == true)
-      {
-        this.btnUndoPost.Enabled = true;
-      }
-      if (ValidUnPost(billdate, filetype) == true)
-      {
-        this.btnPostDetails.Enabled = true;
-      }
-      if (!useNewImport)
-      {
-        ckDownload.Checked = false;
-        ckDownload.Visible = false;
-        for (int i = 0; i < 4; i++)
-          _fileTypeSuffixes[i] = "xls";
-      }
+
 
     }
 
-      #region form events
-      private void btnFindFolder_Click(object sender, EventArgs e)
-      {
-        resetFileColors(false);
-        btnImport.Enabled = false;
-        btnPostDetails.Enabled = false;
-        btnUndoImport.Enabled = false;
-        btnUndoPost.Enabled = false;
-        FolderBrowserDialog openFileDialog1 = new FolderBrowserDialog();
+    #region form events
+    private void btnFindFolder_Click(object sender, EventArgs e)
+    {
+      resetFileColors(false);
+      btnImport.Enabled = false;
+      btnPostDetails.Enabled = false;
+      btnUndoImport.Enabled = false;
+      btnUndoPost.Enabled = false;
+      FolderBrowserDialog openFileDialog1 = new FolderBrowserDialog();
 
-        openFileDialog1.SelectedPath = _rootPath;
-        openFileDialog1.Description = "Select the folder where the import files for this bill date have been placed";
+      openFileDialog1.SelectedPath = _rootPath;
+      openFileDialog1.Description = "Select the folder where the import files for this bill date have been placed";
             
 
-        DialogResult result = openFileDialog1.ShowDialog(); // Show the dialog.
-        if (result == DialogResult.OK) // Test result.
-        {
-          txtBasePath.Text = _rootPath = _basePath = openFileDialog1.SelectedPath;
-          btnReloadFiles.Enabled = true;
-          loadFileNames(ckDownload.Checked);
-        }
+      DialogResult result = openFileDialog1.ShowDialog(); // Show the dialog.
+      if (result == DialogResult.OK) // Test result.
+      {
+        txtBasePath.Text = _rootPath = _basePath = openFileDialog1.SelectedPath;
+        btnReloadFiles.Enabled = true;
+        loadFileNames(ckDownload.Checked);
       }
+    }
 
     //private void btnFindFileMRCRetail_Click(object sender, EventArgs e)
       //{
@@ -251,594 +237,623 @@ namespace CCI.DesktopClient.Screens
       //        this.txtFileName4.Text = openFileDialog1.FileName;
       //    }
       //}
-      private void btnImport_Click(object sender, EventArgs e)
+    private void btnImport_Click(object sender, EventArgs e)
+    {
+      if (hasValidFiles || _importLedgerOnly)
       {
-        if (hasValidFiles || _importLedgerOnly)
+        #region MRC Wholesale
+        if (!_importLedgerOnly && !this.txtFileName1.Text.StartsWith(FILENOTFOUNDPREFIX))
         {
-          #region MRC Wholesale
-          if (!_importLedgerOnly && !this.txtFileName1.Text.StartsWith(FILENOTFOUNDPREFIX))
+          importfileinvaliddate = false;
+          Cursor.Current = Cursors.WaitCursor;
+          string filetype = "MRC Wholesale";
+          DateTime billdate = txtBillDate.Value;
+          if (ValidImport(billdate, filetype) == false)
           {
-            importfileinvaliddate = false;
-            Cursor.Current = Cursors.WaitCursor;
-            string filetype = "MRC Wholesale";
-            DateTime billdate = txtBillDate.Value;
-            if (ValidImport(billdate, filetype) == false)
+            if (useNewImport)
+              this.txtFileName1.Text = this.txtFileName1.Text.Replace("Y:\\", "c:\\city hosted solutions\\");
+            else
+              openSpreadsheet(this.txtFileName1.Text);
+            this.lblMRCWholesaleMsg.Text = "Importing...";
+            importMRCFile("Wholesale", billdate);
+            if (!useNewImport)
+              closeExcel();
+            if (importfileinvaliddate == false)
             {
-              if (useNewImport)
-                this.txtFileName1.Text = this.txtFileName1.Text.Replace("Y:\\", "c:\\city hosted solutions\\");
-              else
-                openSpreadsheet(this.txtFileName1.Text);
-              this.lblMRCWholesaleMsg.Text = "Importing...";
-              importMRCFile("Wholesale", billdate);
-              if (!useNewImport)
-                closeExcel();
-              if (importfileinvaliddate == false)
-              {
-                string user = SecurityContext.User;
-                _dataSource.insertAcctImportLog(user, filetype, this.txtFileName1.Text, billdate);
-                RefreshImportLog();
-                string step = "MRC Wholesale";
-                _dataSource.insertHostedProcessStep(user, step, billdate, filetype, this.txtFileName1.Text);
-                this.lblMRCWholesaleMsg.Text = "Completed...";
-              }
-              else
-              {
-                this.lblMRCWholesaleMsg.Text = "File has wrong bill date";
-              }
-              Cursor.Current = Cursors.Default;
+              string user = SecurityContext.User;
+              _dataSource.insertAcctImportLog(user, filetype, this.txtFileName1.Text, billdate, Source);
+              RefreshImportLog();
+              string step = "MRC Wholesale";
+              _dataSource.insertHostedProcessStep(user, step, billdate, filetype, this.txtFileName1.Text);
+              this.lblMRCWholesaleMsg.Text = "Completed...";
             }
             else
             {
-              this.lblMRCWholesaleMsg.Text = "Already Imported.";
+              this.lblMRCWholesaleMsg.Text = "File has wrong bill date";
             }
+            Cursor.Current = Cursors.Default;
           }
-          #endregion
-          #region MRC Retail
-          if (!_importLedgerOnly && !this.txtFileName2.Text.StartsWith(FILENOTFOUNDPREFIX))
+          else
           {
-            importfileinvaliddate = false;
-            Cursor.Current = Cursors.WaitCursor;
-            string filetype = "MRC Retail";
-            DateTime billdate = txtBillDate.Value;
-            if (ValidImport(billdate, filetype) == false)
+            this.lblMRCWholesaleMsg.Text = "Already Imported.";
+          }
+        }
+        #endregion
+        #region MRC Retail
+        if (!_importLedgerOnly && !this.txtFileName2.Text.StartsWith(FILENOTFOUNDPREFIX))
+        {
+          importfileinvaliddate = false;
+          Cursor.Current = Cursors.WaitCursor;
+          string filetype = "MRC Retail";
+          DateTime billdate = txtBillDate.Value;
+          if (ValidImport(billdate, filetype) == false)
+          {
+            if (useNewImport)
+              this.txtFileName2.Text = this.txtFileName2.Text.Replace("Y:\\", "c:\\city hosted solutions\\");
+            else
+              openSpreadsheet(this.txtFileName2.Text);
+            this.lblMRCRetailMsg.Text = "Importing...";
+            importMRCFile("Retail", billdate);
+            if (!useNewImport)
+              closeExcel();
+            if (importfileinvaliddate == false)
             {
-              if (useNewImport)
-                this.txtFileName2.Text = this.txtFileName2.Text.Replace("Y:\\", "c:\\city hosted solutions\\");
-              else
-                openSpreadsheet(this.txtFileName2.Text);
-              this.lblMRCRetailMsg.Text = "Importing...";
-              importMRCFile("Retail", billdate);
-              if (!useNewImport)
-                closeExcel();
-              if (importfileinvaliddate == false)
-              {
-                string user = SecurityContext.User;
-                _dataSource.insertAcctImportLog(user, filetype, this.txtFileName2.Text, billdate);
-                RefreshImportLog();
-                string step = "MRC Retail";
-                _dataSource.insertHostedProcessStep(user, step, billdate, filetype, this.txtFileName2.Text);
-                this.lblMRCRetailMsg.Text = "Completed...";
-              }
-              else
-              {
-                this.lblMRCRetailMsg.Text = "File has wrong bill date";
-              }
-              Cursor.Current = Cursors.Default;
+              string user = SecurityContext.User;
+              _dataSource.insertAcctImportLog(user, filetype, this.txtFileName2.Text, billdate, Source);
+              RefreshImportLog();
+              string step = "MRC Retail";
+              _dataSource.insertHostedProcessStep(user, step, billdate, filetype, this.txtFileName2.Text);
+              this.lblMRCRetailMsg.Text = "Completed...";
             }
             else
             {
-              this.lblMRCRetailMsg.Text = "Already Imported.";
+              this.lblMRCRetailMsg.Text = "File has wrong bill date";
             }
+            Cursor.Current = Cursors.Default;
           }
-          #endregion
-          #region OCC Wholesale
-          if (!_importLedgerOnly && !this.txtFileName3.Text.StartsWith(FILENOTFOUNDPREFIX))
+          else
           {
-            importfileinvaliddate = false;
-            Cursor.Current = Cursors.WaitCursor;
-            string filetype = "OCC Wholesale";
-            DateTime billdate = txtBillDate.Value;
-            if (ValidImport(billdate, filetype) == false)
+            this.lblMRCRetailMsg.Text = "Already Imported.";
+          }
+        }
+        #endregion
+        #region OCC Wholesale
+        if (!_importLedgerOnly && !this.txtFileName3.Text.StartsWith(FILENOTFOUNDPREFIX))
+        {
+          importfileinvaliddate = false;
+          Cursor.Current = Cursors.WaitCursor;
+          string filetype = "OCC Wholesale";
+          DateTime billdate = txtBillDate.Value;
+          if (ValidImport(billdate, filetype) == false)
+          {
+            if (useNewImport)
+              this.txtFileName3.Text = this.txtFileName3.Text.Replace("Y:\\", "c:\\city hosted solutions\\");
+            else
+            openSpreadsheet(this.txtFileName3.Text);
+            this.lblOCCWholesaleMsg.Text = "Importing...";
+            importOther("Wholesale", billdate);
+            if (!useNewImport)
+              closeExcel();
+            if (importfileinvaliddate == false)
             {
-              if (useNewImport)
-                this.txtFileName3.Text = this.txtFileName3.Text.Replace("Y:\\", "c:\\city hosted solutions\\");
-              else
-              openSpreadsheet(this.txtFileName3.Text);
-              this.lblOCCWholesaleMsg.Text = "Importing...";
-              importOther("Wholesale", billdate);
-              if (!useNewImport)
-                closeExcel();
-              if (importfileinvaliddate == false)
-              {
-                string user = SecurityContext.User;
-                _dataSource.insertAcctImportLog(user, filetype, this.txtFileName3.Text, billdate);
-                RefreshImportLog();
-                string step = "OCC Wholesale";
-                _dataSource.insertHostedProcessStep(user, step, billdate, filetype, this.txtFileName3.Text);
-                this.lblOCCWholesaleMsg.Text = "Completed...";
-              }
-              else
-              {
-                this.lblOCCWholesaleMsg.Text = "File has wrong bill date";
-              }
-              Cursor.Current = Cursors.Default;
+              string user = SecurityContext.User;
+              _dataSource.insertAcctImportLog(user, filetype, this.txtFileName3.Text, billdate, Source);
+              RefreshImportLog();
+              string step = "OCC Wholesale";
+              _dataSource.insertHostedProcessStep(user, step, billdate, filetype, this.txtFileName3.Text);
+              this.lblOCCWholesaleMsg.Text = "Completed...";
             }
             else
             {
-              this.lblOCCWholesaleMsg.Text = "Already Imported.";
+              this.lblOCCWholesaleMsg.Text = "File has wrong bill date";
             }
+            Cursor.Current = Cursors.Default;
           }
-          #endregion
-          #region OCC Retail
-          if (!_importLedgerOnly && !this.txtFileName4.Text.StartsWith(FILENOTFOUNDPREFIX))
+          else
           {
-            Cursor.Current = Cursors.WaitCursor;
-            string filetype = "OCC Retail";
-            DateTime billdate = txtBillDate.Value;
-            if (ValidImport(billdate, filetype) == false)
+            this.lblOCCWholesaleMsg.Text = "Already Imported.";
+          }
+        }
+        #endregion
+        #region OCC Retail
+        if (!_importLedgerOnly && !this.txtFileName4.Text.StartsWith(FILENOTFOUNDPREFIX))
+        {
+          Cursor.Current = Cursors.WaitCursor;
+          string filetype = "OCC Retail";
+          DateTime billdate = txtBillDate.Value;
+          if (ValidImport(billdate, filetype) == false)
+          {
+            if (useNewImport)
+              this.txtFileName4.Text = this.txtFileName4.Text.Replace("Y:\\", "c:\\city hosted solutions\\");
+            else
+              openSpreadsheet(this.txtFileName4.Text);
+            this.lblOCCRetailMsg.Text = "Importing...";
+            importOther("Retail", billdate);
+            if (!useNewImport)
+              closeExcel();
+            if (importfileinvaliddate == false)
             {
-              if (useNewImport)
-                this.txtFileName4.Text = this.txtFileName4.Text.Replace("Y:\\", "c:\\city hosted solutions\\");
-              else
-                openSpreadsheet(this.txtFileName4.Text);
-              this.lblOCCRetailMsg.Text = "Importing...";
-              importOther("Retail", billdate);
-              if (!useNewImport)
-                closeExcel();
-              if (importfileinvaliddate == false)
-              {
-                string user = SecurityContext.User;
-                _dataSource.insertAcctImportLog(user, filetype, this.txtFileName4.Text, billdate);
-                RefreshImportLog();
-                string step = "OCC Retail";
-                _dataSource.insertHostedProcessStep(user, step, billdate, filetype, this.txtFileName4.Text);
-                this.lblOCCRetailMsg.Text = "Completed...";
-              }
-              else
-              {
-                this.lblOCCRetailMsg.Text = "File has wrong bill date";
-              }
-              Cursor.Current = Cursors.Default;
+              string user = SecurityContext.User;
+              _dataSource.insertAcctImportLog(user, filetype, this.txtFileName4.Text, billdate, Source);
+              RefreshImportLog();
+              string step = "OCC Retail";
+              _dataSource.insertHostedProcessStep(user, step, billdate, filetype, this.txtFileName4.Text);
+              this.lblOCCRetailMsg.Text = "Completed...";
             }
             else
             {
-              this.lblOCCRetailMsg.Text = "Already Imported.";
+              this.lblOCCRetailMsg.Text = "File has wrong bill date";
             }
+            Cursor.Current = Cursors.Default;
           }
-          #endregion
-          #region Toll Wholesale
-          if (!_importLedgerOnly && !this.txtFileName5.Text.StartsWith(FILENOTFOUNDPREFIX))
+          else
           {
-            Exception returnmsg;
-            Boolean importerror;
-   //         this.txtFileName5.Text = this.txtFileName5.Text.Replace("y:\\", "d:\\city operations\\");
-   //         this.txtFileName5.Text = this.txtFileName5.Text.Replace("Y:\\", "d:\\city operations\\");
-            //this.txtFileName5.Text = this.txtFileName5.Text.Replace("y:\\", "c:\\city hosted solutions\\");
-            this.txtFileName5.Text = this.txtFileName5.Text.Replace("Y:\\", "c:\\city hosted solutions\\");
-            Cursor.Current = Cursors.WaitCursor;
-            string filetype = "Calls Wholesale";
-            string importtable = "hostedtemptollwholesale";
-            DateTime billdate = txtBillDate.Value;
-            if (ValidImport(billdate, filetype) == false)
+            this.lblOCCRetailMsg.Text = "Already Imported.";
+          }
+        }
+        #endregion
+        #region Toll Wholesale
+        if (!_importLedgerOnly && !this.txtFileName5.Text.StartsWith(FILENOTFOUNDPREFIX))
+        {
+          Exception returnmsg;
+          Boolean importerror;
+  //         this.txtFileName5.Text = this.txtFileName5.Text.Replace("y:\\", "d:\\city operations\\");
+  //         this.txtFileName5.Text = this.txtFileName5.Text.Replace("Y:\\", "d:\\city operations\\");
+          //this.txtFileName5.Text = this.txtFileName5.Text.Replace("y:\\", "c:\\city hosted solutions\\");
+          this.txtFileName5.Text = this.txtFileName5.Text.Replace("Y:\\", "c:\\city hosted solutions\\");
+          Cursor.Current = Cursors.WaitCursor;
+          string filetype = "Calls Wholesale";
+          string importtable = "hostedtemptollwholesale";
+          DateTime billdate = txtBillDate.Value;
+          if (ValidImport(billdate, filetype) == false)
+          {
+            this.lblCallWholesaleMsg.Text = "Importing...";
+            this.lblCallWholesaleMsg.Refresh();
+            returnmsg = importTollWholesale(this.txtFileName5.Text,Convert.ToString(billdate.Year),Convert.ToString(billdate.Month));
+            if (returnmsg == null)
             {
-              this.lblCallWholesaleMsg.Text = "Importing...";
-              this.lblCallWholesaleMsg.Refresh();
-              returnmsg = importTollWholesale(this.txtFileName5.Text,Convert.ToString(billdate.Year),Convert.ToString(billdate.Month));
-              if (returnmsg == null)
+              importerror = _dataSource.checkfortollimporterror(importtable, Convert.ToString(billdate.Year), Convert.ToString(billdate.Month));
+              if (importerror == false)
               {
-                importerror = _dataSource.checkfortollimporterror(importtable, Convert.ToString(billdate.Year), Convert.ToString(billdate.Month));
-                if (importerror == false)
+                string user = SecurityContext.User;
+                returnmsg = _dataSource.insertAcctImportLog(user, filetype, this.txtFileName5.Text, billdate, Source);
+                if (returnmsg == null)
                 {
-                  string user = SecurityContext.User;
-                  returnmsg = _dataSource.insertAcctImportLog(user, filetype, this.txtFileName5.Text, billdate);
+                  RefreshImportLog();
+                  string step = "Calls Wholesale";
+                  returnmsg = _dataSource.insertHostedProcessStep(user, step, billdate, filetype, this.txtFileName5.Text);
                   if (returnmsg == null)
                   {
-                    RefreshImportLog();
-                    string step = "Calls Wholesale";
-                    returnmsg = _dataSource.insertHostedProcessStep(user, step, billdate, filetype, this.txtFileName5.Text);
-                    if (returnmsg == null)
-                    {
-                      this.lblCallWholesaleMsg.Text = "Completed...";
-                      this.lblCallWholesaleMsg.Refresh();
-                    }
-                    else
-                    {
-                      this.lblCallWholesaleMsg.Text = "Error updating process cycle";
-                      this.lblCallWholesaleMsg.Refresh();
-                      this.txtErrorMessage.Text = returnmsg.Message;
-                    }
+                    this.lblCallWholesaleMsg.Text = "Completed...";
+                    this.lblCallWholesaleMsg.Refresh();
                   }
                   else
                   {
-                    this.lblCallWholesaleMsg.Text = "Error updating import log";
+                    this.lblCallWholesaleMsg.Text = "Error updating process cycle";
                     this.lblCallWholesaleMsg.Refresh();
                     this.txtErrorMessage.Text = returnmsg.Message;
                   }
                 }
                 else
                 {
-                  this.lblCallWholesaleMsg.Text = "File has wrong bill date";
+                  this.lblCallWholesaleMsg.Text = "Error updating import log";
                   this.lblCallWholesaleMsg.Refresh();
+                  this.txtErrorMessage.Text = returnmsg.Message;
                 }
               }
               else
               {
-                this.lblCallWholesaleMsg.Text = "Error Importing Call Wholesale";
+                this.lblCallWholesaleMsg.Text = "File has wrong bill date";
                 this.lblCallWholesaleMsg.Refresh();
-                this.txtErrorMessage.Text = returnmsg.Message;
               }
-              Cursor.Current = Cursors.Default;
             }
             else
             {
-              this.lblCallWholesaleMsg.Text = "Already Imported.";
+              this.lblCallWholesaleMsg.Text = "Error Importing Call Wholesale";
+              this.lblCallWholesaleMsg.Refresh();
+              this.txtErrorMessage.Text = returnmsg.Message;
             }
+            Cursor.Current = Cursors.Default;
           }
-          #endregion
-          #region Toll Retail
-          if (!_importLedgerOnly && !this.txtFileName6.Text.StartsWith(FILENOTFOUNDPREFIX))
+          else
           {
-            Exception returnmsg;
-            Boolean importerror;
+            this.lblCallWholesaleMsg.Text = "Already Imported.";
+          }
+        }
+        #endregion
+        #region Toll Retail
+        if (!_importLedgerOnly && !this.txtFileName6.Text.StartsWith(FILENOTFOUNDPREFIX))
+        {
+          Exception returnmsg;
+          Boolean importerror;
 //            this.txtFileName6.Text = this.txtFileName6.Text.Replace("y:\\", "d:\\city operations\\");
 //            this.txtFileName6.Text = this.txtFileName6.Text.Replace("Y:\\", "d:\\city operations\\");
-            //this.txtFileName6.Text = this.txtFileName6.Text.Replace("y:\\", "c:\\city hosted solutions\\");
-            this.txtFileName6.Text = this.txtFileName6.Text.Replace("Y:\\", "c:\\city hosted solutions\\");
+          //this.txtFileName6.Text = this.txtFileName6.Text.Replace("y:\\", "c:\\city hosted solutions\\");
+          this.txtFileName6.Text = this.txtFileName6.Text.Replace("Y:\\", "c:\\city hosted solutions\\");
 
-            Cursor.Current = Cursors.WaitCursor;
-            string filetype = "Calls Retail";
-            string importtable = "hostedtemptollretail";
-            DateTime billdate = txtBillDate.Value;
-            if (ValidImport(billdate, filetype) == false)
+          Cursor.Current = Cursors.WaitCursor;
+          string filetype = "Calls Retail";
+          string importtable = "hostedtemptollretail";
+          DateTime billdate = txtBillDate.Value;
+          if (ValidImport(billdate, filetype) == false)
+          {
+            this.lblCallRetailMsg.Text = "Importing...";
+            returnmsg = importTollRetail(this.txtFileName6.Text, Convert.ToString(billdate.Year), Convert.ToString(billdate.Month));
+            if (returnmsg == null)
             {
-              this.lblCallRetailMsg.Text = "Importing...";
-              returnmsg = importTollRetail(this.txtFileName6.Text, Convert.ToString(billdate.Year), Convert.ToString(billdate.Month));
-              if (returnmsg == null)
+              importerror = _dataSource.checkfortollimporterror(importtable, Convert.ToString(billdate.Year), Convert.ToString(billdate.Month));
+              if (importerror == false)
               {
-                importerror = _dataSource.checkfortollimporterror(importtable, Convert.ToString(billdate.Year), Convert.ToString(billdate.Month));
-                if (importerror == false)
+                string user = SecurityContext.User;
+                returnmsg = _dataSource.insertAcctImportLog(user, filetype, this.txtFileName6.Text, billdate, Source);
+                if (returnmsg == null)
                 {
-                  string user = SecurityContext.User;
-                  returnmsg = _dataSource.insertAcctImportLog(user, filetype, this.txtFileName6.Text, billdate);
+                  RefreshImportLog();
+                  string step = "Calls Retail";
+                  returnmsg = _dataSource.insertHostedProcessStep(user, step, billdate, filetype, this.txtFileName6.Text);
                   if (returnmsg == null)
                   {
-                    RefreshImportLog();
-                    string step = "Calls Retail";
-                    returnmsg = _dataSource.insertHostedProcessStep(user, step, billdate, filetype, this.txtFileName6.Text);
-                    if (returnmsg == null)
-                    {
-                      this.lblCallRetailMsg.Text = "Completed...";
-                      this.lblCallRetailMsg.Refresh();
-                    }
-                    else
-                    {
-                      this.lblCallRetailMsg.Text = "Error updating process cycle";
-                      this.lblCallRetailMsg.Refresh();
-                      this.txtErrorMessage.Text = returnmsg.Message;
-                    }
+                    this.lblCallRetailMsg.Text = "Completed...";
+                    this.lblCallRetailMsg.Refresh();
                   }
                   else
                   {
-                    this.lblCallRetailMsg.Text = "Error updating import log";
+                    this.lblCallRetailMsg.Text = "Error updating process cycle";
                     this.lblCallRetailMsg.Refresh();
                     this.txtErrorMessage.Text = returnmsg.Message;
                   }
                 }
                 else
                 {
-                  this.lblCallRetailMsg.Text = "File has wrong bill date";
+                  this.lblCallRetailMsg.Text = "Error updating import log";
                   this.lblCallRetailMsg.Refresh();
+                  this.txtErrorMessage.Text = returnmsg.Message;
                 }
               }
               else
               {
-                this.lblCallRetailMsg.Text = "Error Importing Call Retail";
+                this.lblCallRetailMsg.Text = "File has wrong bill date";
                 this.lblCallRetailMsg.Refresh();
-                this.txtErrorMessage.Text = returnmsg.Message;
               }
-              Cursor.Current = Cursors.Default;
             }
             else
             {
-              this.lblCallRetailMsg.Text = "Already Imported.";
+              this.lblCallRetailMsg.Text = "Error Importing Call Retail";
+              this.lblCallRetailMsg.Refresh();
+              this.txtErrorMessage.Text = returnmsg.Message;
             }
+            Cursor.Current = Cursors.Default;
           }
-          #endregion
-          #region Tax
-          if (!_importLedgerOnly && !this.txtFileName7.Text.StartsWith(FILENOTFOUNDPREFIX))
+          else
           {
-            Cursor.Current = Cursors.WaitCursor;
-            string filetype = "Tax Detail";
-            DateTime billdate = txtBillDate.Value;
-            if (ValidImport(billdate, filetype) == false)
-            {
-              openSpreadsheet(this.txtFileName7.Text);
-              this.lblTaxesMsg.Text = "Importing...";
-              importTaxes(txtBillDate.Value);
-              closeExcel();
-              string user = SecurityContext.User;
-              _dataSource.insertAcctImportLog(user, filetype, this.txtFileName7.Text, billdate);
-              RefreshImportLog();
-              string step = "Tax Detail";
-              _dataSource.insertHostedProcessStep(user, step, billdate, filetype, this.txtFileName7.Text);
-              this.lblTaxesMsg.Text = "Completed...";
-              Cursor.Current = Cursors.Default;
-            }
-            else
-            {
-              this.lblTaxesMsg.Text = "Already Imported.";
-            }
+            this.lblCallRetailMsg.Text = "Already Imported.";
           }
-          #endregion
-          #region Ledger
-          if (ckRequireLedger.Checked && !this.txtFileName8.Text.StartsWith(FILENOTFOUNDPREFIX))
+        }
+        #endregion
+        #region Tax
+        if (!_importLedgerOnly && !this.txtFileName7.Text.StartsWith(FILENOTFOUNDPREFIX))
+        {
+          Cursor.Current = Cursors.WaitCursor;
+          string filetype = "Tax Detail";
+          DateTime billdate = txtBillDate.Value;
+          if (ValidImport(billdate, filetype) == false)
           {
-            Cursor.Current = Cursors.WaitCursor;
-            string filetype = "Customer Ledger";
-            DateTime billdate = txtBillDate.Value;
-            if (ValidImport(billdate, filetype) == false)
-            {
-              openSpreadsheet(this.txtFileName8.Text);
-              this.lblLedgerMsg.Text = "Importing...";
-              importLedger(txtBillDate.Value);
-              closeExcel();
-              string user = SecurityContext.User;
-              _dataSource.insertAcctImportLog(user, filetype, this.txtFileName8.Text, billdate);
-              RefreshImportLog();
-              string step = "Customer Ledger";
-              _dataSource.insertHostedProcessStep(user, step, billdate, filetype, this.txtFileName8.Text);
-              this.lblLedgerMsg.Text = "Completed...";
-              Cursor.Current = Cursors.Default;
-            }
-            else
-            {
-              this.lblTaxesMsg.Text = "Already Imported.";
-            }
+            openSpreadsheet(this.txtFileName7.Text);
+            this.lblTaxesMsg.Text = "Importing...";
+            importTaxes(txtBillDate.Value);
+            closeExcel();
+            string user = SecurityContext.User;
+            _dataSource.insertAcctImportLog(user, filetype, this.txtFileName7.Text, billdate, Source);
+            RefreshImportLog();
+            string step = "Tax Detail";
+            _dataSource.insertHostedProcessStep(user, step, billdate, filetype, this.txtFileName7.Text);
+            this.lblTaxesMsg.Text = "Completed...";
+            Cursor.Current = Cursors.Default;
           }
-          #endregion
-          RefreshImportLog();
-          btnPostDetails.Enabled = true;
-          btnUndoImport.Enabled = true;
-          btnImport.Enabled = false;
+          else
+          {
+            this.lblTaxesMsg.Text = "Already Imported.";
+          }
+        }
+        #endregion
+        #region Ledger
+        if (ckRequireLedger.Checked && !this.txtFileName8.Text.StartsWith(FILENOTFOUNDPREFIX))
+        {
+          Cursor.Current = Cursors.WaitCursor;
+          string filetype = "Customer Ledger";
+          DateTime billdate = txtBillDate.Value;
+          if (ValidImport(billdate, filetype) == false)
+          {
+            openSpreadsheet(this.txtFileName8.Text);
+            this.lblLedgerMsg.Text = "Importing...";
+            importLedger(txtBillDate.Value);
+            closeExcel();
+            string user = SecurityContext.User;
+            _dataSource.insertAcctImportLog(user, filetype, this.txtFileName8.Text, billdate, Source);
+            RefreshImportLog();
+            string step = "Customer Ledger";
+            _dataSource.insertHostedProcessStep(user, step, billdate, filetype, this.txtFileName8.Text);
+            this.lblLedgerMsg.Text = "Completed...";
+            Cursor.Current = Cursors.Default;
+          }
+          else
+          {
+            this.lblTaxesMsg.Text = "Already Imported.";
+          }
+        }
+        #endregion
+        RefreshImportLog();
+        btnPostDetails.Enabled = true;
+        btnUndoImport.Enabled = true;
+        btnImport.Enabled = false;
+      }
+      else
+      {
+        this.txtErrorMessage.Text = "Make sure the bill date and all import file names are filled.";
+      }
+    }
+    private void btnPostDetails_Click(object sender, EventArgs e)
+    {
+
+      Exception returnmsg;
+      string filetype = "Posted";
+      DateTime billdate = txtBillDate.Value;
+      if (ValidPost(billdate, filetype) == false)
+      {
+        this.lblPostedMsg.Text = "Posting...";
+        this.lblPostedMsg.Refresh();
+        string user = SecurityContext.User;
+        if (!_importLedgerOnly)
+        {
+          returnmsg = _dataSource.processMRCDetails(txtBillDate.Value, user);
+          if (returnmsg == null)
+          {
+            this.lblMRCWholesaleMsg.Text = "Posted...";
+            this.lblMRCWholesaleMsg.Refresh();
+            this.lblMRCRetailMsg.Text = "Posted...";
+            this.lblMRCRetailMsg.Refresh();
+          }
+          else
+          {
+            this.lblMRCWholesaleMsg.Text = "Error Posting";
+            this.lblMRCWholesaleMsg.Refresh();
+            this.lblMRCRetailMsg.Text = "Error Posting";
+            this.lblMRCRetailMsg.Refresh();
+            this.txtErrorMessage.Text = returnmsg.Message;
+          }
+          returnmsg = _dataSource.processOCCDetails(txtBillDate.Value, user);
+          if (returnmsg == null)
+          {
+            this.lblOCCWholesaleMsg.Text = "Posted...";
+            this.lblOCCWholesaleMsg.Refresh();
+            this.lblOCCRetailMsg.Text = "Posted...";
+            this.lblOCCRetailMsg.Refresh();
+          }
+          else
+          {
+            this.lblOCCWholesaleMsg.Text = "Error Posting";
+            this.lblOCCWholesaleMsg.Refresh();
+            this.lblOCCRetailMsg.Text = "Error Posting";
+            this.lblOCCRetailMsg.Refresh();
+            this.txtErrorMessage.Text = returnmsg.Message;
+          }
+          returnmsg = _dataSource.processTOLLDetails(txtBillDate.Value, user);
+          if (returnmsg == null)
+          {
+            this.lblCallWholesaleMsg.Text = "Posted...";
+            this.lblCallWholesaleMsg.Refresh();
+            this.lblCallRetailMsg.Text = "Posted...";
+            this.lblCallRetailMsg.Refresh();
+          }
+          else
+          {
+            this.lblCallWholesaleMsg.Text = "Error Posting";
+            this.lblCallWholesaleMsg.Refresh();
+            this.lblCallRetailMsg.Text = "Error Posting";
+            this.lblCallRetailMsg.Refresh();
+            this.txtErrorMessage.Text = returnmsg.Message;
+          }
+          returnmsg = _dataSource.insertTaxDetail(txtBillDate.Value, user);
+          if (returnmsg == null)
+          {
+            this.lblTaxesMsg.Text = "Posted...";
+            this.lblTaxesMsg.Refresh();
+          }
+          else
+          {
+            this.lblTaxesMsg.Text = "Error Posting";
+            this.lblTaxesMsg.Refresh();
+            this.txtErrorMessage.Text = returnmsg.Message;
+          }
+        }
+        if (ckRequireLedger.Checked)
+        {
+          returnmsg = _dataSource.processLedgerTransactions(txtBillDate.Value, user);
+          if (returnmsg == null)
+          {
+            lblLedgerMsg.Text = "Posted...";
+            lblLedgerMsg.Refresh();
+          }
+          else
+          {
+            lblLedgerMsg.Text = "Error Posting";
+            lblLedgerMsg.Refresh();
+            this.txtErrorMessage.Text = returnmsg.Message;
+          }
+        }
+        returnmsg = _dataSource.insertAcctImportLog(user, filetype, this.txtFileName7.Text, billdate, Source);
+        if (returnmsg == null)
+        {
+          this.lblPostedMsg.Text = "Posted...";
+          this.lblPostedMsg.Refresh();
         }
         else
         {
-          this.txtErrorMessage.Text = "Make sure the bill date and all import file names are filled.";
+          this.lblPostedMsg.Text = "Error updating import log";
+          this.lblPostedMsg.Refresh();
+          this.txtErrorMessage.Text = returnmsg.Message;
         }
+        string step = "Posted";
+        returnmsg = _dataSource.insertHostedProcessStep(user, step, billdate, filetype, this.txtFileName4.Text);
+        if (returnmsg == null)
+        {
+          this.lblPostedMsg.Text = "Posted...";
+          this.lblPostedMsg.Refresh();
+        }
+        else
+        {
+          this.lblPostedMsg.Text = "Error updating process cycle";
+          this.lblPostedMsg.Refresh();
+          this.txtErrorMessage.Text = returnmsg.Message;
+        }
+        RefreshImportLog();
+        btnPostDetails.Enabled = false;
+        btnUndoPost.Enabled = true;
       }
-      private void btnPostDetails_Click(object sender, EventArgs e)
+      else
       {
+        this.lblPostedMsg.Text = "Already Posted.";
+        btnPostDetails.Enabled = false;
+        btnUndoPost.Enabled = true;
+      }
+    }
 
-        Exception returnmsg;
+    private void btnUndoImport_Click(object sender, EventArgs e)
+    {
+      //if (this.txtBillingDate.Text != "")
+      //{
         string filetype = "Posted";
+        string returnmsg;
         DateTime billdate = txtBillDate.Value;
         if (ValidPost(billdate, filetype) == false)
         {
-          this.lblPostedMsg.Text = "Posting...";
-          this.lblPostedMsg.Refresh();
+          this.lblUndoPostMsg.Text = "Undoing Import...";
+          this.lblUndoPostMsg.Refresh();
           string user = SecurityContext.User;
-          if (!_importLedgerOnly)
+          returnmsg = _dataSource.processUndoImport(txtBillDate.Value, user);
+          if (returnmsg == "")
           {
-            returnmsg = _dataSource.processMRCDetails(txtBillDate.Value, user);
-            if (returnmsg == null)
-            {
-              this.lblMRCWholesaleMsg.Text = "Posted...";
-              this.lblMRCWholesaleMsg.Refresh();
-              this.lblMRCRetailMsg.Text = "Posted...";
-              this.lblMRCRetailMsg.Refresh();
-            }
-            else
-            {
-              this.lblMRCWholesaleMsg.Text = "Error Posting";
-              this.lblMRCWholesaleMsg.Refresh();
-              this.lblMRCRetailMsg.Text = "Error Posting";
-              this.lblMRCRetailMsg.Refresh();
-              this.txtErrorMessage.Text = returnmsg.Message;
-            }
-            returnmsg = _dataSource.processOCCDetails(txtBillDate.Value, user);
-            if (returnmsg == null)
-            {
-              this.lblOCCWholesaleMsg.Text = "Posted...";
-              this.lblOCCWholesaleMsg.Refresh();
-              this.lblOCCRetailMsg.Text = "Posted...";
-              this.lblOCCRetailMsg.Refresh();
-            }
-            else
-            {
-              this.lblOCCWholesaleMsg.Text = "Error Posting";
-              this.lblOCCWholesaleMsg.Refresh();
-              this.lblOCCRetailMsg.Text = "Error Posting";
-              this.lblOCCRetailMsg.Refresh();
-              this.txtErrorMessage.Text = returnmsg.Message;
-            }
-            returnmsg = _dataSource.processTOLLDetails(txtBillDate.Value, user);
-            if (returnmsg == null)
-            {
-              this.lblCallWholesaleMsg.Text = "Posted...";
-              this.lblCallWholesaleMsg.Refresh();
-              this.lblCallRetailMsg.Text = "Posted...";
-              this.lblCallRetailMsg.Refresh();
-            }
-            else
-            {
-              this.lblCallWholesaleMsg.Text = "Error Posting";
-              this.lblCallWholesaleMsg.Refresh();
-              this.lblCallRetailMsg.Text = "Error Posting";
-              this.lblCallRetailMsg.Refresh();
-              this.txtErrorMessage.Text = returnmsg.Message;
-            }
-            returnmsg = _dataSource.insertTaxDetail(txtBillDate.Value, user);
-            if (returnmsg == null)
-            {
-              this.lblTaxesMsg.Text = "Posted...";
-              this.lblTaxesMsg.Refresh();
-            }
-            else
-            {
-              this.lblTaxesMsg.Text = "Error Posting";
-              this.lblTaxesMsg.Refresh();
-              this.txtErrorMessage.Text = returnmsg.Message;
-            }
-          }
-          if (ckRequireLedger.Checked)
-          {
-            returnmsg = _dataSource.processLedgerTransactions(txtBillDate.Value, user);
-            if (returnmsg == null)
-            {
-              lblLedgerMsg.Text = "Posted...";
-              lblLedgerMsg.Refresh();
-            }
-            else
-            {
-              lblLedgerMsg.Text = "Error Posting";
-              lblLedgerMsg.Refresh();
-              this.txtErrorMessage.Text = returnmsg.Message;
-            }
-          }
-          returnmsg = _dataSource.insertAcctImportLog(user, filetype, this.txtFileName7.Text, billdate);
-          if (returnmsg == null)
-          {
-            this.lblPostedMsg.Text = "Posted...";
-            this.lblPostedMsg.Refresh();
+            RefreshImportLog();
+            this.lblUndoPostMsg.Text = "Undo Completed...";
+            this.lblUndoPostMsg.Refresh();
           }
           else
           {
-            this.lblPostedMsg.Text = "Error updating import log";
-            this.lblPostedMsg.Refresh();
-            this.txtErrorMessage.Text = returnmsg.Message;
+            this.lblUndoPostMsg.Text = returnmsg;
+            this.lblUndoPostMsg.Refresh();
           }
-          string step = "Posted";
-          returnmsg = _dataSource.insertHostedProcessStep(user, step, billdate, filetype, this.txtFileName4.Text);
-          if (returnmsg == null)
-          {
-            this.lblPostedMsg.Text = "Posted...";
-            this.lblPostedMsg.Refresh();
-          }
-          else
-          {
-            this.lblPostedMsg.Text = "Error updating process cycle";
-            this.lblPostedMsg.Refresh();
-            this.txtErrorMessage.Text = returnmsg.Message;
-          }
-          RefreshImportLog();
-          btnPostDetails.Enabled = false;
-          btnUndoPost.Enabled = true;
         }
         else
         {
-          this.lblPostedMsg.Text = "Already Posted.";
-          btnPostDetails.Enabled = false;
-          btnUndoPost.Enabled = true;
+          lblUndoPostMsg.Text = "Already posted";
         }
-      }
-
-      private void btnUndoImport_Click(object sender, EventArgs e)
-      {
-        //if (this.txtBillingDate.Text != "")
-        //{
-          string filetype = "Posted";
-          string returnmsg;
-          DateTime billdate = txtBillDate.Value;
-          if (ValidPost(billdate, filetype) == false)
+      //}
+      //else
+      //{
+      //  this.lblUndoPostMsg.Text = "Missing Bill Date.";
+      //}
+      RefreshImportLog();
+    }
+    private void btnUndoPost_Click(object sender, EventArgs e)
+    {
+      //if (this.txtBillingDate.Text != "")
+      //{
+        string filetype = "Posted";
+        string returnmsg;
+        DateTime billdate = txtBillDate.Value;
+        if (ValidPost(billdate, filetype) == true)
+        {
+          this.lblUndoPostMsg.Text = "Undoing Post...";
+          this.lblUndoPostMsg.Refresh();
+          string user = SecurityContext.User;
+          returnmsg = _dataSource.processUndoPost(txtBillDate.Value, user, Source);
+          if (returnmsg == "")
           {
-            this.lblUndoPostMsg.Text = "Undoing Import...";
+            RefreshImportLog();
+            this.lblUndoPostMsg.Text = "Undo Completed...";
             this.lblUndoPostMsg.Refresh();
-            string user = SecurityContext.User;
-            returnmsg = _dataSource.processUndoImport(txtBillDate.Value, user);
-            if (returnmsg == "")
-            {
-              RefreshImportLog();
-              this.lblUndoPostMsg.Text = "Undo Completed...";
-              this.lblUndoPostMsg.Refresh();
-            }
-            else
-            {
-              this.lblUndoPostMsg.Text = returnmsg;
-              this.lblUndoPostMsg.Refresh();
-            }
           }
           else
           {
-            lblUndoPostMsg.Text = "Already posted";
-          }
-        //}
-        //else
-        //{
-        //  this.lblUndoPostMsg.Text = "Missing Bill Date.";
-        //}
-        RefreshImportLog();
-      }
-      private void btnUndoPost_Click(object sender, EventArgs e)
-      {
-        //if (this.txtBillingDate.Text != "")
-        //{
-          string filetype = "Posted";
-          string returnmsg;
-          DateTime billdate = txtBillDate.Value;
-          if (ValidPost(billdate, filetype) == true)
-          {
-            this.lblUndoPostMsg.Text = "Undoing Post...";
+            this.lblUndoPostMsg.Text = returnmsg;
             this.lblUndoPostMsg.Refresh();
-            string user = SecurityContext.User;
-            returnmsg = _dataSource.processUndoPost(txtBillDate.Value, user);
-            if (returnmsg == "")
-            {
-              RefreshImportLog();
-              this.lblUndoPostMsg.Text = "Undo Completed...";
-              this.lblUndoPostMsg.Refresh();
-            }
-            else
-            {
-              this.lblUndoPostMsg.Text = returnmsg;
-              this.lblUndoPostMsg.Refresh();
-            }
           }
-          else
-          {
-            lblUndoPostMsg.Text = "Not yet posted";
-          }
-        //}
-        //else
-        //{
-        //  this.lblUndoPostMsg.Text = "Missing Bill Date.";
-        //}
-        RefreshImportLog();
-      }
-      private void btnQBExport_Click(object sender, EventArgs e)
-      {
+        }
+        else
+        {
+          lblUndoPostMsg.Text = "Not yet posted";
+        }
+      //}
+      //else
+      //{
+      //  this.lblUndoPostMsg.Text = "Missing Bill Date.";
+      //}
+      RefreshImportLog();
+    }
+    private void btnQBExport_Click(object sender, EventArgs e)
+    {
 
-      }
+    }
 
-      private bool ValidImport(DateTime billdate, string filetype)
-      {
-        bool logexists;
-        logexists = _dataSource.checkProcessStepsbeforeimport(billdate, filetype, filetype);
-        return logexists;
-      }
-      private bool ValidPost(DateTime billdate, string step)
-      {
-        bool logexists;
-        logexists = _dataSource.checkProcessStepsbeforeimport(billdate, step, null);
-        return logexists;
-      }
-      private bool ValidUnPost(DateTime billdate, string step)
-      {
-        bool logexists;
-        logexists = _dataSource.checkforUnpost(billdate, step, null);
-        return logexists;
-      }
-      private void btnReloadFiles_Click(object sender, EventArgs e)
-      {
-        loadFileNames();
-      }
+    private bool ValidImport(DateTime billdate, string filetype)
+    {
+      bool logexists;
+      logexists = _dataSource.checkProcessStepsbeforeimport(billdate, filetype, filetype);
+      return logexists;
+    }
+    private bool ValidPost(DateTime billdate, string step)
+    {
+      bool logexists;
+      logexists = _dataSource.checkProcessStepsbeforeimport(billdate, step, null);
+      return logexists;
+    }
+    private bool ValidUnPost(DateTime billdate, string step)
+    {
+      bool logexists;
+      logexists = _dataSource.checkforUnpost(billdate, step, null);
+      return logexists;
+    }
+    private void btnReloadFiles_Click(object sender, EventArgs e)
+    {
+      loadFileNames();
+    }
 
-      private void ckImportLedgerOnly_CheckedChanged(object sender, EventArgs e)
+    private void ckImportLedgerOnly_CheckedChanged(object sender, EventArgs e)
+    {
+      _importLedgerOnly = ckImportLedgerOnly.Checked;
+    }
+    private void frmImports_Load(object sender, EventArgs e)
+    {
+      this.Text = this.Text + " files for " + Source;
+      RefreshImportLog();
+      txtBillDate.Value = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+      string filetype = "Posted";
+      string importfiletype = "Tax Detail";
+      DateTime billdate = txtBillDate.Value;
+      if (ValidImport(billdate, importfiletype) == true && ValidPost(billdate, filetype) == false)
       {
-        _importLedgerOnly = ckImportLedgerOnly.Checked;
+        this.btnPostDetails.Enabled = true;
       }
-      #endregion
+      if (ValidPost(billdate, filetype) == true)
+      {
+        this.btnUndoPost.Enabled = true;
+      }
+      if (ValidUnPost(billdate, filetype) == true)
+      {
+        this.btnPostDetails.Enabled = true;
+      }
+      if (!useNewImport)
+      {
+        ckDownload.Checked = false;
+        ckDownload.Visible = false;
+        for (int i = 0; i < 4; i++)
+          _fileTypeSuffixes[i] = "xls";
+      }
+    }
 
-      #region import methods
+    #endregion
+
+    #region import methods
 
     private void importMRCFile(string MRCType, DateTime billdate)
     {
@@ -1533,179 +1548,179 @@ namespace CCI.DesktopClient.Screens
 
       #endregion
 
-      #region other private methods
-      DateTime ExcelDateConvert(string cellvalue)
+    #region other private methods
+    DateTime ExcelDateConvert(string cellvalue)
+    {
+      if (CommonFunctions.IsNumeric(cellvalue) && cellvalue.Length != 8)
       {
-        if (CommonFunctions.IsNumeric(cellvalue) && cellvalue.Length != 8)
+        int SerialDate = CommonFunctions.CInt(cellvalue);
+        if (SerialDate > 59) SerialDate -= 1; //Excel/Lotus 2/29/1900 bug   
+        return new DateTime(1899, 12, 31).AddDays(SerialDate);
+      }
+      else
+      {
+        string stryear = cellvalue.Substring(0, 4);
+        string strmonth = cellvalue.Substring(4, 2);
+        string strday = cellvalue.Substring(6, 2);
+        DateTime dt = Convert.ToDateTime(strmonth + "/" + strday + "/" + stryear);
+        return dt;
+      }
+    }
+    string ExcelDaysConvert(string cellvalue)
+    {
+        DateTime begdate = new DateTime(1900, 1, 1);
+        double xldays = Convert.ToDouble(cellvalue);
+        xldays = xldays - 2;
+        DateTime xldate = begdate.AddDays(xldays);
+        string strxldate = Convert.ToString(xldate);
+        return strxldate;
+    }
+    string ExcelTimeConvert(string cellvalue)
+    {
+        double dblcellvalue = Convert.ToDouble(cellvalue);
+        DateTime time = DateTime.FromOADate(dblcellvalue);
+        string strtime = time.ToString("H:mm");
+        return strtime;
+    }
+    string FixBTNs(string cellvalue)
+    {
+      if (string.IsNullOrEmpty(cellvalue))
+        return string.Empty;
+      string strcellvalue = cellvalue.Replace(" ", "");
+      strcellvalue = strcellvalue.Replace("-", "");
+      strcellvalue = strcellvalue.Replace("(", "");
+      strcellvalue = strcellvalue.Replace(")", "");
+      int len = Math.Max(10, strcellvalue.Length);
+      strcellvalue = strcellvalue.Substring(0,len);
+      return strcellvalue;
+    }
+    private bool isValidFileName(string filename, ImportFileTypes fileType)
+    {
+      bool isOK = false;
+      int i = (int)fileType;
+      string standardPrefix = _fileTypePrefixes[i];
+      //if (CommonFunctions.IsDateTime(txtBillingDate.Text))
+      //{
+        string comparedate = txtBillDate.Value.ToString("yyyyMM");
+        if (!string.IsNullOrEmpty(filename))
         {
-          int SerialDate = CommonFunctions.CInt(cellvalue);
-          if (SerialDate > 59) SerialDate -= 1; //Excel/Lotus 2/29/1900 bug   
-          return new DateTime(1899, 12, 31).AddDays(SerialDate);
-        }
-        else
-        {
-          string stryear = cellvalue.Substring(0, 4);
-          string strmonth = cellvalue.Substring(4, 2);
-          string strday = cellvalue.Substring(6, 2);
-          DateTime dt = Convert.ToDateTime(strmonth + "/" + strday + "/" + stryear);
-          return dt;
-        }
-      }
-      string ExcelDaysConvert(string cellvalue)
-      {
-          DateTime begdate = new DateTime(1900, 1, 1);
-          double xldays = Convert.ToDouble(cellvalue);
-          xldays = xldays - 2;
-          DateTime xldate = begdate.AddDays(xldays);
-          string strxldate = Convert.ToString(xldate);
-          return strxldate;
-      }
-      string ExcelTimeConvert(string cellvalue)
-      {
-          double dblcellvalue = Convert.ToDouble(cellvalue);
-          DateTime time = DateTime.FromOADate(dblcellvalue);
-          string strtime = time.ToString("H:mm");
-          return strtime;
-      }
-      string FixBTNs(string cellvalue)
-      {
-        if (string.IsNullOrEmpty(cellvalue))
-          return string.Empty;
-        string strcellvalue = cellvalue.Replace(" ", "");
-        strcellvalue = strcellvalue.Replace("-", "");
-        strcellvalue = strcellvalue.Replace("(", "");
-        strcellvalue = strcellvalue.Replace(")", "");
-        int len = Math.Max(10, strcellvalue.Length);
-        strcellvalue = strcellvalue.Substring(0,len);
-        return strcellvalue;
-      }
-      private bool isValidFileName(string filename, ImportFileTypes fileType)
-      {
-        bool isOK = false;
-        int i = (int)fileType;
-        string standardPrefix = _fileTypePrefixes[i];
-        //if (CommonFunctions.IsDateTime(txtBillingDate.Text))
-        //{
-          string comparedate = txtBillDate.Value.ToString("yyyyMM");
-          if (!string.IsNullOrEmpty(filename))
+          int lastslash = filename.LastIndexOf("\\"); // strip of full path
+          if (lastslash > 0)
+            filename = filename.Substring(lastslash + 1);
+          int dot = filename.LastIndexOf(".");
+          if (dot > 0)
+            filename = filename.Substring(0, dot);
+          int len1 = standardPrefix.Length;
+          if (len1 + 6 == filename.Length)
           {
-            int lastslash = filename.LastIndexOf("\\"); // strip of full path
-            if (lastslash > 0)
-              filename = filename.Substring(lastslash + 1);
-            int dot = filename.LastIndexOf(".");
-            if (dot > 0)
-              filename = filename.Substring(0, dot);
-            int len1 = standardPrefix.Length;
-            if (len1 + 6 == filename.Length)
+            string prefix = filename.Substring(0, len1);
+            if (prefix.Equals(standardPrefix, StringComparison.CurrentCultureIgnoreCase))
             {
-              string prefix = filename.Substring(0, len1);
-              if (prefix.Equals(standardPrefix, StringComparison.CurrentCultureIgnoreCase))
-              {
-                string filerest = filename.Substring(len1);
-                if (comparedate.Equals(filerest))
-                  isOK = true;
-              }
+              string filerest = filename.Substring(len1);
+              if (comparedate.Equals(filerest))
+                isOK = true;
             }
           }
-        //}
-        //else
-        //{
-        //  MessageBox.Show("Please enter the Bill Date.");
-        //  return isOK;
-        //}
-        if (!isOK)
-          MessageBox.Show(string.Format("Incorrect filename format. Must be in the form {0}YYYYMM", standardPrefix));
-        return isOK;
+        }
+      //}
+      //else
+      //{
+      //  MessageBox.Show("Please enter the Bill Date.");
+      //  return isOK;
+      //}
+      if (!isOK)
+        MessageBox.Show(string.Format("Incorrect filename format. Must be in the form {0}YYYYMM", standardPrefix));
+      return isOK;
           
-      }
-      private void resetFileColors(bool red)
+    }
+    private void resetFileColors(bool red)
+    {
+      for (int iFile = 1; iFile <= 8; iFile++)
       {
-        for (int iFile = 1; iFile <= 8; iFile++)
-        {
-          string textbox = "txtFileName" + (iFile + 1).ToString();
-          TextBox txt = findTextBox(textbox);
-          if (txt != null)
-            txt.ForeColor = red ? Color.Red : Color.Black;
-        }
+        string textbox = "txtFileName" + (iFile + 1).ToString();
+        TextBox txt = findTextBox(textbox);
+        if (txt != null)
+          txt.ForeColor = red ? Color.Red : Color.Black;
       }
-      private void openSpreadsheet(string filename)
-      {
-          appExl = new Excel.ApplicationClass(); 
-          workbook = appExl.Workbooks.Open(filename, Missing.Value,
-              Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value,
-              Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value,
-              Missing.Value, Missing.Value, Missing.Value);
-          NwSheet = (Excel.Worksheet)workbook.Sheets.get_Item(1);
-          ShtRange = NwSheet.UsedRange;
-      }
-      private void closeExcel()
-      {
-          workbook.Close(true, Missing.Value, Missing.Value);
-          appExl.Quit();
-      }
-      private TextBox findTextBox(string name)
-      {
-        return findTextBox(name, this);
-      }
-      private TextBox findTextBox(string name, Control c)
-      {
-        if (c.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase))
-          if (c.GetType() == typeof(TextBox))
-            return (TextBox)c;
-          else
-            throw new Exception(string.Format("Control {0} is not a TextBox", name));
+    }
+    private void openSpreadsheet(string filename)
+    {
+        appExl = new Excel.ApplicationClass(); 
+        workbook = appExl.Workbooks.Open(filename, Missing.Value,
+            Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value,
+            Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value,
+            Missing.Value, Missing.Value, Missing.Value);
+        NwSheet = (Excel.Worksheet)workbook.Sheets.get_Item(1);
+        ShtRange = NwSheet.UsedRange;
+    }
+    private void closeExcel()
+    {
+        workbook.Close(true, Missing.Value, Missing.Value);
+        appExl.Quit();
+    }
+    private TextBox findTextBox(string name)
+    {
+      return findTextBox(name, this);
+    }
+    private TextBox findTextBox(string name, Control c)
+    {
+      if (c.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase))
+        if (c.GetType() == typeof(TextBox))
+          return (TextBox)c;
         else
-          if (c.HasChildren)
-            foreach (Control container in c.Controls)
-            {
-              TextBox txt = findTextBox(name, container);
-              if (txt != null)
-                return txt;
-            }
-        return null;
-      }
-      private void CheckForPreviousImports()
-      {
-          DateTime nodate = new DateTime(1980, 1, 1);
-          DateTime dt;
-          string sdt;
-          sdt = _dataSource.selectBillDatefromLog("MRC Wholesale");
-          if (sdt != "")
+          throw new Exception(string.Format("Control {0} is not a TextBox", name));
+      else
+        if (c.HasChildren)
+          foreach (Control container in c.Controls)
           {
-              this.lblMRCWholesaleMsg.Text = String.Format("{0:yyyy/MM}", sdt);
+            TextBox txt = findTextBox(name, container);
+            if (txt != null)
+              return txt;
           }
-          dt = _dataSource.selectBillingDatefromTemp("HostedImportMRCRetail");
-          if (dt > nodate)
-          {
-              this.lblMRCRetailMsg.Text = String.Format("{0:yyyy/MM/dd}", dt);
-          }
-          sdt = _dataSource.selectBillDatefromLog("OCC Wholesale");
-          if (sdt != "")
-          {
-              this.lblOCCWholesaleMsg.Text = String.Format("{0:yyyy/MM}", sdt);
-          }
-          dt = _dataSource.selectBillingDatefromTemp("HostedImportOCCRetail");
-          if (dt > nodate)
-          {
-              this.lblOCCRetailMsg.Text = String.Format("{0:yyyy/MM/dd}", dt);
-          }
-          sdt = _dataSource.selectBillingDatefromCallTemp("HostedImportTollWholesale");
-          if (sdt != "")
-          {
-              this.lblCallWholesaleMsg.Text = sdt;
-          }
-          sdt = _dataSource.selectBillingDatefromCallTemp("HostedImportTollRetail");
-          if (sdt != "")
-          {
-              this.lblCallRetailMsg.Text = sdt;
-          }
-          dt = _dataSource.selectBillingDatefromTemp("HostedImportTaxes");
-          if (dt > nodate)
-          {
-              this.lblTaxesMsg.Text = String.Format("{0:yyyy/MM/dd}", dt);
-          }
+      return null;
+    }
+    private void CheckForPreviousImports()
+    {
+        DateTime nodate = new DateTime(1980, 1, 1);
+        DateTime dt;
+        string sdt;
+        sdt = _dataSource.selectBillDatefromLog("MRC Wholesale");
+        if (sdt != "")
+        {
+            this.lblMRCWholesaleMsg.Text = String.Format("{0:yyyy/MM}", sdt);
+        }
+        dt = _dataSource.selectBillingDatefromTemp("HostedImportMRCRetail");
+        if (dt > nodate)
+        {
+            this.lblMRCRetailMsg.Text = String.Format("{0:yyyy/MM/dd}", dt);
+        }
+        sdt = _dataSource.selectBillDatefromLog("OCC Wholesale");
+        if (sdt != "")
+        {
+            this.lblOCCWholesaleMsg.Text = String.Format("{0:yyyy/MM}", sdt);
+        }
+        dt = _dataSource.selectBillingDatefromTemp("HostedImportOCCRetail");
+        if (dt > nodate)
+        {
+            this.lblOCCRetailMsg.Text = String.Format("{0:yyyy/MM/dd}", dt);
+        }
+        sdt = _dataSource.selectBillingDatefromCallTemp("HostedImportTollWholesale");
+        if (sdt != "")
+        {
+            this.lblCallWholesaleMsg.Text = sdt;
+        }
+        sdt = _dataSource.selectBillingDatefromCallTemp("HostedImportTollRetail");
+        if (sdt != "")
+        {
+            this.lblCallRetailMsg.Text = sdt;
+        }
+        dt = _dataSource.selectBillingDatefromTemp("HostedImportTaxes");
+        if (dt > nodate)
+        {
+            this.lblTaxesMsg.Text = String.Format("{0:yyyy/MM/dd}", dt);
+        }
 
-      }
+    }
     private void loadFileNames(bool downloadFiles = false)
     {
       SaddleBackFTPInfo ftpInfo = new SaddleBackFTPInfo();
@@ -1801,5 +1816,6 @@ namespace CCI.DesktopClient.Screens
         ACG.CommonForms.CommonFormFunctions.displayDataSetGrid(grdImportLog, dsLog);
       }
     #endregion
+
   }
 }

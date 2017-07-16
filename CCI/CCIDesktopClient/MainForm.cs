@@ -320,12 +320,12 @@ namespace CCI.DesktopClient
       frm.ColumnName = "Customer";
       ShowForm(frm, true);
     }
-    private void importsToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-      ScreenBase frm = new frmImports();
-      frm.SecurityContext = _securityContext;
-      ShowForm(frm, true);
-    }
+    //private void importsToolStripMenuItem_Click(object sender, EventArgs e)
+    //{
+    //  ScreenBase frm = new frmImports();
+    //  frm.SecurityContext = _securityContext;
+    //  ShowForm(frm, true);
+    //}
     private void customerMaintenanceToolStripMenuItem1_Click(object sender, EventArgs e)
     {
       ScreenBase frm = new frmCustomers();
