@@ -18,6 +18,9 @@ namespace CCI.DesktopClient.Screens
   {
     #region module data
 
+    private const string DEFAULTWHOLESALECARRIER = "Saddleback";
+    private const string DEFAULTRETAILCARRIER = "CityHosted";
+
     private const string colWholesaleUSOC = "usocwholesale";
     private const string colWholesaleMRC = "mrcwholesale";
     private const string colWholesaleNRC = "nrcwholesale";
@@ -54,8 +57,9 @@ namespace CCI.DesktopClient.Screens
       InitializeComponent();
       txtRetailUSOC.SearchExec = new SearchDataSourceProductList();
       txtWholesaleUSOC.SearchExec = new SearchDataSourceProductList();
-      ((SearchDataSourceProductList)txtRetailUSOC.SearchExec).Carrier = "CityHosted";
-      ((SearchDataSourceProductList)txtWholesaleUSOC.SearchExec).Carrier = "Saddleback";
+      srchRetailUsocMatching.SearchExec = new SearchDataSourceProductList();
+      srchWholesaleUsocMatching.SearchExec = new SearchDataSourceProductList();
+      resetUsocSearch(cboCarrier.Text);
       srchUSOCList.CanChangeDisplayFields = true;
       cboMode.Items.Clear();
       cboMode.Items.AddRange(_modeList);
@@ -148,7 +152,7 @@ namespace CCI.DesktopClient.Screens
     private void selectCarrier(string carrier)
     {
       addCriteria(colPrimaryCarrier, ctlSearchGrid.opEQUALS, carrier);
-
+      resetUsocSearch(cboCarrier.Text);
     }
     private void reloadUsocList(bool resetLastRowSelected)
     {
@@ -378,24 +382,36 @@ namespace CCI.DesktopClient.Screens
     {
       string retail = lstRetailUsocs.Text;
       string wholesale = lstWholesaleUsocs.Text;
+      string primaryCarrier = cboCarrier.Text;
       lblUsocMatching.Text = string.Format("Retail {0} = Wholesale {1}", retail, wholesale);
       if (save)
       {
-        int? ret = _dataSource.reassignWholesaleUSOC(retail, wholesale);
+        int? ret = _dataSource.reassignWholesaleUSOC(retail, wholesale, primaryCarrier);
         if (ret != null && ret == -1)
           MessageBox.Show("Match Retail to Wholesale USOC was not successfull");
+        reloadUsocList(false);
       }
     }
     private void unmatchUsocs(bool save)
     {
       lblUsocMatching.Text = string.Empty;
       string retail = lstRetailUsocs.Text;
-
+      string primaryCarrier = cboCarrier.Text;
+      string wholesale = lstWholesaleUsocs.Text;
       if (save)
       {
-        int? ret = _dataSource.reassignWholesaleUSOC(retail, retail, cboCarrier.Text);
+        // disconect retail
+        int? ret = _dataSource.reassignWholesaleUSOC(retail, retail, primaryCarrier);
         if (ret != null && ret == -1)
           MessageBox.Show("UnMatch Retail to Wholesale USOC was not successfull");
+        // disconnect whoesale
+        if (retail.Equals(wholesale, StringComparison.CurrentCultureIgnoreCase))
+        {
+          ret = _dataSource.reassignWholesaleUSOC(wholesale, wholesale, primaryCarrier);
+          if (ret != null && ret == -1)
+            MessageBox.Show("UnMatch Retail to Wholesale USOC was not successfull");
+        }
+        reloadUsocList(false);
       }
     }
     private void saveRetail()
@@ -518,7 +534,17 @@ namespace CCI.DesktopClient.Screens
       #endregion
 
     }
-
+    private void resetUsocSearch(string primaryCarrier)
+    {
+      ((SearchDataSourceProductList)txtRetailUSOC.SearchExec).Carrier = DEFAULTRETAILCARRIER;
+      ((SearchDataSourceProductList)txtRetailUSOC.SearchExec).PrimaryCarrier = primaryCarrier;
+      ((SearchDataSourceProductList)srchRetailUsocMatching.SearchExec).Carrier = DEFAULTRETAILCARRIER;
+      ((SearchDataSourceProductList)srchRetailUsocMatching.SearchExec).PrimaryCarrier = primaryCarrier;
+      ((SearchDataSourceProductList)txtWholesaleUSOC.SearchExec).Carrier = primaryCarrier;
+      ((SearchDataSourceProductList)txtWholesaleUSOC.SearchExec).PrimaryCarrier = primaryCarrier;
+      ((SearchDataSourceProductList)srchWholesaleUsocMatching.SearchExec).Carrier = primaryCarrier;
+      ((SearchDataSourceProductList)srchWholesaleUsocMatching.SearchExec).PrimaryCarrier = primaryCarrier;
+    }
     #endregion
 
     #region form events
@@ -563,7 +589,6 @@ namespace CCI.DesktopClient.Screens
     {
       unmatchUsocs(true);
     }
-
     private void tabMaintenance_SelectedIndexChanged(object sender, EventArgs e)
     {
       TabPage thisTab = tabMaintenance.SelectedTab;
@@ -575,12 +600,10 @@ namespace CCI.DesktopClient.Screens
       else if (thisTab.Name.Equals(tabMatching.Name) && !thisMode.Equals(modeMatching))
         CommonFormFunctions.setComboBoxCell(cboMode, modeMatching);
     }
-
     private void btnRetailNew_Click(object sender, EventArgs e)
     {
       clearTabPage(tabRetail);
     }
-
     private void btnRetailCancel_Click(object sender, EventArgs e)
     {
       if (srchUSOCList.SelectedRow != null)
@@ -588,24 +611,42 @@ namespace CCI.DesktopClient.Screens
       else
         clearTabPage(tabRetail);
     }
-
     private void btnRetailSave_Click(object sender, EventArgs e)
     {
       saveRetail();
     }
-    #endregion
-
     private void btnWholesaleNew_Click(object sender, EventArgs e)
     {
       clearTabPage(tabWholesale);
     }
-
     private void btnWholesaleCancel_Click(object sender, EventArgs e)
     {
       if (srchUSOCList.SelectedRow != null)
         loadWholesaleFields(srchUSOCList.SelectedRow);
       else
         clearTabPage(tabWholesale);
+    }
+    private void srchRetailUsocMatching_OnSelected(object sender, EventArgs e)
+    {
+      // select the list item to match selected item
+      CommonFormFunctions.setComboBoxCell(lstRetailUsocs, srchRetailUsocMatching.Text);
+    }
+    private void srchWholesaleUsocMatching_OnSelected(object sender, EventArgs e)
+    {
+      // select the list item to match selected item
+      CommonFormFunctions.setComboBoxCell(lstWholesaleUsocs, srchWholesaleUsocMatching.Text);
+    }
+
+    #endregion
+
+    private void lstRetailUsocs_SelectedIndexChanged(object sender, EventArgs e)
+    {
+      srchRetailUsocMatching.Text = lstRetailUsocs.Text;
+    }
+
+    private void lstWholesaleUsocs_SelectedIndexChanged(object sender, EventArgs e)
+    {
+      srchWholesaleUsocMatching.Text = lstWholesaleUsocs.Text;
     }
   }
 }

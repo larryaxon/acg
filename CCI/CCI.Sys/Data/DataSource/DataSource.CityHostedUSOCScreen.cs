@@ -330,14 +330,12 @@ w.UnMatched = 1
         unmatched = "1";
       sql = "update ProductList set unmatched = {0} where ItemID = '{1}' and Carrier = '{2}'";
 
-      retCode = updateDataFromSQL(string.Format(sql, unmatched, rusoc, HOSTEDRETAILCARRIER)); // not retailonly
-      //if (string.IsNullOrEmpty(rusoc))
-      //  unmatched = "1";
-      //else
+      retCode = updateDataFromSQL(string.Format(sql, unmatched, rusoc, primarycarrier)); // not retailonly
+      
       unmatched = "0";
-      if (retCode >= 0 && !string.IsNullOrEmpty(wusoc))
+      if ((retCode == null || retCode >= 0) && !string.IsNullOrEmpty(wusoc))
         retCode = updateDataFromSQL(string.Format(sql, unmatched, wusoc, primarycarrier)); // make sure new wholesale is NOT wholesaleonly 
-      if (retCode >= 0 && numberRetailUSOCs(oldWholesaleUSOC, false) == 0) // there are no more "daughters"  
+      if ((retCode == null || retCode >= 0) && numberRetailUSOCs(oldWholesaleUSOC, false) == 0) // there are no more "daughters"  
         retCode = updateDataFromSQL(string.Format(sql, "1", oldWholesaleUSOC, primarycarrier)); // reset wholesale to wholesaleonly
       return retCode;
     }

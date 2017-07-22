@@ -435,7 +435,7 @@ namespace CCI.DesktopClient.Screens
       this.grdImportLog.Dock = System.Windows.Forms.DockStyle.Fill;
       this.grdImportLog.Location = new System.Drawing.Point(0, 0);
       this.grdImportLog.Name = "grdImportLog";
-      this.grdImportLog.Size = new System.Drawing.Size(478, 629);
+      this.grdImportLog.Size = new System.Drawing.Size(435, 629);
       this.grdImportLog.TabIndex = 39;
       // 
       // splitMain
@@ -473,8 +473,8 @@ namespace CCI.DesktopClient.Screens
       // splitMain.Panel2
       // 
       this.splitMain.Panel2.Controls.Add(this.grdImportLog);
-      this.splitMain.Size = new System.Drawing.Size(1254, 629);
-      this.splitMain.SplitterDistance = 772;
+      this.splitMain.Size = new System.Drawing.Size(1140, 629);
+      this.splitMain.SplitterDistance = 701;
       this.splitMain.TabIndex = 40;
       // 
       // ckDownload
@@ -491,7 +491,7 @@ namespace CCI.DesktopClient.Screens
       // 
       this.btnReloadFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.btnReloadFiles.Enabled = false;
-      this.btnReloadFiles.Location = new System.Drawing.Point(700, 14);
+      this.btnReloadFiles.Location = new System.Drawing.Point(678, 14);
       this.btnReloadFiles.Name = "btnReloadFiles";
       this.btnReloadFiles.Size = new System.Drawing.Size(50, 23);
       this.btnReloadFiles.TabIndex = 3;
@@ -506,7 +506,7 @@ namespace CCI.DesktopClient.Screens
       this.txtBasePath.Enabled = false;
       this.txtBasePath.Location = new System.Drawing.Point(313, 16);
       this.txtBasePath.Name = "txtBasePath";
-      this.txtBasePath.Size = new System.Drawing.Size(381, 20);
+      this.txtBasePath.Size = new System.Drawing.Size(359, 20);
       this.txtBasePath.TabIndex = 2;
       // 
       // txtBillDate
@@ -648,7 +648,7 @@ namespace CCI.DesktopClient.Screens
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(1254, 629);
+      this.ClientSize = new System.Drawing.Size(1140, 629);
       this.Controls.Add(this.splitMain);
       this.Name = "frmImports";
       this.Text = "Imports";

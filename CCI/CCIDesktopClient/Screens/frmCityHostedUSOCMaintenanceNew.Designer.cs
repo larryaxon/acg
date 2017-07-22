@@ -85,6 +85,8 @@
       this.btnWholesaleSave = new System.Windows.Forms.Button();
       this.btnWholesaleNew = new System.Windows.Forms.Button();
       this.tabMatching = new System.Windows.Forms.TabPage();
+      this.srchWholesaleUsocMatching = new ACG.CommonForms.ctlSearch();
+      this.srchRetailUsocMatching = new ACG.CommonForms.ctlSearch();
       this.lblUsocMatching = new System.Windows.Forms.Label();
       this.lstWholesaleUsocs = new System.Windows.Forms.ListBox();
       this.btnUnmatchUsoc = new System.Windows.Forms.Button();
@@ -755,6 +757,8 @@
       // 
       // tabMatching
       // 
+      this.tabMatching.Controls.Add(this.srchWholesaleUsocMatching);
+      this.tabMatching.Controls.Add(this.srchRetailUsocMatching);
       this.tabMatching.Controls.Add(this.lblUsocMatching);
       this.tabMatching.Controls.Add(this.lstWholesaleUsocs);
       this.tabMatching.Controls.Add(this.btnUnmatchUsoc);
@@ -767,6 +771,60 @@
       this.tabMatching.TabIndex = 2;
       this.tabMatching.Text = "Retail/Wholesale Matching";
       this.tabMatching.UseVisualStyleBackColor = true;
+      // 
+      // srchWholesaleUsocMatching
+      // 
+      this.srchWholesaleUsocMatching.AddNewMode = false;
+      this.srchWholesaleUsocMatching.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.srchWholesaleUsocMatching.AutoAddNewMode = false;
+      this.srchWholesaleUsocMatching.AutoSelectWhenMatch = false;
+      this.srchWholesaleUsocMatching.AutoTabToNextControlOnSelect = true;
+      this.srchWholesaleUsocMatching.ClearSearchWhenComplete = false;
+      this.srchWholesaleUsocMatching.Collapsed = true;
+      this.srchWholesaleUsocMatching.CreatedNewItem = false;
+      this.srchWholesaleUsocMatching.DisplayOnlyDescription = false;
+      this.srchWholesaleUsocMatching.DisplayOnlyID = false;
+      this.srchWholesaleUsocMatching.FixKeySpace = "-1";
+      this.srchWholesaleUsocMatching.ID = "";
+      this.srchWholesaleUsocMatching.ID_DescSplitter = ":";
+      this.srchWholesaleUsocMatching.Location = new System.Drawing.Point(455, 39);
+      this.srchWholesaleUsocMatching.MaxHeight = 228;
+      this.srchWholesaleUsocMatching.MustExistInList = false;
+      this.srchWholesaleUsocMatching.MustExistMessage = "You must enter a valid value";
+      this.srchWholesaleUsocMatching.Name = "srchWholesaleUsocMatching";
+      this.srchWholesaleUsocMatching.SearchExec = null;
+      this.srchWholesaleUsocMatching.ShowCustomerNameWhenSet = true;
+      this.srchWholesaleUsocMatching.ShowTermedCheckBox = false;
+      this.srchWholesaleUsocMatching.Size = new System.Drawing.Size(694, 27);
+      this.srchWholesaleUsocMatching.TabIndex = 113;
+      this.srchWholesaleUsocMatching.OnSelected += new System.EventHandler<System.EventArgs>(this.srchWholesaleUsocMatching_OnSelected);
+      // 
+      // srchRetailUsocMatching
+      // 
+      this.srchRetailUsocMatching.AddNewMode = false;
+      this.srchRetailUsocMatching.AutoAddNewMode = false;
+      this.srchRetailUsocMatching.AutoSelectWhenMatch = false;
+      this.srchRetailUsocMatching.AutoTabToNextControlOnSelect = true;
+      this.srchRetailUsocMatching.ClearSearchWhenComplete = false;
+      this.srchRetailUsocMatching.Collapsed = true;
+      this.srchRetailUsocMatching.CreatedNewItem = false;
+      this.srchRetailUsocMatching.DisplayOnlyDescription = false;
+      this.srchRetailUsocMatching.DisplayOnlyID = false;
+      this.srchRetailUsocMatching.FixKeySpace = "-1";
+      this.srchRetailUsocMatching.ID = "";
+      this.srchRetailUsocMatching.ID_DescSplitter = ":";
+      this.srchRetailUsocMatching.Location = new System.Drawing.Point(17, 38);
+      this.srchRetailUsocMatching.MaxHeight = 228;
+      this.srchRetailUsocMatching.MustExistInList = false;
+      this.srchRetailUsocMatching.MustExistMessage = "You must enter a valid value";
+      this.srchRetailUsocMatching.Name = "srchRetailUsocMatching";
+      this.srchRetailUsocMatching.SearchExec = null;
+      this.srchRetailUsocMatching.ShowCustomerNameWhenSet = true;
+      this.srchRetailUsocMatching.ShowTermedCheckBox = false;
+      this.srchRetailUsocMatching.Size = new System.Drawing.Size(327, 27);
+      this.srchRetailUsocMatching.TabIndex = 112;
+      this.srchRetailUsocMatching.OnSelected += new System.EventHandler<System.EventArgs>(this.srchRetailUsocMatching_OnSelected);
       // 
       // lblUsocMatching
       // 
@@ -783,10 +841,11 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
       this.lstWholesaleUsocs.FormattingEnabled = true;
-      this.lstWholesaleUsocs.Location = new System.Drawing.Point(455, 59);
+      this.lstWholesaleUsocs.Location = new System.Drawing.Point(455, 72);
       this.lstWholesaleUsocs.Name = "lstWholesaleUsocs";
-      this.lstWholesaleUsocs.Size = new System.Drawing.Size(694, 212);
+      this.lstWholesaleUsocs.Size = new System.Drawing.Size(694, 199);
       this.lstWholesaleUsocs.TabIndex = 11;
+      this.lstWholesaleUsocs.SelectedIndexChanged += new System.EventHandler(this.lstWholesaleUsocs_SelectedIndexChanged);
       // 
       // btnUnmatchUsoc
       // 
@@ -813,10 +872,11 @@
       this.lstRetailUsocs.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
       this.lstRetailUsocs.FormattingEnabled = true;
-      this.lstRetailUsocs.Location = new System.Drawing.Point(17, 59);
+      this.lstRetailUsocs.Location = new System.Drawing.Point(17, 72);
       this.lstRetailUsocs.Name = "lstRetailUsocs";
-      this.lstRetailUsocs.Size = new System.Drawing.Size(326, 212);
+      this.lstRetailUsocs.Size = new System.Drawing.Size(326, 199);
       this.lstRetailUsocs.TabIndex = 8;
+      this.lstRetailUsocs.SelectedIndexChanged += new System.EventHandler(this.lstRetailUsocs_SelectedIndexChanged);
       // 
       // label4
       // 
@@ -917,5 +977,7 @@
     private System.Windows.Forms.Button btnMatchUsoc;
     private System.Windows.Forms.ListBox lstRetailUsocs;
     private System.Windows.Forms.Label label4;
+    private ACG.CommonForms.ctlSearch srchWholesaleUsocMatching;
+    private ACG.CommonForms.ctlSearch srchRetailUsocMatching;
   }
 }
