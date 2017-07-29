@@ -742,8 +742,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ACG\trunk\ACG.CommonForms\ACG.CommonForms.csproj">
-      <Project>{F65C74CD-A49C-4A91-8278-55C5B9E98A51}</Project>
+    <ProjectReference Include="..\..\acg\trunk\ACG.CommonForms\ACG.CommonForms.csproj">
+      <Project>{f65c74cd-a49c-4a91-8278-55c5b9e98a51}</Project>
       <Name>ACG.CommonForms</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\ACG\trunk\ACG\ACG.csproj">

@@ -49,26 +49,31 @@ namespace CCI.DesktopClient.Screens
     private bool useNewImport = true;
     private enum ImportSource { Saddleback, RedRock }
     private ImportSource _importSource = ImportSource.Saddleback;
-    private class SaddleBackFTPInfo
+    private class SourceFTPInfo
     {
-      private const string URIKEY = "SaddlebackFTPUri";
-      private const string UIDKEY = "SaddlebackFTPUsername";
-      private const string PWKEY = "SaddlebackFTPPassword";
-      public string Uri = ConfigurationManager.AppSettings[URIKEY];
-      public string Uid = ConfigurationManager.AppSettings[UIDKEY];
-      public string Pw = ConfigurationManager.AppSettings[PWKEY];
+      public string Uri  { get; set; }
+      public string Uid  { get; set; }
+      public string Pw  { get; set; }
     }
-
+    
+    private class ImportSourceConfiguration
+    {
+      public ImportSource Source { get; set; }
+      public List<ImportfileType> FileTypes { get; set; }
+      public SourceFTPInfo FTPInfo { get; set; }
+    }
+    private class ImportfileType
+    {
+      public ImportFileTypes FileType { get; set; }
+      public string Prefix { get; set; }
+      public string Suffic { get; set; }
+      public string StoredProcedure { get; set; }
+      public int skiplines { get; set; }
+    }
     private enum ImportFileTypes { MRCWholesale, MRCRetail, OCCWholesale, OCCRetail, TollWholesale, TollRetail, Tax, Ledger };
-    private string[] _saddlebackFileTypePrefixes = new string[] { "MRC WHLSL-", "MRC Retail-", "OCC WHLSL-", "OCC Retail-", "Toll WHLSL-", "Toll Retail-", "TAX-", "Ledger-" };
-    private string[] _redRockFileTypePrefixes = new string[] { "Wholesale MRC Red Rock-", "Retail MRC Red Rock-", "Wholesale OCC Red Rock-", "Retail OCC Red Rock-", "Wholesale Toll Red Rock-", "Retail Toll Red Rock-", "TAX Red Rock-", "Ledger Red Rock-" };
-    private string[] _fileTypePrefixes = new string[] { };
-    private string[] _fileTypeSuffixes = new string[] { };
-    private string[] _saddlebackFileTypeSuffixes = new string[] { "csv", "csv", "csv", "csv", "csv", "csv", "csv", "xls" };
-    private string[] _redRockFileTypeSuffixes = new string[] { "txt", "txt", "txt", "txt", "txt", "txt", "txt", "txt" };
-    private int[] _skipLines = new int[] { 4, 4, 4, 4, 0, 0, 0, 0 };
-    //private string[] _fileTypeSuffixes = new string[] { "xls", "xls", "xls", "xls", "csv", "csv", "csv", "xls" };
+    private Dictionary<ImportSource, ImportSourceConfiguration> _importSources = new Dictionary<ImportSource, ImportSourceConfiguration>();
     private const string FILENOTFOUNDPREFIX = "NOT FOUND: ";
+    private List<Control> _textBoxes = null;
 
     public string Source
     {
@@ -84,16 +89,16 @@ namespace CCI.DesktopClient.Screens
         {
           _importSource = ImportSource.Saddleback;
           _sourceFolder = "Saddleback Imports";
-          _fileTypePrefixes = _saddlebackFileTypePrefixes;
-          _fileTypeSuffixes = _saddlebackFileTypeSuffixes;
+          //_fileTypePrefixes = _saddlebackFileTypePrefixes;
+          //_fileTypeSuffixes = _saddlebackFileTypeSuffixes;
         }
         else if (value.Equals("RedRock", StringComparison.CurrentCultureIgnoreCase))
         {
           _importSource = ImportSource.RedRock;
           _sourceFolder = "Red Rock Imports";
-          _fileTypePrefixes = _redRockFileTypePrefixes;
-          _fileTypeSuffixes = _redRockFileTypeSuffixes;
-          ckDownload.Visible = false;
+          //_fileTypePrefixes = _redRockFileTypePrefixes;
+          //_fileTypeSuffixes = _redRockFileTypeSuffixes;
+          //ckDownload.Visible = false;
         }
         else
         {
@@ -107,7 +112,7 @@ namespace CCI.DesktopClient.Screens
 
       InitializeComponent();
       //            CheckForPreviousImports();
-
+      _textBoxes = ACG.CommonForms.CommonFormFunctions.GetAllControls<TextBox>(this);
 
     }
 
@@ -250,14 +255,9 @@ namespace CCI.DesktopClient.Screens
           DateTime billdate = txtBillDate.Value;
           if (ValidImport(billdate, filetype) == false)
           {
-            if (useNewImport)
-              this.txtFileName1.Text = this.txtFileName1.Text.Replace("Y:\\", "c:\\city hosted solutions\\");
-            else
-              openSpreadsheet(this.txtFileName1.Text);
+            this.txtFileName1.Text = this.txtFileName1.Text.Replace("Y:\\", "c:\\city hosted solutions\\");
             this.lblMRCWholesaleMsg.Text = "Importing...";
-            importMRCFile("Wholesale", billdate);
-            if (!useNewImport)
-              closeExcel();
+            importfile(ImportFileTypes.MRCWholesale, billdate);
             if (importfileinvaliddate == false)
             {
               string user = SecurityContext.User;
@@ -293,7 +293,7 @@ namespace CCI.DesktopClient.Screens
             else
               openSpreadsheet(this.txtFileName2.Text);
             this.lblMRCRetailMsg.Text = "Importing...";
-            importMRCFile("Retail", billdate);
+            importfile(ImportFileTypes.MRCRetail, billdate);
             if (!useNewImport)
               closeExcel();
             if (importfileinvaliddate == false)
@@ -331,7 +331,7 @@ namespace CCI.DesktopClient.Screens
             else
             openSpreadsheet(this.txtFileName3.Text);
             this.lblOCCWholesaleMsg.Text = "Importing...";
-            importOther("Wholesale", billdate);
+            importfile(ImportFileTypes.OCCWholesale, billdate);
             if (!useNewImport)
               closeExcel();
             if (importfileinvaliddate == false)
@@ -368,7 +368,7 @@ namespace CCI.DesktopClient.Screens
             else
               openSpreadsheet(this.txtFileName4.Text);
             this.lblOCCRetailMsg.Text = "Importing...";
-            importOther("Retail", billdate);
+            importfile(ImportFileTypes.OCCRetail, billdate);
             if (!useNewImport)
               closeExcel();
             if (importfileinvaliddate == false)
@@ -409,7 +409,7 @@ namespace CCI.DesktopClient.Screens
           {
             this.lblCallWholesaleMsg.Text = "Importing...";
             this.lblCallWholesaleMsg.Refresh();
-            returnmsg = importTollWholesale(this.txtFileName5.Text,Convert.ToString(billdate.Year),Convert.ToString(billdate.Month));
+            returnmsg = importfile(ImportFileTypes.TollWholesale, billdate);
             if (returnmsg == null)
             {
               importerror = _dataSource.checkfortollimporterror(importtable, Convert.ToString(billdate.Year), Convert.ToString(billdate.Month));
@@ -478,7 +478,7 @@ namespace CCI.DesktopClient.Screens
           if (ValidImport(billdate, filetype) == false)
           {
             this.lblCallRetailMsg.Text = "Importing...";
-            returnmsg = importTollRetail(this.txtFileName6.Text, Convert.ToString(billdate.Year), Convert.ToString(billdate.Month));
+            returnmsg = importfile(ImportFileTypes.TollRetail, billdate);
             if (returnmsg == null)
             {
               importerror = _dataSource.checkfortollimporterror(importtable, Convert.ToString(billdate.Year), Convert.ToString(billdate.Month));
@@ -538,10 +538,17 @@ namespace CCI.DesktopClient.Screens
           DateTime billdate = txtBillDate.Value;
           if (ValidImport(billdate, filetype) == false)
           {
-            openSpreadsheet(this.txtFileName7.Text);
-            this.lblTaxesMsg.Text = "Importing...";
-            importTaxes(txtBillDate.Value);
-            closeExcel();
+            // if there is not a stored procedure for this file, then use the special spreadsheet logic. 
+            // note this will need to change if we get another source that needs spreadsheet input but is not Saddleback
+            if (_importSources[_importSource].FileTypes.Where(t => t.FileType == ImportFileTypes.Tax).FirstOrDefault().StoredProcedure.Equals("Spreadsheet", StringComparison.CurrentCultureIgnoreCase))
+            {
+              openSpreadsheet(this.txtFileName7.Text);
+              this.lblTaxesMsg.Text = "Importing...";
+              importTaxes(txtBillDate.Value);
+              closeExcel();
+            }
+            else
+              importfile(ImportFileTypes.Tax, billdate); // just process normally using the stored procedure
             string user = SecurityContext.User;
             _dataSource.insertAcctImportLog(user, filetype, this.txtFileName7.Text, billdate, Source);
             RefreshImportLog();
@@ -564,10 +571,15 @@ namespace CCI.DesktopClient.Screens
           DateTime billdate = txtBillDate.Value;
           if (ValidImport(billdate, filetype) == false)
           {
-            openSpreadsheet(this.txtFileName8.Text);
-            this.lblLedgerMsg.Text = "Importing...";
-            importLedger(txtBillDate.Value);
-            closeExcel();
+            if (_importSources[_importSource].FileTypes.Where(t => t.FileType == ImportFileTypes.Ledger).FirstOrDefault().StoredProcedure.Equals("Spreadsheet", StringComparison.CurrentCultureIgnoreCase))
+            {
+              openSpreadsheet(this.txtFileName8.Text);
+              this.lblLedgerMsg.Text = "Importing...";
+              importLedger(txtBillDate.Value);
+              closeExcel();
+            }
+            else
+              importfile(ImportFileTypes.Ledger, billdate);
             string user = SecurityContext.User;
             _dataSource.insertAcctImportLog(user, filetype, this.txtFileName8.Text, billdate, Source);
             RefreshImportLog();
@@ -594,6 +606,23 @@ namespace CCI.DesktopClient.Screens
     }
     private void btnPostDetails_Click(object sender, EventArgs e)
     {
+      DialogResult ans = MessageBox.Show(@"Have you Imported all sources (e.g. Saddleback, Red Rock, etc.)? If not, it is not advisable to Post yet. 
+You cannot import and post another source after you have posted something for this Billing Period. Select Yes if you have imported everything,
+No if you have not and wish to be safe, and Cancel if you want to ignore and continue to Post unsafely.", "OK to Post", MessageBoxButtons.YesNoCancel);
+      if (ans == DialogResult.No)
+      {
+        MessageBox.Show("Request to Post is Cancelled");
+        return;
+      }
+      else if (ans == DialogResult.Cancel)
+      {
+        ans = MessageBox.Show("Are you sure you want to Post even though you have not imported everything and will not be able to import what remains?", "OK to Post", MessageBoxButtons.YesNo);
+        if (ans == DialogResult.No)
+        {
+          MessageBox.Show("Request to Post is Cancelled");
+          return;
+        }
+      }
 
       Exception returnmsg;
       string filetype = "Posted";
@@ -825,6 +854,8 @@ namespace CCI.DesktopClient.Screens
     private void frmImports_Load(object sender, EventArgs e)
     {
       this.Text = this.Text + " files for " + Source;
+      if (_importSources.Count == 0)
+        loadImportFileTypes();
       RefreshImportLog();
       txtBillDate.Value = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
       string filetype = "Posted";
@@ -842,711 +873,224 @@ namespace CCI.DesktopClient.Screens
       {
         this.btnPostDetails.Enabled = true;
       }
-      if (!useNewImport)
-      {
-        ckDownload.Checked = false;
-        ckDownload.Visible = false;
-        for (int i = 0; i < 4; i++)
-          _fileTypeSuffixes[i] = "xls";
-      }
+      //if (!useNewImport)
+      //{
+      //  ckDownload.Checked = false;
+      //  ckDownload.Visible = false;
+      //  for (int i = 0; i < 4; i++)
+      //    _fileTypeSuffixes[i] = "xls";
+      //}
     }
 
     #endregion
 
     #region import methods
 
-    private void importMRCFile(string MRCType, DateTime billdate)
+
+    private Exception importfile(ImportFileTypes fileTypeEnum, DateTime billdate)
     {
-      Exception returnmsg;
-      if (useNewImport)
+      ImportfileType fileType = _importSources[_importSource].FileTypes.Where(t => t.FileType == fileTypeEnum).FirstOrDefault();
+      int fileNumber = (int)fileTypeEnum + 1; // which file name text box i9s this?
+      string fileTextBoxName = "txtFileName" + fileNumber.ToString();
+      string filepath = _textBoxes.Where(t => t.Name == fileTextBoxName).FirstOrDefault().Text;
+      string storedproc = fileType.StoredProcedure;
+      string criteria;
+      switch (fileTypeEnum)
       {
-        string storedproc;
-        storedproc = "ImportHostedMRCRetail";
-        string filepath = txtFileName2.Text;
-        if (MRCType == "Wholesale")
-        {
-          storedproc = "ImportHostedMRCWholesale";
-          filepath = txtFileName1.Text;
-        }
-        string criteria = String.Format(",'{0}'", billdate.ToString("yyyyMMdd"));
-        returnmsg = _dataSource.executestoredproc(storedproc, filepath, criteria);
+        case ImportFileTypes.TollRetail:
+        case ImportFileTypes.TollWholesale:
+          criteria = String.Format(",'{0}', '{1}'", billdate.Year, billdate.Month);
+          break;
+        default:
+          criteria = String.Format(",'{0}'", billdate.ToString("yyyyMMdd"));
+          break;
       }
-      else
-      {
-        string importtable;
-        int StartRow;
-        int EndRow;
-        int Columns;
-        string savevalue;
-        if (MRCType == "Wholesale")
-        {
-          importtable = "hostedimportmrcwholesale";
-          StartRow = 7;
-          Columns = 11;
-          EndRow = 1;
-        }
-        else // "Retail"
-        {
-          importtable = "hostedimportmrcretail";
-          StartRow = 6;
-          Columns = 11;
-          EndRow = 1;
-        }
+      Exception returnmsg = _dataSource.executestoredproc(storedproc, filepath, criteria);
+      return returnmsg;
+    }
+
+    private void importTaxes(DateTime importdate)
+    {
+        string importtable = "hostedimporttaxes";
         DataAdapterContainer da = _dataSource.getMaintenanceAdapter(importtable, new Dictionary<string, string>());
         DataSet ds = da.DataSet;
         DataTable dt = ds.Tables[0];
         int Cnum = 0;
         int Rnum = 0;
-        for (Rnum = StartRow; Rnum <= ShtRange.Rows.Count - EndRow; Rnum++)
+        int StartRow = 1;
+        int TotRows = 2;
+        bool GoodRow = false;
+        int BadRowCount = 0;
+        int BadColCount = 0;
+        for (Rnum = StartRow; Rnum <= ShtRange.Rows.Count - TotRows && BadRowCount < 3; Rnum++)
         {
-          DataRow dr = dt.NewRow();
-          for (Cnum = 1; Cnum <= Columns; Cnum++)
-          {
-            if ((ShtRange.Cells[Rnum, Cnum] as Excel.Range).Value2 == null && Cnum == 1)
+            DataRow dr = dt.NewRow();
+            for (Cnum = 1; Cnum <= 9; Cnum++)
             {
-              Rnum = ShtRange.Rows.Count;
+              if ((ShtRange.Cells[Rnum, Cnum] as Excel.Range).Value2 != null)
+              {
+                dr[Cnum] = TaxCases(Cnum, (ShtRange.Cells[Rnum, Cnum] as Excel.Range).Value2.ToString());
+                GoodRow = true;
+                BadColCount = 0;
+              }
+              else
+                BadColCount = BadColCount + 1;
+            }
+            if (BadColCount > 9)
+              GoodRow = false;
+            if (GoodRow == true)
+            {
+              dr[10] = importdate;
+              dt.Rows.Add(dr);
+              GoodRow = false;
+              BadRowCount = 0;
             }
             else
             {
-              string cellvalue = "";
-              if ((ShtRange.Cells[Rnum, Cnum] as Excel.Range).Value2 != null)
-              {
-                cellvalue = (ShtRange.Cells[Rnum, Cnum] as Excel.Range).Value2.ToString();
-              }
-
-              savevalue = MRCCases(Cnum, cellvalue, MRCType, billdate);
-              if (savevalue == "Bad Date")
-                Rnum = ShtRange.Rows.Count;
-              else
-                dr[Cnum] = savevalue;
+              BadRowCount = BadRowCount + 1;
             }
-          }
-          dt.Rows.Add(dr);
         }
         da.DataAdapter.Update(ds, importtable);
-      }
     }
-      string MRCCases(int FieldNum, string cellvalue, string MRCType, DateTime billdate)
-      {
-          switch (FieldNum)
-              {
-                  case 1: //Customer Acct# 
-                  case 2: //Customer Name
-                  case 5: //USOC
-                  case 6: //Product Description
-                      {
-                          string strcellvalue = cellvalue.Replace("'", "''");
-                          return strcellvalue;
-                      }
-                  case 3: //MasterBTN
-                  case 4: // BTN
-                      {
-                        string strcellvalue = FixBTNs(cellvalue);
-                        return strcellvalue;
-                      }
-                  case 7: //Qty
-                  case 8: //Price
-                  case 9: //Amount Billed
-                      {
-                          return cellvalue;
-                      }
-                  case 10://Connection Date                            
-                      {
-                          cellvalue = ExcelDateConvert(cellvalue).ToString();
-                          return cellvalue;
-                      }
-                  case 11://Billing Date 
-                      {
-                        if (cellvalue == "")
-                        {
-                            cellvalue = Convert.ToString(billdate);
-                        }
-                        else
-                        {
-                            cellvalue = ExcelDateConvert(cellvalue).ToString();
-                            if (Convert.ToString(this.txtBillDate.Value) != cellvalue)
-                            {
-                              cellvalue = "Bad Date";
-                              importfileinvaliddate = true;
-                            }
-                        }
-                        return cellvalue;
-                      }
-              }
-          return cellvalue;
-      }
-      private void importOldOtherWholesale()
-      {
-          string importtable;
-          importtable = "hostedimportoccwholesale";
-          DataAdapterContainer da = _dataSource.getMaintenanceAdapter(importtable, new Dictionary<string, string>());
-          DataSet ds = da.DataSet;
-          DataTable dt = ds.Tables[0];
-          int Cnum = 0;
-          int dtCnum = 0;
-          int Rnum = 0;
-          bool iscustomerrow = true;
-          bool issubtotrow = false;
-          string cellvalue;
-          string customer;
-          DataRow dr = dt.NewRow(); 
-          for (Rnum = 6; Rnum <= ShtRange.Rows.Count - 4; Rnum++)
-          {
-              for (Cnum = 1; Cnum <= 7; Cnum++)
-              {
-                  if ((ShtRange.Cells[Rnum, Cnum] as Excel.Range).Value2 != null)
-                  {
-                      if (Cnum > 1 && Cnum < 6)
-                      {
-                          dtCnum = Cnum + 1;
-                      }
-                      else
-                      {
-                          dtCnum = Cnum;
-                      }
-                      if (Cnum == 1)
-                      {
-                          cellvalue = (ShtRange.Cells[Rnum, Cnum] as Excel.Range).Value2.ToString();
-                          issubtotrow = cellvalue.Contains("Subtotal");
-                          if (iscustomerrow == true)
-                          {
-                              dr[1] = cellvalue;
-                          }
-                          if (issubtotrow == false && iscustomerrow == false)
-                          {
-                              dr[2] = cellvalue;
-                          }
-                      }
-                      else
-                      {
-                          if (issubtotrow == false && iscustomerrow == false)
-                          {
-                          //     dr[dtCnum] = OtherCasesWholesale(Cnum, (ShtRange.Cells[Rnum, Cnum] as Excel.Range).Value2.ToString());
-                          }
-                      }
-                  }
-                  else
-                  {
-  //                    Rnum = ShtRange.Rows.Count;
-                  }
-              }
-              if (issubtotrow == false && iscustomerrow == false)
-              {
-                  customer = Convert.ToString(dr[1]);
-                  dt.Rows.Add(dr);
-                  dr = dt.NewRow();
-                  dr[1] = customer;
-              }
-              else
-              {
-                  if (iscustomerrow == true)
-                  {
-                      iscustomerrow = false;
-                  }
-                  if (issubtotrow == true)
-                  {
-                      iscustomerrow = true;
-                      issubtotrow = false;
-                  }
-              }
-          }
-          da.DataAdapter.Update(ds, importtable);
-      }
-      string OLdOtherCasesWholesale(int FieldNum, string cellvalue)
-      {
-          switch (FieldNum)
-          {
-              case 1: //Master BTN
-              case 2: //BTN
-                  {
-                    string strcellvalue = FixBTNs(cellvalue);
-                    return strcellvalue;
-                  }
-              case 5: //Service
-              case 6: //USOC
-                  {
-                      string strcellvalue = cellvalue.Replace("'", "''");
-                      return strcellvalue;
-                  }
-              case 4: //Amount
-                  {
-                      return cellvalue;
-                  }
-              case 3://DateTime   
-                  {
-                      cellvalue = ExcelDateConvert(cellvalue).ToString();
-                      return cellvalue;
-                  }
-          }
-          return cellvalue;
-      }
-
-    private void importOther(string OCCType, DateTime billdate)
+    string TaxCases(int FieldNum, string cellvalue)
     {
-      Exception returnmsg;
-      if (useNewImport)
+      switch (FieldNum)
       {
-        string storedproc;
-        storedproc = "ImportHostedOCCRetail";
-        string filepath = txtFileName4.Text;
-        if (OCCType == "Wholesale")
-        {
-          storedproc = "ImportHostedOCCWholesale";
-          filepath = txtFileName3.Text;
-        }
-        string criteria = String.Format(",'{0}'", billdate.ToString("yyyyMMdd"));
-        returnmsg = _dataSource.executestoredproc(storedproc, filepath, criteria);
+        case 1: //Customer Number
+          {
+            string zeropad = "000000";
+            cellvalue = cellvalue.Trim();
+            int padlength = 8 - cellvalue.Length;
+            string strcellvalue = zeropad.Substring(0, padlength) + cellvalue;
+            return strcellvalue;
+          }
+        case 2: //masterbtn
+          {
+            if (cellvalue.Length > 5)
+            {
+              string strcellvalue = FixBTNs(cellvalue);
+              return strcellvalue;
+            }
+            else
+              return cellvalue;
+          }
+        case 3: //Level
+        case 4: //level description
+        case 5: //jurisdiction
+        case 6: //Rate
+        case 7: //Tax Type
+        case 8: //Title
+          {
+            string strcellvalue = cellvalue.Replace("'", "''");
+            return strcellvalue;
+          }
+        case 9://Tax Amount
+          {
+            return cellvalue;
+          }
       }
-      else
+      return cellvalue;
+    }
+
+    private void importLedger(DateTime importdate)
+    {
+      string importtable = "hostedimportledger";
+      const string balanceLine = "Current Account Balance Due: ";
+      DataAdapterContainer da = _dataSource.getMaintenanceAdapter(importtable, new Dictionary<string, string>());
+      DataSet ds = da.DataSet;
+      DataTable dt = ds.Tables[0];
+      int Rnum = 0;
+      int StartRow = 5;
+      int TotRows = 3;
+      DataRow dr = dt.NewRow();
+      bool newCust = true;
+      string custid = string.Empty;
+      string custname = string.Empty;
+      DateTime lastTransctionDate = DateTime.Today;
+      for (Rnum = StartRow; Rnum <= ShtRange.Rows.Count - TotRows; Rnum++)
       {
-        string importtable;
-        int firstrow;
-        if (OCCType == "Wholesale")
-        {
-          importtable = "hostedimportoccwholesale";
-          firstrow = 5;
-        }
+        custid = LedgerCases(1, CommonFunctions.CString((ShtRange.Cells[Rnum, 1] as Excel.Range).Value2));
+        if (string.IsNullOrEmpty(custid)) //  a blank line
+          newCust = true;
         else
         {
-          importtable = "hostedimportoccretail";
-          firstrow = 4;
-        }
-        DataAdapterContainer da = _dataSource.getMaintenanceAdapter(importtable, new Dictionary<string, string>());
-        DataSet ds = da.DataSet;
-        DataTable dt = ds.Tables[0];
-        int Cnum = 0;
-        int Rnum = 0;
-        string savevalue;
-        bool badrow = false;
-        for (Rnum = firstrow; Rnum <= ShtRange.Rows.Count - 2; Rnum++)
-        {
-          DataRow dr = dt.NewRow();
-          badrow = false;
-          for (Cnum = 1; Cnum <= 9 && Rnum <= ShtRange.Rows.Count; Cnum++)
+          string tmpName = LedgerCases(2, CommonFunctions.CString((ShtRange.Cells[Rnum, 2] as Excel.Range).Value2)).Trim();
+          if (newCust)
           {
-            if (Cnum == 1 && Convert.ToString((ShtRange.Cells[Rnum, Cnum] as Excel.Range).Value2) == "End")
-              Rnum = ShtRange.Rows.Count;
+            newCust = false; // don't write a record, just get the name
+            custname = tmpName;
+          }
+          else
+          {
+            decimal amount = 0;
+            string title = string.Empty;
+            DateTime transactionDate = lastTransctionDate;
+            if (string.IsNullOrEmpty(tmpName)) // normal line item
+            {
+              transactionDate = CommonFunctions.CDateTime(LedgerCases(3, CommonFunctions.CString((ShtRange.Cells[Rnum, 3] as Excel.Range).Value2)));
+              title = LedgerCases(4, CommonFunctions.CString((ShtRange.Cells[Rnum, 4] as Excel.Range).Value2));
+              amount = CommonFunctions.CDecimal(LedgerCases(5, CommonFunctions.CString((ShtRange.Cells[Rnum, 5] as Excel.Range).Value2)));
+            }
             else
             {
-              if ((ShtRange.Cells[Rnum, Cnum] as Excel.Range).Value2 != null)
+              // balance line (and last line of customer)
+              // Current Account Balance Due: 403.89
+              if (tmpName.StartsWith(balanceLine))
               {
-                savevalue = OtherCases(Cnum, (ShtRange.Cells[Rnum, Cnum] as Excel.Range).Value2.ToString());
-                if (savevalue == "Bad Date")
-                  Rnum = ShtRange.Rows.Count;
-                else
-                  dr[Cnum] = savevalue;
-              }
-              else
-              {
-                Rnum = Rnum + 1;
-                Cnum = 10;
-                badrow = true;
+                amount = CommonFunctions.CDecimal(tmpName.Substring(balanceLine.Length));
+                title = "Balance";
               }
             }
-          }
-          if (badrow == false)
+            //dr[0] = System.DBNull.Value;
+            dr[1] = custid;
+            dr[2] = custname;
+            dr[3] = transactionDate;
+            dr[4] = title;
+            dr[5] = amount;
+            dr[6] = txtBillDate.Value;
             dt.Rows.Add(dr);
+            dr = dt.NewRow();
+            //newCust = true; // looking for the next customer
+          }
         }
-        da.DataAdapter.Update(ds, importtable);
       }
+      da.DataAdapter.Update(ds, importtable);
     }
-      string OtherCases(int FieldNum, string cellvalue)
+    string LedgerCases(int FieldNum, string cellvalue)
+    {
+      string strcellvalue = string.Empty;
+      switch (FieldNum)
       {
-          switch (FieldNum)
+        case 1: //Customer Number
           {
-              case 1: //Customer
-              case 6: //Code
-              case 7: //USOC
-              case 8: //Description
-                  {
-                      string strcellvalue = cellvalue.Replace("'", "''");
-                      return strcellvalue;
-                  }
-              case 2: //Master BTN
-              case 3: //BTN
-                  {
-                    string strcellvalue = FixBTNs(cellvalue);
-                    return strcellvalue;
-                  }
-              case 5: //Amount
-                  {
-                      return cellvalue;
-                  }
-              case 4://DateTime   
-                  {
-                    cellvalue = ExcelDaysConvert(cellvalue).ToString();
-                    return cellvalue;
-                  }
-              case 9://BillDate
-                  {
-                      cellvalue = ExcelDateConvert(cellvalue).ToString();
-                      if (Convert.ToString(this.txtBillDate.Value) != cellvalue)
-                      {
-                        cellvalue = "Bad Date";
-                        importfileinvaliddate = true;
-                      }
-                      return cellvalue;
-                  }
-          }
-          return cellvalue;
-      }
-
-      private Exception importTollWholesale(string filepath, string billyear, string billmonth)
-      {
-        Exception returnmsg;
-        string storedproc = "ImportHostedTollWholesale";
-        string criteria = String.Format(",'{0}', '{1}'", billyear, billmonth); 
-        returnmsg = _dataSource.executestoredproc(storedproc, filepath, criteria);
-        return returnmsg;
-      }
-      private Exception importTollRetail(string filepath, string billyear, string billmonth)
-      {
-        Exception returnmsg;
-        string storedproc = "ImportHostedTollRetail";
-        string criteria = String.Format(",'{0}', '{1}'", billyear, billmonth); 
-        returnmsg = _dataSource.executestoredproc(storedproc, filepath, criteria);
-        return returnmsg;
-      }
-      private void importCalls(string calltype)
-      {
-          string importtable;
-          int Columns;
-          int RowCount;
-          if (calltype == "Wholesale")
-          {
-              importtable = "hostedimporttollwholesale";
-          }
-          else
-          {
-              importtable = "hostedimporttollretail";
-          }
-          DataAdapterContainer da = _dataSource.getMaintenanceAdapter(importtable, new Dictionary<string, string>());
-          DataSet ds = da.DataSet;
-          DataTable dt = ds.Tables[0];
-          int Cnum = 0;
-          int Rnum = 0;
-          int TblCol = 0;
-          //string cellvalue;
-          //string holddate;
-
-          if (calltype == "Wholesale")
-          {
-              Columns = 21;
-              RowCount = ShtRange.Rows.Count;
-          }
-          else
-          {
-              Columns = 14;
-              RowCount = ShtRange.Rows.Count - 1;
-          }
-
-          for (Rnum = 2; Rnum <= RowCount; Rnum++)
-          {
-              DataRow dr = dt.NewRow(); 
-              for (Cnum = 1; Cnum <= Columns; Cnum++)
-              {
-                  if ((ShtRange.Cells[Rnum, Cnum] as Excel.Range).Value2 != null)
-                      if (calltype == "Wholesale")
-                      {
-                          dr[Cnum] = CallWholesaleCases(Cnum, (ShtRange.Cells[Rnum, Cnum] as Excel.Range).Value2.ToString());
-                      }
-                      else
-                      {
-                        if (Cnum > 7)
-                        {
-                          TblCol = Cnum - 1;
-                        }
-                        else
-                        {
-                          TblCol = Cnum;
-                        }
-                        if (Cnum != 7 && Cnum != 8)
-                        {
-                          dr[TblCol] = CallRetailCases(Cnum, (ShtRange.Cells[Rnum, Cnum] as Excel.Range).Value2.ToString());
-                        }
-                        if (Cnum == 8)
-                        {
-                          string calldate = CallRetailCases(7,(ShtRange.Cells[Rnum, 7] as Excel.Range).Value2.ToString());
-                          string calltime = (ShtRange.Cells[Rnum, 8] as Excel.Range).Value2.ToString();
-                          if (calltime.Length < 6)
-                          {
-                            calltime = "00:" + calltime;
-                          }
-                          dr[7] = calldate.Substring(0,10) + " " + calltime;
-                        }
-                      }
-                  else
-                      Rnum = ShtRange.Rows.Count;
-              }
-                dt.Rows.Add(dr);
-          }
-          da.DataAdapter.Update(ds,importtable);
-      }
-      string CallWholesaleCases(int FieldNum, string cellvalue)
-      {
-          switch (FieldNum)
-          {
-              case 1: //Billing Month
-              case 2: //Billing Year
-              case 6: //Customer Number
-              case 10: //From State
-              case 11://Carrier ID
-              case 12://Message Type
-              case 13://OCPID
-              case 14://Rate
-              case 15://Rate Class
-              case 16://Settlement Code
-              case 17://To City
-              case 18://To Reference
-              case 20://To State
-                  {
-                      string strcellvalue = cellvalue.Replace("'", "''");
-                      return strcellvalue;
-                  }
-              case 3: //BTN
-              case 9: //From NUmber
-              case 19://To Number
-                  {
-                    string strcellvalue = FixBTNs(cellvalue);
-                    return strcellvalue;
-                  }
-              case 4: //Call Number
-              case 5: //Charge
-              case 8: //Duration
-              case 21://Usage Account Code
-                  {
-                      return cellvalue;
-                  }
-              case 7: //Date                            
-                  {
-                      cellvalue = ExcelDaysConvert(cellvalue).ToString();
-                      return cellvalue;
-                  }
-          }
-          return cellvalue;
-      }
-      string CallRetailCases(int FieldNum, string cellvalue)
-      {
-          switch (FieldNum)
-          {
-              case 1: //Customer Number
-              case 2: //Billing Year
-              case 3: //Billing Month
-              case 5: //Message Type
-              case 11://To City
-              case 12://To State
-              case 13://Rate
-                  {
-                      string strcellvalue = cellvalue.Replace("'", "''");
-                      return strcellvalue;
-                  }
-              case 4: //BTN
-              case 6: //From Number
-              case 10: //To Number
-                  {
-                    string strcellvalue = FixBTNs(cellvalue);
-                    return strcellvalue;
-                  }
-              case 9: //Duration
-              case 14://Charge
-                  {
-                      return cellvalue;
-                  }
-              case 7: //Date                            
-                  {
-                      cellvalue = ExcelDateConvert(cellvalue).ToString();
-                      return cellvalue;
-                  }
-              case 8: //Time
-                  {
-                      return cellvalue;
-                  }
-          }
-          return cellvalue;
-      }
-
-      private void importTaxes(DateTime importdate)
-      {
-          string importtable = "hostedimporttaxes";
-          DataAdapterContainer da = _dataSource.getMaintenanceAdapter(importtable, new Dictionary<string, string>());
-          DataSet ds = da.DataSet;
-          DataTable dt = ds.Tables[0];
-          int Cnum = 0;
-          int Rnum = 0;
-          int StartRow = 1;
-          int TotRows = 2;
-          bool GoodRow = false;
-          int BadRowCount = 0;
-          int BadColCount = 0;
-          for (Rnum = StartRow; Rnum <= ShtRange.Rows.Count - TotRows && BadRowCount < 3; Rnum++)
-          {
-              DataRow dr = dt.NewRow();
-              for (Cnum = 1; Cnum <= 9; Cnum++)
-              {
-                if ((ShtRange.Cells[Rnum, Cnum] as Excel.Range).Value2 != null)
-                {
-                  dr[Cnum] = TaxCases(Cnum, (ShtRange.Cells[Rnum, Cnum] as Excel.Range).Value2.ToString());
-                  GoodRow = true;
-                  BadColCount = 0;
-                }
-                else
-                  BadColCount = BadColCount + 1;
-              }
-              if (BadColCount > 9)
-                GoodRow = false;
-              if (GoodRow == true)
-              {
-                dr[10] = importdate;
-                dt.Rows.Add(dr);
-                GoodRow = false;
-                BadRowCount = 0;
-              }
-              else
-              {
-                BadRowCount = BadRowCount + 1;
-              }
-          }
-          da.DataAdapter.Update(ds, importtable);
-      }
-      string TaxCases(int FieldNum, string cellvalue)
-      {
-        switch (FieldNum)
-        {
-          case 1: //Customer Number
-            {
-              string zeropad = "000000";
-              cellvalue = cellvalue.Trim();
-              int padlength = 8 - cellvalue.Length;
-              string strcellvalue = zeropad.Substring(0, padlength) + cellvalue;
+            if (string.IsNullOrEmpty(cellvalue))
               return strcellvalue;
-            }
-          case 2: //masterbtn
-            {
-              if (cellvalue.Length > 5)
-              {
-                string strcellvalue = FixBTNs(cellvalue);
-                return strcellvalue;
-              }
-              else
-                return cellvalue;
-            }
-          case 3: //Level
-          case 4: //level description
-          case 5: //jurisdiction
-          case 6: //Rate
-          case 7: //Tax Type
-          case 8: //Title
-            {
-              string strcellvalue = cellvalue.Replace("'", "''");
-              return strcellvalue;
-            }
-          case 9://Tax Amount
-            {
-              return cellvalue;
-            }
-        }
-        return cellvalue;
-      }
-
-      private void importLedger(DateTime importdate)
-      {
-        string importtable = "hostedimportledger";
-        const string balanceLine = "Current Account Balance Due: ";
-        DataAdapterContainer da = _dataSource.getMaintenanceAdapter(importtable, new Dictionary<string, string>());
-        DataSet ds = da.DataSet;
-        DataTable dt = ds.Tables[0];
-        int Rnum = 0;
-        int StartRow = 5;
-        int TotRows = 3;
-        DataRow dr = dt.NewRow();
-        bool newCust = true;
-        string custid = string.Empty;
-        string custname = string.Empty;
-        DateTime lastTransctionDate = DateTime.Today;
-        for (Rnum = StartRow; Rnum <= ShtRange.Rows.Count - TotRows; Rnum++)
-        {
-          custid = LedgerCases(1, CommonFunctions.CString((ShtRange.Cells[Rnum, 1] as Excel.Range).Value2));
-          if (string.IsNullOrEmpty(custid)) //  a blank line
-            newCust = true;
-          else
-          {
-            string tmpName = LedgerCases(2, CommonFunctions.CString((ShtRange.Cells[Rnum, 2] as Excel.Range).Value2)).Trim();
-            if (newCust)
-            {
-              newCust = false; // don't write a record, just get the name
-              custname = tmpName;
-            }
-            else
-            {
-              decimal amount = 0;
-              string title = string.Empty;
-              DateTime transactionDate = lastTransctionDate;
-              if (string.IsNullOrEmpty(tmpName)) // normal line item
-              {
-                transactionDate = CommonFunctions.CDateTime(LedgerCases(3, CommonFunctions.CString((ShtRange.Cells[Rnum, 3] as Excel.Range).Value2)));
-                title = LedgerCases(4, CommonFunctions.CString((ShtRange.Cells[Rnum, 4] as Excel.Range).Value2));
-                amount = CommonFunctions.CDecimal(LedgerCases(5, CommonFunctions.CString((ShtRange.Cells[Rnum, 5] as Excel.Range).Value2)));
-              }
-              else
-              {
-                // balance line (and last line of customer)
-                // Current Account Balance Due: 403.89
-                if (tmpName.StartsWith(balanceLine))
-                {
-                  amount = CommonFunctions.CDecimal(tmpName.Substring(balanceLine.Length));
-                  title = "Balance";
-                }
-              }
-              //dr[0] = System.DBNull.Value;
-              dr[1] = custid;
-              dr[2] = custname;
-              dr[3] = transactionDate;
-              dr[4] = title;
-              dr[5] = amount;
-              dr[6] = txtBillDate.Value;
-              dt.Rows.Add(dr);
-              dr = dt.NewRow();
-              //newCust = true; // looking for the next customer
-            }
+            string zeropad = "000000";
+            cellvalue = cellvalue.Trim();
+            int padlength = 8 - cellvalue.Length;
+              strcellvalue = zeropad.Substring(0, padlength) + cellvalue;
+            return strcellvalue;
           }
-        }
-        da.DataAdapter.Update(ds, importtable);
+        case 3: //TransactionDate
+          {
+            strcellvalue = ExcelDateConvert(cellvalue).ToString();
+            return strcellvalue;
+          }
+        case 2: //CustomerName
+        case 4: //Title
+          {
+              strcellvalue = cellvalue.Replace("'", "''");
+            return strcellvalue;
+          }
+        case 5://Tax Amount
+          {
+            return cellvalue;
+          }
       }
-      string LedgerCases(int FieldNum, string cellvalue)
-      {
-        string strcellvalue = string.Empty;
-        switch (FieldNum)
-        {
-          case 1: //Customer Number
-            {
-              if (string.IsNullOrEmpty(cellvalue))
-                return strcellvalue;
-              string zeropad = "000000";
-              cellvalue = cellvalue.Trim();
-              int padlength = 8 - cellvalue.Length;
-                strcellvalue = zeropad.Substring(0, padlength) + cellvalue;
-              return strcellvalue;
-            }
-          case 3: //TransactionDate
-            {
-              strcellvalue = ExcelDateConvert(cellvalue).ToString();
-              return strcellvalue;
-            }
-          case 2: //CustomerName
-          case 4: //Title
-            {
-                strcellvalue = cellvalue.Replace("'", "''");
-              return strcellvalue;
-            }
-          case 5://Tax Amount
-            {
-              return cellvalue;
-            }
-        }
-        return cellvalue;
-      }
+      return cellvalue;
+    }
 
-      #endregion
+    #endregion
 
     #region other private methods
     DateTime ExcelDateConvert(string cellvalue)
@@ -1594,11 +1138,13 @@ namespace CCI.DesktopClient.Screens
       strcellvalue = strcellvalue.Substring(0,len);
       return strcellvalue;
     }
-    private bool isValidFileName(string filename, ImportFileTypes fileType)
+    private bool isValidFileName(string filename, ImportFileTypes fileTypeEnum)
     {
       bool isOK = false;
-      int i = (int)fileType;
-      string standardPrefix = _fileTypePrefixes[i];
+      ImportSourceConfiguration source = _importSources[_importSource];
+      int i = (int)fileTypeEnum;
+      ImportfileType fileType = source.FileTypes.Where<ImportfileType>(t => t.FileType == fileTypeEnum).FirstOrDefault();
+      string standardPrefix = fileType.Prefix;//_fileTypePrefixes[i];
       //if (CommonFunctions.IsDateTime(txtBillingDate.Text))
       //{
         string comparedate = txtBillDate.Value.ToString("yyyyMM");
@@ -1723,18 +1269,16 @@ namespace CCI.DesktopClient.Screens
     }
     private void loadFileNames(bool downloadFiles = false)
     {
-      SaddleBackFTPInfo ftpInfo = new SaddleBackFTPInfo();
-      string uri = ftpInfo.Uri;
-      string uid = ftpInfo.Uid;
-      string pw = ftpInfo.Pw;
-      ACG.Common.ACGFtp ftp = new ACG.Common.ACGFtp();
+      ImportSourceConfiguration source = _importSources[_importSource];
+
       bool hasError = false;
       string datepart = txtBillDate.Value.ToString("yyyyMM");
       // now populate each foldername and check to see if it is there
-      for (int iFile = 0; iFile < _fileTypePrefixes.GetLength(0); iFile++)
+      int iFile = 0;
+      foreach (ImportfileType fileType in source.FileTypes)
       {
-        string prefix = _fileTypePrefixes[iFile];
-        string suffix = _fileTypeSuffixes[iFile];
+        string prefix = fileType.Prefix;
+        string suffix = fileType.Suffic;
         string datepartend = string.Empty;
         //if (useNewImport && iFile < 6)
         //  datepartend = "01";
@@ -1754,9 +1298,22 @@ namespace CCI.DesktopClient.Screens
         }
         else
         {
-          if (downloadFiles)
+          if (downloadFiles && source.FTPInfo != null)
           {
-            if (iFile < _fileTypePrefixes.GetLength(0) - 1)  // last two files are tax and ledger and they are not on the ftp site 10-31-2015 supposedly the tax file will be there so I add it
+            /*
+             * TODO: right now, only Saddleback files can be ftp downloaded, and there are some 
+             * Saddleback hard coded entries in this section. This works for now, but if
+             * we start ftping red rock files or get another source that needs ftp downloads,
+             * then some of this section will need to be tweaked
+             */
+            #region ftp download
+            SourceFTPInfo ftpInfo = source.FTPInfo;
+
+            string uri = ftpInfo.Uri;
+            string uid = ftpInfo.Uid;
+            string pw = ftpInfo.Pw;
+            ACG.Common.ACGFtp ftp = new ACG.Common.ACGFtp();
+            if (iFile < source.FileTypes.Count - 1)  // last two files are tax and ledger and they are not on the ftp site 10-31-2015 supposedly the tax file will be there so I add it
             {
               txt.Text = "Downloading...";
               txt.ForeColor = Color.Blue;
@@ -1766,7 +1323,7 @@ namespace CCI.DesktopClient.Screens
                 string firstLine = string.Empty;
                 if (iFile == 2 || iFile == 3) // OCC files don't have header row
                   firstLine = @"Customer,MasterBTN,BTN,Date,Amount,Code,USOC,Service,BillDate";
-                ftp.ftpGetFile(uri, uid, pw, filename, _basePath, _skipLines[iFile], firstLine);
+                ftp.ftpGetFile(uri, uid, pw, filename, _basePath, fileType.skiplines, firstLine);
                 txt.Text = filepath;
                 txt.ForeColor = Color.Black;
                 txt.Refresh();
@@ -1780,17 +1337,18 @@ namespace CCI.DesktopClient.Screens
             }
             else
             {
-              if (iFile < _fileTypePrefixes.GetLength(0) - 1 || ckRequireLedger.Checked)
+              if (iFile < source.FileTypes.Count - 1 || ckRequireLedger.Checked)
                 hasError = true;
 
               txt.Text = FILENOTFOUNDPREFIX + filepath;
               txt.ForeColor = Color.Red;
               txt.Refresh();
             }
+            #endregion
           }
           else
           {
-            if (iFile < _fileTypePrefixes.GetLength(0) - 1 || ckRequireLedger.Checked)
+            if (iFile < source.FileTypes.Count - 1 || ckRequireLedger.Checked)
               hasError = true;
 
             txt.Text = FILENOTFOUNDPREFIX + filepath;
@@ -1798,7 +1356,7 @@ namespace CCI.DesktopClient.Screens
             txt.Refresh();
           }
         }
-
+        iFile++;
       }
       if (hasError && !_importLedgerOnly)
         MessageBox.Show("Some filenames were not found");
@@ -1809,7 +1367,36 @@ namespace CCI.DesktopClient.Screens
         hasValidFiles = true;
       }
     }
+    private void loadImportFileTypes()
+    {
+      DataSet sources = _dataSource.getImportSources();
+      foreach (DataRow src in sources.Tables[0].Rows)
+      {
+        ImportSourceConfiguration source = new ImportSourceConfiguration();
+        source.Source = (ImportSource)Enum.Parse(typeof(ImportSource), src["Source"].ToString());
+        DataSet fileTypes = _dataSource.getImportFileTypes(source.Source.ToString());
+        source.FileTypes = new List<ImportfileType>();
+        foreach (DataRow row in fileTypes.Tables[0].Rows)
+        {
+          ImportfileType fileType = new ImportfileType();
+          fileType.FileType = (ImportFileTypes)Enum.Parse(typeof(ImportFileTypes), CommonFunctions.CString(row["FileType"]));
+          fileType.Prefix = CommonFunctions.CString(row["Prefix"]);
+          fileType.Suffic = CommonFunctions.CString(row["Suffix"]);
+          fileType.StoredProcedure = CommonFunctions.CString(row["StoredProcedure"]);
+          fileType.skiplines = CommonFunctions.CInt(row["SkipLines"]);
+          source.FileTypes.Add(fileType);
+        }
+        if (src["FtpSiteUrl"] != null)
+        {
+          source.FTPInfo = new SourceFTPInfo();
+          source.FTPInfo.Uri = CommonFunctions.CString(src["FtpSiteUrl"]);
+          source.FTPInfo.Uid = CommonFunctions.CString(src["FtpSiteUsername"]);
+          source.FTPInfo.Pw = CommonFunctions.CString(src["FtpSitePassword"]);
+        }
+        _importSources.Add(source.Source, source);
+      }
 
+    }
     private void RefreshImportLog()
       {
         DataSet dsLog = _dataSource.getAcctImportLog();
@@ -1817,5 +1404,368 @@ namespace CCI.DesktopClient.Screens
       }
     #endregion
 
+    #region old commented out code
+    //string OtherCases(int FieldNum, string cellvalue)
+    //{
+    //    switch (FieldNum)
+    //    {
+    //        case 1: //Customer
+    //        case 6: //Code
+    //        case 7: //USOC
+    //        case 8: //Description
+    //            {
+    //                string strcellvalue = cellvalue.Replace("'", "''");
+    //                return strcellvalue;
+    //            }
+    //        case 2: //Master BTN
+    //        case 3: //BTN
+    //            {
+    //              string strcellvalue = FixBTNs(cellvalue);
+    //              return strcellvalue;
+    //            }
+    //        case 5: //Amount
+    //            {
+    //                return cellvalue;
+    //            }
+    //        case 4://DateTime   
+    //            {
+    //              cellvalue = ExcelDaysConvert(cellvalue).ToString();
+    //              return cellvalue;
+    //            }
+    //        case 9://BillDate
+    //            {
+    //                cellvalue = ExcelDateConvert(cellvalue).ToString();
+    //                if (Convert.ToString(this.txtBillDate.Value) != cellvalue)
+    //                {
+    //                  cellvalue = "Bad Date";
+    //                  importfileinvaliddate = true;
+    //                }
+    //                return cellvalue;
+    //            }
+    //    }
+    //    return cellvalue;
+    //}
+
+    //private string[] _saddlebackFileTypePrefixes = new string[] { "MRC WHLSL-", "MRC Retail-", "OCC WHLSL-", "OCC Retail-", "Toll WHLSL-", "Toll Retail-", "TAX-", "Ledger-" };
+    //private string[] _redRockFileTypePrefixes = new string[] { "Wholesale MRC Red Rock-", "Retail MRC Red Rock-", "Wholesale OCC Red Rock-", "Retail OCC Red Rock-", "Wholesale Toll Red Rock-", "Retail Toll Red Rock-", "TAX Red Rock-", "Ledger Red Rock-" };
+    //private string[] _fileTypePrefixes = new string[] { };
+    //private string[] _fileTypeSuffixes = new string[] { };
+    //private string[] _saddlebackFileTypeSuffixes = new string[] { "csv", "csv", "csv", "csv", "csv", "csv", "csv", "xls" };
+    //private string[] _redRockFileTypeSuffixes = new string[] { "txt", "txt", "txt", "txt", "txt", "txt", "txt", "txt" };
+    //private int[] _skipLines = new int[] { 4, 4, 4, 4, 0, 0, 0, 0 };
+    //private string[] _fileTypeSuffixes = new string[] { "xls", "xls", "xls", "xls", "csv", "csv", "csv", "xls" };
+    //string MRCCases(int FieldNum, string cellvalue, string MRCType, DateTime billdate)
+    //{
+    //    switch (FieldNum)
+    //        {
+    //            case 1: //Customer Acct# 
+    //            case 2: //Customer Name
+    //            case 5: //USOC
+    //            case 6: //Product Description
+    //                {
+    //                    string strcellvalue = cellvalue.Replace("'", "''");
+    //                    return strcellvalue;
+    //                }
+    //            case 3: //MasterBTN
+    //            case 4: // BTN
+    //                {
+    //                  string strcellvalue = FixBTNs(cellvalue);
+    //                  return strcellvalue;
+    //                }
+    //            case 7: //Qty
+    //            case 8: //Price
+    //            case 9: //Amount Billed
+    //                {
+    //                    return cellvalue;
+    //                }
+    //            case 10://Connection Date                            
+    //                {
+    //                    cellvalue = ExcelDateConvert(cellvalue).ToString();
+    //                    return cellvalue;
+    //                }
+    //            case 11://Billing Date 
+    //                {
+    //                  if (cellvalue == "")
+    //                  {
+    //                      cellvalue = Convert.ToString(billdate);
+    //                  }
+    //                  else
+    //                  {
+    //                      cellvalue = ExcelDateConvert(cellvalue).ToString();
+    //                      if (Convert.ToString(this.txtBillDate.Value) != cellvalue)
+    //                      {
+    //                        cellvalue = "Bad Date";
+    //                        importfileinvaliddate = true;
+    //                      }
+    //                  }
+    //                  return cellvalue;
+    //                }
+    //        }
+    //    return cellvalue;
+    //}
+    //    private void importOldOtherWholesale()
+    //    {
+    //        string importtable;
+    //        importtable = "hostedimportoccwholesale";
+    //        DataAdapterContainer da = _dataSource.getMaintenanceAdapter(importtable, new Dictionary<string, string>());
+    //        DataSet ds = da.DataSet;
+    //        DataTable dt = ds.Tables[0];
+    //        int Cnum = 0;
+    //        int dtCnum = 0;
+    //        int Rnum = 0;
+    //        bool iscustomerrow = true;
+    //        bool issubtotrow = false;
+    //        string cellvalue;
+    //        string customer;
+    //        DataRow dr = dt.NewRow(); 
+    //        for (Rnum = 6; Rnum <= ShtRange.Rows.Count - 4; Rnum++)
+    //        {
+    //            for (Cnum = 1; Cnum <= 7; Cnum++)
+    //            {
+    //                if ((ShtRange.Cells[Rnum, Cnum] as Excel.Range).Value2 != null)
+    //                {
+    //                    if (Cnum > 1 && Cnum < 6)
+    //                    {
+    //                        dtCnum = Cnum + 1;
+    //                    }
+    //                    else
+    //                    {
+    //                        dtCnum = Cnum;
+    //                    }
+    //                    if (Cnum == 1)
+    //                    {
+    //                        cellvalue = (ShtRange.Cells[Rnum, Cnum] as Excel.Range).Value2.ToString();
+    //                        issubtotrow = cellvalue.Contains("Subtotal");
+    //                        if (iscustomerrow == true)
+    //                        {
+    //                            dr[1] = cellvalue;
+    //                        }
+    //                        if (issubtotrow == false && iscustomerrow == false)
+    //                        {
+    //                            dr[2] = cellvalue;
+    //                        }
+    //                    }
+    //                    else
+    //                    {
+    //                        if (issubtotrow == false && iscustomerrow == false)
+    //                        {
+    //                        //     dr[dtCnum] = OtherCasesWholesale(Cnum, (ShtRange.Cells[Rnum, Cnum] as Excel.Range).Value2.ToString());
+    //                        }
+    //                    }
+    //                }
+    //                else
+    //                {
+    ////                    Rnum = ShtRange.Rows.Count;
+    //                }
+    //            }
+    //            if (issubtotrow == false && iscustomerrow == false)
+    //            {
+    //                customer = Convert.ToString(dr[1]);
+    //                dt.Rows.Add(dr);
+    //                dr = dt.NewRow();
+    //                dr[1] = customer;
+    //            }
+    //            else
+    //            {
+    //                if (iscustomerrow == true)
+    //                {
+    //                    iscustomerrow = false;
+    //                }
+    //                if (issubtotrow == true)
+    //                {
+    //                    iscustomerrow = true;
+    //                    issubtotrow = false;
+    //                }
+    //            }
+    //        }
+    //        da.DataAdapter.Update(ds, importtable);
+    //    }
+    //string OLdOtherCasesWholesale(int FieldNum, string cellvalue)
+    //{
+    //    switch (FieldNum)
+    //    {
+    //        case 1: //Master BTN
+    //        case 2: //BTN
+    //            {
+    //              string strcellvalue = FixBTNs(cellvalue);
+    //              return strcellvalue;
+    //            }
+    //        case 5: //Service
+    //        case 6: //USOC
+    //            {
+    //                string strcellvalue = cellvalue.Replace("'", "''");
+    //                return strcellvalue;
+    //            }
+    //        case 4: //Amount
+    //            {
+    //                return cellvalue;
+    //            }
+    //        case 3://DateTime   
+    //            {
+    //                cellvalue = ExcelDateConvert(cellvalue).ToString();
+    //                return cellvalue;
+    //            }
+    //    }
+    //    return cellvalue;
+    //}
+    //private void importCalls(string calltype)
+    //{
+    //    string importtable;
+    //    int Columns;
+    //    int RowCount;
+    //    if (calltype == "Wholesale")
+    //    {
+    //        importtable = "hostedimporttollwholesale";
+    //    }
+    //    else
+    //    {
+    //        importtable = "hostedimporttollretail";
+    //    }
+    //    DataAdapterContainer da = _dataSource.getMaintenanceAdapter(importtable, new Dictionary<string, string>());
+    //    DataSet ds = da.DataSet;
+    //    DataTable dt = ds.Tables[0];
+    //    int Cnum = 0;
+    //    int Rnum = 0;
+    //    int TblCol = 0;
+    //    //string cellvalue;
+    //    //string holddate;
+
+    //    if (calltype == "Wholesale")
+    //    {
+    //        Columns = 21;
+    //        RowCount = ShtRange.Rows.Count;
+    //    }
+    //    else
+    //    {
+    //        Columns = 14;
+    //        RowCount = ShtRange.Rows.Count - 1;
+    //    }
+
+    //    for (Rnum = 2; Rnum <= RowCount; Rnum++)
+    //    {
+    //        DataRow dr = dt.NewRow(); 
+    //        for (Cnum = 1; Cnum <= Columns; Cnum++)
+    //        {
+    //            if ((ShtRange.Cells[Rnum, Cnum] as Excel.Range).Value2 != null)
+    //                if (calltype == "Wholesale")
+    //                {
+    //                    dr[Cnum] = CallWholesaleCases(Cnum, (ShtRange.Cells[Rnum, Cnum] as Excel.Range).Value2.ToString());
+    //                }
+    //                else
+    //                {
+    //                  if (Cnum > 7)
+    //                  {
+    //                    TblCol = Cnum - 1;
+    //                  }
+    //                  else
+    //                  {
+    //                    TblCol = Cnum;
+    //                  }
+    //                  if (Cnum != 7 && Cnum != 8)
+    //                  {
+    //                    dr[TblCol] = CallRetailCases(Cnum, (ShtRange.Cells[Rnum, Cnum] as Excel.Range).Value2.ToString());
+    //                  }
+    //                  if (Cnum == 8)
+    //                  {
+    //                    string calldate = CallRetailCases(7,(ShtRange.Cells[Rnum, 7] as Excel.Range).Value2.ToString());
+    //                    string calltime = (ShtRange.Cells[Rnum, 8] as Excel.Range).Value2.ToString();
+    //                    if (calltime.Length < 6)
+    //                    {
+    //                      calltime = "00:" + calltime;
+    //                    }
+    //                    dr[7] = calldate.Substring(0,10) + " " + calltime;
+    //                  }
+    //                }
+    //            else
+    //                Rnum = ShtRange.Rows.Count;
+    //        }
+    //          dt.Rows.Add(dr);
+    //    }
+    //    da.DataAdapter.Update(ds,importtable);
+    //}
+    //string CallWholesaleCases(int FieldNum, string cellvalue)
+    //{
+    //    switch (FieldNum)
+    //    {
+    //        case 1: //Billing Month
+    //        case 2: //Billing Year
+    //        case 6: //Customer Number
+    //        case 10: //From State
+    //        case 11://Carrier ID
+    //        case 12://Message Type
+    //        case 13://OCPID
+    //        case 14://Rate
+    //        case 15://Rate Class
+    //        case 16://Settlement Code
+    //        case 17://To City
+    //        case 18://To Reference
+    //        case 20://To State
+    //            {
+    //                string strcellvalue = cellvalue.Replace("'", "''");
+    //                return strcellvalue;
+    //            }
+    //        case 3: //BTN
+    //        case 9: //From NUmber
+    //        case 19://To Number
+    //            {
+    //              string strcellvalue = FixBTNs(cellvalue);
+    //              return strcellvalue;
+    //            }
+    //        case 4: //Call Number
+    //        case 5: //Charge
+    //        case 8: //Duration
+    //        case 21://Usage Account Code
+    //            {
+    //                return cellvalue;
+    //            }
+    //        case 7: //Date                            
+    //            {
+    //                cellvalue = ExcelDaysConvert(cellvalue).ToString();
+    //                return cellvalue;
+    //            }
+    //    }
+    //    return cellvalue;
+    //}
+    //string CallRetailCases(int FieldNum, string cellvalue)
+    //{
+    //    switch (FieldNum)
+    //    {
+    //        case 1: //Customer Number
+    //        case 2: //Billing Year
+    //        case 3: //Billing Month
+    //        case 5: //Message Type
+    //        case 11://To City
+    //        case 12://To State
+    //        case 13://Rate
+    //            {
+    //                string strcellvalue = cellvalue.Replace("'", "''");
+    //                return strcellvalue;
+    //            }
+    //        case 4: //BTN
+    //        case 6: //From Number
+    //        case 10: //To Number
+    //            {
+    //              string strcellvalue = FixBTNs(cellvalue);
+    //              return strcellvalue;
+    //            }
+    //        case 9: //Duration
+    //        case 14://Charge
+    //            {
+    //                return cellvalue;
+    //            }
+    //        case 7: //Date                            
+    //            {
+    //                cellvalue = ExcelDateConvert(cellvalue).ToString();
+    //                return cellvalue;
+    //            }
+    //        case 8: //Time
+    //            {
+    //                return cellvalue;
+    //            }
+    //    }
+    //    return cellvalue;
+    //}
+
+    #endregion
   }
 }

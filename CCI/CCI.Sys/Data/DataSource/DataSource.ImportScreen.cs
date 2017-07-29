@@ -538,6 +538,16 @@ group by BillDate) h";
         return "Partial";
       }
     }
+    public DataSet getImportSources()
+    {
+      const string sql = "SELECT * from ImportSources";
+      return getDataFromSQL(sql);
+    }
+    public DataSet getImportFileTypes(string source)
+    {
+      string sql = string.Format("SELECT FileType, Prefix, Suffix, StoredProcedure, SkipLines from ImportFileTypes where Source = '{0}'", source);
+      return getDataFromSQL(sql);
+    }
     private static string getexcelfile()
     {
       Stream myStream;
