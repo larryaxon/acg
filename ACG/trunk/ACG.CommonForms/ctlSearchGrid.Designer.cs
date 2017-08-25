@@ -32,6 +32,7 @@
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ctlSearchGrid));
       this.splitMain = new System.Windows.Forms.SplitContainer();
       this.splitSelect = new System.Windows.Forms.SplitContainer();
+      this.srchNamedSearch = new ACG.CommonForms.ctlSearch();
       this.btnDeleteSavedSearch = new System.Windows.Forms.Button();
       this.toolStripSearch = new System.Windows.Forms.ToolStrip();
       this.tsbtnSearch = new System.Windows.Forms.ToolStripButton();
@@ -53,7 +54,6 @@
       this.copyCellToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.btnCollapseSearch = new System.Windows.Forms.Button();
       this.btnShowFields = new System.Windows.Forms.Button();
-      this.srchNamedSearch = new ACG.CommonForms.ctlSearch();
       this.splitMain.Panel1.SuspendLayout();
       this.splitMain.Panel2.SuspendLayout();
       this.splitMain.SuspendLayout();
@@ -113,6 +113,35 @@
       this.splitSelect.Size = new System.Drawing.Size(452, 448);
       this.splitSelect.SplitterDistance = 234;
       this.splitSelect.TabIndex = 11;
+      // 
+      // srchNamedSearch
+      // 
+      this.srchNamedSearch.AddNewMode = false;
+      this.srchNamedSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.srchNamedSearch.AutoAddNewMode = false;
+      this.srchNamedSearch.AutoSelectWhenMatch = false;
+      this.srchNamedSearch.AutoTabToNextControlOnSelect = false;
+      this.srchNamedSearch.ClearSearchOnExpand = true;
+      this.srchNamedSearch.ClearSearchWhenComplete = true;
+      this.srchNamedSearch.Collapsed = true;
+      this.srchNamedSearch.CreatedNewItem = false;
+      this.srchNamedSearch.DisplayOnlyDescription = false;
+      this.srchNamedSearch.DisplayOnlyID = true;
+      this.srchNamedSearch.FixKeySpace = "-1";
+      this.srchNamedSearch.ID = "";
+      this.srchNamedSearch.ID_DescSplitter = ":";
+      this.srchNamedSearch.Location = new System.Drawing.Point(6, 22);
+      this.srchNamedSearch.MaxHeight = 228;
+      this.srchNamedSearch.MustExistInList = false;
+      this.srchNamedSearch.MustExistMessage = "You must enter a valid value";
+      this.srchNamedSearch.Name = "srchNamedSearch";
+      this.srchNamedSearch.SearchExec = null;
+      this.srchNamedSearch.ShowCustomerNameWhenSet = true;
+      this.srchNamedSearch.ShowTermedCheckBox = false;
+      this.srchNamedSearch.Size = new System.Drawing.Size(202, 22);
+      this.srchNamedSearch.TabIndex = 0;
+      this.srchNamedSearch.OnSelected += new System.EventHandler<System.EventArgs>(this.srchNamedSearch_OnSelected);
       // 
       // btnDeleteSavedSearch
       // 
@@ -348,34 +377,6 @@
       this.btnShowFields.Text = "Fields";
       this.btnShowFields.UseVisualStyleBackColor = true;
       this.btnShowFields.Click += new System.EventHandler(this.btnShowFields_Click);
-      // 
-      // srchNamedSearch
-      // 
-      this.srchNamedSearch.AddNewMode = false;
-      this.srchNamedSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.srchNamedSearch.AutoAddNewMode = false;
-      this.srchNamedSearch.AutoSelectWhenMatch = false;
-      this.srchNamedSearch.AutoTabToNextControlOnSelect = false;
-      this.srchNamedSearch.ClearSearchWhenComplete = true;
-      this.srchNamedSearch.Collapsed = true;
-      this.srchNamedSearch.CreatedNewItem = false;
-      this.srchNamedSearch.DisplayOnlyDescription = false;
-      this.srchNamedSearch.DisplayOnlyID = true;
-      this.srchNamedSearch.FixKeySpace = "-1";
-      this.srchNamedSearch.ID = "";
-      this.srchNamedSearch.ID_DescSplitter = ":";
-      this.srchNamedSearch.Location = new System.Drawing.Point(6, 22);
-      this.srchNamedSearch.MaxHeight = 228;
-      this.srchNamedSearch.MustExistInList = false;
-      this.srchNamedSearch.MustExistMessage = "You must enter a valid value";
-      this.srchNamedSearch.Name = "srchNamedSearch";
-      this.srchNamedSearch.SearchExec = null;
-      this.srchNamedSearch.ShowCustomerNameWhenSet = true;
-      this.srchNamedSearch.ShowTermedCheckBox = false;
-      this.srchNamedSearch.Size = new System.Drawing.Size(202, 22);
-      this.srchNamedSearch.TabIndex = 0;
-      this.srchNamedSearch.OnSelected += new System.EventHandler<System.EventArgs>(this.srchNamedSearch_OnSelected);
       // 
       // ctlSearchGrid
       // 

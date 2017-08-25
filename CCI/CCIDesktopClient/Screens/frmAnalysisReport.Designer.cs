@@ -55,6 +55,7 @@
       this.srchBottomGrid.AutoAddNewMode = false;
       this.srchBottomGrid.AutoSelectWhenMatch = false;
       this.srchBottomGrid.AutoTabToNextControlOnSelect = false;
+      this.srchBottomGrid.ClearSearchOnExpand = true;
       this.srchBottomGrid.ClearSearchWhenComplete = false;
       this.srchBottomGrid.Collapsed = true;
       this.srchBottomGrid.CreatedNewItem = false;
@@ -63,7 +64,7 @@
       this.srchBottomGrid.FixKeySpace = "-1";
       this.srchBottomGrid.ID = "";
       this.srchBottomGrid.ID_DescSplitter = ":";
-      this.srchBottomGrid.Location = new System.Drawing.Point(878, 0);
+      this.srchBottomGrid.Location = new System.Drawing.Point(836, 2);
       this.srchBottomGrid.MaxHeight = 228;
       this.srchBottomGrid.MustExistInList = true;
       this.srchBottomGrid.MustExistMessage = "You must select a valid query";
@@ -81,6 +82,7 @@
       this.srchMiddleGrid.AutoAddNewMode = false;
       this.srchMiddleGrid.AutoSelectWhenMatch = false;
       this.srchMiddleGrid.AutoTabToNextControlOnSelect = false;
+      this.srchMiddleGrid.ClearSearchOnExpand = true;
       this.srchMiddleGrid.ClearSearchWhenComplete = false;
       this.srchMiddleGrid.Collapsed = true;
       this.srchMiddleGrid.CreatedNewItem = false;
@@ -89,7 +91,7 @@
       this.srchMiddleGrid.FixKeySpace = "-1";
       this.srchMiddleGrid.ID = "";
       this.srchMiddleGrid.ID_DescSplitter = ":";
-      this.srchMiddleGrid.Location = new System.Drawing.Point(669, 0);
+      this.srchMiddleGrid.Location = new System.Drawing.Point(627, 2);
       this.srchMiddleGrid.MaxHeight = 228;
       this.srchMiddleGrid.MustExistInList = true;
       this.srchMiddleGrid.MustExistMessage = "You must select a valid query";
@@ -107,6 +109,7 @@
       this.srchTopGrid.AutoAddNewMode = false;
       this.srchTopGrid.AutoSelectWhenMatch = false;
       this.srchTopGrid.AutoTabToNextControlOnSelect = false;
+      this.srchTopGrid.ClearSearchOnExpand = true;
       this.srchTopGrid.ClearSearchWhenComplete = false;
       this.srchTopGrid.Collapsed = true;
       this.srchTopGrid.CreatedNewItem = false;
@@ -115,7 +118,7 @@
       this.srchTopGrid.FixKeySpace = "-1";
       this.srchTopGrid.ID = "";
       this.srchTopGrid.ID_DescSplitter = ":";
-      this.srchTopGrid.Location = new System.Drawing.Point(460, 0);
+      this.srchTopGrid.Location = new System.Drawing.Point(418, 2);
       this.srchTopGrid.MaxHeight = 228;
       this.srchTopGrid.MustExistInList = true;
       this.srchTopGrid.MustExistMessage = "You must select a valid query";
@@ -133,6 +136,7 @@
       this.srchNamedSearch.AutoAddNewMode = false;
       this.srchNamedSearch.AutoSelectWhenMatch = false;
       this.srchNamedSearch.AutoTabToNextControlOnSelect = true;
+      this.srchNamedSearch.ClearSearchOnExpand = false;
       this.srchNamedSearch.ClearSearchWhenComplete = false;
       this.srchNamedSearch.Collapsed = true;
       this.srchNamedSearch.CreatedNewItem = false;
@@ -155,8 +159,7 @@
       // 
       // btnClear
       // 
-      this.btnClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnClear.Location = new System.Drawing.Point(1286, 1);
+      this.btnClear.Location = new System.Drawing.Point(239, 1);
       this.btnClear.Name = "btnClear";
       this.btnClear.Size = new System.Drawing.Size(45, 20);
       this.btnClear.TabIndex = 7;
@@ -167,7 +170,7 @@
       // label1
       // 
       this.label1.AutoSize = true;
-      this.label1.Location = new System.Drawing.Point(333, 3);
+      this.label1.Location = new System.Drawing.Point(291, 5);
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(122, 13);
       this.label1.TabIndex = 3;
@@ -175,12 +178,13 @@
       // 
       // btnGroups
       // 
-      this.btnGroups.Location = new System.Drawing.Point(238, 1);
+      this.btnGroups.Location = new System.Drawing.Point(1088, 1);
       this.btnGroups.Name = "btnGroups";
       this.btnGroups.Size = new System.Drawing.Size(89, 20);
       this.btnGroups.TabIndex = 2;
       this.btnGroups.Text = "Create Group";
       this.btnGroups.UseVisualStyleBackColor = true;
+      this.btnGroups.Visible = false;
       this.btnGroups.Click += new System.EventHandler(this.btnGroups_Click);
       // 
       // ckFilterByIDList
