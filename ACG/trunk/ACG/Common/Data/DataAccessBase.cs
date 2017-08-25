@@ -661,6 +661,14 @@ namespace ACG.Common.Data
       ds = null;
       return o;
     }
+    public void deleteUserOption(string user, string optiontype, string optionname)
+    {
+      if (!existsTable(CommonData.tableUSEROPTIONS))
+        return;
+      string sql = string.Format("Delete from {0} where UserID = '{1}' and OptionType = '{2}' and OptionName = '{3}'",
+        CommonData.tableUSEROPTIONS, user, optiontype, optionname);
+      updateDataFromSQL(sql);
+    }
     #endregion
     #endregion
 
