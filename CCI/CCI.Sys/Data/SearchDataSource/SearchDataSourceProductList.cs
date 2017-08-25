@@ -20,8 +20,8 @@ namespace CCI.Sys.Data
     {
 //      SQL = "Select * from (select m.ItemID, m.Name from ProductList p inner join MasterProductList m on p.ItemId = m.ItemId {0}) p ";
       SQL = @"Select ItemID, Name
-                from MasterProductList
-                where IsSaddlebackUSOC = 0 ";
+                from MasterProductList ";
+                //where IsSaddlebackUSOC = 0 ";
       OrderByClause = " order by Name ";
       IDName = "ItemID";
       NameName = "Name";
@@ -35,30 +35,28 @@ namespace CCI.Sys.Data
       {
         if (string.IsNullOrEmpty(PrimaryCarrier))
         {
-          Carrier = "CityHosted";
-          PrimaryCarrier = "Saddleback";
+          //Carrier = "CityHosted";
+          //PrimaryCarrier = "Saddleback";
         }
         else
         {
-          Carrier = PrimaryCarrier;
+          carrierClause = string.Format("WHERE p.PrimaryCarrier = '{0}'", PrimaryCarrier);
         }
       }
       else
       {
         if (string.IsNullOrEmpty(PrimaryCarrier))
         {
-          if (Carrier.Equals("CityHosted"))
-          {
-            PrimaryCarrier = "Saddleback";
-          }
+          carrierClause = string.Format("WHERE p.Carrier = '{0}' ", Carrier);
+        }
+        else
+        {
+          carrierClause = string.Format("WHERE p.Carrier = '{0}' and p.PrimaryCarrier = '{1}' ", Carrier, PrimaryCarrier);
         }
       }
 
       SQL = string.Format(@"SELECT * FROM (SELECT dbo.MasterProductList.ItemID, dbo.MasterProductList.Name
-FROM         dbo.MasterProductList INNER JOIN
-             dbo.ProductList AS p ON dbo.MasterProductList.ItemID = p.ItemID
-WHERE        p.Carrier = '{0}'
-AND          p.PrimaryCarrier = '{1}') p", Carrier, PrimaryCarrier);
+FROM dbo.MasterProductList INNER JOIN dbo.ProductList AS p ON dbo.MasterProductList.ItemID = p.ItemID {0}) p", carrierClause);
 
         return getSearchList(SQL, OrderByClause, criteria, IDName, new string[] { NameName }, useExactID, true);
 

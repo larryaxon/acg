@@ -29,6 +29,18 @@ select * from [cityhostedtest].dbo.MasterProductList where itemid like 'r%' and 
 INSERT INTO PRODUCTLIST
 SELECT * FROM [cityhostedtest].dbo.ProductList where itemid like 'r%' and itemid <> 'router'
 
+-- fixup product search datasoure
+update DataSources
+set FromClause = '* from (Select distinct ni.Customer, c.Legalname CustomerName, ni.Location, l.LegalName LocationName, ni.ItemId, pl.PrimaryCarrier, p.Name ProductName, ni.Quantity, ni.MRC, ni.NRC, ni.Comments, 
+ni.StartDate, ni.EndDate, ni.LastModifiedBy, ni.LastModifiedDateTime,   
+ni.ID, Case when Convert(date,getdate()) between isnull(ni.startdate, ''1/1/1900'') and isnull(ni.enddate, ''12/31/2100'') then ''Yes'' else ''No'' end Active, coalesce(ni.OrderID, ni.CityCareProdOrderID) OrderID 
+from NetworkInventory ni
+inner join Entity c on ni.Customer = c.Entity
+left join Entity l on ni.Location = l.Entity
+inner join MasterProductList p on ni.Itemid = p.Itemid
+inner join ProductList pl on ni.ItemID = pl.itemid) a '
+where DataSource = 'SearchNetworkInventory'
+
 /***************************************************************************************
 
 	Add Red Rock Carrier

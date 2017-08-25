@@ -38,8 +38,9 @@
       this.label14 = new System.Windows.Forms.Label();
       this.splitMain = new System.Windows.Forms.SplitContainer();
       this.pnlNewNetworkInventory = new System.Windows.Forms.Panel();
-      this.txtNewItemID = new ACG.CommonForms.ctlSearch();
+      this.txtPrimaryCarrier = new ACG.CommonForms.ctlSearch();
       this.txtNewLocation = new ACG.CommonForms.ctlSearch();
+      this.txtNewItemID = new ACG.CommonForms.ctlSearch();
       this.txtTransactionMRC = new System.Windows.Forms.TextBox();
       this.label4 = new System.Windows.Forms.Label();
       this.label3 = new System.Windows.Forms.Label();
@@ -215,12 +216,13 @@
       // 
       this.splitMain.Panel2.Controls.Add(this.srchNetworkInventory);
       this.splitMain.Panel2.Controls.Add(this.label16);
-      this.splitMain.Size = new System.Drawing.Size(1190, 638);
+      this.splitMain.Size = new System.Drawing.Size(1116, 638);
       this.splitMain.SplitterDistance = 304;
       this.splitMain.TabIndex = 2;
       // 
       // pnlNewNetworkInventory
       // 
+      this.pnlNewNetworkInventory.Controls.Add(this.txtPrimaryCarrier);
       this.pnlNewNetworkInventory.Controls.Add(this.txtNewLocation);
       this.pnlNewNetworkInventory.Controls.Add(this.txtNewItemID);
       this.pnlNewNetworkInventory.Controls.Add(this.txtTransactionMRC);
@@ -264,35 +266,33 @@
       this.pnlNewNetworkInventory.Dock = System.Windows.Forms.DockStyle.Fill;
       this.pnlNewNetworkInventory.Location = new System.Drawing.Point(0, 0);
       this.pnlNewNetworkInventory.Name = "pnlNewNetworkInventory";
-      this.pnlNewNetworkInventory.Size = new System.Drawing.Size(1190, 304);
+      this.pnlNewNetworkInventory.Size = new System.Drawing.Size(1116, 304);
       this.pnlNewNetworkInventory.TabIndex = 36;
       // 
-      // txtNewItemID
+      // txtPrimaryCarrier
       // 
-      this.txtNewItemID.AddNewMode = false;
-      this.txtNewItemID.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.txtNewItemID.AutoAddNewMode = false;
-      this.txtNewItemID.AutoSelectWhenMatch = false;
-      this.txtNewItemID.AutoTabToNextControlOnSelect = true;
-      this.txtNewItemID.ClearSearchWhenComplete = false;
-      this.txtNewItemID.Collapsed = true;
-      this.txtNewItemID.CreatedNewItem = false;
-      this.txtNewItemID.DisplayOnlyDescription = false;
-      this.txtNewItemID.DisplayOnlyID = false;
-      this.txtNewItemID.FixKeySpace = "-1";
-      this.txtNewItemID.ID = "";
-      this.txtNewItemID.ID_DescSplitter = ":";
-      this.txtNewItemID.Location = new System.Drawing.Point(107, 57);
-      this.txtNewItemID.MaxHeight = 228;
-      this.txtNewItemID.MustExistInList = false;
-      this.txtNewItemID.MustExistMessage = "You must enter a valid value";
-      this.txtNewItemID.Name = "txtNewItemID";
-      this.txtNewItemID.SearchExec = null;
-      this.txtNewItemID.ShowCustomerNameWhenSet = true;
-      this.txtNewItemID.ShowTermedCheckBox = false;
-      this.txtNewItemID.Size = new System.Drawing.Size(782, 18);
-      this.txtNewItemID.TabIndex = 5;
+      this.txtPrimaryCarrier.AddNewMode = false;
+      this.txtPrimaryCarrier.AutoAddNewMode = false;
+      this.txtPrimaryCarrier.AutoSelectWhenMatch = false;
+      this.txtPrimaryCarrier.AutoTabToNextControlOnSelect = true;
+      this.txtPrimaryCarrier.ClearSearchWhenComplete = false;
+      this.txtPrimaryCarrier.Collapsed = true;
+      this.txtPrimaryCarrier.CreatedNewItem = false;
+      this.txtPrimaryCarrier.DisplayOnlyDescription = false;
+      this.txtPrimaryCarrier.DisplayOnlyID = false;
+      this.txtPrimaryCarrier.FixKeySpace = "-1";
+      this.txtPrimaryCarrier.ID = "";
+      this.txtPrimaryCarrier.ID_DescSplitter = ":";
+      this.txtPrimaryCarrier.Location = new System.Drawing.Point(107, 55);
+      this.txtPrimaryCarrier.MaxHeight = 228;
+      this.txtPrimaryCarrier.MustExistInList = false;
+      this.txtPrimaryCarrier.MustExistMessage = "You must enter a valid value";
+      this.txtPrimaryCarrier.Name = "txtPrimaryCarrier";
+      this.txtPrimaryCarrier.SearchExec = null;
+      this.txtPrimaryCarrier.ShowCustomerNameWhenSet = true;
+      this.txtPrimaryCarrier.ShowTermedCheckBox = false;
+      this.txtPrimaryCarrier.Size = new System.Drawing.Size(262, 20);
+      this.txtPrimaryCarrier.TabIndex = 3;
       // 
       // txtNewLocation
       // 
@@ -318,8 +318,35 @@
       this.txtNewLocation.SearchExec = null;
       this.txtNewLocation.ShowCustomerNameWhenSet = true;
       this.txtNewLocation.ShowTermedCheckBox = false;
-      this.txtNewLocation.Size = new System.Drawing.Size(886, 18);
-      this.txtNewLocation.TabIndex = 4;
+      this.txtNewLocation.Size = new System.Drawing.Size(812, 18);
+      this.txtNewLocation.TabIndex = 2;
+      // 
+      // txtNewItemID
+      // 
+      this.txtNewItemID.AddNewMode = false;
+      this.txtNewItemID.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.txtNewItemID.AutoAddNewMode = false;
+      this.txtNewItemID.AutoSelectWhenMatch = false;
+      this.txtNewItemID.AutoTabToNextControlOnSelect = true;
+      this.txtNewItemID.ClearSearchWhenComplete = false;
+      this.txtNewItemID.Collapsed = true;
+      this.txtNewItemID.CreatedNewItem = false;
+      this.txtNewItemID.DisplayOnlyDescription = false;
+      this.txtNewItemID.DisplayOnlyID = false;
+      this.txtNewItemID.FixKeySpace = "-1";
+      this.txtNewItemID.ID = "";
+      this.txtNewItemID.ID_DescSplitter = ":";
+      this.txtNewItemID.Location = new System.Drawing.Point(368, 57);
+      this.txtNewItemID.MaxHeight = 228;
+      this.txtNewItemID.MustExistInList = false;
+      this.txtNewItemID.MustExistMessage = "You must enter a valid value";
+      this.txtNewItemID.Name = "txtNewItemID";
+      this.txtNewItemID.SearchExec = null;
+      this.txtNewItemID.ShowCustomerNameWhenSet = true;
+      this.txtNewItemID.ShowTermedCheckBox = false;
+      this.txtNewItemID.Size = new System.Drawing.Size(447, 18);
+      this.txtNewItemID.TabIndex = 4;
       // 
       // txtTransactionMRC
       // 
@@ -357,7 +384,7 @@
       // 
       this.dtTransactionDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.dtTransactionDate.Format = "d";
-      this.dtTransactionDate.Location = new System.Drawing.Point(1006, 78);
+      this.dtTransactionDate.Location = new System.Drawing.Point(932, 78);
       this.dtTransactionDate.Name = "dtTransactionDate";
       this.dtTransactionDate.Size = new System.Drawing.Size(177, 20);
       this.dtTransactionDate.TabIndex = 14;
@@ -367,7 +394,7 @@
       // 
       this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.label2.AutoSize = true;
-      this.label2.Location = new System.Drawing.Point(898, 82);
+      this.label2.Location = new System.Drawing.Point(824, 82);
       this.label2.Name = "label2";
       this.label2.Size = new System.Drawing.Size(89, 13);
       this.label2.TabIndex = 74;
@@ -377,7 +404,7 @@
       // 
       this.dtNewExpDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.dtNewExpDate.Format = "d";
-      this.dtNewExpDate.Location = new System.Drawing.Point(1006, 147);
+      this.dtNewExpDate.Location = new System.Drawing.Point(932, 147);
       this.dtNewExpDate.Name = "dtNewExpDate";
       this.dtNewExpDate.Size = new System.Drawing.Size(177, 20);
       this.dtNewExpDate.TabIndex = 17;
@@ -387,7 +414,7 @@
       // 
       this.dtNewEndDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.dtNewEndDate.Format = "d";
-      this.dtNewEndDate.Location = new System.Drawing.Point(1006, 124);
+      this.dtNewEndDate.Location = new System.Drawing.Point(932, 124);
       this.dtNewEndDate.Name = "dtNewEndDate";
       this.dtNewEndDate.Size = new System.Drawing.Size(177, 20);
       this.dtNewEndDate.TabIndex = 16;
@@ -397,7 +424,7 @@
       // 
       this.dtNewStartDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.dtNewStartDate.Format = "d";
-      this.dtNewStartDate.Location = new System.Drawing.Point(1006, 101);
+      this.dtNewStartDate.Location = new System.Drawing.Point(932, 101);
       this.dtNewStartDate.Name = "dtNewStartDate";
       this.dtNewStartDate.Size = new System.Drawing.Size(177, 20);
       this.dtNewStartDate.TabIndex = 15;
@@ -407,7 +434,7 @@
       // 
       this.dtNewDateInstalled.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.dtNewDateInstalled.Format = "d";
-      this.dtNewDateInstalled.Location = new System.Drawing.Point(1006, 55);
+      this.dtNewDateInstalled.Location = new System.Drawing.Point(932, 55);
       this.dtNewDateInstalled.Name = "dtNewDateInstalled";
       this.dtNewDateInstalled.Size = new System.Drawing.Size(177, 20);
       this.dtNewDateInstalled.TabIndex = 13;
@@ -436,14 +463,14 @@
       this.txtNewCustomer.ShowCustomerNameWhenSet = true;
       this.txtNewCustomer.ShowTermedCheckBox = false;
       this.txtNewCustomer.Size = new System.Drawing.Size(191, 18);
-      this.txtNewCustomer.TabIndex = 3;
+      this.txtNewCustomer.TabIndex = 1;
       this.txtNewCustomer.Leave += new System.EventHandler(this.txtNewCustomer_Leave);
       // 
       // label36
       // 
       this.label36.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.label36.AutoSize = true;
-      this.label36.Location = new System.Drawing.Point(898, 151);
+      this.label36.Location = new System.Drawing.Point(824, 151);
       this.label36.Name = "label36";
       this.label36.Size = new System.Drawing.Size(51, 13);
       this.label36.TabIndex = 72;
@@ -456,13 +483,13 @@
       this.txtNewAccount.Enabled = false;
       this.txtNewAccount.Location = new System.Drawing.Point(110, 83);
       this.txtNewAccount.Name = "txtNewAccount";
-      this.txtNewAccount.Size = new System.Drawing.Size(773, 20);
-      this.txtNewAccount.TabIndex = 6;
+      this.txtNewAccount.Size = new System.Drawing.Size(699, 20);
+      this.txtNewAccount.TabIndex = 5;
       // 
       // btnNewCancel
       // 
       this.btnNewCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnNewCancel.Location = new System.Drawing.Point(827, 172);
+      this.btnNewCancel.Location = new System.Drawing.Point(753, 172);
       this.btnNewCancel.Name = "btnNewCancel";
       this.btnNewCancel.Size = new System.Drawing.Size(75, 23);
       this.btnNewCancel.TabIndex = 19;
@@ -473,7 +500,7 @@
       // btnClone
       // 
       this.btnClone.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnClone.Location = new System.Drawing.Point(908, 173);
+      this.btnClone.Location = new System.Drawing.Point(834, 173);
       this.btnClone.Name = "btnClone";
       this.btnClone.Size = new System.Drawing.Size(65, 20);
       this.btnClone.TabIndex = 20;
@@ -501,7 +528,7 @@
       // 
       this.label31.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.label31.AutoSize = true;
-      this.label31.Location = new System.Drawing.Point(898, 105);
+      this.label31.Location = new System.Drawing.Point(824, 105);
       this.label31.Name = "label31";
       this.label31.Size = new System.Drawing.Size(55, 13);
       this.label31.TabIndex = 65;
@@ -529,7 +556,7 @@
       this.lblNewNew.AutoSize = true;
       this.lblNewNew.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.lblNewNew.ForeColor = System.Drawing.Color.Red;
-      this.lblNewNew.Location = new System.Drawing.Point(1112, 10);
+      this.lblNewNew.Location = new System.Drawing.Point(1038, 10);
       this.lblNewNew.Name = "lblNewNew";
       this.lblNewNew.Size = new System.Drawing.Size(64, 13);
       this.lblNewNew.TabIndex = 62;
@@ -539,7 +566,7 @@
       // btnNewDelete
       // 
       this.btnNewDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnNewDelete.Location = new System.Drawing.Point(1122, 173);
+      this.btnNewDelete.Location = new System.Drawing.Point(1048, 173);
       this.btnNewDelete.Name = "btnNewDelete";
       this.btnNewDelete.Size = new System.Drawing.Size(65, 20);
       this.btnNewDelete.TabIndex = 23;
@@ -567,7 +594,7 @@
       // btnNewNew
       // 
       this.btnNewNew.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnNewNew.Location = new System.Drawing.Point(1050, 173);
+      this.btnNewNew.Location = new System.Drawing.Point(976, 173);
       this.btnNewNew.Name = "btnNewNew";
       this.btnNewNew.Size = new System.Drawing.Size(65, 20);
       this.btnNewNew.TabIndex = 22;
@@ -587,7 +614,7 @@
       // btnNewSave
       // 
       this.btnNewSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnNewSave.Location = new System.Drawing.Point(979, 173);
+      this.btnNewSave.Location = new System.Drawing.Point(905, 173);
       this.btnNewSave.Name = "btnNewSave";
       this.btnNewSave.Size = new System.Drawing.Size(65, 20);
       this.btnNewSave.TabIndex = 21;
@@ -603,7 +630,7 @@
       this.txtNewComments.Location = new System.Drawing.Point(7, 173);
       this.txtNewComments.Multiline = true;
       this.txtNewComments.Name = "txtNewComments";
-      this.txtNewComments.Size = new System.Drawing.Size(814, 118);
+      this.txtNewComments.Size = new System.Drawing.Size(740, 118);
       this.txtNewComments.TabIndex = 18;
       // 
       // label21
@@ -611,9 +638,9 @@
       this.label21.AutoSize = true;
       this.label21.Location = new System.Drawing.Point(8, 59);
       this.label21.Name = "label21";
-      this.label21.Size = new System.Drawing.Size(44, 13);
+      this.label21.Size = new System.Drawing.Size(79, 13);
       this.label21.TabIndex = 38;
-      this.label21.Text = "Product";
+      this.label21.Text = "Carrier/Product";
       // 
       // label23
       // 
@@ -637,7 +664,7 @@
       // 
       this.label25.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.label25.AutoSize = true;
-      this.label25.Location = new System.Drawing.Point(898, 59);
+      this.label25.Location = new System.Drawing.Point(824, 59);
       this.label25.Name = "label25";
       this.label25.Size = new System.Drawing.Size(72, 13);
       this.label25.TabIndex = 47;
@@ -654,7 +681,7 @@
       // 
       this.label26.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.label26.AutoSize = true;
-      this.label26.Location = new System.Drawing.Point(898, 128);
+      this.label26.Location = new System.Drawing.Point(824, 128);
       this.label26.Name = "label26";
       this.label26.Size = new System.Drawing.Size(52, 13);
       this.label26.TabIndex = 49;
@@ -674,7 +701,7 @@
       this.txtNewOrderID.Location = new System.Drawing.Point(110, 3);
       this.txtNewOrderID.Name = "txtNewOrderID";
       this.txtNewOrderID.Size = new System.Drawing.Size(182, 20);
-      this.txtNewOrderID.TabIndex = 2;
+      this.txtNewOrderID.TabIndex = 0;
       // 
       // label1
       // 
@@ -713,7 +740,7 @@
       this.srchNetworkInventory.Name = "srchNetworkInventory";
       this.srchNetworkInventory.NameType = CCI.Common.CommonData.UnmatchedNameTypes.Customer;
       this.srchNetworkInventory.SearchCriteria = null;
-      this.srchNetworkInventory.Size = new System.Drawing.Size(1190, 330);
+      this.srchNetworkInventory.Size = new System.Drawing.Size(1116, 330);
       this.srchNetworkInventory.TabIndex = 0;
       this.srchNetworkInventory.Title = "Search (0 Records Found)";
       this.srchNetworkInventory.UniqueIdentifier = "ID";
@@ -733,7 +760,7 @@
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(1214, 673);
+      this.ClientSize = new System.Drawing.Size(1140, 673);
       this.Controls.Add(this.ckActiveInventoryOnly);
       this.Controls.Add(this.ctlLocationSearch);
       this.Controls.Add(this.ctlCustomerSearch);
@@ -811,5 +838,6 @@
     private System.Windows.Forms.Label label4;
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.TextBox txtTransactionQuantity;
+    private ACG.CommonForms.ctlSearch txtPrimaryCarrier;
   }
 }

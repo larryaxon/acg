@@ -153,7 +153,10 @@ namespace CCI.DesktopClient.Screens
         txtNewLocation.Text = CommonFunctions.CString(row["Location"]);
         string itemid = CommonFunctions.CString(row["ItemID"]);
         string carrier = CommonFunctions.CString(row["Carrier"]);
+        string primaryCarrier = CommonFunctions.CString(row["PrimaryCarrier"]);
+        txtPrimaryCarrier.Text = primaryCarrier;
         ((SearchDataSourceProductList)txtNewItemID.SearchExec).Carrier = carrier;
+        ((SearchDataSourceProductList)txtNewItemID.SearchExec).PrimaryCarrier = primaryCarrier;
         txtNewItemID.Text = itemid;
         txtTransactionQuantity.Text = Math.Round(CommonFunctions.CDecimal(row["TransactionQuantity"]), 2).ToString();
         txtQuantity.Text = Math.Round(CommonFunctions.CDecimal(row["Quantity"]),2).ToString();
@@ -183,7 +186,9 @@ namespace CCI.DesktopClient.Screens
     private void reloadNewProductCombo()
     {
       string itemid = txtNewItemID.Text;
+      string primaryCarrier = txtPrimaryCarrier.Text;
       ((SearchDataSourceProductList)txtNewItemID.SearchExec).Carrier = _carrier;
+      ((SearchDataSourceProductList)txtNewItemID.SearchExec).PrimaryCarrier = primaryCarrier;
       txtNewItemID.Text = itemid;
     }
     private void clearNewFields()
@@ -274,6 +279,7 @@ namespace CCI.DesktopClient.Screens
       ctlLocationSearch.SearchExec = new SearchDataSourceEntity("Location");
       txtNewCustomer.SearchExec = new SearchDataSourceEntity("Customer");
       txtNewLocation.SearchExec = new SearchDataSourceEntity("Location");
+      txtPrimaryCarrier.SearchExec = new SearchDataSourceEntity("Carrier");
       txtNewItemID.SearchExec = new SearchDataSourceProductList();
     }
     private void txtCustomerSearch_Leave(object sender, EventArgs e)
