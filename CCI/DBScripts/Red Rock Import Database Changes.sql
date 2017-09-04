@@ -812,3 +812,34 @@ Account Number Customer id	billed tn	billed description	RedRock Charge	Redrock R
 
 END
 GO
+/********************************************************************************************************
+
+	NEW Features CHS SOW 8-2017
+
+********************************************************************************************************/
+
+// Add new physical INventory table
+
+CREATE TABLE [dbo].[PhysicalInventory](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[NetWorkInventoryID] [int] NOT NULL,
+	[MacAddress] [varchar](50) NOT NULL,
+	[Notes] [varchar](1096) NULL,
+	[ModifiedBy] [varchar](25) NULL,
+	[ModifiedDateTime] [datetime] NULL,
+	[CreatedBy] [varchar](25) NULL,
+	[CreatedDateTime] [datetime] NULL,
+ CONSTRAINT [PK_PhysicalInventory] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+/****** Object:  Index [IX_PhysicalInventoryPrimary]    Script Date: 9/4/2017 9:49:13 AM ******/
+CREATE NONCLUSTERED INDEX [IX_PhysicalInventoryPrimary] ON [dbo].[PhysicalInventory]
+(
+	[NetWorkInventoryID] ASC,
+	[MacAddress] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
+GO

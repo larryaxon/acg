@@ -200,7 +200,10 @@ WHERE po.prodorderid = " + orderid;
     }
     public DataSet getNewNetworkInventory(string id)
     {
-      return getDataFromSQL(string.Format(@"select ni.* from NetworkInventory ni where ID = {0}",id));
+      return getDataFromSQL(string.Format(@"select ni.*, case when p.PrimaryCarrier is null then 'N0ne' else p.PrimaryCarrier end PrimaryCarrier
+from NetworkInventory ni 
+left Join ProductList p on ni.Itemid = p.itemId and p.Carrier = 'CityHosted'
+where ni.ID = {0}",id));
     }
     public bool isActiveNetworkInventory(string id)
     {
@@ -262,6 +265,22 @@ WHERE po.prodorderid = " + orderid;
         if (ret2 != null && ret2 < 0) // we had an error here
           return ret2;
       }
+      return ret;
+    }
+    public int? savePhysicalInventory(string id, string macAddress, string notes, string user)
+    {
+      // TODO: need both net inv id and phys inv id
+      string sql;
+      if (string.IsNullOrEmpty(id) || id == "-1")
+        sql = @"INSERT INTO PhysicalInventory (MacAddress, Notes, CreatedBy, CreatedDateTIme, ModifiedBy, ModifiedDateTime)
+VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}')";
+      else
+        sql = @"UPDATE PhysicalInventory
+SET MacAddress = '{0}', Notes = '{1}', CreatedBy = '{2}', CreatedDateTime = '{3}', ModifiedBy = '{4}', ModifiedDateTime = '{5}'
+WHERE ID = {6}";
+      DateTime date = DateTime.Now;
+      sql = string.Format(sql, macAddress, notes, user, date, user, date, id);
+      int? ret = updateDataFromSQL(sql);
       return ret;
     }
     private string printDate(DateTime? dt)
