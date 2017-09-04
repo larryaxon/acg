@@ -55,36 +55,25 @@
       this.screensToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.cityhostedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.monthlyCycleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.cityUsocMaintenanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.networkInventoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.cashReceiptsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.customerMaintenanceToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
       this.customersWithMissingInfoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.dealerMaintenanceToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
       this.dealerPricingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.dealerQuotesScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.oCCAdjustmentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.creditMemosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.groupMaintenanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.dealerRetailUSOCPricingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.cityHostedUsocNewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.reportsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.analyticsReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.productsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.masterProductMaintenanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.productMaintenanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.cityHostedUSOCMaintenanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.itemCategoryMaintenanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.commissionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.commissionExceptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.entitiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.customerMaintenanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.payorMaintenanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.carrierMaintenanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.dealerMaintenanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.salesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.prospectsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.iBPProspectsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.followUpsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.unmatchedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.unmatchedCustomersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.unmatchedCustomersFromImportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -93,21 +82,14 @@
       this.unmatchedVendorsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.unmatchedNetworkInventoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.unmatchedCarriersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.followUpsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
       this.adminToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.entityMaintenanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.attributeMaintenanceRawModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.attributeMaintenanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.developerScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.masterCodeListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.userMaintenanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.dataSourceMaintenanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.entityEditToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.maintenanceTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.maintTest2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.genericMaintenanceScreenSetupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.ordersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-      this.orderEntryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.maintenanceScreensToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.viewMenu = new System.Windows.Forms.ToolStripMenuItem();
       this.toolBarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -139,7 +121,6 @@
       this.statusStrip = new System.Windows.Forms.StatusStrip();
       this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
       this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-      this.cityHostedUsocNewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.menuStrip.SuspendLayout();
       this.toolStrip.SuspendLayout();
       this.statusStrip.SuspendLayout();
@@ -158,7 +139,7 @@
       this.menuStrip.Location = new System.Drawing.Point(0, 0);
       this.menuStrip.MdiWindowListItem = this.windowsMenu;
       this.menuStrip.Name = "menuStrip";
-      this.menuStrip.Size = new System.Drawing.Size(1230, 24);
+      this.menuStrip.Size = new System.Drawing.Size(1140, 24);
       this.menuStrip.TabIndex = 0;
       this.menuStrip.Text = "MenuStrip";
       // 
@@ -348,13 +329,9 @@
             this.cityhostedToolStripMenuItem,
             this.reportsToolStripMenuItem,
             this.productsToolStripMenuItem,
-            this.commissionsToolStripMenuItem,
             this.entitiesToolStripMenuItem,
-            this.salesToolStripMenuItem,
             this.unmatchedToolStripMenuItem,
-            this.followUpsToolStripMenuItem1,
             this.adminToolStripMenuItem,
-            this.ordersToolStripMenuItem,
             this.maintenanceScreensToolStripMenuItem});
       this.screensToolStripMenuItem.Name = "screensToolStripMenuItem";
       this.screensToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
@@ -364,19 +341,16 @@
       // 
       this.cityhostedToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.monthlyCycleToolStripMenuItem,
-            this.cityUsocMaintenanceToolStripMenuItem,
+            this.cityHostedUsocNewToolStripMenuItem,
             this.networkInventoryToolStripMenuItem,
             this.cashReceiptsToolStripMenuItem,
             this.customerMaintenanceToolStripMenuItem1,
             this.customersWithMissingInfoToolStripMenuItem,
             this.dealerMaintenanceToolStripMenuItem1,
             this.dealerPricingToolStripMenuItem,
-            this.dealerQuotesScreenToolStripMenuItem,
             this.oCCAdjustmentsToolStripMenuItem,
             this.creditMemosToolStripMenuItem,
-            this.groupMaintenanceToolStripMenuItem,
-            this.dealerRetailUSOCPricingToolStripMenuItem,
-            this.cityHostedUsocNewToolStripMenuItem});
+            this.dealerRetailUSOCPricingToolStripMenuItem});
       this.cityhostedToolStripMenuItem.Name = "cityhostedToolStripMenuItem";
       this.cityhostedToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
       this.cityhostedToolStripMenuItem.Text = "City Hosted";
@@ -387,13 +361,6 @@
       this.monthlyCycleToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
       this.monthlyCycleToolStripMenuItem.Text = "CH Financials Cycle";
       this.monthlyCycleToolStripMenuItem.Click += new System.EventHandler(this.monthlyCycleToolStripMenuItem_Click);
-      // 
-      // cityUsocMaintenanceToolStripMenuItem
-      // 
-      this.cityUsocMaintenanceToolStripMenuItem.Name = "cityUsocMaintenanceToolStripMenuItem";
-      this.cityUsocMaintenanceToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
-      this.cityUsocMaintenanceToolStripMenuItem.Text = "City Hosted Usoc Maintenance";
-      this.cityUsocMaintenanceToolStripMenuItem.Click += new System.EventHandler(this.cityUsocMaintenanceToolStripMenuItem_Click);
       // 
       // networkInventoryToolStripMenuItem
       // 
@@ -437,13 +404,6 @@
       this.dealerPricingToolStripMenuItem.Text = "Dealer Pricing";
       this.dealerPricingToolStripMenuItem.Click += new System.EventHandler(this.dealerPricingToolStripMenuItem_Click);
       // 
-      // dealerQuotesScreenToolStripMenuItem
-      // 
-      this.dealerQuotesScreenToolStripMenuItem.Name = "dealerQuotesScreenToolStripMenuItem";
-      this.dealerQuotesScreenToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
-      this.dealerQuotesScreenToolStripMenuItem.Text = "Dealer Quotes Screen";
-      this.dealerQuotesScreenToolStripMenuItem.Click += new System.EventHandler(this.dealerQuotesScreenToolStripMenuItem_Click);
-      // 
       // oCCAdjustmentsToolStripMenuItem
       // 
       this.oCCAdjustmentsToolStripMenuItem.Name = "oCCAdjustmentsToolStripMenuItem";
@@ -458,19 +418,19 @@
       this.creditMemosToolStripMenuItem.Text = "Credit Memos";
       this.creditMemosToolStripMenuItem.Click += new System.EventHandler(this.CreditMemosToolStripMenuItem_Click);
       // 
-      // groupMaintenanceToolStripMenuItem
-      // 
-      this.groupMaintenanceToolStripMenuItem.Name = "groupMaintenanceToolStripMenuItem";
-      this.groupMaintenanceToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
-      this.groupMaintenanceToolStripMenuItem.Text = "Group Maintenance";
-      this.groupMaintenanceToolStripMenuItem.Click += new System.EventHandler(this.groupMaintenanceToolStripMenuItem_Click);
-      // 
       // dealerRetailUSOCPricingToolStripMenuItem
       // 
       this.dealerRetailUSOCPricingToolStripMenuItem.Name = "dealerRetailUSOCPricingToolStripMenuItem";
       this.dealerRetailUSOCPricingToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
       this.dealerRetailUSOCPricingToolStripMenuItem.Text = "Dealer Retail USOC Pricing";
       this.dealerRetailUSOCPricingToolStripMenuItem.Click += new System.EventHandler(this.dealerRetailUSOCPricingToolStripMenuItem_Click);
+      // 
+      // cityHostedUsocNewToolStripMenuItem
+      // 
+      this.cityHostedUsocNewToolStripMenuItem.Name = "cityHostedUsocNewToolStripMenuItem";
+      this.cityHostedUsocNewToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
+      this.cityHostedUsocNewToolStripMenuItem.Text = "City Hosted Usoc Maintenance";
+      this.cityHostedUsocNewToolStripMenuItem.Click += new System.EventHandler(this.cityHostedUsocNewToolStripMenuItem_Click);
       // 
       // reportsToolStripMenuItem
       // 
@@ -490,34 +450,10 @@
       // productsToolStripMenuItem
       // 
       this.productsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.masterProductMaintenanceToolStripMenuItem,
-            this.productMaintenanceToolStripMenuItem,
-            this.cityHostedUSOCMaintenanceToolStripMenuItem,
             this.itemCategoryMaintenanceToolStripMenuItem});
       this.productsToolStripMenuItem.Name = "productsToolStripMenuItem";
       this.productsToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
       this.productsToolStripMenuItem.Text = "Products";
-      // 
-      // masterProductMaintenanceToolStripMenuItem
-      // 
-      this.masterProductMaintenanceToolStripMenuItem.Name = "masterProductMaintenanceToolStripMenuItem";
-      this.masterProductMaintenanceToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
-      this.masterProductMaintenanceToolStripMenuItem.Text = "Master Product Maintenance";
-      this.masterProductMaintenanceToolStripMenuItem.Click += new System.EventHandler(this.masterProductMaintenanceToolStripMenuItem_Click);
-      // 
-      // productMaintenanceToolStripMenuItem
-      // 
-      this.productMaintenanceToolStripMenuItem.Name = "productMaintenanceToolStripMenuItem";
-      this.productMaintenanceToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
-      this.productMaintenanceToolStripMenuItem.Text = "Product Maintenance";
-      this.productMaintenanceToolStripMenuItem.Click += new System.EventHandler(this.productMaintenanceToolStripMenuItem_Click);
-      // 
-      // cityHostedUSOCMaintenanceToolStripMenuItem
-      // 
-      this.cityHostedUSOCMaintenanceToolStripMenuItem.Name = "cityHostedUSOCMaintenanceToolStripMenuItem";
-      this.cityHostedUSOCMaintenanceToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
-      this.cityHostedUSOCMaintenanceToolStripMenuItem.Text = "City Hosted USOC Maintenance";
-      this.cityHostedUSOCMaintenanceToolStripMenuItem.Click += new System.EventHandler(this.cityHostedUSOCMaintenanceToolStripMenuItem_Click);
       // 
       // itemCategoryMaintenanceToolStripMenuItem
       // 
@@ -525,20 +461,6 @@
       this.itemCategoryMaintenanceToolStripMenuItem.Size = new System.Drawing.Size(242, 22);
       this.itemCategoryMaintenanceToolStripMenuItem.Text = "Item Category Maintenance";
       this.itemCategoryMaintenanceToolStripMenuItem.Click += new System.EventHandler(this.itemCategoryMaintenanceToolStripMenuItem_Click);
-      // 
-      // commissionsToolStripMenuItem
-      // 
-      this.commissionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.commissionExceptionsToolStripMenuItem});
-      this.commissionsToolStripMenuItem.Name = "commissionsToolStripMenuItem";
-      this.commissionsToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
-      this.commissionsToolStripMenuItem.Text = "Commissions";
-      this.commissionsToolStripMenuItem.Visible = false;
-      // 
-      // commissionExceptionsToolStripMenuItem
-      // 
-      this.commissionExceptionsToolStripMenuItem.Name = "commissionExceptionsToolStripMenuItem";
-      this.commissionExceptionsToolStripMenuItem.Size = new System.Drawing.Size(67, 22);
       // 
       // entitiesToolStripMenuItem
       // 
@@ -578,33 +500,6 @@
       this.dealerMaintenanceToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
       this.dealerMaintenanceToolStripMenuItem.Text = "Dealer Maintenance";
       this.dealerMaintenanceToolStripMenuItem.Click += new System.EventHandler(this.dealerMaintenanceToolStripMenuItem_Click);
-      // 
-      // salesToolStripMenuItem
-      // 
-      this.salesToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.prospectsToolStripMenuItem,
-            this.iBPProspectsToolStripMenuItem,
-            this.followUpsToolStripMenuItem});
-      this.salesToolStripMenuItem.Name = "salesToolStripMenuItem";
-      this.salesToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
-      this.salesToolStripMenuItem.Text = "Sales";
-      this.salesToolStripMenuItem.Visible = false;
-      // 
-      // prospectsToolStripMenuItem
-      // 
-      this.prospectsToolStripMenuItem.Name = "prospectsToolStripMenuItem";
-      this.prospectsToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
-      // 
-      // iBPProspectsToolStripMenuItem
-      // 
-      this.iBPProspectsToolStripMenuItem.Name = "iBPProspectsToolStripMenuItem";
-      this.iBPProspectsToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
-      // 
-      // followUpsToolStripMenuItem
-      // 
-      this.followUpsToolStripMenuItem.Name = "followUpsToolStripMenuItem";
-      this.followUpsToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
-      this.followUpsToolStripMenuItem.Text = "Follow Ups";
       // 
       // unmatchedToolStripMenuItem
       // 
@@ -660,26 +555,15 @@
       this.unmatchedCarriersToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
       this.unmatchedCarriersToolStripMenuItem.Text = "Unmatched Carriers";
       // 
-      // followUpsToolStripMenuItem1
-      // 
-      this.followUpsToolStripMenuItem1.Name = "followUpsToolStripMenuItem1";
-      this.followUpsToolStripMenuItem1.Size = new System.Drawing.Size(186, 22);
-      this.followUpsToolStripMenuItem1.Text = "Follow Ups";
-      this.followUpsToolStripMenuItem1.Click += new System.EventHandler(this.followUpsToolStripMenuItem1_Click);
-      // 
       // adminToolStripMenuItem
       // 
       this.adminToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.entityMaintenanceToolStripMenuItem,
             this.attributeMaintenanceRawModeToolStripMenuItem,
             this.attributeMaintenanceToolStripMenuItem,
-            this.developerScreenToolStripMenuItem,
             this.masterCodeListToolStripMenuItem,
             this.userMaintenanceToolStripMenuItem,
             this.dataSourceMaintenanceToolStripMenuItem,
-            this.entityEditToolStripMenuItem,
-            this.maintenanceTestToolStripMenuItem,
-            this.maintTest2ToolStripMenuItem,
             this.genericMaintenanceScreenSetupToolStripMenuItem});
       this.adminToolStripMenuItem.Name = "adminToolStripMenuItem";
       this.adminToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
@@ -706,13 +590,6 @@
       this.attributeMaintenanceToolStripMenuItem.Text = "Attribute Maintenance";
       this.attributeMaintenanceToolStripMenuItem.Click += new System.EventHandler(this.attributeMaintenanceToolStripMenuItem_Click);
       // 
-      // developerScreenToolStripMenuItem
-      // 
-      this.developerScreenToolStripMenuItem.Name = "developerScreenToolStripMenuItem";
-      this.developerScreenToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
-      this.developerScreenToolStripMenuItem.Text = "Developer Screen";
-      this.developerScreenToolStripMenuItem.Click += new System.EventHandler(this.developerScreenToolStripMenuItem_Click);
-      // 
       // masterCodeListToolStripMenuItem
       // 
       this.masterCodeListToolStripMenuItem.Name = "masterCodeListToolStripMenuItem";
@@ -734,48 +611,12 @@
       this.dataSourceMaintenanceToolStripMenuItem.Text = "Data Source Maintenance";
       this.dataSourceMaintenanceToolStripMenuItem.Click += new System.EventHandler(this.dataSourceMaintenanceToolStripMenuItem_Click);
       // 
-      // entityEditToolStripMenuItem
-      // 
-      this.entityEditToolStripMenuItem.Name = "entityEditToolStripMenuItem";
-      this.entityEditToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
-      this.entityEditToolStripMenuItem.Text = "Entity Edit";
-      this.entityEditToolStripMenuItem.Click += new System.EventHandler(this.entityEditToolStripMenuItem_Click);
-      // 
-      // maintenanceTestToolStripMenuItem
-      // 
-      this.maintenanceTestToolStripMenuItem.Name = "maintenanceTestToolStripMenuItem";
-      this.maintenanceTestToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
-      this.maintenanceTestToolStripMenuItem.Text = "Maintenance Test";
-      this.maintenanceTestToolStripMenuItem.Click += new System.EventHandler(this.maintenanceTestToolStripMenuItem_Click);
-      // 
-      // maintTest2ToolStripMenuItem
-      // 
-      this.maintTest2ToolStripMenuItem.Name = "maintTest2ToolStripMenuItem";
-      this.maintTest2ToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
-      this.maintTest2ToolStripMenuItem.Text = "Maint test 2";
-      this.maintTest2ToolStripMenuItem.Click += new System.EventHandler(this.maintTest2ToolStripMenuItem_Click);
-      // 
       // genericMaintenanceScreenSetupToolStripMenuItem
       // 
       this.genericMaintenanceScreenSetupToolStripMenuItem.Name = "genericMaintenanceScreenSetupToolStripMenuItem";
       this.genericMaintenanceScreenSetupToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
       this.genericMaintenanceScreenSetupToolStripMenuItem.Text = "Generic Maintenance Screen Setup";
       this.genericMaintenanceScreenSetupToolStripMenuItem.Click += new System.EventHandler(this.genericMaintenanceScreenSetupToolStripMenuItem_Click);
-      // 
-      // ordersToolStripMenuItem
-      // 
-      this.ordersToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.orderEntryToolStripMenuItem});
-      this.ordersToolStripMenuItem.Name = "ordersToolStripMenuItem";
-      this.ordersToolStripMenuItem.Size = new System.Drawing.Size(186, 22);
-      this.ordersToolStripMenuItem.Text = "Orders (Test Only)";
-      // 
-      // orderEntryToolStripMenuItem
-      // 
-      this.orderEntryToolStripMenuItem.Name = "orderEntryToolStripMenuItem";
-      this.orderEntryToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
-      this.orderEntryToolStripMenuItem.Text = "Order Entry";
-      this.orderEntryToolStripMenuItem.Click += new System.EventHandler(this.orderEntryToolStripMenuItem_Click);
       // 
       // maintenanceScreensToolStripMenuItem
       // 
@@ -943,7 +784,7 @@
             this.helpToolStripButton});
       this.toolStrip.Location = new System.Drawing.Point(0, 24);
       this.toolStrip.Name = "toolStrip";
-      this.toolStrip.Size = new System.Drawing.Size(1230, 25);
+      this.toolStrip.Size = new System.Drawing.Size(1140, 25);
       this.toolStrip.TabIndex = 1;
       this.toolStrip.Text = "ToolStrip";
       // 
@@ -1020,7 +861,7 @@
             this.toolStripStatusLabel});
       this.statusStrip.Location = new System.Drawing.Point(0, 578);
       this.statusStrip.Name = "statusStrip";
-      this.statusStrip.Size = new System.Drawing.Size(1230, 22);
+      this.statusStrip.Size = new System.Drawing.Size(1140, 22);
       this.statusStrip.TabIndex = 2;
       this.statusStrip.Text = "StatusStrip";
       // 
@@ -1030,18 +871,11 @@
       this.toolStripStatusLabel.Size = new System.Drawing.Size(39, 17);
       this.toolStripStatusLabel.Text = "Status";
       // 
-      // cityHostedUsocNewToolStripMenuItem
-      // 
-      this.cityHostedUsocNewToolStripMenuItem.Name = "cityHostedUsocNewToolStripMenuItem";
-      this.cityHostedUsocNewToolStripMenuItem.Size = new System.Drawing.Size(237, 22);
-      this.cityHostedUsocNewToolStripMenuItem.Text = "City Hosted Usoc New";
-      this.cityHostedUsocNewToolStripMenuItem.Click += new System.EventHandler(this.cityHostedUsocNewToolStripMenuItem_Click);
-      // 
       // MainForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(1230, 600);
+      this.ClientSize = new System.Drawing.Size(1140, 600);
       this.Controls.Add(this.statusStrip);
       this.Controls.Add(this.toolStrip);
       this.Controls.Add(this.menuStrip);
@@ -1126,50 +960,31 @@
     private System.Windows.Forms.ToolStripMenuItem unmatchedNetworkInventoryToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem entitiesToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem entityMaintenanceToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem salesToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem prospectsToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem attributeMaintenanceRawModeToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem adminToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem userMaintenanceToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem iBPProspectsToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem followUpsToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem customerMaintenanceToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem payorMaintenanceToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem carrierMaintenanceToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem productsToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem cityhostedToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem reportsToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem productMaintenanceToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem masterProductMaintenanceToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem developerScreenToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem dealerQuotesScreenToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem unmatchedCarriersToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem dealerMaintenanceToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem dealerMaintenanceToolStripMenuItem1;
-    private System.Windows.Forms.ToolStripMenuItem cityUsocMaintenanceToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem cashReceiptsToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem commissionsToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem commissionExceptionsToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem monthlyCycleToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem dealerPricingToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem cityHostedUSOCMaintenanceToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem followUpsToolStripMenuItem1;
     private System.Windows.Forms.ToolStripMenuItem attributeMaintenanceToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem customerMaintenanceToolStripMenuItem1;
     private System.Windows.Forms.ToolStripMenuItem customersWithMissingInfoToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem networkInventoryToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem analyticsReportToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem oCCAdjustmentsToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem groupMaintenanceToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem itemCategoryMaintenanceToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem dealerRetailUSOCPricingToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem dataSourceMaintenanceToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem ordersToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem orderEntryToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem entityEditToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem maintenanceTestToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem creditMemosToolStripMenuItem;
-    private System.Windows.Forms.ToolStripMenuItem maintTest2ToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem maintenanceScreensToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem genericMaintenanceScreenSetupToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem cityHostedUsocNewToolStripMenuItem;

@@ -217,7 +217,7 @@
       // 
       this.splitMain.Panel2.Controls.Add(this.bottomGrid);
       this.splitMain.Panel2Collapsed = true;
-      this.splitMain.Size = new System.Drawing.Size(1331, 706);
+      this.splitMain.Size = new System.Drawing.Size(1140, 658);
       this.splitMain.SplitterDistance = 443;
       this.splitMain.TabIndex = 0;
       // 
@@ -236,7 +236,7 @@
       // 
       this.splitTop.Panel2.Controls.Add(this.middleGrid);
       this.splitTop.Panel2Collapsed = true;
-      this.splitTop.Size = new System.Drawing.Size(1331, 706);
+      this.splitTop.Size = new System.Drawing.Size(1140, 658);
       this.splitTop.SplitterDistance = 431;
       this.splitTop.TabIndex = 0;
       // 
@@ -260,7 +260,7 @@
       this.topGrid.Name = "topGrid";
       this.topGrid.NameType = CCI.Common.CommonData.UnmatchedNameTypes.None;
       this.topGrid.SearchCriteria = null;
-      this.topGrid.Size = new System.Drawing.Size(1331, 706);
+      this.topGrid.Size = new System.Drawing.Size(1140, 658);
       this.topGrid.TabIndex = 0;
       this.topGrid.Title = "Search (0 Records Found)";
       this.topGrid.UniqueIdentifier = "ID";
@@ -324,7 +324,7 @@
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(1331, 733);
+      this.ClientSize = new System.Drawing.Size(1140, 685);
       this.Controls.Add(this.srchBottomGrid);
       this.Controls.Add(this.srchMiddleGrid);
       this.Controls.Add(this.srchTopGrid);
