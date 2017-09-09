@@ -85,7 +85,13 @@ where e.entitytype = 'customer'";
       returnmsg = updateDataFromSQLReturnErrorDescription(string.Format(sql));
       return returnmsg;
     }
-
+    public Exception execResetAll(DateTime billdate)
+    {
+      Exception returnmsg;
+      string sql = string.Format("exec ResetAllImports '{0}'", billdate);
+      returnmsg = updateDataFromSQLReturnErrorDescription(string.Format(sql));
+      return returnmsg;
+    }
 
     public DateTime selectBillingDatefromTemp(string Table)
     {
