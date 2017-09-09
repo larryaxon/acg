@@ -364,6 +364,11 @@ namespace CCI.DesktopClient.Screens
               else
                 MessageBox.Show(string.Format(PROCESSERROR, stat));
               break;
+            case "resetallimports":
+              stat = processResetAll();
+              if (!stat.Equals("Ready"))
+                MessageBox.Show(string.Format(PROCESSERROR, stat));
+              break;
             case "postcashreceipts":
               stat = processPostCashReceipts();
               if (stat.Equals("Ready"))
@@ -678,6 +683,28 @@ namespace CCI.DesktopClient.Screens
         Exception returnmsg = _dataSource.execUnpostInvoices(_billDate);
         if (returnmsg != null)
           validexportmsg = string.Format("Error Processing Invoice Unpost: <{0}>", CommonFunctions.getInnerException(returnmsg).Message);
+        lblProcessStatus.Visible = false;
+
+        Cursor.Current = Cursors.Default;
+      }
+      return validexportmsg;
+    }
+    private string processResetAll()
+    {
+      string validexportmsg = "Ready";
+      DialogResult ans = MessageBox.Show("Reset ALL data for this period. Are you sure you want to do this? This will delete all imported and posted data for this period and all activity logs.",
+        "Reset All Data for this Period", MessageBoxButtons.YesNo);
+      if (ans == DialogResult.No)
+        validexportmsg = "Reset was not performed";
+      else
+      {
+        lblProcessStatus.Text = "Processing Reset All...";
+        lblProcessStatus.Visible = true;
+
+        Cursor.Current = Cursors.WaitCursor;
+        Exception returnmsg = _dataSource.execResetAll(_billDate);
+        if (returnmsg != null)
+          validexportmsg = string.Format("Error Processing Reset All: <{0}>", CommonFunctions.getInnerException(returnmsg).Message);
         lblProcessStatus.Visible = false;
 
         Cursor.Current = Cursors.Default;
