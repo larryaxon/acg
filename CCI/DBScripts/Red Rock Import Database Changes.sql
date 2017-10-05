@@ -96,7 +96,7 @@ INSERT INTO ImportFileTypes (Source, FileType, PreFix, Suffix, StoredProcedure, 
 SELECT Source, FileType, PreFix, Suffix, StoredProcedure, CreatedDateTime, ModifiedDateTime, CreatedBy, ModifiedBy, SkipLines
 from [CityHostedTest].[dbo].[ImportFileTypes]
 
-
+GO
 /***************************************************************************************
 	Update Queries
 ****************************************************************************************/
@@ -170,7 +170,7 @@ and wholesale.carrier = 'Saddleback'
 and retail.itemid is null
 and wholesale.itemid not in (select distinct masteritemid from masterproductlist where itemid <> masteritemid 
 )
-
+GO
 ALTER view [dbo].[vw_CityHostedUSOCPresentation] as 
 select USOCRetail, Description DescriptionRetail, USOCWholesale, DescriptionWholesale, PrimaryCarrier, 
 case when MRCRetail = -1 then 'Variable' else Convert(nvarchar(20), MRCRetail) end MRCRetail, MRCWholesale, 
@@ -818,7 +818,7 @@ GO
 
 ********************************************************************************************************/
 
-// Add new physical INventory table
+-- Add new physical INventory table
 
 CREATE TABLE [dbo].[PhysicalInventory](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
