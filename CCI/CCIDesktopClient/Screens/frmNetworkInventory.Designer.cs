@@ -411,6 +411,7 @@
       this.txtPrimaryCarrier.ShowTermedCheckBox = false;
       this.txtPrimaryCarrier.Size = new System.Drawing.Size(262, 20);
       this.txtPrimaryCarrier.TabIndex = 3;
+      this.txtPrimaryCarrier.Leave += new System.EventHandler(this.txtPrimaryCarrier_Leave);
       // 
       // txtNewLocation
       // 
