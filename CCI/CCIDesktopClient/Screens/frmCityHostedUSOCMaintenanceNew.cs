@@ -52,7 +52,7 @@ namespace CCI.DesktopClient.Screens
     private DataSource _ds = null;
     private DataSource _dataSource { get { if (_ds == null) _ds = new DataSource(); return _ds; } }
     #endregion
-    public frmCityHostedUSOCMaintenanceNew()
+    public frmCityHostedUSOCMaintenanceNew() 
     {
       InitializeComponent();
       txtRetailUSOC.SearchExec = new SearchDataSourceProductList();
@@ -491,7 +491,7 @@ namespace CCI.DesktopClient.Screens
         taxCode = cboTaxCode.Text;
         retCode = _dataSource.updateMasterProduct(retailUSOC, retailDescription, chsCategory, retailUSOC, externalCategory, externalDescription, isRetail, isWholesale, isSaddlebackUSOC);
         if (retCode == null || retCode >= 0)
-          retCode = _dataSource.updateProduct(primaryCarrier, retailUSOC, retailStartDate, retailEndDate, retailUSOC, retailMRC, retailNRC,
+          retCode = _dataSource.updateProduct(DEFAULTRETAILCARRIER, retailUSOC, retailStartDate, retailEndDate, SecurityContext.User, retailMRC, retailNRC,
             retailOnly, excludeFromException, taxCode, primaryCarrier);
       }
       #endregion
@@ -524,9 +524,10 @@ namespace CCI.DesktopClient.Screens
           wholesaleEndDate = dtWholesaleEndDate.Value;
         else
           wholesaleEndDate = null;
+        
         retCode = _dataSource.updateMasterProduct(wholesaleUSOC, wholesaleDescription, chsCategory, wholesaleUSOC, externalCategory, externalDescription, isRetail, isWholesale, isSaddlebackUSOC);
         if (retCode == null || retCode >= 0)
-          retCode = _dataSource.updateProduct(DataSource.HOSTEDWHOLESALECARRIER, wholesaleUSOC, wholesaleStartDate, wholesaleEndDate, SecurityContext.User, wholesaleMRC, wholesaleNRC,
+          retCode = _dataSource.updateProduct(primaryCarrier, wholesaleUSOC, wholesaleStartDate, wholesaleEndDate, SecurityContext.User, wholesaleMRC, wholesaleNRC,
             wholesaleOnly, excludeFromException, taxCode);
       }
       if (ckRefresh.Checked)
@@ -647,6 +648,11 @@ namespace CCI.DesktopClient.Screens
     private void lstWholesaleUsocs_SelectedIndexChanged(object sender, EventArgs e)
     {
       srchWholesaleUsocMatching.Text = lstWholesaleUsocs.Text;
+    }
+
+    private void btnWholesaleSave_Click(object sender, EventArgs e)
+    {
+       saveWholesale();
     }
   }
 }
