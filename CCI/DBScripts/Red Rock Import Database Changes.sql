@@ -120,9 +120,9 @@ select
 	case when getdate() between isnull(wholesale.startdate, '1/1/1900') and isnull(wholesale.enddate, '12/31/2100') then 'Yes' else 'No' end WholesaleActive,
 	retail.StartDate RetailStartDate, retail.EndDate RetailEndDate, wholesale.StartDate WholesaleStartDate, wholesale.EndDate WholesaleEndDate,
 	case when m.issaddlebackusoc = 1  then 'Yes' else 'No' end IsExternal,
-	case when sd.UseMRC = 1 then 'Yes' else 'No' end UseMRCinDQ,
-	sd.ScreenSection DealerQuoteCategory,
-	sd.IsRecommended DQLessScreenOnly,
+	--case when sd.UseMRC = 1 then 'Yes' else 'No' end UseMRCinDQ,
+	--sd.ScreenSection DealerQuoteCategory,
+	--sd.IsRecommended DQLessScreenOnly,
 	m.ExternalCategory,
 	m.ItemSubCategory CHSCategory,
 	case when isnull(retail.ExcludeFromException,0) = 0 then 'No' else 'Yes' end ExcludeFromExceptions,
@@ -132,8 +132,8 @@ left join (select ItemID, Name, ItemSubCategory, MasterItemID, ExternalName, Ext
 	) m on retail.ItemID = m.ItemID and retail.Carrier = 'cityhosted'
 left join ProductList wholesale on wholesale.ItemID = m.MasterItemID and wholesale.Carrier <> 'CityHosted'
 left join MasterProductList m2 on wholesale.ItemID = m2.ItemID and Wholesale.Carrier <> 'CityHosted'
-left join ScreenDefinition sd on sd.Screen = 'DealerQuote' and sd.ItemID = retail.itemid
-where isnull(retail.carrier, 'CityHosted') = 'CityHosted' and isnull(wholesale.carrier, 'SaddleBack') <> 'CityHosted' and coalesce(m.Name, m2.name) is not null
+--left join ScreenDefinition sd on sd.Screen = 'DealerQuote' and sd.ItemID = retail.itemid
+where isnull(retail.carrier, 'CityHosted') = 'CityHosted' and isnull(wholesale.carrier, retail.PrimaryCarrier) <> 'CityHosted' and coalesce(m.Name, m2.name) is not null
 union
 select 
 	null Description,
@@ -153,9 +153,9 @@ select
 	case when getdate() between isnull(wholesale.startdate, '1/1/1900') and isnull(wholesale.enddate, '12/31/2100') then 'Yes' else 'No' end WholesaleActive,
 	null RetailStartDate, null RetailEndDate, wholesale.StartDate WholesaleStartDate, wholesale.EndDate WholesaleEndDate,
 	case when m.issaddlebackusoc = 1  then 'Yes' else 'No' end IsExternal,
-	case when sd.UseMRC = 1 then 'Yes' else 'No' end UseMRCinDQ,
-	sd.ScreenSection DealerQuoteCategory,
-	sd.IsRecommended DQLessScreenOnly,
+	--case when sd.UseMRC = 1 then 'Yes' else 'No' end UseMRCinDQ,
+	--sd.ScreenSection DealerQuoteCategory,
+	--sd.IsRecommended DQLessScreenOnly,
 	m.ExternalCategory,
 	m.ItemSubCategory CHSCategory,
 	case when isnull(retail.ExcludeFromException,0) = 0 then 'No' else 'Yes' end ExcludeFromExceptions,
@@ -164,9 +164,9 @@ from ProductList wholesale
 inner join MasterProductList m on wholesale.itemid = m.itemid
 left join HostedNoMatchUSOCs wOnly on wOnly.usoc = wholesale.ItemId and wOnly.Type = 'Wholesale'
 left join ProductList retail on retail.itemid = m.itemid and retail.carrier = 'CityHosted'
-left join ScreenDefinition sd on sd.Screen = 'DealerQuote' and sd.ItemID = wholesale.itemid
+--left join ScreenDefinition sd on sd.Screen = 'DealerQuote' and sd.ItemID = wholesale.itemid
 where m.itemid = m.masteritemid
-and wholesale.carrier = 'Saddleback'
+and wholesale.carrier in ( 'Saddleback', 'RedRock')
 and retail.itemid is null
 and wholesale.itemid not in (select distinct masteritemid from masterproductlist where itemid <> masteritemid 
 )
@@ -176,10 +176,12 @@ select USOCRetail, Description DescriptionRetail, USOCWholesale, DescriptionWhol
 case when MRCRetail = -1 then 'Variable' else Convert(nvarchar(20), MRCRetail) end MRCRetail, MRCWholesale, 
 Case when NRCRetail = -1 then 'Variable' else Convert(nvarchar(20), NRCRetail) end NRCRetail, NRCWholesale, 
 RetailOnly, WholesaleOnly, RetailActive, WholesaleActive, CHSCategory,
-case when DealerQuoteCategory is null then 'N' else 'Y' end DealerQuoteYN,
-DealerQuoteCategory DQCategory, ExternalDescription [RIT Retail Bill Presentation],
+--case when DealerQuoteCategory is null then 'N' else 'Y' end DealerQuoteYN,
+--DealerQuoteCategory DQCategory,
+ ExternalDescription [RIT Retail Bill Presentation],
 ExternalCategory [RIT Category], IsExternal IsSaddlebackUSOC, RetailStartDate, RetailEndDate, WholesaleStartDate, WholesaleEndDate,
-UseMRCinDQ, DQLessScreenOnly, ExcludeFromExceptions, TaxCode [RIT TranTax]
+--UseMRCinDQ, DQLessScreenOnly, 
+ExcludeFromExceptions, TaxCode [RIT TranTax]
 from vw_CityHostedUSOCs 
 
 
