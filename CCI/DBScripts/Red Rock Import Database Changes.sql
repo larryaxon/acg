@@ -845,3 +845,59 @@ CREATE NONCLUSTERED INDEX [IX_PhysicalInventoryPrimary] ON [dbo].[PhysicalInvent
 	[MacAddress] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
 GO
+/********************************************************************************************************
+
+	update retail matching query to change saddleback to wholesale terminology
+
+********************************************************************************************************/
+
+UPDATE datasources
+set FromClause = '  FROM ( Select a.*, case when ex.ExceptionScreen is null then ''No'' else ''Yes'' end ExceptionLogged, ex.Comment,  f.AssignedTo, f.DueDate, f.DispositionCode  
+           from (Select mrc.CustomerID, c.LegalName CustomerName, mrc.RetailUSOC, p.Name ProductName, 
+                        Convert(int,mrc.Qty) WholesaleQty, Convert(int, n.Qty) NetworkInventoryQuantity,
+                        Convert(Decimal(10,2),mrc.Price) WholesaleMRC, Convert(decimal(10,2), n.Price) NetworkInventoryMRC,
+                        case when n.CustomerID IS null then ''Missing NetworkInventory'' 
+                             when mrc.Qty <> n.Qty then ''Quantity Mismatch'' 
+                             when mrc.Price <> n.Price then ''MRC Mismatch''  
+                             else null 
+                        end Exception, mrc.RetailBillDate
+                    from (select retailbilldate, CustomerID, RetailUSOC,sum(RetailQty) Qty, 
+                                 Max(Convert(decimal(10,2),retailamount) / Convert(decimal(10,2),RetailQty)) Price 
+                            from hostedmatchedmrc
+                            group by retailbilldate, CustomerID, retailusoc) mrc 
+               left join (select Customer customerID, ItemId RetailUsoc, SUM(quantity) Qty, MAX(MRC) Price 
+                            from NetworkInventory ni
+                            where (ni.enddate = ''01/01/1900'' or ni.enddate is null) or 
+                             (getdate() >= ni.startdate and getdate() <= ni.enddate) 
+                            group by Customer, ItemID) n   
+                    on mrc.CustomerID = n.customerID and mrc.RetailUSOC = n.RetailUsoc    
+               left join Entity c on mrc.CustomerID = c.entity              
+               left join MasterProductList p on p.ItemID = mrc.RetailUSOC              
+               left join ProductList pr on pr.ItemID = mrc.RetailUSOC and pr.Carrier = ''CityHosted''    
+            where isnull(pr.ExcludeFromException,0) <> 1  
+         union  
+          select customer CustomerID, c.LegalName CustomerName, ni.Itemid RetailUSOC, p.Name ProductName,  
+                 null WholesaleQty, ni.quantity NetworkInventoryQuantity, null WholesaleMRC, 
+                 Convert(decimal(10,2), ni.MRC) NetworkInventoryMRC,  ''Missing Wholesale MRC'' Exception, 
+                 bd.RetailBillDate  
+            from NetworkInventory ni  
+            left join (select distinct customerid, retailusoc 
+                         from hostedmatchedmrc) mrc  
+                 on ni.customer = mrc.customerid and ni.itemid = mrc.retailusoc and ni.carrier = ''cityhosted''
+            left join Entity c on ni.Customer = c.entity      
+            left join MasterProductList p on p.ItemID = ni.ItemID      
+            left join ProductList pr on pr.ItemID = mrc.RetailUSOC and pr.Carrier = ''CityHosted''  
+            inner join (select max(retailbilldate) RetailBillDate 
+                          from hostedmatchedmrc) bd on 1 = 1  
+                          where mrc.customerid is null and ni.carrier = ''cityhosted'' and 
+                                isnull(pr.ExcludeFromException,0) <> 1  ) a  
+            left join ExceptionList ex on ex.ExceptionScreen = ''CityHostedMRCNetworkInventoryMatch'' and 
+                      ex.ExceptionType = a.Exception   and ex.CustomerID = a.CustomerID and 
+                      ((ex.IsOneTime = 1 and a.RetailBillDate = ex.BillDate) or 
+                      (ex.IsOneTime = 0 and a.RetailBillDate >= ex.BillDate) or ex.BillDate is null) and 
+                      isnull(ex.WholesaleUSOC, '''') = ''''   and 
+                      case when ex.RetailUSOC is null or ex.RetailUSOC = '''' then  a.RetailUSOC 
+                           else ex.RetailUSOC end = a.RetailUSOC   
+            left join FollowUps f on ex.FollowUpID = f.ID   ) b
+where retailbilldate = ''10/1/2017'''
+where datasource = 'CityHostedMRCNetworkInventoryMatch'

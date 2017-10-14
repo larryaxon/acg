@@ -451,7 +451,7 @@ namespace CCI.DesktopClient.Screens
     private void txtPrimaryCarrier_Leave(object sender, EventArgs e)
     {
       ((SearchDataSourceProductList)txtNewItemID.SearchExec).PrimaryCarrier = txtPrimaryCarrier.Text;
-      ((SearchDataSourceProductList)txtNewItemID.SearchExec).Carrier = txtPrimaryCarrier.Text;
+      //((SearchDataSourceProductList)txtNewItemID.SearchExec).Carrier = txtPrimaryCarrier.Text;
 
     }
   }

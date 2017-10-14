@@ -44,6 +44,7 @@
       this.txtComment = new System.Windows.Forms.RichTextBox();
       this.txtCommentButton = new System.Windows.Forms.TextBox();
       this.btnUndo = new System.Windows.Forms.Button();
+      this.ckInclude500s = new System.Windows.Forms.CheckBox();
       this.SuspendLayout();
       // 
       // srchMRCNIMatching
@@ -69,7 +70,7 @@
       this.srchMRCNIMatching.NameType = CCI.Common.CommonData.UnmatchedNameTypes.Customer;
       this.srchMRCNIMatching.SearchCriteria = null;
       this.srchMRCNIMatching.Size = new System.Drawing.Size(1351, 576);
-      this.srchMRCNIMatching.TabIndex = 4;
+      this.srchMRCNIMatching.TabIndex = 12;
       this.srchMRCNIMatching.Title = "Search (0 Records Found)";
       this.srchMRCNIMatching.UniqueIdentifier = "ID";
       this.srchMRCNIMatching.UseNamedSearches = false;
@@ -80,7 +81,7 @@
       this.ckUnmatchedOnly.AutoSize = true;
       this.ckUnmatchedOnly.Checked = true;
       this.ckUnmatchedOnly.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.ckUnmatchedOnly.Location = new System.Drawing.Point(406, 5);
+      this.ckUnmatchedOnly.Location = new System.Drawing.Point(399, 5);
       this.ckUnmatchedOnly.Name = "ckUnmatchedOnly";
       this.ckUnmatchedOnly.Size = new System.Drawing.Size(143, 17);
       this.ckUnmatchedOnly.TabIndex = 2;
@@ -111,7 +112,7 @@
       this.ckWholesale.Location = new System.Drawing.Point(1274, 8);
       this.ckWholesale.Name = "ckWholesale";
       this.ckWholesale.Size = new System.Drawing.Size(15, 14);
-      this.ckWholesale.TabIndex = 3;
+      this.ckWholesale.TabIndex = 10;
       this.ckWholesale.UseVisualStyleBackColor = true;
       this.ckWholesale.CheckedChanged += new System.EventHandler(this.ckWholesale_CheckedChanged);
       // 
@@ -127,7 +128,7 @@
       // cboExceptionSearch
       // 
       this.cboExceptionSearch.FormattingEnabled = true;
-      this.cboExceptionSearch.Location = new System.Drawing.Point(230, 3);
+      this.cboExceptionSearch.Location = new System.Drawing.Point(225, 3);
       this.cboExceptionSearch.Name = "cboExceptionSearch";
       this.cboExceptionSearch.Size = new System.Drawing.Size(170, 21);
       this.cboExceptionSearch.TabIndex = 1;
@@ -141,7 +142,7 @@
       this.lblTitle.Location = new System.Drawing.Point(1291, 1);
       this.lblTitle.Name = "lblTitle";
       this.lblTitle.Size = new System.Drawing.Size(62, 24);
-      this.lblTitle.TabIndex = 6;
+      this.lblTitle.TabIndex = 11;
       this.lblTitle.Text = "Retail";
       // 
       // cboDisposition
@@ -151,7 +152,7 @@
       this.cboDisposition.Location = new System.Drawing.Point(896, 6);
       this.cboDisposition.Name = "cboDisposition";
       this.cboDisposition.Size = new System.Drawing.Size(124, 21);
-      this.cboDisposition.TabIndex = 5;
+      this.cboDisposition.TabIndex = 7;
       // 
       // btnExecute
       // 
@@ -168,17 +169,17 @@
       this.lblRowSelected.AutoSize = true;
       this.lblRowSelected.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.lblRowSelected.ForeColor = System.Drawing.Color.Red;
-      this.lblRowSelected.Location = new System.Drawing.Point(677, 7);
+      this.lblRowSelected.Location = new System.Drawing.Point(738, 7);
       this.lblRowSelected.Name = "lblRowSelected";
       this.lblRowSelected.Size = new System.Drawing.Size(86, 13);
-      this.lblRowSelected.TabIndex = 4;
+      this.lblRowSelected.TabIndex = 5;
       this.lblRowSelected.Text = "Row Selected";
       this.lblRowSelected.Visible = false;
       // 
       // ckIncludeExceptions
       // 
       this.ckIncludeExceptions.AutoSize = true;
-      this.ckIncludeExceptions.Location = new System.Drawing.Point(555, 5);
+      this.ckIncludeExceptions.Location = new System.Drawing.Point(544, 5);
       this.ckIncludeExceptions.Name = "ckIncludeExceptions";
       this.ckIncludeExceptions.Size = new System.Drawing.Size(116, 17);
       this.ckIncludeExceptions.TabIndex = 3;
@@ -188,10 +189,10 @@
       // 
       // btnLoad
       // 
-      this.btnLoad.Location = new System.Drawing.Point(815, 4);
+      this.btnLoad.Location = new System.Drawing.Point(830, 4);
       this.btnLoad.Name = "btnLoad";
-      this.btnLoad.Size = new System.Drawing.Size(75, 23);
-      this.btnLoad.TabIndex = 16;
+      this.btnLoad.Size = new System.Drawing.Size(60, 23);
+      this.btnLoad.TabIndex = 6;
       this.btnLoad.Text = "Load";
       this.btnLoad.UseVisualStyleBackColor = true;
       this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
@@ -201,7 +202,7 @@
       this.txtComment.Location = new System.Drawing.Point(969, 45);
       this.txtComment.Name = "txtComment";
       this.txtComment.Size = new System.Drawing.Size(261, 126);
-      this.txtComment.TabIndex = 18;
+      this.txtComment.TabIndex = 13;
       this.txtComment.Text = "";
       this.txtComment.Leave += new System.EventHandler(this.txtComment_Leave);
       // 
@@ -210,7 +211,7 @@
       this.txtCommentButton.Location = new System.Drawing.Point(1026, 6);
       this.txtCommentButton.Name = "txtCommentButton";
       this.txtCommentButton.Size = new System.Drawing.Size(143, 20);
-      this.txtCommentButton.TabIndex = 19;
+      this.txtCommentButton.TabIndex = 8;
       this.txtCommentButton.Click += new System.EventHandler(this.txtCommentButton_Click);
       // 
       // btnUndo
@@ -218,17 +219,28 @@
       this.btnUndo.Location = new System.Drawing.Point(1175, 4);
       this.btnUndo.Name = "btnUndo";
       this.btnUndo.Size = new System.Drawing.Size(93, 23);
-      this.btnUndo.TabIndex = 20;
+      this.btnUndo.TabIndex = 9;
       this.btnUndo.Text = "Undo Exception";
       this.btnUndo.UseVisualStyleBackColor = true;
       this.btnUndo.Visible = false;
       this.btnUndo.Click += new System.EventHandler(this.btnUndo_Click);
+      // 
+      // ckInclude500s
+      // 
+      this.ckInclude500s.AutoSize = true;
+      this.ckInclude500s.Location = new System.Drawing.Point(660, 5);
+      this.ckInclude500s.Name = "ckInclude500s";
+      this.ckInclude500s.Size = new System.Drawing.Size(87, 17);
+      this.ckInclude500s.TabIndex = 4;
+      this.ckInclude500s.Text = "Include 500s";
+      this.ckInclude500s.UseVisualStyleBackColor = true;
       // 
       // frmMRCNetworkInventoryMatching
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(1354, 611);
+      this.Controls.Add(this.ckInclude500s);
       this.Controls.Add(this.btnUndo);
       this.Controls.Add(this.txtCommentButton);
       this.Controls.Add(this.txtComment);
@@ -271,5 +283,6 @@
     private System.Windows.Forms.RichTextBox txtComment;
     private System.Windows.Forms.TextBox txtCommentButton;
     private System.Windows.Forms.Button btnUndo;
+    private System.Windows.Forms.CheckBox ckInclude500s;
   }
 }
