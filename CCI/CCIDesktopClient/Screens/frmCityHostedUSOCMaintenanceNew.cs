@@ -109,7 +109,12 @@ namespace CCI.DesktopClient.Screens
     {
       cboCarrier.Items.Clear();
       cboCarrier.Items.AddRange(_dataSource.getPrimaryCarriers());
-
+      cboRITCategory.Items.Clear();
+      cboRITCategory.Items.AddRange(_dataSource.getExternalCategories());
+      cboCHSCategory.Items.Clear();
+      cboCHSCategory.Items.AddRange(_dataSource.getItemCategories());
+      cboTaxCode.Items.Clear();
+      cboTaxCode.Items.AddRange(_dataSource.getTaxCodes());
     }
     private void selectMode(string mode)
     {
