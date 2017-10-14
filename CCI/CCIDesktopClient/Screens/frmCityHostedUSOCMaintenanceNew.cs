@@ -272,7 +272,7 @@ namespace CCI.DesktopClient.Screens
       ckRetailOnly.Checked = CommonFunctions.CBoolean(row.Cells[colRetailOnly].Value);
       ckExcludeFromExceptions.Checked = CommonFunctions.CBoolean(row.Cells[colExcludeFromExceptions].Value);
       cboTaxCode.Text = CommonFunctions.CString(row.Cells["RIT TranTax"].Value);
-      ckSaddlebackUSOC.Checked = CommonFunctions.CBoolean(row.Cells["IsSaddlebackUSOC"].Value);
+      ckSaddlebackUSOC.Checked = !CommonFunctions.CBoolean(row.Cells["IsSaddlebackUSOC"].Value);
       #endregion
 
       // final fixup (set item search so they require an existing time
@@ -434,7 +434,8 @@ namespace CCI.DesktopClient.Screens
       bool isSaddlebackUSOC, excludeFromException, retailOnly, wholesaleOnly, isRecommended, useMRC;
       wholesaleUSOC = retailUSOC = wholesaleDescription = retailDescription = wholesaleDescription = chsCategory =
         externalDescription = externalCategory = taxCode = dqcategory = string.Empty;
-      isSaddlebackUSOC = excludeFromException = retailOnly = wholesaleOnly = isRecommended = useMRC = false;
+      excludeFromException = retailOnly = wholesaleOnly = isRecommended = useMRC = false;
+      isSaddlebackUSOC = true;
       retailStartDate = retailEndDate = wholesaleStartDate = wholesaleEndDate = null;
       retailMRC = retailNRC = wholesaleMRC = wholesaleNRC = 0;
       int? retCode;
@@ -452,7 +453,7 @@ namespace CCI.DesktopClient.Screens
       chsCategory = cboCHSCategory.Text;
       externalDescription = txtExternalDescription.Text;
       excludeFromException = ckExcludeFromExceptions.Checked;
-      isSaddlebackUSOC = ckSaddlebackUSOC.Checked;
+      isSaddlebackUSOC = !ckSaddlebackUSOC.Checked;
       externalCategory = cboRITCategory.Text;
       #endregion
 
@@ -528,7 +529,7 @@ namespace CCI.DesktopClient.Screens
         retCode = _dataSource.updateMasterProduct(wholesaleUSOC, wholesaleDescription, chsCategory, wholesaleUSOC, externalCategory, externalDescription, isRetail, isWholesale, isSaddlebackUSOC);
         if (retCode == null || retCode >= 0)
           retCode = _dataSource.updateProduct(primaryCarrier, wholesaleUSOC, wholesaleStartDate, wholesaleEndDate, SecurityContext.User, wholesaleMRC, wholesaleNRC,
-            wholesaleOnly, excludeFromException, taxCode);
+            wholesaleOnly, excludeFromException, taxCode, primaryCarrier);
       }
       if (ckRefresh.Checked)
         reloadUsocList(false);
@@ -604,6 +605,7 @@ namespace CCI.DesktopClient.Screens
     private void btnRetailNew_Click(object sender, EventArgs e)
     {
       clearTabPage(tabRetail);
+      txtRetailUSOC.AddNewMode = true;
     }
     private void btnRetailCancel_Click(object sender, EventArgs e)
     {
@@ -619,6 +621,7 @@ namespace CCI.DesktopClient.Screens
     private void btnWholesaleNew_Click(object sender, EventArgs e)
     {
       clearTabPage(tabWholesale);
+      txtWholesaleUSOC.AddNewMode = true;
     }
     private void btnWholesaleCancel_Click(object sender, EventArgs e)
     {
@@ -654,5 +657,6 @@ namespace CCI.DesktopClient.Screens
     {
        saveWholesale();
     }
+
   }
 }

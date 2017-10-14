@@ -30,6 +30,7 @@ namespace CCI.Sys.Data
     public string[] Search(string criteria, bool useExactID)
     {
       string carrierClause = string.Empty;
+      string cr = string.IsNullOrEmpty(criteria) ? criteria : criteria.Trim();
       // create defaults for missing Carrier or Primary Carrier
       if (string.IsNullOrEmpty(Carrier))
       {
@@ -58,7 +59,7 @@ namespace CCI.Sys.Data
       SQL = string.Format(@"SELECT * FROM (SELECT dbo.MasterProductList.ItemID, dbo.MasterProductList.Name
 FROM dbo.MasterProductList INNER JOIN dbo.ProductList AS p ON dbo.MasterProductList.ItemID = p.ItemID {0}) p", carrierClause);
 
-        return getSearchList(SQL, OrderByClause, criteria, IDName, new string[] { NameName }, useExactID, true);
+        return getSearchList(SQL, OrderByClause, cr, IDName, new string[] { NameName }, useExactID, true);
 
     }
   }
