@@ -663,5 +663,15 @@ namespace CCI.DesktopClient.Screens
        saveWholesale();
     }
 
+    private void tabMaintenance_DrawItem(object sender, DrawItemEventArgs e)
+    {
+      TabPage page = tabMaintenance.TabPages[e.Index];
+      e.Graphics.FillRectangle(new SolidBrush(page.BackColor), e.Bounds);
+
+      Rectangle paddedBounds = e.Bounds;
+      int yOffset = (e.State == DrawItemState.Selected) ? -2 : 1;
+      paddedBounds.Offset(1, yOffset);
+      TextRenderer.DrawText(e.Graphics, page.Text, Font, paddedBounds, page.ForeColor);
+    }
   }
 }

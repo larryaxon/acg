@@ -84,6 +84,8 @@
       this.btnWholesaleSave = new System.Windows.Forms.Button();
       this.btnWholesaleNew = new System.Windows.Forms.Button();
       this.tabMatching = new System.Windows.Forms.TabPage();
+      this.label18 = new System.Windows.Forms.Label();
+      this.label17 = new System.Windows.Forms.Label();
       this.srchWholesaleUsocMatching = new ACG.CommonForms.ctlSearch();
       this.srchRetailUsocMatching = new ACG.CommonForms.ctlSearch();
       this.lblUsocMatching = new System.Windows.Forms.Label();
@@ -92,8 +94,6 @@
       this.btnMatchUsoc = new System.Windows.Forms.Button();
       this.lstRetailUsocs = new System.Windows.Forms.ListBox();
       this.label4 = new System.Windows.Forms.Label();
-      this.label17 = new System.Windows.Forms.Label();
-      this.label18 = new System.Windows.Forms.Label();
       this.tabMaintenance.SuspendLayout();
       this.tabRetail.SuspendLayout();
       this.tabWholesale.SuspendLayout();
@@ -150,6 +150,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
       this.srchUSOCList.AutoRefreshWhenFieldChecked = false;
       this.srchUSOCList.AutoSaveUserOptions = false;
+      this.srchUSOCList.BackColor = System.Drawing.SystemColors.ControlLightLight;
       this.srchUSOCList.CanChangeDisplayFields = true;
       this.srchUSOCList.CanChangeDisplaySearchCriteria = true;
       this.srchUSOCList.ColumnName = "CustomerName";
@@ -213,15 +214,18 @@
       this.tabMaintenance.Controls.Add(this.tabRetail);
       this.tabMaintenance.Controls.Add(this.tabWholesale);
       this.tabMaintenance.Controls.Add(this.tabMatching);
+      this.tabMaintenance.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
       this.tabMaintenance.Location = new System.Drawing.Point(1, 337);
       this.tabMaintenance.Name = "tabMaintenance";
       this.tabMaintenance.SelectedIndex = 0;
       this.tabMaintenance.Size = new System.Drawing.Size(1418, 313);
       this.tabMaintenance.TabIndex = 19;
+      this.tabMaintenance.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.tabMaintenance_DrawItem);
       // 
       // tabRetail
       // 
       this.tabRetail.AutoScroll = true;
+      this.tabRetail.BackColor = System.Drawing.SystemColors.ControlLightLight;
       this.tabRetail.Controls.Add(this.btnRetailNew);
       this.tabRetail.Controls.Add(this.btnRetailCancel);
       this.tabRetail.Controls.Add(this.btnRetailSave);
@@ -256,7 +260,6 @@
       this.tabRetail.Size = new System.Drawing.Size(1410, 287);
       this.tabRetail.TabIndex = 0;
       this.tabRetail.Text = "Retail Usoc Maintenance";
-      this.tabRetail.UseVisualStyleBackColor = true;
       // 
       // btnRetailNew
       // 
@@ -538,6 +541,7 @@
       // 
       // tabWholesale
       // 
+      this.tabWholesale.BackColor = System.Drawing.SystemColors.ControlLightLight;
       this.tabWholesale.Controls.Add(this.label1);
       this.tabWholesale.Controls.Add(this.txtWholesaleUSOC);
       this.tabWholesale.Controls.Add(this.ckWholesaleInactivate);
@@ -560,7 +564,6 @@
       this.tabWholesale.Size = new System.Drawing.Size(1410, 287);
       this.tabWholesale.TabIndex = 1;
       this.tabWholesale.Text = "Wholesale Usoc Maintenance";
-      this.tabWholesale.UseVisualStyleBackColor = true;
       // 
       // label1
       // 
@@ -733,6 +736,7 @@
       // 
       // tabMatching
       // 
+      this.tabMatching.BackColor = System.Drawing.SystemColors.ControlLightLight;
       this.tabMatching.Controls.Add(this.label18);
       this.tabMatching.Controls.Add(this.label17);
       this.tabMatching.Controls.Add(this.srchWholesaleUsocMatching);
@@ -748,7 +752,24 @@
       this.tabMatching.Size = new System.Drawing.Size(1410, 287);
       this.tabMatching.TabIndex = 2;
       this.tabMatching.Text = "Retail/Wholesale Matching";
-      this.tabMatching.UseVisualStyleBackColor = true;
+      // 
+      // label18
+      // 
+      this.label18.AutoSize = true;
+      this.label18.Location = new System.Drawing.Point(452, 49);
+      this.label18.Name = "label18";
+      this.label18.Size = new System.Drawing.Size(90, 13);
+      this.label18.TabIndex = 115;
+      this.label18.Text = "Wholesale USOC";
+      // 
+      // label17
+      // 
+      this.label17.AutoSize = true;
+      this.label17.Location = new System.Drawing.Point(14, 49);
+      this.label17.Name = "label17";
+      this.label17.Size = new System.Drawing.Size(67, 13);
+      this.label17.TabIndex = 114;
+      this.label17.Text = "Retail USOC";
       // 
       // srchWholesaleUsocMatching
       // 
@@ -862,28 +883,11 @@
       this.label4.TabIndex = 7;
       this.label4.Text = "Wholesale USOC Matching";
       // 
-      // label17
-      // 
-      this.label17.AutoSize = true;
-      this.label17.Location = new System.Drawing.Point(14, 49);
-      this.label17.Name = "label17";
-      this.label17.Size = new System.Drawing.Size(67, 13);
-      this.label17.TabIndex = 114;
-      this.label17.Text = "Retail USOC";
-      // 
-      // label18
-      // 
-      this.label18.AutoSize = true;
-      this.label18.Location = new System.Drawing.Point(452, 49);
-      this.label18.Name = "label18";
-      this.label18.Size = new System.Drawing.Size(90, 13);
-      this.label18.TabIndex = 115;
-      this.label18.Text = "Wholesale USOC";
-      // 
       // frmCityHostedUSOCMaintenanceNew
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(179)))), ((int)(((byte)(175)))));
       this.ClientSize = new System.Drawing.Size(1420, 653);
       this.Controls.Add(this.tabMaintenance);
       this.Controls.Add(this.cboCarrier);
