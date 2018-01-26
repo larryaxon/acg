@@ -47,6 +47,9 @@ namespace CCI.DesktopClient.Screens
     private const string modeWholesale = "Edit Wholesale";
     private const string modeMatching = "Match Retail/Wholesale";
 
+    private string[] _dpLevels = null;
+    private string[] _dealerPricingLevels { get { if (_dpLevels == null) _dpLevels = _dataSource.getDealerPricingLevels(); return _dpLevels; } }
+
     private string[] _modeList = new string[] { modeRetail, modeWholesale, modeMatching };
 
     private DataSource _ds = null;
@@ -282,7 +285,22 @@ namespace CCI.DesktopClient.Screens
 
       // final fixup (set item search so they require an existing time
       txtRetailUSOC.Enabled = false;  // you cannot change an existing usoc in edit mode
+      loadDealerCostGrid(txtRetailUSOC.Text);
 
+    }
+    private void loadDealerCostGrid(string retailUsoc)
+    {
+      DataSet ds = _dataSource.getHostedDealerCosts(retailUsoc);
+      CommonFormFunctions.convertDataSetToGrid(grdDealerCosts, ds);
+      //foreach (DataGridViewRow row in grdDealerCosts.Rows) // hide all rows that are not a pricing level
+      //{
+      //  object val = row.Cells["Level"].Value;
+      //  if (val == null || !CommonFunctions.inList(_dealerPricingLevels, val.ToString()))
+      //    row.Visible = false;
+      //}
+      grdDealerCosts.Columns["USOC"].Visible = false; // hide the itemid/usoc column
+      grdDealerCosts.Columns["LastModifiedBy"].Visible = false;
+      grdDealerCosts.Columns["LastModifiedDateTime"].Visible = false;
     }
     private void loadWholesaleFields(DataGridViewRow row)
     {
@@ -378,7 +396,9 @@ namespace CCI.DesktopClient.Screens
         else
           retailUsoc = CommonFunctions.CString(((DataGridViewCell)r).Value);
         if (!txtRetailUSOC.Text.Equals(retailUsoc, StringComparison.CurrentCultureIgnoreCase)) // only reload if this screen has not been loaded with this usoc
+        {
           loadRetailFields(row);
+        }
       }
       else if (mode.Equals(modeMatching))
         loadMatchingFields(row); // don;t worry about reload of this screen it is fast and simple
@@ -611,6 +631,7 @@ namespace CCI.DesktopClient.Screens
     {
       clearTabPage(tabRetail);
       txtRetailUSOC.AddNewMode = true;
+      txtRetailUSOC.Enabled = true;
     }
     private void btnRetailCancel_Click(object sender, EventArgs e)
     {
@@ -622,6 +643,7 @@ namespace CCI.DesktopClient.Screens
     private void btnRetailSave_Click(object sender, EventArgs e)
     {
       saveRetail();
+      txtRetailUSOC.Enabled = false;
     }
     private void btnWholesaleNew_Click(object sender, EventArgs e)
     {

@@ -94,10 +94,12 @@
       this.btnMatchUsoc = new System.Windows.Forms.Button();
       this.lstRetailUsocs = new System.Windows.Forms.ListBox();
       this.label4 = new System.Windows.Forms.Label();
+      this.grdDealerCosts = new System.Windows.Forms.DataGridView();
       this.tabMaintenance.SuspendLayout();
       this.tabRetail.SuspendLayout();
       this.tabWholesale.SuspendLayout();
       this.tabMatching.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.grdDealerCosts)).BeginInit();
       this.SuspendLayout();
       // 
       // cboCarrier
@@ -165,11 +167,12 @@
       this.srchUSOCList.Name = "srchUSOCList";
       this.srchUSOCList.NameType = CCI.Common.CommonData.UnmatchedNameTypes.Customer;
       this.srchUSOCList.SearchCriteria = null;
-      this.srchUSOCList.Size = new System.Drawing.Size(1418, 326);
+      this.srchUSOCList.Size = new System.Drawing.Size(1418, 297);
       this.srchUSOCList.TabIndex = 14;
       this.srchUSOCList.Title = "Search (0 Records Found)";
       this.srchUSOCList.UniqueIdentifier = "ID";
       this.srchUSOCList.UseNamedSearches = false;
+      this.srchUSOCList.RowSelected += new ACG.CommonForms.ctlSearchGrid.RowSelectedHandler(this.srchUSOCList_RowSelected);
       // 
       // ckRefresh
       // 
@@ -215,10 +218,10 @@
       this.tabMaintenance.Controls.Add(this.tabWholesale);
       this.tabMaintenance.Controls.Add(this.tabMatching);
       this.tabMaintenance.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
-      this.tabMaintenance.Location = new System.Drawing.Point(1, 337);
+      this.tabMaintenance.Location = new System.Drawing.Point(1, 330);
       this.tabMaintenance.Name = "tabMaintenance";
       this.tabMaintenance.SelectedIndex = 0;
-      this.tabMaintenance.Size = new System.Drawing.Size(1418, 313);
+      this.tabMaintenance.Size = new System.Drawing.Size(1418, 320);
       this.tabMaintenance.TabIndex = 19;
       this.tabMaintenance.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.tabMaintenance_DrawItem);
       // 
@@ -226,6 +229,7 @@
       // 
       this.tabRetail.AutoScroll = true;
       this.tabRetail.BackColor = System.Drawing.SystemColors.ControlLightLight;
+      this.tabRetail.Controls.Add(this.grdDealerCosts);
       this.tabRetail.Controls.Add(this.btnRetailNew);
       this.tabRetail.Controls.Add(this.btnRetailCancel);
       this.tabRetail.Controls.Add(this.btnRetailSave);
@@ -257,7 +261,7 @@
       this.tabRetail.Location = new System.Drawing.Point(4, 22);
       this.tabRetail.Name = "tabRetail";
       this.tabRetail.Padding = new System.Windows.Forms.Padding(3);
-      this.tabRetail.Size = new System.Drawing.Size(1410, 287);
+      this.tabRetail.Size = new System.Drawing.Size(1410, 294);
       this.tabRetail.TabIndex = 0;
       this.tabRetail.Text = "Retail Usoc Maintenance";
       // 
@@ -561,7 +565,7 @@
       this.tabWholesale.Location = new System.Drawing.Point(4, 22);
       this.tabWholesale.Name = "tabWholesale";
       this.tabWholesale.Padding = new System.Windows.Forms.Padding(3);
-      this.tabWholesale.Size = new System.Drawing.Size(1410, 287);
+      this.tabWholesale.Size = new System.Drawing.Size(1410, 294);
       this.tabWholesale.TabIndex = 1;
       this.tabWholesale.Text = "Wholesale Usoc Maintenance";
       // 
@@ -749,7 +753,7 @@
       this.tabMatching.Controls.Add(this.label4);
       this.tabMatching.Location = new System.Drawing.Point(4, 22);
       this.tabMatching.Name = "tabMatching";
-      this.tabMatching.Size = new System.Drawing.Size(1410, 287);
+      this.tabMatching.Size = new System.Drawing.Size(1410, 294);
       this.tabMatching.TabIndex = 2;
       this.tabMatching.Text = "Retail/Wholesale Matching";
       // 
@@ -883,6 +887,17 @@
       this.label4.TabIndex = 7;
       this.label4.Text = "Wholesale USOC Matching";
       // 
+      // grdDealerCosts
+      // 
+      this.grdDealerCosts.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.grdDealerCosts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+      this.grdDealerCosts.Location = new System.Drawing.Point(611, 31);
+      this.grdDealerCosts.Name = "grdDealerCosts";
+      this.grdDealerCosts.Size = new System.Drawing.Size(783, 244);
+      this.grdDealerCosts.TabIndex = 133;
+      // 
       // frmCityHostedUSOCMaintenanceNew
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -908,6 +923,7 @@
       this.tabWholesale.PerformLayout();
       this.tabMatching.ResumeLayout(false);
       this.tabMatching.PerformLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.grdDealerCosts)).EndInit();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -981,5 +997,6 @@
     private System.Windows.Forms.Label label4;
     private System.Windows.Forms.Label label18;
     private System.Windows.Forms.Label label17;
+    private System.Windows.Forms.DataGridView grdDealerCosts;
   }
 }
