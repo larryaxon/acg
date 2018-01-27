@@ -29,7 +29,8 @@ namespace CCI.DesktopClient.Screens
       EntityOwner = "CCI";
       usocUSOC.SearchExec = new SearchDataSourceProductList();
       txtMasterDealer.SearchExec = new SearchDataSourceMasterDealer();
-   
+      _showContacts = false;
+      
       ((SearchDataSourceProductList)usocUSOC.SearchExec).Carrier = "CityHosted"; // retail usocs
       dtEndDate.Value = CommonData.FutureDateTime;
       newCost();
