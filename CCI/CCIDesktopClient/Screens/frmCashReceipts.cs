@@ -79,6 +79,11 @@ namespace CCI.DesktopClient.Screens
         criteria.Add("HasActiveInventory", new string[] { ctlSearchGrid.opEQUALS, "Yes" });
       if (noCreditBalancesToolStripMenuItem.Checked)
         criteria.Add("Balance Owed", new string[] { ctlSearchGrid.opGREATEROREQUAL, "0" });
+      if (excludeWithInactiveInventoryAndZeroBalanceToolStripMenuItem.Checked)
+      {
+        criteria.Add("HasActiveInventory", new string[] { ctlSearchGrid.opEQUALS, "Yes" });
+        criteria.Add("Balance Owed", new string[] { ctlSearchGrid.opNOTEQUALS, "0" });
+      }
       DateTime endDate = _endDate;
       DateTime billDate = endDate.AddDays(1 - endDate.Day);
       srchCashReceipts.Parameters.Clear();
@@ -729,5 +734,6 @@ namespace CCI.DesktopClient.Screens
     {
       undoImportPayments();
     }
+
   }
 }

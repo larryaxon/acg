@@ -38,6 +38,7 @@
       this.tbUnpaidOnly = new System.Windows.Forms.ToolStripMenuItem();
       this.activeInventoryOnlyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.noCreditBalancesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.excludeWithInactiveInventoryAndZeroBalanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
       this.tbBillingPeriod = new System.Windows.Forms.ToolStripTextBox();
       this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -130,7 +131,8 @@
             this.exportedToolStripMenuItem,
             this.tbUnpaidOnly,
             this.activeInventoryOnlyToolStripMenuItem,
-            this.noCreditBalancesToolStripMenuItem});
+            this.noCreditBalancesToolStripMenuItem,
+            this.excludeWithInactiveInventoryAndZeroBalanceToolStripMenuItem});
       this.tbOptions.Image = ((System.Drawing.Image)(resources.GetObject("tbOptions.Image")));
       this.tbOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.tbOptions.Name = "tbOptions";
@@ -143,7 +145,7 @@
             this.tbPosted,
             this.tbUnPosted});
       this.exportedToolStripMenuItem.Name = "exportedToolStripMenuItem";
-      this.exportedToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.exportedToolStripMenuItem.Size = new System.Drawing.Size(313, 22);
       this.exportedToolStripMenuItem.Text = "Include Exported...";
       // 
       // tbPosted
@@ -168,7 +170,7 @@
       // 
       this.tbUnpaidOnly.CheckOnClick = true;
       this.tbUnpaidOnly.Name = "tbUnpaidOnly";
-      this.tbUnpaidOnly.Size = new System.Drawing.Size(180, 22);
+      this.tbUnpaidOnly.Size = new System.Drawing.Size(313, 22);
       this.tbUnpaidOnly.Text = "Unpaid Only";
       // 
       // activeInventoryOnlyToolStripMenuItem
@@ -176,7 +178,7 @@
       this.activeInventoryOnlyToolStripMenuItem.CheckOnClick = true;
       this.activeInventoryOnlyToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
       this.activeInventoryOnlyToolStripMenuItem.Name = "activeInventoryOnlyToolStripMenuItem";
-      this.activeInventoryOnlyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.activeInventoryOnlyToolStripMenuItem.Size = new System.Drawing.Size(313, 22);
       this.activeInventoryOnlyToolStripMenuItem.Text = "Active Inventory Only";
       // 
       // noCreditBalancesToolStripMenuItem
@@ -184,8 +186,15 @@
       this.noCreditBalancesToolStripMenuItem.CheckOnClick = true;
       this.noCreditBalancesToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
       this.noCreditBalancesToolStripMenuItem.Name = "noCreditBalancesToolStripMenuItem";
-      this.noCreditBalancesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+      this.noCreditBalancesToolStripMenuItem.Size = new System.Drawing.Size(313, 22);
       this.noCreditBalancesToolStripMenuItem.Text = "No Credit Balances";
+      // 
+      // excludeWithInactiveInventoryAndZeroBalanceToolStripMenuItem
+      // 
+      this.excludeWithInactiveInventoryAndZeroBalanceToolStripMenuItem.CheckOnClick = true;
+      this.excludeWithInactiveInventoryAndZeroBalanceToolStripMenuItem.Name = "excludeWithInactiveInventoryAndZeroBalanceToolStripMenuItem";
+      this.excludeWithInactiveInventoryAndZeroBalanceToolStripMenuItem.Size = new System.Drawing.Size(313, 22);
+      this.excludeWithInactiveInventoryAndZeroBalanceToolStripMenuItem.Text = "Exclude with Inactive Inventory and Zero Balance";
       // 
       // toolStripLabel1
       // 
@@ -726,5 +735,6 @@
     private System.Windows.Forms.ToolStripButton btnImportPayments;
     private System.Windows.Forms.ToolStripButton btnUndoImport;
     private System.Windows.Forms.ToolStripLabel lblProcessing;
+    private System.Windows.Forms.ToolStripMenuItem excludeWithInactiveInventoryAndZeroBalanceToolStripMenuItem;
   }
 }
