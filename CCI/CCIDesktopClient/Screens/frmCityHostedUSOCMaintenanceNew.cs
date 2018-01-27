@@ -47,6 +47,8 @@ namespace CCI.DesktopClient.Screens
     private const string modeWholesale = "Edit Wholesale";
     private const string modeMatching = "Match Retail/Wholesale";
 
+    private List<int> _dealerCostDirtyRows = new List<int>();
+
     private string[] _dpLevels = null;
     private string[] _dealerPricingLevels { get { if (_dpLevels == null) _dpLevels = _dataSource.getDealerPricingLevels(); return _dpLevels; } }
 
@@ -291,16 +293,38 @@ namespace CCI.DesktopClient.Screens
     private void loadDealerCostGrid(string retailUsoc)
     {
       DataSet ds = _dataSource.getHostedDealerCosts(retailUsoc);
-      CommonFormFunctions.convertDataSetToGrid(grdDealerCosts, ds);
-      //foreach (DataGridViewRow row in grdDealerCosts.Rows) // hide all rows that are not a pricing level
+      List<DataGridViewColumn> columns = new List<DataGridViewColumn>();
+      // specify the column types to use int he grid
+      DataGridViewComboBoxColumn levels = new DataGridViewComboBoxColumn();
+      levels.Items.AddRange(_dealerPricingLevels);
+      columns.Add(levels); //Levels
+      DataGridViewTextBoxColumn usoc = new DataGridViewTextBoxColumn();
+      usoc.Visible = false;
+      columns.Add(usoc); //USOCs
+      columns.Add(new DataGridViewTextBoxColumn()); //StartDate
+      columns.Add(new DataGridViewTextBoxColumn()); //EndDate
+      columns.Add(new DataGridViewTextBoxColumn()); //MRC
+      columns.Add(new DataGridViewTextBoxColumn()); //NRC
+      DataGridViewTextBoxColumn lastModifiedBy = new DataGridViewTextBoxColumn();
+      lastModifiedBy.Visible = false;
+      columns.Add(lastModifiedBy);
+      DataGridViewTextBoxColumn lastModifiedDateTime = new DataGridViewTextBoxColumn();
+      lastModifiedDateTime.Visible = false;
+      columns.Add(lastModifiedDateTime);
+      CommonFormFunctions.convertDataSetToGrid(grdDealerCosts, ds, columns.ToArray());
+      //grdDealerCosts.Columns["USOC"].Visible = false; // hide the itemid/usoc column
+      //grdDealerCosts.Columns["LastModifiedBy"].Visible = false;
+      //grdDealerCosts.Columns["LastModifiedDateTime"].Visible = false;
+      //// now make all the level cells a combo
+      //foreach (DataGridViewRow row in grdDealerCosts.Rows)
       //{
-      //  object val = row.Cells["Level"].Value;
-      //  if (val == null || !CommonFunctions.inList(_dealerPricingLevels, val.ToString()))
-      //    row.Visible = false;
+      //  DataGridViewCell oldCell = row.Cells["Level"];
+      //  DataGridViewComboBoxCell newCell = new DataGridViewComboBoxCell();
+      //  newCell.Items.AddRange(_dealerPricingLevels);
+      //  newCell.Value = oldCell.Value;
+      //  int cellIndex = oldCell.ColumnIndex;
+      //  row.Cells[cellIndex] = newCell;
       //}
-      grdDealerCosts.Columns["USOC"].Visible = false; // hide the itemid/usoc column
-      grdDealerCosts.Columns["LastModifiedBy"].Visible = false;
-      grdDealerCosts.Columns["LastModifiedDateTime"].Visible = false;
     }
     private void loadWholesaleFields(DataGridViewRow row)
     {
@@ -442,6 +466,24 @@ namespace CCI.DesktopClient.Screens
     private void saveRetail()
     {
       save("retail");
+    }
+    private void saveDealerCostGrid(string usoc)
+    {
+      foreach (int rowIndex in _dealerCostDirtyRows)
+      {
+        DataGridViewRow row = grdDealerCosts.Rows[rowIndex];
+        string level = CommonFunctions.CString(row.Cells["Level"].Value);
+        if (!string.IsNullOrEmpty(level)) // dont save an empty row
+        {
+          string install = CommonFunctions.CString(CommonFunctions.CDecimal(row.Cells["NRC"]));
+          string dealerCost = CommonFunctions.CString(CommonFunctions.CDecimal(row.Cells["MRC"]));
+          object oDate = row.Cells["StartDate"].Value;
+          DateTime startDate = oDate == null ? CommonData.PastDateTime : CommonFunctions.CDateTime(oDate);
+          oDate = row.Cells["EndDate"].Value;
+          DateTime endDate = oDate == null ? CommonData.FutureDateTime : CommonFunctions.CDateTime(oDate);
+          _dataSource.updateDealerCost(null, usoc, dealerCost, install, level, startDate, endDate, SecurityContext.User);
+        }
+      }
     }
     private void saveWholesale()
     {
@@ -694,6 +736,59 @@ namespace CCI.DesktopClient.Screens
       int yOffset = (e.State == DrawItemState.Selected) ? -2 : 1;
       paddedBounds.Offset(1, yOffset);
       TextRenderer.DrawText(e.Graphics, page.Text, Font, paddedBounds, page.ForeColor);
+    }
+
+    private void grdDealerCosts_RowLeave(object sender, DataGridViewCellEventArgs e)
+    {
+      if (!_dealerCostDirtyRows.Contains(e.RowIndex))
+        _dealerCostDirtyRows.Add(e.RowIndex);
+    }
+
+    private void grdDealerCosts_RowValidating(object sender, DataGridViewCellCancelEventArgs e)
+    {
+      DataGridViewRow row = grdDealerCosts.Rows[e.RowIndex];
+      DataGridViewCell lastCell = row.Cells["NRC"];
+      // valid dates?
+      foreach (DataGridViewCell cell in row.Cells)
+      {
+        string cellName = grdDealerCosts.Columns[cell.ColumnIndex].Name;
+        switch (cellName)
+        {
+          case "StartDate":
+          case "EndDate":
+            if (cell.Value != null) // null is valid value
+            {
+              if (!CommonFunctions.IsDateTime(cell.Value.ToString())) // but if its not a good date
+              {
+                cell.Selected = true; // select the errored cell
+                if (lastCell.ColumnIndex != cell.ColumnIndex) // and this validation routine keeps that last cell selected so we unselect it
+                  lastCell.Selected = false;
+                MessageBox.Show(cellName + " is not in correct date format");
+                e.Cancel = true;
+                return;
+              }
+
+            }
+            break;
+          case "USOC":
+            if (cell.Value == null) // there is no USOC
+              cell.Value = txtRetailUSOC.Text; // then use the one from the current tab
+            break;
+          case "MRC":
+          case "NRC":
+            // make sure they are numeric
+            if (cell.Value == null || !CommonFunctions.IsNumeric(cell.Value))
+            {
+              cell.Selected = true;
+              MessageBox.Show(cellName + "Must be a number");
+              e.Cancel = true;
+              return;
+            }
+            break;
+
+        }
+
+      }
     }
   }
 }

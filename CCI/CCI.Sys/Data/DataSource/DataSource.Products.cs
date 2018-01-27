@@ -293,21 +293,7 @@ inner join MasterProductList m2 on m.MasterItemID = m2.ItemID order by m2.Name, 
       string sql = string.Format("select ID, Price, StartDate, EndDate from HostedUSOCRetailPricing where RetailUSOC = '{0}' order by Price, StartDate", itemID);
       return getDataFromSQL(sql);
     }
-    public DataSet getHostedDealerCosts(string itemID)
-    {
-      string sql = string.Format(@"select dc.[Dealer] [Level]
-,dc.[ItemID] USOC
-,format(dc.[StartDate], 'M/d/yyyy') StartDate
-,format(dc.[EndDate], 'M/d/yyyy') EndDate
-,dc.[DealerCost] MRC
-,dc.[Install] NRC
-,dc.[LastModifiedBy]
-,dc.[LastModifiedDateTime] 
-from HostedDealerCosts dc 
-inner join CodeMaster cm on dc.Dealer = cm.CodeValue and cm.CodeType = 'dealerpricinglevels'
-where ItemID= '{0}' order by Dealer",  itemID);
-      return getDataFromSQL(sql);
-    }
+
     public int? updateHostedDealerPrice(int? id, string itemID, decimal price, DateTime? startDate, DateTime? endDate, string user)
     {
       string strStartDate, strEndDate, sql;

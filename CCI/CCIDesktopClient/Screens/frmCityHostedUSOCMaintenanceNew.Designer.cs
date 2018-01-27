@@ -38,6 +38,7 @@
       this.ckIncludeNonSaddleback = new System.Windows.Forms.CheckBox();
       this.tabMaintenance = new System.Windows.Forms.TabControl();
       this.tabRetail = new System.Windows.Forms.TabPage();
+      this.grdDealerCosts = new System.Windows.Forms.DataGridView();
       this.btnRetailNew = new System.Windows.Forms.Button();
       this.btnRetailCancel = new System.Windows.Forms.Button();
       this.btnRetailSave = new System.Windows.Forms.Button();
@@ -94,12 +95,11 @@
       this.btnMatchUsoc = new System.Windows.Forms.Button();
       this.lstRetailUsocs = new System.Windows.Forms.ListBox();
       this.label4 = new System.Windows.Forms.Label();
-      this.grdDealerCosts = new System.Windows.Forms.DataGridView();
       this.tabMaintenance.SuspendLayout();
       this.tabRetail.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.grdDealerCosts)).BeginInit();
       this.tabWholesale.SuspendLayout();
       this.tabMatching.SuspendLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.grdDealerCosts)).BeginInit();
       this.SuspendLayout();
       // 
       // cboCarrier
@@ -264,6 +264,19 @@
       this.tabRetail.Size = new System.Drawing.Size(1410, 294);
       this.tabRetail.TabIndex = 0;
       this.tabRetail.Text = "Retail Usoc Maintenance";
+      // 
+      // grdDealerCosts
+      // 
+      this.grdDealerCosts.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.grdDealerCosts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+      this.grdDealerCosts.Location = new System.Drawing.Point(611, 31);
+      this.grdDealerCosts.Name = "grdDealerCosts";
+      this.grdDealerCosts.Size = new System.Drawing.Size(783, 244);
+      this.grdDealerCosts.TabIndex = 133;
+      this.grdDealerCosts.RowLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdDealerCosts_RowLeave);
+      this.grdDealerCosts.RowValidating += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.grdDealerCosts_RowValidating);
       // 
       // btnRetailNew
       // 
@@ -887,17 +900,6 @@
       this.label4.TabIndex = 7;
       this.label4.Text = "Wholesale USOC Matching";
       // 
-      // grdDealerCosts
-      // 
-      this.grdDealerCosts.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.grdDealerCosts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-      this.grdDealerCosts.Location = new System.Drawing.Point(611, 31);
-      this.grdDealerCosts.Name = "grdDealerCosts";
-      this.grdDealerCosts.Size = new System.Drawing.Size(783, 244);
-      this.grdDealerCosts.TabIndex = 133;
-      // 
       // frmCityHostedUSOCMaintenanceNew
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -919,11 +921,11 @@
       this.tabMaintenance.ResumeLayout(false);
       this.tabRetail.ResumeLayout(false);
       this.tabRetail.PerformLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.grdDealerCosts)).EndInit();
       this.tabWholesale.ResumeLayout(false);
       this.tabWholesale.PerformLayout();
       this.tabMatching.ResumeLayout(false);
       this.tabMatching.PerformLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.grdDealerCosts)).EndInit();
       this.ResumeLayout(false);
       this.PerformLayout();
 

@@ -332,6 +332,21 @@ where (item =  'user' and name = 'salesperson' and Value = 'Yes')  order by firs
         return false;
       return level.IndexOf("Master", StringComparison.CurrentCulture) == 0;
     }
+    public DataSet getHostedDealerCosts(string itemID)
+    {
+      string sql = string.Format(@"select dc.[Dealer] [Level]
+,dc.[ItemID] USOC
+,format(dc.[StartDate], 'M/d/yyyy') StartDate
+,format(dc.[EndDate], 'M/d/yyyy') EndDate
+,dc.[DealerCost] MRC
+,dc.[Install] NRC
+,dc.[LastModifiedBy]
+,dc.[LastModifiedDateTime] 
+from HostedDealerCosts dc 
+inner join CodeMaster cm on dc.Dealer = cm.CodeValue and cm.CodeType = 'dealerpricinglevels'
+where ItemID= '{0}' order by Dealer", itemID);
+      return getDataFromSQL(sql);
+    }
     public string cloneDealerCostLevel(string oldLevel, string newLevel, DateTime startDate, string user)
     {
       if (string.IsNullOrEmpty(oldLevel) || string.IsNullOrEmpty(newLevel))

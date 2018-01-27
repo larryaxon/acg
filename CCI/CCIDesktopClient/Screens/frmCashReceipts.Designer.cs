@@ -92,7 +92,7 @@
       tbPost.BackColor = System.Drawing.SystemColors.ControlLight;
       tbPost.ImageTransparentColor = System.Drawing.Color.Magenta;
       tbPost.Name = "tbPost";
-      tbPost.Size = new System.Drawing.Size(86, 22);
+      tbPost.Size = new System.Drawing.Size(83, 22);
       tbPost.Text = "Export to Sage";
       tbPost.Visible = false;
       tbPost.Click += new System.EventHandler(this.btnPost_Click);
@@ -134,7 +134,7 @@
       this.tbOptions.Image = ((System.Drawing.Image)(resources.GetObject("tbOptions.Image")));
       this.tbOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.tbOptions.Name = "tbOptions";
-      this.tbOptions.Size = new System.Drawing.Size(62, 22);
+      this.tbOptions.Size = new System.Drawing.Size(57, 22);
       this.tbOptions.Text = "Options";
       // 
       // exportedToolStripMenuItem
@@ -143,7 +143,7 @@
             this.tbPosted,
             this.tbUnPosted});
       this.exportedToolStripMenuItem.Name = "exportedToolStripMenuItem";
-      this.exportedToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+      this.exportedToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
       this.exportedToolStripMenuItem.Text = "Include Exported...";
       // 
       // tbPosted
@@ -152,7 +152,7 @@
       this.tbPosted.CheckOnClick = true;
       this.tbPosted.CheckState = System.Windows.Forms.CheckState.Checked;
       this.tbPosted.Name = "tbPosted";
-      this.tbPosted.Size = new System.Drawing.Size(143, 22);
+      this.tbPosted.Size = new System.Drawing.Size(138, 22);
       this.tbPosted.Text = "Exported";
       // 
       // tbUnPosted
@@ -161,14 +161,14 @@
       this.tbUnPosted.CheckOnClick = true;
       this.tbUnPosted.CheckState = System.Windows.Forms.CheckState.Checked;
       this.tbUnPosted.Name = "tbUnPosted";
-      this.tbUnPosted.Size = new System.Drawing.Size(143, 22);
+      this.tbUnPosted.Size = new System.Drawing.Size(138, 22);
       this.tbUnPosted.Text = "Not Exported";
       // 
       // tbUnpaidOnly
       // 
       this.tbUnpaidOnly.CheckOnClick = true;
       this.tbUnpaidOnly.Name = "tbUnpaidOnly";
-      this.tbUnpaidOnly.Size = new System.Drawing.Size(188, 22);
+      this.tbUnpaidOnly.Size = new System.Drawing.Size(180, 22);
       this.tbUnpaidOnly.Text = "Unpaid Only";
       // 
       // activeInventoryOnlyToolStripMenuItem
@@ -176,7 +176,7 @@
       this.activeInventoryOnlyToolStripMenuItem.CheckOnClick = true;
       this.activeInventoryOnlyToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
       this.activeInventoryOnlyToolStripMenuItem.Name = "activeInventoryOnlyToolStripMenuItem";
-      this.activeInventoryOnlyToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+      this.activeInventoryOnlyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
       this.activeInventoryOnlyToolStripMenuItem.Text = "Active Inventory Only";
       // 
       // noCreditBalancesToolStripMenuItem
@@ -184,13 +184,13 @@
       this.noCreditBalancesToolStripMenuItem.CheckOnClick = true;
       this.noCreditBalancesToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
       this.noCreditBalancesToolStripMenuItem.Name = "noCreditBalancesToolStripMenuItem";
-      this.noCreditBalancesToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+      this.noCreditBalancesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
       this.noCreditBalancesToolStripMenuItem.Text = "No Credit Balances";
       // 
       // toolStripLabel1
       // 
       this.toolStripLabel1.Name = "toolStripLabel1";
-      this.toolStripLabel1.Size = new System.Drawing.Size(67, 22);
+      this.toolStripLabel1.Size = new System.Drawing.Size(59, 22);
       this.toolStripLabel1.Text = "Billing Date";
       // 
       // tbBillingPeriod
@@ -209,7 +209,7 @@
       this.tbLoad.BackColor = System.Drawing.SystemColors.ControlLight;
       this.tbLoad.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.tbLoad.Name = "tbLoad";
-      this.tbLoad.Size = new System.Drawing.Size(37, 22);
+      this.tbLoad.Size = new System.Drawing.Size(34, 22);
       this.tbLoad.Text = "Load";
       this.tbLoad.Click += new System.EventHandler(this.btnLoad_Click);
       // 
@@ -230,7 +230,7 @@
       this.tbQBExport.Image = ((System.Drawing.Image)(resources.GetObject("tbQBExport.Image")));
       this.tbQBExport.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.tbQBExport.Name = "tbQBExport";
-      this.tbQBExport.Size = new System.Drawing.Size(110, 22);
+      this.tbQBExport.Size = new System.Drawing.Size(100, 22);
       this.tbQBExport.Text = "QuickBooks Export";
       this.tbQBExport.Visible = false;
       this.tbQBExport.Click += new System.EventHandler(this.btnQBExport_Click);
@@ -243,7 +243,7 @@
       // toolStripLabel3
       // 
       this.toolStripLabel3.Name = "toolStripLabel3";
-      this.toolStripLabel3.Size = new System.Drawing.Size(54, 22);
+      this.toolStripLabel3.Size = new System.Drawing.Size(48, 22);
       this.toolStripLabel3.Text = "Amt Due";
       // 
       // tbAmountDue
@@ -255,7 +255,7 @@
       // toolStripLabel4
       // 
       this.toolStripLabel4.Name = "toolStripLabel4";
-      this.toolStripLabel4.Size = new System.Drawing.Size(60, 22);
+      this.toolStripLabel4.Size = new System.Drawing.Size(54, 22);
       this.toolStripLabel4.Text = "Total Paid";
       // 
       // tbTotalPaid
@@ -270,7 +270,7 @@
       this.btnImportPayments.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
       this.btnImportPayments.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.btnImportPayments.Name = "btnImportPayments";
-      this.btnImportPayments.Size = new System.Drawing.Size(102, 22);
+      this.btnImportPayments.Size = new System.Drawing.Size(93, 22);
       this.btnImportPayments.Text = "Import Payments";
       this.btnImportPayments.Click += new System.EventHandler(this.btnImportPayments_Click);
       // 
@@ -281,7 +281,7 @@
       this.btnUndoImport.Image = ((System.Drawing.Image)(resources.GetObject("btnUndoImport.Image")));
       this.btnUndoImport.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.btnUndoImport.Name = "btnUndoImport";
-      this.btnUndoImport.Size = new System.Drawing.Size(79, 22);
+      this.btnUndoImport.Size = new System.Drawing.Size(71, 22);
       this.btnUndoImport.Text = "Undo Import";
       this.btnUndoImport.Visible = false;
       this.btnUndoImport.Click += new System.EventHandler(this.btnUndoImport_Click);
@@ -344,6 +344,7 @@
       this.srchCashReceipts.AllowSortByColumn = true;
       this.srchCashReceipts.AutoRefreshWhenFieldChecked = false;
       this.srchCashReceipts.AutoSaveUserOptions = false;
+      this.srchCashReceipts.BackColor = System.Drawing.SystemColors.ControlLightLight;
       this.srchCashReceipts.CanChangeDisplayFields = true;
       this.srchCashReceipts.CanChangeDisplaySearchCriteria = true;
       this.srchCashReceipts.ColumnName = "CustomerName";
@@ -396,6 +397,7 @@
       this.cboCustomer.AutoAddNewMode = false;
       this.cboCustomer.AutoSelectWhenMatch = false;
       this.cboCustomer.AutoTabToNextControlOnSelect = true;
+      this.cboCustomer.ClearSearchOnExpand = false;
       this.cboCustomer.ClearSearchWhenComplete = false;
       this.cboCustomer.Collapsed = true;
       this.cboCustomer.CreatedNewItem = false;
@@ -424,6 +426,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
       this.srchCashDetail.AutoRefreshWhenFieldChecked = false;
       this.srchCashDetail.AutoSaveUserOptions = false;
+      this.srchCashDetail.BackColor = System.Drawing.SystemColors.ControlLightLight;
       this.srchCashDetail.CanChangeDisplayFields = false;
       this.srchCashDetail.CanChangeDisplaySearchCriteria = true;
       this.srchCashDetail.ColumnName = "CustomerName";

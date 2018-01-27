@@ -46,7 +46,26 @@ namespace CCI.DesktopClient.Common
       }
       return (DataGridView[])gridList.ToArray(typeof(DataGridView));
     }
-    public static void convertDataSetToGrid(DataGridView grid, DataSet ds)
+    /// <summary>
+    /// Take the first DataTable in a DataSet and load the columns and rows in the grid. 
+    /// Do NOT bind the dataset to the grid.
+    /// </summary>
+    /// <param name="grid">Reference to the DataViewGrid we are populating</param>
+    /// <param name="ds"></param>
+    public static void convertDataSetToGrid(DataGridView grid, DataSet ds) // legacy overload that does not specify columns
+    {
+      convertDataSetToGrid(grid, ds, null); // call the new one
+    }
+    /// <summary>
+    /// Take the first DataTable in a DataSet and load the columns and rows in the grid. 
+    /// Do NOT bind the dataset to the grid.
+    /// This overload passes in an array of columns so the calling program can override the types
+    /// specifically.
+    /// </summary>
+    /// <param name="grid"></param>
+    /// <param name="ds"></param>
+    /// <param name="columns"></param>
+    public static void convertDataSetToGrid(DataGridView grid, DataSet ds, DataGridViewColumn[] columns)
     {
       grid.Rows.Clear();
       grid.Columns.Clear();
@@ -56,19 +75,27 @@ namespace CCI.DesktopClient.Common
         
         DataTable dt = ds.Tables[0];
         int colCount = ds.Tables[0].Columns.Count;
+        if (columns == null || columns.GetLength(0) != colCount)
+          throw new ArgumentException("Can't load grid, column count does not match dataset");
         for (int iCol = 0; iCol < colCount; iCol++)
         {
           DataColumn colFrom = dt.Columns[iCol];
           DataGridViewColumn col;
-          string t = colFrom.DataType.ToString().ToLower();
-          switch (t)
+          if (columns != null) // if we had columns passed int...
+            col = columns[iCol]; // then use that one
+          else
           {
-            case "system.boolean":
-              col = new DataGridViewCheckBoxColumn();
-              break;
-            default:
-              col = new DataGridViewTextBoxColumn();
-              break;
+            // otherwise make our own
+            string t = colFrom.DataType.ToString().ToLower();
+            switch (t)
+            {
+              case "system.boolean":
+                col = new DataGridViewCheckBoxColumn();
+                break;
+              default:
+                col = new DataGridViewTextBoxColumn();
+                break;
+            }
           }
           col.Name = colFrom.ColumnName;
           grid.Columns.Add(col);
