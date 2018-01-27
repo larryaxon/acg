@@ -50,7 +50,7 @@
       this.lblDBA = new System.Windows.Forms.Label();
       this.txtDBA = new System.Windows.Forms.TextBox();
       this.tabMain.SuspendLayout();
-      this.tabLocations.SuspendLayout();
+      //this.tabLocations.SuspendLayout();
       this.grpBillingAddress.SuspendLayout();
       this.SuspendLayout();
       // 
@@ -63,11 +63,11 @@
       // 
       // tabLocations
       // 
-      this.tabLocations.Size = new System.Drawing.Size(806, 318);
+      //this.tabLocations.Size = new System.Drawing.Size(806, 318);
       // 
       // ctlLocations1
       // 
-      this.ctlLocations1.Size = new System.Drawing.Size(800, 312);
+      //this.ctlLocations1.Size = new System.Drawing.Size(800, 312);
       // 
       // btnRefreshFromCitycare
       // 
@@ -283,7 +283,7 @@
       this.Controls.SetChildIndex(this.lblDBA, 0);
       this.Controls.SetChildIndex(this.txtDBA, 0);
       this.tabMain.ResumeLayout(false);
-      this.tabLocations.ResumeLayout(false);
+      //this.tabLocations.ResumeLayout(false);
       this.grpBillingAddress.ResumeLayout(false);
       this.grpBillingAddress.PerformLayout();
       this.ResumeLayout(false);
