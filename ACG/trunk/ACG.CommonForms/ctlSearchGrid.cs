@@ -678,19 +678,23 @@ namespace ACG.CommonForms
     }
     private void grdResearch_SortCompare(object sender, DataGridViewSortCompareEventArgs e)
     {
-      try
+
+      if (NumericFormattedColumns.ContainsKey(e.Column.Name)) // if ths is a numeric column
       {
-        if (NumericFormattedColumns.ContainsKey(e.Column.Name)) // if ths is a numeric column
+        try
         {
           e.SortResult = CommonFunctions.CDouble(e.CellValue1).CompareTo(CommonFunctions.CDouble(e.CellValue2));
         }
-        else
+        catch (Exception ex)
+        {
           e.SortResult = CommonFunctions.CString(e.CellValue1).CompareTo(CommonFunctions.CString(e.CellValue2));
+        }
       }
-      catch (Exception ex)
-      {
-        string err = ex.Message;
-      }
+      else
+        e.SortResult = CommonFunctions.CString(e.CellValue1).CompareTo(CommonFunctions.CString(e.CellValue2));
+      // this line prevents data type conversion errors when the grid tries to compare string and non-string values
+      e.Handled = true; // now tell the grid not to try to do this itself cause i already did it
+
     }
     private void grdResearch_ColumnAdded(object sender, DataGridViewColumnEventArgs e)
     {

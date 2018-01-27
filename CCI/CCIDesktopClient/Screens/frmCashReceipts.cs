@@ -49,8 +49,9 @@ namespace CCI.DesktopClient.Screens
       srchCashReceipts.RowCheckColumns.Add(COLUMNNONSBAMOUNT, null);
       srchCashReceipts.NumericFormattedColumns.Add(COLUMNAMOUNT, null);
       srchCashReceipts.NumericFormattedColumns.Add(COLUMNBILL, null);
-      srchCashReceipts.DoNotSortColumns.Add(COLUMNAMOUNT, null);
-      srchCashReceipts.DoNotSortColumns.Add(COLUMNBILL, null);
+      // LLA: commented per request from John and Mark to allow these columns to sort
+      //srchCashReceipts.DoNotSortColumns.Add(COLUMNAMOUNT, null);
+      //srchCashReceipts.DoNotSortColumns.Add(COLUMNBILL, null);
       srchCashReceipts.HiddenColumns.Add("Comment", null);
       srchCashDetail.Init(CommonData.UnmatchedNameTypes.CashReceiptsDetail, "Cash Detail");
       srchCashDetail.HiddenColumns.Add("CustomerID", null);
