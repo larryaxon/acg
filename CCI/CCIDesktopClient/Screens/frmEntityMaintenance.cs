@@ -78,7 +78,7 @@ namespace CCI.DesktopClient.Screens
       InitializeComponent();
       ctlEntitySearch1.SearchExec = new SearchDataSourceEntity(_entityType);
       NewEntityName = null;
-      //ctlLocations1.ColumnNames = new string[] { "Location", "Address1", "Address2", "City", "State", "Zip", "Phone", "Entity", "EntityOwner", "EntityType", "StartDate","EndDate" };
+      ctlLocations1.ColumnNames = new string[] { "Location", "Address1", "Address2", "City", "State", "Zip", "Phone", "Entity", "EntityOwner", "EntityType", "StartDate","EndDate" };
       ctlEntitySearch1.ClearSearchWhenComplete = false;
       txtEntity.SendToBack();
       txtLegalName.SendToBack();
@@ -98,10 +98,10 @@ namespace CCI.DesktopClient.Screens
       this.Text = string.Format("{0} Maintenance", string.IsNullOrEmpty(_entityTypeLabel) ? _entityType : _entityTypeLabel);
       ((SearchDataSourceEntity)ctlEntitySearch1.SearchExec).EntityType = _entityType;
       grpAddress.Visible = _showAddress;
-      //tabLocations.Visible = _showContacts;
+      tabLocations.Visible = _showContacts;
       if (!_showContacts)
       {
-        //tabMain.TabPages.Remove(tabLocations);
+        tabMain.TabPages.Remove(tabLocations);
       }
       if (!string.IsNullOrEmpty(entity))
       {
@@ -118,8 +118,8 @@ namespace CCI.DesktopClient.Screens
 
         if (_showContacts)
         {
-          //ctlLocations1.SecurityContext = SecurityContext;
-          //ctlLocations1.Init(_entity, _entityType);
+          ctlLocations1.SecurityContext = SecurityContext;
+          ctlLocations1.Init(_entity, _entityType);
         }
 
 
@@ -143,7 +143,7 @@ namespace CCI.DesktopClient.Screens
       saveFields();
       setLastModifiedBy();
       _dataSource.saveEntity(_eac);
-      //ctlLocations1.Save();
+      ctlLocations1.Save();
       lblNewRecord.Visible = false;
       _dirty = false;
       MessageBox.Show("Record saved");
@@ -182,10 +182,10 @@ namespace CCI.DesktopClient.Screens
       loadFields();
       lblNewRecord.Visible = true;
       txtStatus.Text = "Active";
-      //ctlLocations1.SecurityContext = SecurityContext;
-      //ctlLocations1.Clear();
-      //ctlLocations1.EntityOwnerType = _entityType;
-      //ctlLocations1.EntityOwner = newEntity;
+      ctlLocations1.SecurityContext = SecurityContext;
+      ctlLocations1.Clear();
+      ctlLocations1.EntityOwnerType = _entityType;
+      ctlLocations1.EntityOwner = newEntity;
       txtLegalName.Focus();
       _dirty = true;
     }
@@ -451,13 +451,13 @@ namespace CCI.DesktopClient.Screens
         else
           c.Text = val;
       string fldName = c.Name.Substring(3); // strip off "txt"
-      //if (CommonFunctions.inList(contactDefaultFields, fldName))
-      //{
-      //  if (ctlLocations1.DefaultValues.ContainsKey(fldName))
-      //    ctlLocations1.DefaultValues[fldName] = val;
-      //  else 
-      //    ctlLocations1.DefaultValues.Add(fldName, val);
-      //}
+      if (CommonFunctions.inList(contactDefaultFields, fldName))
+      {
+        if (ctlLocations1.DefaultValues.ContainsKey(fldName))
+          ctlLocations1.DefaultValues[fldName] = val;
+        else 
+          ctlLocations1.DefaultValues.Add(fldName, val);
+      }
     }
     private void clearFields()
     {
@@ -551,10 +551,10 @@ namespace CCI.DesktopClient.Screens
               _states.Add(state);
               txtState.Items.Add(state);
             }
-            //if (_states != null)
-            //{
-            //  ctlLocations1.StateList = (string[])_states.ToArray(typeof(string));
-            //}
+            if (_states != null)
+            {
+              ctlLocations1.StateList = (string[])_states.ToArray(typeof(string));
+            }
           }
         }
       }
@@ -575,7 +575,7 @@ namespace CCI.DesktopClient.Screens
       ctlEntitySearch1.BringToFront();
 
       clearFields();
-      //ctlLocations1.Clear();
+      ctlLocations1.Clear();
       _eac = new EntityAttributesCollection();
     }
     protected void setStatus(string status)
@@ -686,16 +686,16 @@ namespace CCI.DesktopClient.Screens
 
     private void btnCreateLocation_Click(object sender, EventArgs e)
     {
-      //Dictionary<string, object> fields = new Dictionary<string, object>(StringComparer.CurrentCultureIgnoreCase);
-      //fields.Add("Address1", txtAddress1.Text);
-      //fields.Add("Address2", txtAddress2.Text);
-      //fields.Add("City", txtCity.Text);
-      //fields.Add("State", txtState.Text);
-      //fields.Add("Zip", txtZip.Text);
-      //fields.Add("Phone", txtPhone.Text);
-      //fields.Add("CellPhone", txtCellPhone.Text);
-      //fields.Add("Location", string.Format("{0} {1}-{2}", txtCity.Text, txtState.Text, txtAddress1.Text));
-      //ctlLocations1.CreateNewFromParent(fields);
+      Dictionary<string, object> fields = new Dictionary<string, object>(StringComparer.CurrentCultureIgnoreCase);
+      fields.Add("Address1", txtAddress1.Text);
+      fields.Add("Address2", txtAddress2.Text);
+      fields.Add("City", txtCity.Text);
+      fields.Add("State", txtState.Text);
+      fields.Add("Zip", txtZip.Text);
+      fields.Add("Phone", txtPhone.Text);
+      fields.Add("CellPhone", txtCellPhone.Text);
+      fields.Add("Location", string.Format("{0} {1}-{2}", txtCity.Text, txtState.Text, txtAddress1.Text));
+      ctlLocations1.CreateNewFromParent(fields);
     }
   }
 }

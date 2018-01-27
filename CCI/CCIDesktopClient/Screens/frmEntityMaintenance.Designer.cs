@@ -31,9 +31,10 @@
       this.ctlEntitySearch1 = new ACG.CommonForms.ctlSearch();
       this.txtEndDate = new ACG.CommonForms.ctlACGDate();
       this.txtStartDate = new ACG.CommonForms.ctlACGDate();
-      this.lblEndDate = new System.Windows.Forms.Label();
-      this.lblStartDate = new System.Windows.Forms.Label();
+      this.label3 = new System.Windows.Forms.Label();
+      this.label2 = new System.Windows.Forms.Label();
       this.tabMain = new System.Windows.Forms.TabControl();
+      this.tabLocations = new System.Windows.Forms.TabPage();
       this.txtStatus = new System.Windows.Forms.ComboBox();
       this.lblStatus = new System.Windows.Forms.Label();
       this.grpAddress = new System.Windows.Forms.GroupBox();
@@ -60,6 +61,9 @@
       this.lblEntity = new System.Windows.Forms.Label();
       this.txtEntity = new System.Windows.Forms.TextBox();
       this.txtLegalName = new System.Windows.Forms.TextBox();
+      this.ctlLocations1 = new CCI.DesktopClient.Common.ctlContacts();
+      this.tabMain.SuspendLayout();
+      this.tabLocations.SuspendLayout();
       this.grpAddress.SuspendLayout();
       this.pnlLoading.SuspendLayout();
       this.SuspendLayout();
@@ -70,7 +74,6 @@
       this.ctlEntitySearch1.AutoAddNewMode = false;
       this.ctlEntitySearch1.AutoSelectWhenMatch = false;
       this.ctlEntitySearch1.AutoTabToNextControlOnSelect = true;
-      this.ctlEntitySearch1.ClearSearchOnExpand = false;
       this.ctlEntitySearch1.ClearSearchWhenComplete = true;
       this.ctlEntitySearch1.Collapsed = true;
       this.ctlEntitySearch1.CreatedNewItem = false;
@@ -100,7 +103,6 @@
       this.txtEndDate.Size = new System.Drawing.Size(125, 17);
       this.txtEndDate.TabIndex = 4;
       this.txtEndDate.Value = null;
-      this.txtEndDate.Visible = false;
       // 
       // txtStartDate
       // 
@@ -111,39 +113,48 @@
       this.txtStartDate.Size = new System.Drawing.Size(125, 17);
       this.txtStartDate.TabIndex = 3;
       this.txtStartDate.Value = null;
-      this.txtStartDate.Visible = false;
       // 
-      // lblEndDate
+      // label3
       // 
-      this.lblEndDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.lblEndDate.AutoSize = true;
-      this.lblEndDate.Location = new System.Drawing.Point(874, 31);
-      this.lblEndDate.Name = "lblEndDate";
-      this.lblEndDate.Size = new System.Drawing.Size(52, 13);
-      this.lblEndDate.TabIndex = 17;
-      this.lblEndDate.Text = "End Date";
-      this.lblEndDate.Visible = false;
+      this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.label3.AutoSize = true;
+      this.label3.Location = new System.Drawing.Point(874, 31);
+      this.label3.Name = "label3";
+      this.label3.Size = new System.Drawing.Size(52, 13);
+      this.label3.TabIndex = 17;
+      this.label3.Text = "End Date";
       // 
-      // lblStartDate
+      // label2
       // 
-      this.lblStartDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.lblStartDate.AutoSize = true;
-      this.lblStartDate.Location = new System.Drawing.Point(684, 32);
-      this.lblStartDate.Name = "lblStartDate";
-      this.lblStartDate.Size = new System.Drawing.Size(55, 13);
-      this.lblStartDate.TabIndex = 15;
-      this.lblStartDate.Text = "Start Date";
-      this.lblStartDate.Visible = false;
+      this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.label2.AutoSize = true;
+      this.label2.Location = new System.Drawing.Point(684, 32);
+      this.label2.Name = "label2";
+      this.label2.Size = new System.Drawing.Size(55, 13);
+      this.label2.TabIndex = 15;
+      this.label2.Text = "Start Date";
       // 
       // tabMain
       // 
       this.tabMain.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+      this.tabMain.Controls.Add(this.tabLocations);
       this.tabMain.Location = new System.Drawing.Point(382, 52);
       this.tabMain.Name = "tabMain";
       this.tabMain.SelectedIndex = 0;
       this.tabMain.Size = new System.Drawing.Size(809, 142);
       this.tabMain.TabIndex = 10;
+      // 
+      // tabLocations
+      // 
+      this.tabLocations.Controls.Add(this.ctlLocations1);
+      this.tabLocations.Location = new System.Drawing.Point(4, 22);
+      this.tabLocations.Name = "tabLocations";
+      this.tabLocations.Padding = new System.Windows.Forms.Padding(3);
+      this.tabLocations.Size = new System.Drawing.Size(801, 116);
+      this.tabLocations.TabIndex = 1;
+      this.tabLocations.Text = "Locations";
+      this.tabLocations.UseVisualStyleBackColor = true;
       // 
       // txtStatus
       // 
@@ -200,7 +211,6 @@
       this.btnCreateLocation.TabIndex = 12;
       this.btnCreateLocation.Text = "Create new Location from this Address";
       this.btnCreateLocation.UseVisualStyleBackColor = true;
-      this.btnCreateLocation.Visible = false;
       this.btnCreateLocation.Click += new System.EventHandler(this.btnCreateLocation_Click);
       // 
       // txtCellPhone
@@ -407,6 +417,35 @@
       this.txtLegalName.Tag = "";
       this.txtLegalName.TextChanged += new System.EventHandler(this.txtLegalName_TextChanged);
       // 
+      // ctlLocations1
+      // 
+      this.ctlLocations1.ColumnNames = new string[] {
+        "ContactType",
+        "FirstName",
+        "LegalName",
+        "Phone",
+        "CellPhone",
+        "EmailAddress",
+        "Address1",
+        "Address2",
+        "City",
+        "State",
+        "Zip",
+        "Entity",
+        "EntityOwner",
+        "EntityType"};
+      this.ctlLocations1.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.ctlLocations1.EntityOwner = null;
+      this.ctlLocations1.EntityOwnerType = null;
+      this.ctlLocations1.EntityType = "Location";
+      this.ctlLocations1.IncludeGrandChildren = false;
+      this.ctlLocations1.Location = new System.Drawing.Point(3, 3);
+      this.ctlLocations1.Name = "ctlLocations1";
+      this.ctlLocations1.SecurityContext = null;
+      this.ctlLocations1.Size = new System.Drawing.Size(795, 110);
+      this.ctlLocations1.StateList = null;
+      this.ctlLocations1.TabIndex = 1;
+      // 
       // frmEntityMaintenance
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -415,8 +454,8 @@
       this.Controls.Add(this.ctlEntitySearch1);
       this.Controls.Add(this.txtEndDate);
       this.Controls.Add(this.txtStartDate);
-      this.Controls.Add(this.lblEndDate);
-      this.Controls.Add(this.lblStartDate);
+      this.Controls.Add(this.label3);
+      this.Controls.Add(this.label2);
       this.Controls.Add(this.tabMain);
       this.Controls.Add(this.txtStatus);
       this.Controls.Add(this.lblStatus);
@@ -435,6 +474,8 @@
       this.Load += new System.EventHandler(this.frmEntityMaintenance_Load);
       this.Leave += new System.EventHandler(this.frmEntityMaintenance_Leave);
       this.Validating += new System.ComponentModel.CancelEventHandler(this.frmEntityMaintenance_Validating);
+      this.tabMain.ResumeLayout(false);
+      this.tabLocations.ResumeLayout(false);
       this.grpAddress.ResumeLayout(false);
       this.grpAddress.PerformLayout();
       this.pnlLoading.ResumeLayout(false);
@@ -472,9 +513,11 @@
     private System.Windows.Forms.Label lblCell;
     private ACG.CommonForms.ctlSearch ctlEntitySearch1;
     protected System.Windows.Forms.TabControl tabMain;
+    protected System.Windows.Forms.TabPage tabLocations;
     protected System.Windows.Forms.Label lblNewRecord;
-    private System.Windows.Forms.Label lblStartDate;
-    private System.Windows.Forms.Label lblEndDate;
+    protected Common.ctlContacts ctlLocations1;
+    private System.Windows.Forms.Label label2;
+    private System.Windows.Forms.Label label3;
     private ACG.CommonForms.ctlACGDate txtStartDate;
     private ACG.CommonForms.ctlACGDate txtEndDate;
     private System.Windows.Forms.Button btnCreateLocation;

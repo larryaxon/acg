@@ -62,7 +62,7 @@
       this.label7 = new System.Windows.Forms.Label();
       this.label3 = new System.Windows.Forms.Label();
       this.tabMain.SuspendLayout();
-      //this.tabLocations.SuspendLayout();
+      this.tabLocations.SuspendLayout();
       this.splitDealerDetail.Panel1.SuspendLayout();
       this.splitDealerDetail.Panel2.SuspendLayout();
       this.splitDealerDetail.SuspendLayout();
@@ -498,7 +498,7 @@
       this.Controls.SetChildIndex(this.splitDealerDetail, 0);
       this.Controls.SetChildIndex(this.tabMain, 0);
       this.tabMain.ResumeLayout(false);
-      //this.tabLocations.ResumeLayout(false);
+      this.tabLocations.ResumeLayout(false);
       this.splitDealerDetail.Panel1.ResumeLayout(false);
       this.splitDealerDetail.Panel1.PerformLayout();
       this.splitDealerDetail.Panel2.ResumeLayout(false);
