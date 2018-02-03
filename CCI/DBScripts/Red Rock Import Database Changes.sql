@@ -25,10 +25,10 @@ SET PrimaryCarrier = 'Saddleback'
 
 
 INSERT INTO MasterProductList
-select * from [cityhostedtest].dbo.MasterProductList where itemid like 'r%' and itemid <> 'router'
+select * from [cityhostedtest2].dbo.MasterProductList where itemid like 'r%' and itemid <> 'router'
 
 INSERT INTO PRODUCTLIST
-SELECT * FROM [cityhostedtest].dbo.ProductList where itemid like 'r%' and itemid <> 'router'
+SELECT * FROM [cityhostedtest2].dbo.ProductList where itemid like 'r%' and itemid <> 'router'
 
 -- fixup product search datasoure
 update DataSources
@@ -49,10 +49,10 @@ where DataSource = 'SearchNetworkInventory'
 ****************************************************************************************/
 
 insert into Entity
-select * from [cityhostedtest].dbo.Entity where Entity = 'RedRock'
+select * from [cityhostedtest2].dbo.Entity where Entity = 'RedRock'
 
 Insert into Attribute
-select * from [cityhostedtest].dbo.Attribute where Entity = 'RedRock'
+select * from [cityhostedtest2].dbo.Attribute where Entity = 'RedRock'
 
 ALTER TABLE AcctImportsLog
 ADD 	[Source] [nvarchar](50) NULL
@@ -79,7 +79,7 @@ GO
 
 INSERT INTO ImportSources (Source, FtpSiteUrl,FtpSiteUsername, FtpSitePassword)
 Select Source, FtpSiteUrl,FtpSiteUsername, FtpSitePassword 
-from [CityHostedTest].[dbo].[ImportSources]
+from [cityhostedtest2].[dbo].[ImportSources]
 
 CREATE TABLE [dbo].[ImportFileTypes](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
@@ -98,7 +98,7 @@ GO
 
 INSERT INTO ImportFileTypes (Source, FileType, PreFix, Suffix, StoredProcedure, CreatedDateTime, ModifiedDateTime, CreatedBy, ModifiedBy, SkipLines)
 SELECT Source, FileType, PreFix, Suffix, StoredProcedure, CreatedDateTime, ModifiedDateTime, CreatedBy, ModifiedBy, SkipLines
-from [CityHostedTest].[dbo].[ImportFileTypes]
+from [cityhostedtest2].[dbo].[ImportFileTypes]
 
 GO
 /***************************************************************************************
