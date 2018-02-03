@@ -18,6 +18,7 @@
 
 ALTER TABLE ProductList 
 ADD [PrimaryCarrier] [nvarchar](50) NULL
+GO
 
 Update ProductList
 SET PrimaryCarrier = 'Saddleback'
@@ -55,6 +56,7 @@ select * from [cityhostedtest].dbo.Attribute where Entity = 'RedRock'
 
 ALTER TABLE AcctImportsLog
 ADD 	[Source] [nvarchar](50) NULL
+GO
 
 Update AcctImportsLog
 SET Source = 'Saddleback'
@@ -73,6 +75,7 @@ CREATE TABLE [dbo].[ImportSources](
 	[FtpSiteUsername] [varchar](50) NULL,
 	[FtpSitePassword] [varchar](50) NULL
 ) ON [PRIMARY]
+GO
 
 INSERT INTO ImportSources (Source, FtpSiteUrl,FtpSiteUsername, FtpSitePassword)
 Select Source, FtpSiteUrl,FtpSiteUsername, FtpSitePassword 
@@ -91,6 +94,7 @@ CREATE TABLE [dbo].[ImportFileTypes](
 	[ModifiedBy] [varchar](50) NULL,
 	[SkipLines] [int] NULL
 ) ON [PRIMARY]
+GO
 
 INSERT INTO ImportFileTypes (Source, FileType, PreFix, Suffix, StoredProcedure, CreatedDateTime, ModifiedDateTime, CreatedBy, ModifiedBy, SkipLines)
 SELECT Source, FileType, PreFix, Suffix, StoredProcedure, CreatedDateTime, ModifiedDateTime, CreatedBy, ModifiedBy, SkipLines
