@@ -145,17 +145,22 @@ order by Sequence", billDate.ToShortDateString(), cycleFilter);
     #endregion
 
     #region AcctImportLog
-    public Exception insertAcctImportLog(string User, string ImportType, string ImportName, DateTime BillDate)
+    public Exception insertAcctImportLog(string User, string ImportType, string ImportName, DateTime BillDate, string source = null)
     {
       Exception returnmsg;
       string LogDateTime = DateTime.Now.ToString(CommonData.FORMATLONGDATETIME);
-      string sql = string.Format("Insert into AcctImportsLog Values ('{0}', '{1}', '{2}', '{3}', '{4}')", User, LogDateTime, BillDate, ImportType, ImportName);
+      string sql = string.Format(@"Insert into AcctImportsLog ([User]
+      ,[DateTime]
+      ,[BillingDate]
+      ,[FileType]
+      ,[File]
+      ,[Source]) Values ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}')", User, LogDateTime, BillDate, ImportType, ImportName, source);
       returnmsg = updateDataFromSQLReturnErrorDescription(string.Format(sql));
       return returnmsg;
     }
     public DataSet getAcctImportLog()
     {
-      string sql = "select DateTime,BillingDate,Filetype,[User],[File] from acctimportslog order by Datetime desc";
+      string sql = "select DateTime,BillingDate,Source,Filetype,[User],[File] from acctimportslog order by Datetime desc";
       return getDataFromSQL(sql);
     }
     public string selectBillDatefromLog(string Type)
@@ -167,12 +172,12 @@ order by Sequence", billDate.ToShortDateString(), cycleFilter);
         return nodate;
       return CommonFunctions.CString(ds.Tables[0].Rows[0][0]);
     }
-    public Exception updateAcctImportsLog(string user, DateTime billdate, string filetype)
+    public Exception updateAcctImportsLog(string user, DateTime billdate, string filetype, string source=null)
     {
       Exception returnmsg;
       string sql;
-      sql = string.Format(@"insert into acctimportslog ([user],[datetime],billingdate,filetype)
-                             values ('{0}',getdate(),'{1}','{2}')", user, billdate, filetype);
+      sql = string.Format(@"insert into acctimportslog ([user],[datetime],billingdate,filetype,source)
+                             values ('{0}',getdate(),'{1}','{2}','{3}')", user, billdate, filetype, source);
       returnmsg = updateDataFromSQLReturnErrorDescription(string.Format(sql));
       return returnmsg;
     }

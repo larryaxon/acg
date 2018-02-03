@@ -284,14 +284,16 @@ namespace CCI.DesktopClient.Screens
                 break;
             }
           }
-          else
+          else if (frm.Name.Equals("frmMRCNetworkInventoryMatching", StringComparison.CurrentCultureIgnoreCase))
           {
-            if (frm.Name.Equals("frmMRCNetworkInventoryMatching", StringComparison.CurrentCultureIgnoreCase))
-            {
-              singleInstance = false;
-              bool isRetail = step.FormParameters.Equals("Retail", StringComparison.CurrentCultureIgnoreCase);
-              ((frmMRCNetworkInventoryMatching)frm).IsRetail = isRetail;
-            }
+            singleInstance = false;
+            bool isRetail = step.FormParameters.Equals("Retail", StringComparison.CurrentCultureIgnoreCase);
+            ((frmMRCNetworkInventoryMatching)frm).IsRetail = isRetail;
+          }
+          else if (frm.Name.Equals("frmImports", StringComparison.CurrentCultureIgnoreCase))
+          {
+            singleInstance = true;
+            ((frmImports)frm).Source = step.FormParameters; // parameters tell where to import from
           }
           if (showForm)
             _main.ShowForm(frm, singleInstance);

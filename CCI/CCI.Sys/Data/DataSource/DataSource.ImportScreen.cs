@@ -240,7 +240,7 @@ where e.entitytype = 'customer'";
       return "";
     }
 
-    public string processUndoPost(DateTime billdate, string user)
+    public string processUndoPost(DateTime billdate, string user, string source)
     {
       Exception returnmsg;
       string errmsg;
@@ -280,7 +280,7 @@ where e.entitytype = 'customer'";
         errmsg = "Error removing invoice transactions.";
         return errmsg;
       }
-      returnmsg = insertAcctImportLog(user, "UnPost", null, billdate);
+      returnmsg = insertAcctImportLog(user, "UnPost", null, billdate, source);
       if (returnmsg != null)
       {
         errmsg = "Error on updating log file.";
@@ -543,6 +543,16 @@ group by BillDate) h";
           return "Posted";
         return "Partial";
       }
+    }
+    public DataSet getImportSources()
+    {
+      const string sql = "SELECT * from ImportSources";
+      return getDataFromSQL(sql);
+    }
+    public DataSet getImportFileTypes(string source)
+    {
+      string sql = string.Format("SELECT FileType, Prefix, Suffix, StoredProcedure, SkipLines from ImportFileTypes where Source = '{0}'", source);
+      return getDataFromSQL(sql);
     }
     private static string getexcelfile()
     {

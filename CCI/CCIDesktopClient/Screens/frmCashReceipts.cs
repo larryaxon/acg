@@ -49,8 +49,9 @@ namespace CCI.DesktopClient.Screens
       srchCashReceipts.RowCheckColumns.Add(COLUMNNONSBAMOUNT, null);
       srchCashReceipts.NumericFormattedColumns.Add(COLUMNAMOUNT, null);
       srchCashReceipts.NumericFormattedColumns.Add(COLUMNBILL, null);
-      srchCashReceipts.DoNotSortColumns.Add(COLUMNAMOUNT, null);
-      srchCashReceipts.DoNotSortColumns.Add(COLUMNBILL, null);
+      // LLA: commented per request from John and Mark to allow these columns to sort
+      //srchCashReceipts.DoNotSortColumns.Add(COLUMNAMOUNT, null);
+      //srchCashReceipts.DoNotSortColumns.Add(COLUMNBILL, null);
       srchCashReceipts.HiddenColumns.Add("Comment", null);
       srchCashDetail.Init(CommonData.UnmatchedNameTypes.CashReceiptsDetail, "Cash Detail");
       srchCashDetail.HiddenColumns.Add("CustomerID", null);
@@ -78,6 +79,11 @@ namespace CCI.DesktopClient.Screens
         criteria.Add("HasActiveInventory", new string[] { ctlSearchGrid.opEQUALS, "Yes" });
       if (noCreditBalancesToolStripMenuItem.Checked)
         criteria.Add("Balance Owed", new string[] { ctlSearchGrid.opGREATEROREQUAL, "0" });
+      if (excludeWithInactiveInventoryAndZeroBalanceToolStripMenuItem.Checked)
+      {
+        criteria.Add("HasActiveInventory", new string[] { ctlSearchGrid.opEQUALS, "Yes" });
+        criteria.Add("Balance Owed", new string[] { ctlSearchGrid.opNOTEQUALS, "0" });
+      }
       DateTime endDate = _endDate;
       DateTime billDate = endDate.AddDays(1 - endDate.Day);
       srchCashReceipts.Parameters.Clear();
@@ -728,5 +734,6 @@ namespace CCI.DesktopClient.Screens
     {
       undoImportPayments();
     }
+
   }
 }

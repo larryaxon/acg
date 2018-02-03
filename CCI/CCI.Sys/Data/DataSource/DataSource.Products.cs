@@ -209,18 +209,19 @@ inner join MasterProductList m2 on m.MasterItemID = m2.ItemID order by m2.Name, 
       return updateDataFromSQL(sql);
     }
     public int? updateProduct(string carrier, string itemID, DateTime? startDate, DateTime? endDate, string lastModifiedBy, decimal mrc, decimal nrc,
-      bool unmatched, bool excludeFromException, string taxCode)
+      bool unmatched, bool excludeFromException, string taxCode, string primaryCarrier = HOSTEDRETAILCARRIER)
     {
       string sql;
       if (existsProduct(carrier, itemID))
         sql = @"update ProductList set StartDate = {2}, EndDate = {3}, LastModifiedBy = '{4}', LastModifiedDateTime = '{5}', MRC = {6}, NRC = {7},
-          Unmatched = '{8}', ExcludeFromException = '{9}', TaxCode = '{10}' where carrier = '{0}' and ItemID = '{1}'";
+          Unmatched = '{8}', ExcludeFromException = '{9}', TaxCode = '{10}', PrimaryCarrier = '{11}'
+          where carrier = '{0}' and ItemID = '{1}'";
       else
-        sql = @"insert into ProductList (Carrier, ItemID, StartDate, EndDate, LastModifiedBy, LastModifiedDateTime,MRC,NRC,Unmatched,ExcludeFromException,TaxCode) 
-              Values ('{0}', '{1}', {2}, {3}, '{4}', '{5}', {6}, {7}, '{8}', '{9}', '{10}')";
+        sql = @"insert into ProductList (Carrier, ItemID, StartDate, EndDate, LastModifiedBy, LastModifiedDateTime,MRC,NRC,Unmatched,ExcludeFromException,TaxCode, PrimaryCarrier) 
+              Values ('{0}', '{1}', {2}, {3}, '{4}', '{5}', {6}, {7}, '{8}', '{9}', '{10}', '{11}')";
       sql = string.Format(sql, carrier, itemID, startDate == null ? "null" : string.Format("'{0}'", ((DateTime)startDate).ToShortDateString()), endDate == null ? "null" : string.Format("'{0}'", ((DateTime)endDate).ToShortDateString()),
           lastModifiedBy, DateTime.Now.ToString(CommonData.FORMATLONGDATETIME), mrc.ToString(), nrc.ToString(), 
-          unmatched ? "1" : "0", excludeFromException ? "1" : "0", taxCode);
+          unmatched ? "1" : "0", excludeFromException ? "1" : "0", taxCode, primaryCarrier);
       return updateDataFromSQL(sql);
     }
     public int?  deleteProduct(string carrier, string itemid)
@@ -292,6 +293,7 @@ inner join MasterProductList m2 on m.MasterItemID = m2.ItemID order by m2.Name, 
       string sql = string.Format("select ID, Price, StartDate, EndDate from HostedUSOCRetailPricing where RetailUSOC = '{0}' order by Price, StartDate", itemID);
       return getDataFromSQL(sql);
     }
+
     public int? updateHostedDealerPrice(int? id, string itemID, decimal price, DateTime? startDate, DateTime? endDate, string user)
     {
       string strStartDate, strEndDate, sql;

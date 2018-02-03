@@ -30,9 +30,12 @@
     {
       this.components = new System.ComponentModel.Container();
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ctlSearchGrid));
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+      System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
       this.splitMain = new System.Windows.Forms.SplitContainer();
       this.splitSelect = new System.Windows.Forms.SplitContainer();
-      this.srchNamedSearch = new ACG.CommonForms.ctlSearch();
+      this.btnDeleteSavedSearch = new System.Windows.Forms.Button();
       this.toolStripSearch = new System.Windows.Forms.ToolStrip();
       this.tsbtnSearch = new System.Windows.Forms.ToolStripButton();
       this.tsbtnExport = new System.Windows.Forms.ToolStripButton();
@@ -53,6 +56,7 @@
       this.copyCellToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.btnCollapseSearch = new System.Windows.Forms.Button();
       this.btnShowFields = new System.Windows.Forms.Button();
+      this.srchNamedSearch = new ACG.CommonForms.ctlSearch();
       this.splitMain.Panel1.SuspendLayout();
       this.splitMain.Panel2.SuspendLayout();
       this.splitMain.SuspendLayout();
@@ -95,6 +99,7 @@
       // splitSelect.Panel1
       // 
       this.splitSelect.Panel1.Controls.Add(this.srchNamedSearch);
+      this.splitSelect.Panel1.Controls.Add(this.btnDeleteSavedSearch);
       this.splitSelect.Panel1.Controls.Add(this.toolStripSearch);
       this.splitSelect.Panel1.Controls.Add(this.grdSearch);
       this.splitSelect.Panel1.Controls.Add(this.lblMRCTotal);
@@ -112,33 +117,16 @@
       this.splitSelect.SplitterDistance = 234;
       this.splitSelect.TabIndex = 11;
       // 
-      // srchNamedSearch
+      // btnDeleteSavedSearch
       // 
-      this.srchNamedSearch.AddNewMode = false;
-      this.srchNamedSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.srchNamedSearch.AutoAddNewMode = false;
-      this.srchNamedSearch.AutoSelectWhenMatch = false;
-      this.srchNamedSearch.AutoTabToNextControlOnSelect = false;
-      this.srchNamedSearch.ClearSearchWhenComplete = false;
-      this.srchNamedSearch.Collapsed = true;
-      this.srchNamedSearch.CreatedNewItem = false;
-      this.srchNamedSearch.DisplayOnlyDescription = false;
-      this.srchNamedSearch.DisplayOnlyID = true;
-      this.srchNamedSearch.FixKeySpace = "-1";
-      this.srchNamedSearch.ID = "";
-      this.srchNamedSearch.ID_DescSplitter = ":";
-      this.srchNamedSearch.Location = new System.Drawing.Point(6, 23);
-      this.srchNamedSearch.MaxHeight = 228;
-      this.srchNamedSearch.MustExistInList = false;
-      this.srchNamedSearch.MustExistMessage = "You must enter a valid value";
-      this.srchNamedSearch.Name = "srchNamedSearch";
-      this.srchNamedSearch.SearchExec = null;
-      this.srchNamedSearch.ShowCustomerNameWhenSet = true;
-      this.srchNamedSearch.ShowTermedCheckBox = false;
-      this.srchNamedSearch.Size = new System.Drawing.Size(225, 17);
-      this.srchNamedSearch.TabIndex = 0;
-      this.srchNamedSearch.OnSelected += new System.EventHandler<System.EventArgs>(this.srchNamedSearch_OnSelected);
+      this.btnDeleteSavedSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.btnDeleteSavedSearch.Location = new System.Drawing.Point(207, 22);
+      this.btnDeleteSavedSearch.Name = "btnDeleteSavedSearch";
+      this.btnDeleteSavedSearch.Size = new System.Drawing.Size(22, 20);
+      this.btnDeleteSavedSearch.TabIndex = 10;
+      this.btnDeleteSavedSearch.Text = "X";
+      this.btnDeleteSavedSearch.UseVisualStyleBackColor = true;
+      this.btnDeleteSavedSearch.Click += new System.EventHandler(this.btnDeleteSavedSearch_Click);
       // 
       // toolStripSearch
       // 
@@ -159,7 +147,7 @@
       this.tsbtnSearch.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
       this.tsbtnSearch.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.tsbtnSearch.Name = "tsbtnSearch";
-      this.tsbtnSearch.Size = new System.Drawing.Size(46, 22);
+      this.tsbtnSearch.Size = new System.Drawing.Size(44, 22);
       this.tsbtnSearch.Text = "Search";
       this.tsbtnSearch.Click += new System.EventHandler(this.btnSearch_Click);
       // 
@@ -168,7 +156,7 @@
       this.tsbtnExport.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
       this.tsbtnExport.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.tsbtnExport.Name = "tsbtnExport";
-      this.tsbtnExport.Size = new System.Drawing.Size(44, 22);
+      this.tsbtnExport.Size = new System.Drawing.Size(43, 22);
       this.tsbtnExport.Text = "Export";
       this.tsbtnExport.Click += new System.EventHandler(this.btnExport_Click);
       // 
@@ -177,7 +165,7 @@
       this.tsbtnClear.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
       this.tsbtnClear.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.tsbtnClear.Name = "tsbtnClear";
-      this.tsbtnClear.Size = new System.Drawing.Size(38, 22);
+      this.tsbtnClear.Size = new System.Drawing.Size(36, 22);
       this.tsbtnClear.Text = "Clear";
       this.tsbtnClear.Click += new System.EventHandler(this.btnClear_Click);
       // 
@@ -197,9 +185,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
       this.grdSearch.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-      this.grdSearch.Location = new System.Drawing.Point(6, 46);
+      this.grdSearch.Location = new System.Drawing.Point(6, 50);
       this.grdSearch.Name = "grdSearch";
-      this.grdSearch.Size = new System.Drawing.Size(228, 374);
+      this.grdSearch.Size = new System.Drawing.Size(228, 370);
       this.grdSearch.TabIndex = 1;
       this.grdSearch.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdSearch_CellValueChanged);
       this.grdSearch.DefaultValuesNeeded += new System.Windows.Forms.DataGridViewRowEventHandler(this.grdSearch_DefaultValuesNeeded);
@@ -301,11 +289,30 @@
       this.grdResearch.AllowUserToAddRows = false;
       this.grdResearch.AllowUserToDeleteRows = false;
       this.grdResearch.AllowUserToOrderColumns = true;
+      dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+      this.grdResearch.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+      dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+      dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(134)))), ((int)(((byte)(133)))), ((int)(((byte)(138)))));
+      dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.Info;
+      dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+      dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+      dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+      this.grdResearch.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
       this.grdResearch.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
       this.grdResearch.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.grdResearch.EnableHeadersVisualStyles = false;
       this.grdResearch.Location = new System.Drawing.Point(0, 0);
       this.grdResearch.MultiSelect = false;
       this.grdResearch.Name = "grdResearch";
+      dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+      dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.ControlLightLight;
+      dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+      dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+      dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+      dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+      this.grdResearch.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
       this.grdResearch.Size = new System.Drawing.Size(633, 448);
       this.grdResearch.TabIndex = 7;
       this.grdResearch.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.grdResearch_CellBeginEdit);
@@ -324,19 +331,19 @@
             this.exportToolStripMenuItem,
             this.copyCellToolStripMenuItem});
       this.mnuGridContext.Name = "contextMenuStrip1";
-      this.mnuGridContext.Size = new System.Drawing.Size(126, 48);
+      this.mnuGridContext.Size = new System.Drawing.Size(120, 48);
       // 
       // exportToolStripMenuItem
       // 
       this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-      this.exportToolStripMenuItem.Size = new System.Drawing.Size(125, 22);
+      this.exportToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
       this.exportToolStripMenuItem.Text = "Export";
       this.exportToolStripMenuItem.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
       // 
       // copyCellToolStripMenuItem
       // 
       this.copyCellToolStripMenuItem.Name = "copyCellToolStripMenuItem";
-      this.copyCellToolStripMenuItem.Size = new System.Drawing.Size(125, 22);
+      this.copyCellToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
       this.copyCellToolStripMenuItem.Text = "Copy Cell";
       this.copyCellToolStripMenuItem.Click += new System.EventHandler(this.copyCellToolStripMenuItem_Click);
       // 
@@ -344,30 +351,64 @@
       // 
       this.btnCollapseSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnCollapseSearch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(134)))), ((int)(((byte)(133)))), ((int)(((byte)(138)))));
       this.btnCollapseSearch.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.btnCollapseSearch.ForeColor = System.Drawing.SystemColors.ControlLightLight;
       this.btnCollapseSearch.Location = new System.Drawing.Point(1, 0);
       this.btnCollapseSearch.Name = "btnCollapseSearch";
       this.btnCollapseSearch.Size = new System.Drawing.Size(18, 341);
       this.btnCollapseSearch.TabIndex = 0;
       this.btnCollapseSearch.Text = "<";
-      this.btnCollapseSearch.UseVisualStyleBackColor = true;
+      this.btnCollapseSearch.UseVisualStyleBackColor = false;
       this.btnCollapseSearch.Click += new System.EventHandler(this.btnCollapseSearch_Click);
       // 
       // btnShowFields
       // 
       this.btnShowFields.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnShowFields.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(134)))), ((int)(((byte)(133)))), ((int)(((byte)(138)))));
+      this.btnShowFields.ForeColor = System.Drawing.SystemColors.ControlLightLight;
       this.btnShowFields.Location = new System.Drawing.Point(0, 349);
       this.btnShowFields.Name = "btnShowFields";
       this.btnShowFields.Size = new System.Drawing.Size(18, 95);
       this.btnShowFields.TabIndex = 1;
       this.btnShowFields.Text = "Fields";
-      this.btnShowFields.UseVisualStyleBackColor = true;
+      this.btnShowFields.UseVisualStyleBackColor = false;
       this.btnShowFields.Click += new System.EventHandler(this.btnShowFields_Click);
+      // 
+      // srchNamedSearch
+      // 
+      this.srchNamedSearch.AddNewMode = false;
+      this.srchNamedSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.srchNamedSearch.AutoAddNewMode = false;
+      this.srchNamedSearch.AutoSelectWhenMatch = false;
+      this.srchNamedSearch.AutoTabToNextControlOnSelect = false;
+      this.srchNamedSearch.ClearSearchOnExpand = true;
+      this.srchNamedSearch.ClearSearchWhenComplete = true;
+      this.srchNamedSearch.Collapsed = true;
+      this.srchNamedSearch.CreatedNewItem = false;
+      this.srchNamedSearch.DisplayOnlyDescription = false;
+      this.srchNamedSearch.DisplayOnlyID = true;
+      this.srchNamedSearch.FixKeySpace = "-1";
+      this.srchNamedSearch.ID = "";
+      this.srchNamedSearch.ID_DescSplitter = ":";
+      this.srchNamedSearch.Location = new System.Drawing.Point(6, 22);
+      this.srchNamedSearch.MaxHeight = 228;
+      this.srchNamedSearch.MustExistInList = false;
+      this.srchNamedSearch.MustExistMessage = "You must enter a valid value";
+      this.srchNamedSearch.Name = "srchNamedSearch";
+      this.srchNamedSearch.SearchExec = null;
+      this.srchNamedSearch.ShowCustomerNameWhenSet = true;
+      this.srchNamedSearch.ShowTermedCheckBox = false;
+      this.srchNamedSearch.Size = new System.Drawing.Size(202, 22);
+      this.srchNamedSearch.TabIndex = 0;
+      this.srchNamedSearch.OnSelected += new System.EventHandler<System.EventArgs>(this.srchNamedSearch_OnSelected);
       // 
       // ctlSearchGrid
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.BackColor = System.Drawing.SystemColors.ControlLightLight;
       this.Controls.Add(this.btnShowFields);
       this.Controls.Add(this.btnCollapseSearch);
       this.Controls.Add(this.splitMain);
@@ -416,5 +457,6 @@
     private System.Windows.Forms.ToolStripButton tsbtnClear;
     private System.Windows.Forms.DataGridView grdSearch;
     private ACG.CommonForms.ctlSearch srchNamedSearch;
+    private System.Windows.Forms.Button btnDeleteSavedSearch;
   }
 }

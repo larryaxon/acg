@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace CCI.DesktopClient.Common
   public partial class frmLogin : Form
   {      
     int _shiftUp = 22;  // nbr pixels we shift the uid/pwd fields up or down to make room for "new password" entry
-
+    static bool _hasLoggedIn = false;
     SecurityContext _s = null;
     DataSource dataSource = new DataSource();
     public frmLogin(SecurityContext securityContext)
@@ -30,6 +31,15 @@ namespace CCI.DesktopClient.Common
       txtUserName.Items.Clear();
       for (int i = 0; i < userList.GetLength(0); i++)
         txtUserName.Items.Add(userList[i]);
+      string AutoLoginPW = ConfigurationManager.AppSettings["AutoLoginPW"];
+      string ChargifyPassword = ConfigurationManager.AppSettings["ChargifyPassword"];
+      if (!string.IsNullOrEmpty(AutoLoginPW) && AutoLoginPW.Equals(ChargifyPassword) && !_hasLoggedIn) // then we automaticaly log in as larry
+      {
+        txtUserName.Text = "LarryA";
+        txtPassword.Text = "1234";
+        _hasLoggedIn = true;
+        btnLogin_Click(this, new EventArgs());
+      }
     }
 
     private void btnLogin_Click(object sender, EventArgs e)

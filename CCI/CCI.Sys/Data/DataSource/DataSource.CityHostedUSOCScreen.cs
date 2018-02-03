@@ -308,6 +308,11 @@ w.UnMatched = 1
     }
     public int? reassignWholesaleUSOC(string retailusoc, string wholesaleusoc)
     {
+      return reassignWholesaleUSOC(retailusoc, wholesaleusoc, HOSTEDWHOLESALECARRIER);
+    }
+
+    public int? reassignWholesaleUSOC(string retailusoc, string wholesaleusoc, string primarycarrier)
+    {
       string wusoc = wholesaleusoc;
       string rusoc = retailusoc;
       int? retCode = 0;
@@ -325,15 +330,13 @@ w.UnMatched = 1
         unmatched = "1";
       sql = "update ProductList set unmatched = {0} where ItemID = '{1}' and Carrier = '{2}'";
 
-      retCode = updateDataFromSQL(string.Format(sql, unmatched, rusoc, HOSTEDRETAILCARRIER)); // not retailonly
-      //if (string.IsNullOrEmpty(rusoc))
-      //  unmatched = "1";
-      //else
+      retCode = updateDataFromSQL(string.Format(sql, unmatched, rusoc, primarycarrier)); // not retailonly
+      
       unmatched = "0";
-      if (retCode >= 0 && !string.IsNullOrEmpty(wusoc))
-        retCode = updateDataFromSQL(string.Format(sql, unmatched, wusoc, HOSTEDWHOLESALECARRIER)); // make sure new wholesale is NOT wholesaleonly 
-      if (retCode >= 0 && numberRetailUSOCs(oldWholesaleUSOC, false) == 0) // there are no more "daughters"  
-        retCode = updateDataFromSQL(string.Format(sql, "1", oldWholesaleUSOC, HOSTEDWHOLESALECARRIER)); // reset wholesale to wholesaleonly
+      if ((retCode == null || retCode >= 0) && !string.IsNullOrEmpty(wusoc))
+        retCode = updateDataFromSQL(string.Format(sql, unmatched, wusoc, primarycarrier)); // make sure new wholesale is NOT wholesaleonly 
+      if ((retCode == null || retCode >= 0) && numberRetailUSOCs(oldWholesaleUSOC, false) == 0) // there are no more "daughters"  
+        retCode = updateDataFromSQL(string.Format(sql, "1", oldWholesaleUSOC, primarycarrier)); // reset wholesale to wholesaleonly
       return retCode;
     }
     public string getWholesaleUSOC(string usoc)
@@ -399,6 +402,65 @@ where m.itemid = '{0}'";
     {
       return updateScreenDefinition(CommonData.DEALERQUOTESCREEN, section, usoc, null, "99", isRecommended.ToString(), useMRC.ToString(), null, user);
     }
-
+    public string[] getPrimaryCarriers()
+    {
+      string sql = @"select distinct PrimaryCarrier from ProductList WHERE PrimaryCarrier is not null";
+      DataSet ds = getDataFromSQL(sql);
+      if (ds == null)
+        return new string[0];
+      string[] carriers = new string[0];
+      if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+      {
+        carriers = new string[ds.Tables[0].Rows.Count];
+        int i = 0;
+        foreach (DataRow row in ds.Tables[0].Rows)
+          carriers[i++] = CommonFunctions.CString(row["PrimaryCarrier"]);
+      }
+      ds.Clear();
+      ds = null;
+      return carriers;
+    }
+    public string[] getRetailUsocs(string carrier)
+    {
+      if (string.IsNullOrEmpty(carrier))
+        return new string[0];
+      const string basesql = "SELECT distinct ItemID USOC from ProductList where Carrier = 'CityHosted' and PrimaryCarrier = '{0}'";
+      string sql = string.Format(basesql, carrier);
+      DataSet ds = getDataFromSQL(sql);
+      if (ds == null)
+        return new string[0];
+      string[] carriers = new string[0];
+      if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+      {
+        carriers = new string[ds.Tables[0].Rows.Count];
+        int i = 0;
+        foreach (DataRow row in ds.Tables[0].Rows)
+          carriers[i++] = CommonFunctions.CString(row["USOC"]);
+      }
+      ds.Clear();
+      ds = null;
+      return carriers;
+    }
+    public string[] getWholesaleUsocs(string carrier)
+    {
+      if (string.IsNullOrEmpty(carrier))
+        return new string[0];
+      const string basesql = "SELECT distinct ItemID USOC from ProductList where Carrier = '{0}'";
+      string sql = string.Format(basesql, carrier);
+      DataSet ds = getDataFromSQL(sql);
+      if (ds == null)
+        return new string[0];
+      string[] carriers = new string[0];
+      if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+      {
+        carriers = new string[ds.Tables[0].Rows.Count];
+        int i = 0;
+        foreach (DataRow row in ds.Tables[0].Rows)
+          carriers[i++] = CommonFunctions.CString(row["USOC"]);
+      }
+      ds.Clear();
+      ds = null;
+      return carriers;
+    }
   }
 }

@@ -99,6 +99,7 @@ namespace CCI.DesktopClient.Screens
       ((SearchDataSourceEntity)ctlEntitySearch1.SearchExec).EntityType = _entityType;
       grpAddress.Visible = _showAddress;
       tabLocations.Visible = _showContacts;
+      btnCreateLocation.Visible = _showContacts;
       if (!_showContacts)
       {
         tabMain.TabPages.Remove(tabLocations);

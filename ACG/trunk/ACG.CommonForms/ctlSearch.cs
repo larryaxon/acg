@@ -37,6 +37,7 @@ namespace ACG.CommonForms
     private string _mustExistMessage = "You must enter a valid value";
     DateTime _effectiveDate = DateTime.Today;
     string _Name = string.Empty;
+    private bool _clearSearchOnExpand = false;
    
     #endregion
     private ISearchDataSource searchExec = null;
@@ -187,6 +188,19 @@ namespace ACG.CommonForms
       }
     }
 
+    public bool ClearSearchOnExpand
+    {
+      get
+      {
+        return _clearSearchOnExpand;
+      }
+
+      set
+      {
+        _clearSearchOnExpand = value;
+      }
+    }
+
     #endregion
     public ctlSearch()
     {
@@ -293,6 +307,9 @@ namespace ACG.CommonForms
     public event EventHandler<EventArgs> OnSelected;
     private void btnExpand_Click(object sender, EventArgs e)
     {
+      // check to see if we want to clear the text box before we expand so we see all items and not just the ones that match the criteria
+      if (Collapsed && _clearSearchOnExpand)
+        txtSearch.Text = string.Empty;
       /*
        * the problem is that when we press the expand button, if we are coming from the list, we have already selected the item and collapsed, so we don't want to do it again
        */
@@ -561,6 +578,9 @@ namespace ACG.CommonForms
     }
     private void expandList(bool forceExpand)
     {
+      // check to see if we want to clear the text box before we expand so we see all items and not just the ones that match the criteria
+      if (Collapsed && _clearSearchOnExpand)
+        txtSearch.Text = string.Empty;
       if (forceExpand)
         Collapsed = false;
       else

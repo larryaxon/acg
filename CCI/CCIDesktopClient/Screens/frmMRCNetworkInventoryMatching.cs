@@ -187,6 +187,8 @@ namespace CCI.DesktopClient.Screens
         }
         if (!ckIncludeExceptions.Checked)
           criteria.Add("ExceptionLogged", new string[] { ctlSearchGrid.opEQUALS, "No" });
+        if (!ckInclude500s.Checked)
+          criteria.Add("RetailUSOC", new string[] { ctlSearchGrid.opNOTEQUALS, "500" });
         srchMRCNIMatching.SearchCriteria = criteria;
         srchMRCNIMatching.ReLoad();
       }

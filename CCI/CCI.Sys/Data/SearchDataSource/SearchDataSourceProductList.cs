@@ -15,12 +15,13 @@ namespace CCI.Sys.Data
     public string SQL { get; set; }
     public string OrderByClause { get; set; }
     public string Carrier { get; set; }
+    public string PrimaryCarrier { get; set; }
     public SearchDataSourceProductList()
     {
 //      SQL = "Select * from (select m.ItemID, m.Name from ProductList p inner join MasterProductList m on p.ItemId = m.ItemId {0}) p ";
       SQL = @"Select ItemID, Name
-                from MasterProductList
-                where IsSaddlebackUSOC = 0 ";
+                from MasterProductList ";
+                //where IsSaddlebackUSOC = 0 ";
       OrderByClause = " order by Name ";
       IDName = "ItemID";
       NameName = "Name";
@@ -29,16 +30,36 @@ namespace CCI.Sys.Data
     public string[] Search(string criteria, bool useExactID)
     {
       string carrierClause = string.Empty;
+      string cr = string.IsNullOrEmpty(criteria) ? criteria : criteria.Trim();
+      // create defaults for missing Carrier or Primary Carrier
       if (string.IsNullOrEmpty(Carrier))
-          Carrier = "CityHosted";
+      {
+        if (string.IsNullOrEmpty(PrimaryCarrier))
+        {
+          //Carrier = "CityHosted";
+          //PrimaryCarrier = "Saddleback";
+        }
+        else
+        {
+          carrierClause = string.Format("WHERE p.PrimaryCarrier = '{0}'", PrimaryCarrier);
+        }
+      }
+      else
+      {
+        if (string.IsNullOrEmpty(PrimaryCarrier))
+        {
+          carrierClause = string.Format("WHERE p.Carrier = '{0}' ", Carrier);
+        }
+        else
+        {
+          carrierClause = string.Format("WHERE p.Carrier = '{0}' and p.PrimaryCarrier = '{1}' ", Carrier, PrimaryCarrier);
+        }
+      }
 
       SQL = string.Format(@"SELECT * FROM (SELECT dbo.MasterProductList.ItemID, dbo.MasterProductList.Name
-FROM         dbo.MasterProductList INNER JOIN
-             dbo.ProductList AS p ON dbo.MasterProductList.ItemID = p.ItemID
-WHERE        p.Carrier = '{0}') p",Carrier);
-//      return getSearchList(string.Format(SQL, carrierClause), OrderByClause, criteria, IDName, new string[] { NameName }, useExactID);
-      //return getSearchList(SQL, OrderByClause, criteria, IDName, new string[] { NameName }, useExactID);
-        return getSearchList(SQL, OrderByClause, criteria, IDName, new string[] { NameName }, useExactID, true);
+FROM dbo.MasterProductList INNER JOIN dbo.ProductList AS p ON dbo.MasterProductList.ItemID = p.ItemID {0}) p", carrierClause);
+
+        return getSearchList(SQL, OrderByClause, cr, IDName, new string[] { NameName }, useExactID, true);
 
     }
   }

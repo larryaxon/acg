@@ -35,7 +35,8 @@ namespace CCI.DesktopClient.Screens
     #region public methods
     public void Init()
     {
-      srchNetworkInventory.Init(CommonData.UnmatchedNameTypes.SearchNetworkInventory, null);      
+      srchNetworkInventory.Init(CommonData.UnmatchedNameTypes.SearchNetworkInventory, null);
+      srchPhysicalInventory.Init("Physical Inventory", null);   
     }
     public new void Save()
     {
@@ -153,7 +154,10 @@ namespace CCI.DesktopClient.Screens
         txtNewLocation.Text = CommonFunctions.CString(row["Location"]);
         string itemid = CommonFunctions.CString(row["ItemID"]);
         string carrier = CommonFunctions.CString(row["Carrier"]);
+        string primaryCarrier = CommonFunctions.CString(row["PrimaryCarrier"]);
+        txtPrimaryCarrier.Text = primaryCarrier;
         ((SearchDataSourceProductList)txtNewItemID.SearchExec).Carrier = carrier;
+        ((SearchDataSourceProductList)txtNewItemID.SearchExec).PrimaryCarrier = primaryCarrier;
         txtNewItemID.Text = itemid;
         txtTransactionQuantity.Text = Math.Round(CommonFunctions.CDecimal(row["TransactionQuantity"]), 2).ToString();
         txtQuantity.Text = Math.Round(CommonFunctions.CDecimal(row["Quantity"]),2).ToString();
@@ -173,8 +177,12 @@ namespace CCI.DesktopClient.Screens
         dtNewExpDate.Text = expDate == null ? null : ((DateTime)expDate).ToShortDateString();
         bool isActiveByDate = CommonFunctions.CDateTime(row["startdate"], CommonData.PastDateTime) <= DateTime.Today && DateTime.Today <= CommonFunctions.CDateTime(row["enddate"], CommonData.FutureDateTime);
         //ckNewActive.Checked = System.DBNull.Value == row["inactive"] && isActiveByDate ? true : false;
-        txtNewComments.Text = CommonFunctions.CString(row["comments"]);
         txtLastModifiedBy.Text = CommonFunctions.CString(row["LastModifiedBy"]);
+        // Load Physical Inventory for this item
+        Dictionary<string, string[]> criteriaNew = new Dictionary<string, string[]>(StringComparer.CurrentCultureIgnoreCase);
+        criteriaNew.Add("NetworkInventoryID", new string[] { ctlSearchGrid.opEQUALS, newnetinvid.ToString() });
+        srchPhysicalInventory.SearchCriteria = criteriaNew;
+        srchPhysicalInventory.ReLoad();
         lblNewNew.Visible = false;
       }
       ds.Clear();
@@ -183,7 +191,9 @@ namespace CCI.DesktopClient.Screens
     private void reloadNewProductCombo()
     {
       string itemid = txtNewItemID.Text;
+      string primaryCarrier = txtPrimaryCarrier.Text;
       ((SearchDataSourceProductList)txtNewItemID.SearchExec).Carrier = _carrier;
+      ((SearchDataSourceProductList)txtNewItemID.SearchExec).PrimaryCarrier = primaryCarrier;
       txtNewItemID.Text = itemid;
     }
     private void clearNewFields()
@@ -203,7 +213,6 @@ namespace CCI.DesktopClient.Screens
       txtTransactionMRC.Text = string.Empty;
       txtNewMRC.Text = string.Empty;
       txtNewNRC.Text = string.Empty;
-      txtNewComments.Text = string.Empty;
       txtNewAccount.Text = string.Empty;
       txtTransactionQuantity.Text = string.Empty;
       txtQuantity.Text = "1";
@@ -213,6 +222,7 @@ namespace CCI.DesktopClient.Screens
       dtNewStartDate.Text = null;
       dtNewExpDate.Text = null;
       lblNewNew.Visible = true;
+      clearPhysicalInventory();
     }
     private void saveNewFields()
     {
@@ -231,15 +241,35 @@ namespace CCI.DesktopClient.Screens
       DateTime? transactionDate = dtTransactionDate.Value;
       DateTime? installdate = dtNewDateInstalled.Value;
       DateTime? expirationdate = dtNewExpDate.Value;
-      string comments = txtNewComments.Text;
       int orderid = CommonFunctions.CInt(txtNewOrderID.Text);
       string account = txtNewAccount.Text;
       bool active = startDate <= DateTime.Today && DateTime.Today <= endDate;
       int? id = _dataSource.updateNewNetworkInventory(netinv_id, customer, location, orderid, orderid, _carrier, itemid, string.Empty, account,
-        mrc, nrc, comments, string.Empty, string.Empty, installdate, startDate, endDate, string.Empty, string.Empty, quantity, active, vendor, expirationdate,
+        mrc, nrc, null, string.Empty, string.Empty, installdate, startDate, endDate, string.Empty, string.Empty, quantity, active, vendor, expirationdate,
         transactionDate, transactionQuantity, transactionMRC);
       if (id != null && id > 0)
         txtNewNetInvID.Text = id.ToString();
+      savePhysicalInventory();
+    }
+    private void savePhysicalInventory()
+    {
+      if (!string.IsNullOrEmpty(txtMacAddress.Text) && !string.IsNullOrEmpty(txtPhysicalInventoryNotes.Text))
+      {
+        int? id = _dataSource.savePhysicalInventory(txtNewNetInvID.Text, txtMacAddress.Text, txtPhysicalInventoryNotes.Text, SecurityContext.User);
+        if (id != null && string.IsNullOrEmpty(txtPhysicalInventoryID.Text))
+          txtPhysicalInventoryID.Text = ((int)id).ToString();  // set the ID in the screen if we need one and have one
+        srchPhysicalInventory.ReLoad();
+      }
+    }
+    private void clearPhysicalInventory()
+    {
+      txtPhysicalInventoryID.Text = string.Empty;
+      txtMacAddress.Text = string.Empty;
+      txtPhysicalInventoryNotes.Text = string.Empty;
+      if (string.IsNullOrEmpty(txtNewNetInvID.Text))
+        srchPhysicalInventory.Clear();
+      else
+        srchPhysicalInventory.ReLoad();
     }
     private long addToNewDatabaseFromOrder(string orderid)
     {
@@ -274,6 +304,7 @@ namespace CCI.DesktopClient.Screens
       ctlLocationSearch.SearchExec = new SearchDataSourceEntity("Location");
       txtNewCustomer.SearchExec = new SearchDataSourceEntity("Customer");
       txtNewLocation.SearchExec = new SearchDataSourceEntity("Location");
+      txtPrimaryCarrier.SearchExec = new SearchDataSourceEntity("Carrier");
       txtNewItemID.SearchExec = new SearchDataSourceProductList();
     }
     private void txtCustomerSearch_Leave(object sender, EventArgs e)
@@ -388,15 +419,40 @@ namespace CCI.DesktopClient.Screens
       else
         clearNewFields();
     }
+
+
     #endregion
 
     private void txtNewCustomer_Leave(object sender, EventArgs e)
     {
       txtNewAccount.Text = getSaddleBackID(txtNewCustomer.Text);
     }
+    private void srchPhysicalInventory_RowSelected(object sender, ACG.CommonForms.MaintenanceGridRowSelectedArgs e)
+    {
+      if (e.SelectedRow != null)
+      {
+        string id = CommonFunctions.CString(e.SelectedRow.Cells["ID"].Value);
+        string macAddress = CommonFunctions.CString(e.SelectedRow.Cells["MacAddress"].Value);
+        string Notes = CommonFunctions.CString(e.SelectedRow.Cells["MacAddress"].Value);
+        txtMacAddress.Text = macAddress;
+        txtPhysicalInventoryNotes.Text = Notes;
+        txtPhysicalInventoryID.Text = id;
+      }
+    }
+    private void btnSavePhysicalInventory_Click(object sender, EventArgs e)
+    {
+      savePhysicalInventory();
+    }
 
 
 
     #endregion
+
+    private void txtPrimaryCarrier_Leave(object sender, EventArgs e)
+    {
+      ((SearchDataSourceProductList)txtNewItemID.SearchExec).PrimaryCarrier = txtPrimaryCarrier.Text;
+      //((SearchDataSourceProductList)txtNewItemID.SearchExec).Carrier = txtPrimaryCarrier.Text;
+
+    }
   }
 }

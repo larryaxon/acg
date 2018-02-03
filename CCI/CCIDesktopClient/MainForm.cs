@@ -45,8 +45,20 @@ namespace CCI.DesktopClient
     {
       createCodeMenu();
       createGenericMaintenanceMenu();
+      string gotoForm = ConfigurationManager.AppSettings["AutoLoginScreen"];
+      if (!string.IsNullOrEmpty(gotoForm))
+      {
+        Form frm = getFormFromName(gotoForm);
+        if (frm != null)
+          ShowForm(frm, true);
+      }
     }
     #region generic menu and tool strip events
+    private Form getFormFromName(string name)
+    {
+      string nmspace = this.GetType().Namespace + ".Screens";
+      return (Form)Activator.CreateInstance(Type.GetType(nmspace + "." + name)); 
+    }
     private void ShowNewForm(object sender, EventArgs e)
     {
       Form childForm = new Form();
@@ -308,12 +320,12 @@ namespace CCI.DesktopClient
       frm.ColumnName = "Customer";
       ShowForm(frm, true);
     }
-    private void importsToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-      ScreenBase frm = new frmImports();
-      frm.SecurityContext = _securityContext;
-      ShowForm(frm, true);
-    }
+    //private void importsToolStripMenuItem_Click(object sender, EventArgs e)
+    //{
+    //  ScreenBase frm = new frmImports();
+    //  frm.SecurityContext = _securityContext;
+    //  ShowForm(frm, true);
+    //}
     private void customerMaintenanceToolStripMenuItem1_Click(object sender, EventArgs e)
     {
       ScreenBase frm = new frmCustomers();
@@ -415,7 +427,6 @@ namespace CCI.DesktopClient
       // first let's take away
       if (!s.Security.HasObjectAccess("CommissionsScreens"))
       {
-        commissionExceptionsToolStripMenuItem.Visible = false;
         unmatchedToolStripMenuItem.Visible = false;
         //productsToolStripMenuItem.Visible = false;
       }
@@ -423,7 +434,6 @@ namespace CCI.DesktopClient
       {
         entityMaintenanceToolStripMenuItem.Visible = false;
         attributeMaintenanceRawModeToolStripMenuItem.Visible = false;
-        developerScreenToolStripMenuItem.Visible = false;
         attributeMaintenanceToolStripMenuItem.Visible = false;      
       }
       if (!s.Security.HasObjectAccess("AdminScreens"))
@@ -438,25 +448,16 @@ namespace CCI.DesktopClient
         masterCodeListToolStripMenuItem.Visible = false;
         //adminToolStripMenuItem.Visible = false;        
       }
-      if (!s.Security.HasObjectAccess("SalesScreens"))
-      {
-        salesToolStripMenuItem.Visible = false;
-      }
       // now we add back
-      if (!s.Security.HasObjectAccess("OpsScreens"))
-      {
-      }
       if (!s.Security.HasObject("CCIAdmin"))
       {
-        cityHostedUSOCMaintenanceToolStripMenuItem.Visible = false;
-        cityUsocMaintenanceToolStripMenuItem.Visible = false;
+        cityHostedUsocNewToolStripMenuItem.Visible = false;
         itemCategoryMaintenanceToolStripMenuItem.Visible = false;
-        ordersToolStripMenuItem.Visible = false;
       }
       if (s.Security.HasObject("CanEditUSOCs"))
       {
-        cityHostedUSOCMaintenanceToolStripMenuItem.Visible = true;
-        cityUsocMaintenanceToolStripMenuItem.Visible = true;
+        cityHostedUsocNewToolStripMenuItem.Visible = true;
+        cityHostedUsocNewToolStripMenuItem.Visible = true;
       }
       unmatchedCustomersFromImportToolStripMenuItem.Visible = false;  // disable this for now
     }
@@ -556,5 +557,10 @@ namespace CCI.DesktopClient
       ShowForm((Form)frm, true);
     }
 
+    private void cityHostedUsocNewToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      ScreenBase frm = new frmCityHostedUSOCMaintenanceNew();
+      ShowForm(frm, true);
+    }
   }
 }

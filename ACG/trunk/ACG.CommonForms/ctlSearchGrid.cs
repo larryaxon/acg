@@ -292,6 +292,7 @@ namespace ACG.CommonForms
       adjustCanDisplayFields(); // adjust Fields/Filter button according to the value of CanChangeDisplayFields
       srchNamedSearch.SearchExec = new SearchDataSourceNamedSearch();
       srchNamedSearch.AutoAddNewMode = true;
+      srchNamedSearch.ClearSearchOnExpand = true;
     }
 
     #region public methods
@@ -501,6 +502,42 @@ namespace ACG.CommonForms
       }
       _searchPaneEdited = false; // set edit flag to false since we just loaded the search pane
     }
+    public void DeleteNamedSearch(string name)
+    {
+      string nothingToDelete = "There is no saved search found to delete.";
+      string title = "Delete Saved Search";
+
+      if (string.IsNullOrEmpty(name))
+      {
+        MessageBox.Show(nothingToDelete, title);
+        return;
+      }
+      // get the current user
+      IScreenBase parent = CommonFormFunctions.getParentForm(this);
+      if (parent == null || parent.SecurityContext == null)
+        return;
+      string user = parent.SecurityContext.User;
+      string optiontype = string.Format("NamedSearch:{0}",name);
+      // check to see if it is there
+      UserOption option = _dataSource.getUserOption(user, optiontype, NameType.ToString());
+      if (option == null) // if null then it is not
+      {
+        MessageBox.Show(nothingToDelete, title); // so inform the user
+        return;
+      }
+
+      if (!_searchPaneEdited && !string.IsNullOrEmpty(name) && !NameType.Equals("None", StringComparison.CurrentCultureIgnoreCase))
+      {
+        // delete the user option
+        _dataSource.deleteUserOption(user, optiontype, NameType.ToString());
+        // reset the grid
+        _searchCriteria.Clear();
+        grdSearch.Rows.Clear();
+        // tell the user we did it
+        MessageBox.Show("Saved Search Deleted.", title);
+      }
+      _searchPaneEdited = false; // set edit flag to false since we just loaded the search pane
+    }
     public void SelectFirst()
     {
       if (grdResearch.RowCount > 0)
@@ -641,19 +678,23 @@ namespace ACG.CommonForms
     }
     private void grdResearch_SortCompare(object sender, DataGridViewSortCompareEventArgs e)
     {
-      try
+
+      if (NumericFormattedColumns.ContainsKey(e.Column.Name)) // if ths is a numeric column
       {
-        if (NumericFormattedColumns.ContainsKey(e.Column.Name)) // if ths is a numeric column
+        try
         {
           e.SortResult = CommonFunctions.CDouble(e.CellValue1).CompareTo(CommonFunctions.CDouble(e.CellValue2));
         }
-        else
+        catch (Exception ex)
+        {
           e.SortResult = CommonFunctions.CString(e.CellValue1).CompareTo(CommonFunctions.CString(e.CellValue2));
+        }
       }
-      catch (Exception ex)
-      {
-        string err = ex.Message;
-      }
+      else
+        e.SortResult = CommonFunctions.CString(e.CellValue1).CompareTo(CommonFunctions.CString(e.CellValue2));
+      // this line prevents data type conversion errors when the grid tries to compare string and non-string values
+      e.Handled = true; // now tell the grid not to try to do this itself cause i already did it
+
     }
     private void grdResearch_ColumnAdded(object sender, DataGridViewColumnEventArgs e)
     {
@@ -741,7 +782,6 @@ namespace ACG.CommonForms
     {
       _searchPaneEdited = true; // set edited flag to true since the operator did something with a cell
     }
-
     private void grdSearch_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
     {
 
@@ -749,6 +789,21 @@ namespace ACG.CommonForms
     private void grdSearch_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
     {
       _searchPaneEdited = true; // set edited flag to true since the operator added a row
+    }
+    private void grdSearch_RowValidating(object sender, DataGridViewCellCancelEventArgs e)
+    {
+    }
+    private void grdSearch_UserDeletedRow(object sender, DataGridViewRowEventArgs e)
+    {
+      string fieldname = CommonFunctions.CString(e.Row.Cells[0].Value);
+      if (SearchCriteria.ContainsKey(fieldname))
+        SearchCriteria.Remove(fieldname);
+      _searchPaneEdited = true; // user has deleted a row so we flag as edited
+    }
+    private void btnDeleteSavedSearch_Click(object sender, EventArgs e)
+    {
+      DeleteNamedSearch(srchNamedSearch.Text); // delete the named search
+      srchNamedSearch.Text = string.Empty; // and clear the field
     }
     #endregion
 
@@ -1475,18 +1530,6 @@ namespace ACG.CommonForms
     }
 
     #endregion
-
-    private void grdSearch_RowValidating(object sender, DataGridViewCellCancelEventArgs e)
-    {
-    }
-
-    private void grdSearch_UserDeletedRow(object sender, DataGridViewRowEventArgs e)
-    {
-      string fieldname = CommonFunctions.CString(e.Row.Cells[0].Value);
-      if (SearchCriteria.ContainsKey(fieldname))
-        SearchCriteria.Remove(fieldname);
-      _searchPaneEdited = true; // user has deleted a row so we flag as edited
-    }
 
   }
 }

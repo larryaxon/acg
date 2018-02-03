@@ -46,7 +46,26 @@ namespace CCI.DesktopClient.Common
       }
       return (DataGridView[])gridList.ToArray(typeof(DataGridView));
     }
-    public static void convertDataSetToGrid(DataGridView grid, DataSet ds)
+    /// <summary>
+    /// Take the first DataTable in a DataSet and load the columns and rows in the grid. 
+    /// Do NOT bind the dataset to the grid.
+    /// </summary>
+    /// <param name="grid">Reference to the DataViewGrid we are populating</param>
+    /// <param name="ds"></param>
+    public static void convertDataSetToGrid(DataGridView grid, DataSet ds) // legacy overload that does not specify columns
+    {
+      convertDataSetToGrid(grid, ds, null); // call the new one
+    }
+    /// <summary>
+    /// Take the first DataTable in a DataSet and load the columns and rows in the grid. 
+    /// Do NOT bind the dataset to the grid.
+    /// This overload passes in an array of columns so the calling program can override the types
+    /// specifically.
+    /// </summary>
+    /// <param name="grid"></param>
+    /// <param name="ds"></param>
+    /// <param name="columns"></param>
+    public static void convertDataSetToGrid(DataGridView grid, DataSet ds, DataGridViewColumn[] columns)
     {
       grid.Rows.Clear();
       grid.Columns.Clear();
@@ -56,19 +75,27 @@ namespace CCI.DesktopClient.Common
         
         DataTable dt = ds.Tables[0];
         int colCount = ds.Tables[0].Columns.Count;
+        if (columns == null || columns.GetLength(0) != colCount)
+          throw new ArgumentException("Can't load grid, column count does not match dataset");
         for (int iCol = 0; iCol < colCount; iCol++)
         {
           DataColumn colFrom = dt.Columns[iCol];
           DataGridViewColumn col;
-          string t = colFrom.DataType.ToString().ToLower();
-          switch (t)
+          if (columns != null) // if we had columns passed int...
+            col = columns[iCol]; // then use that one
+          else
           {
-            case "system.boolean":
-              col = new DataGridViewCheckBoxColumn();
-              break;
-            default:
-              col = new DataGridViewTextBoxColumn();
-              break;
+            // otherwise make our own
+            string t = colFrom.DataType.ToString().ToLower();
+            switch (t)
+            {
+              case "system.boolean":
+                col = new DataGridViewCheckBoxColumn();
+                break;
+              default:
+                col = new DataGridViewTextBoxColumn();
+                break;
+            }
           }
           col.Name = colFrom.ColumnName;
           grid.Columns.Add(col);
@@ -163,16 +190,22 @@ namespace CCI.DesktopClient.Common
         {
           bool isGridCombo = ctl.GetType() == typeof(DataGridViewComboBoxCell);
           bool isComboBox = ctl.GetType() == typeof(ComboBox);
+          bool isListBox = ctl.GetType() == typeof(ListBox);
           if ((isGridCombo && ((DataGridViewComboBoxCell)ctl).Items.Count > 0)
-              || (isComboBox && ((ComboBox)ctl).Items.Count > 0))
+              || (isComboBox && ((ComboBox)ctl).Items.Count > 0)
+              || (isListBox && ((ListBox)ctl).Items.Count > 0))
           {
             bool foundMatch = false;
             string strValue = val.ToString();
             IList items;
             if (isGridCombo)
               items = ((DataGridViewComboBoxCell)ctl).Items;
-            else
+            else if (isComboBox)
               items = ((ComboBox)ctl).Items;
+            else if (isListBox)
+              items = ((ListBox)ctl).Items;
+            else
+              return;
             for (int i = 0; i < items.Count; i++)
             {
               object item = items[i];
@@ -188,11 +221,24 @@ namespace CCI.DesktopClient.Common
                     pList = new object[0];
                     ((DataGridViewComboBoxCell)ctl).Value = item.GetType().GetProperty(((DataGridViewComboBoxCell)ctl).ValueMember).GetValue(item, pList);
                   }
-                  else
+                  else if (isComboBox)
                   {
-                    ((ComboBox)ctl).Text = (string)item.GetType().GetProperty(((ComboBox)ctl).DisplayMember).GetValue(item, new object[] { });
+                    
+                    if (item.GetType() == typeof(string))
+                      ((ComboBox)ctl).Text = item.ToString();
+                    else
+                      ((ComboBox)ctl).Text = (string)item.GetType().GetProperty(((ComboBox)ctl).DisplayMember).GetValue(item, new object[] { });
                     ((ComboBox)ctl).SelectedIndex = i;
                     ((ComboBox)ctl).Refresh();
+                  }
+                  else
+                  {
+                    if (item.GetType() == typeof(string))
+                      ((ListBox)ctl).Text = item.ToString();
+                    else
+                      ((ListBox)ctl).Text = (string)item.GetType().GetProperty(((ListBox)ctl).DisplayMember).GetValue(item, new object[] { });
+                    ((ListBox)ctl).SelectedIndex = i;
+                    ((ListBox)ctl).Refresh();
                   }
                   foundMatch = true;
                   break;
@@ -203,8 +249,10 @@ namespace CCI.DesktopClient.Common
             {
               if (isGridCombo)
                 ((DataGridViewComboBoxCell)ctl).Value = items[0];
-              else
+              else if (isComboBox)
                 ((ComboBox)ctl).SelectedItem = items[0];
+              else
+                ((ListBox)ctl).SelectedItem = items[0];
             }
           }
 

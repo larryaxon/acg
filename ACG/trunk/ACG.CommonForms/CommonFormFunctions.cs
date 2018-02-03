@@ -48,7 +48,7 @@ namespace ACG.CommonForms
 
       if (ds != null && ds.Tables.Count > 0)
       {
-        
+
         DataTable dt = ds.Tables[0];
         int colCount = ds.Tables[0].Columns.Count;
         for (int iCol = 0; iCol < colCount; iCol++)
@@ -76,9 +76,9 @@ namespace ACG.CommonForms
             object[] oColValues = new object[colCount];
             DataRow row = dt.Rows[iRow];
             for (int iCol = 0; iCol < dt.Columns.Count; iCol++)
-              oColValues[iCol] = row[iCol];           
+              oColValues[iCol] = row[iCol];
             grid.Rows.Add(oColValues);
-         }
+          }
         }
       }
     }
@@ -145,7 +145,7 @@ namespace ACG.CommonForms
           }
           else
             if ((bool)o.GetType().GetMethod("Equals").Invoke(o, new object[] { value }))
-              return o;
+            return o;
         }
       }
       return list[0];
@@ -204,7 +204,7 @@ namespace ACG.CommonForms
           }
 
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
           ;
         }
@@ -268,7 +268,7 @@ namespace ACG.CommonForms
             ((ctlSearchGrid)c).Clear();
           else if (ctype.Name.Equals("ctlContactsLocations"))
             c.GetType().GetMethod("Clear").Invoke(c, new object[0]);
-            //((ctlContactsLocations)c).Clear();
+          //((ctlContactsLocations)c).Clear();
           else if (ctype == typeof(ListBox))
             ((ListBox)c).Items.Clear();
 
@@ -438,23 +438,23 @@ namespace ACG.CommonForms
       }
       return null;
     }
-    public static System.Boolean IsNumeric (System.Object Expression)
+    public static System.Boolean IsNumeric(System.Object Expression)
     {
-      if(Expression == null || Expression is DateTime)
-          return false;
+      if (Expression == null || Expression is DateTime)
+        return false;
 
-      if(Expression is Int16 || Expression is Int32 || Expression is Int64 || Expression is Decimal || Expression is Single || Expression is Double || Expression is Boolean)
-          return true;
-   
-      try 
+      if (Expression is Int16 || Expression is Int32 || Expression is Int64 || Expression is Decimal || Expression is Single || Expression is Double || Expression is Boolean)
+        return true;
+
+      try
       {
-          if(Expression is string)
-              Double.Parse(Expression as string);
-          else
-              Double.Parse(Expression.ToString());
-              return true;
-          } catch {} // just dismiss errors but return false
-          return false;
+        if (Expression is string)
+          Double.Parse(Expression as string);
+        else
+          Double.Parse(Expression.ToString());
+        return true;
+      } catch { } // just dismiss errors but return false
+      return false;
     }
     public static void fillComboBoxList(ComboBox ctl, PickListEntries list)
     {
@@ -532,7 +532,26 @@ namespace ACG.CommonForms
         value = textBox.Text;
       return dialogResult;
     }
-}
-
+    /// <summary>
+    /// returns a flat list of all controls recursively in a control container (e.g. a form)
+    /// It only returns controls that are of type T
+    /// </summary>
+    /// <typeparam name="T">Type of control to return. If you want all of them, just use Control</typeparam>
+    /// <param name="container"></param>
+    /// <param name="list"></param>
+    /// <returns></returns>
+    public static List<Control> GetAllControls<T>(Control container, List<Control> list = null)
+    {
+      if (list == null)
+        list = new List<Control>();
+      foreach (Control c in container.Controls) // does nothing 
+      {
+        list = GetAllControls<T>(c, list);
+        if (c is T) list.Add(c);
+      }
+      return list;
+    }
   }
+
+}
 

@@ -96,13 +96,15 @@ namespace CCI.DesktopClient.Screens
       // 
       // panel4
       // 
+      this.panel4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.panel4.Controls.Add(this.label15);
       this.panel4.Controls.Add(this.lblTaxesMsg);
       this.panel4.Controls.Add(this.label2);
       this.panel4.Controls.Add(this.txtFileName7);
       this.panel4.Location = new System.Drawing.Point(22, 327);
       this.panel4.Name = "panel4";
-      this.panel4.Size = new System.Drawing.Size(728, 57);
+      this.panel4.Size = new System.Drawing.Size(680, 57);
       this.panel4.TabIndex = 31;
       // 
       // label15
@@ -137,11 +139,13 @@ namespace CCI.DesktopClient.Screens
             | System.Windows.Forms.AnchorStyles.Right)));
       this.txtFileName7.Location = new System.Drawing.Point(148, 20);
       this.txtFileName7.Name = "txtFileName7";
-      this.txtFileName7.Size = new System.Drawing.Size(462, 20);
+      this.txtFileName7.Size = new System.Drawing.Size(414, 20);
       this.txtFileName7.TabIndex = 25;
       // 
       // panel3
       // 
+      this.panel3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.panel3.Controls.Add(this.label3);
       this.panel3.Controls.Add(this.lblCallRetailMsg);
       this.panel3.Controls.Add(this.lblCallWholesaleMsg);
@@ -151,7 +155,7 @@ namespace CCI.DesktopClient.Screens
       this.panel3.Controls.Add(this.txtFileName5);
       this.panel3.Location = new System.Drawing.Point(22, 234);
       this.panel3.Name = "panel3";
-      this.panel3.Size = new System.Drawing.Size(728, 94);
+      this.panel3.Size = new System.Drawing.Size(680, 94);
       this.panel3.TabIndex = 30;
       // 
       // label3
@@ -194,7 +198,7 @@ namespace CCI.DesktopClient.Screens
             | System.Windows.Forms.AnchorStyles.Right)));
       this.txtFileName6.Location = new System.Drawing.Point(148, 51);
       this.txtFileName6.Name = "txtFileName6";
-      this.txtFileName6.Size = new System.Drawing.Size(462, 20);
+      this.txtFileName6.Size = new System.Drawing.Size(414, 20);
       this.txtFileName6.TabIndex = 30;
       // 
       // label4
@@ -212,11 +216,13 @@ namespace CCI.DesktopClient.Screens
             | System.Windows.Forms.AnchorStyles.Right)));
       this.txtFileName5.Location = new System.Drawing.Point(148, 24);
       this.txtFileName5.Name = "txtFileName5";
-      this.txtFileName5.Size = new System.Drawing.Size(462, 20);
+      this.txtFileName5.Size = new System.Drawing.Size(414, 20);
       this.txtFileName5.TabIndex = 27;
       // 
       // panel2
       // 
+      this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.panel2.Controls.Add(this.lblOCCRetailMsg);
       this.panel2.Controls.Add(this.txtFileName4);
       this.panel2.Controls.Add(this.label8);
@@ -226,7 +232,7 @@ namespace CCI.DesktopClient.Screens
       this.panel2.Controls.Add(this.txtFileName3);
       this.panel2.Location = new System.Drawing.Point(22, 144);
       this.panel2.Name = "panel2";
-      this.panel2.Size = new System.Drawing.Size(728, 94);
+      this.panel2.Size = new System.Drawing.Size(680, 94);
       this.panel2.TabIndex = 29;
       // 
       // lblOCCRetailMsg
@@ -243,7 +249,7 @@ namespace CCI.DesktopClient.Screens
             | System.Windows.Forms.AnchorStyles.Right)));
       this.txtFileName4.Location = new System.Drawing.Point(148, 49);
       this.txtFileName4.Name = "txtFileName4";
-      this.txtFileName4.Size = new System.Drawing.Size(462, 20);
+      this.txtFileName4.Size = new System.Drawing.Size(414, 20);
       this.txtFileName4.TabIndex = 11;
       // 
       // label8
@@ -287,14 +293,14 @@ namespace CCI.DesktopClient.Screens
             | System.Windows.Forms.AnchorStyles.Right)));
       this.txtFileName3.Location = new System.Drawing.Point(148, 23);
       this.txtFileName3.Name = "txtFileName3";
-      this.txtFileName3.Size = new System.Drawing.Size(462, 20);
+      this.txtFileName3.Size = new System.Drawing.Size(414, 20);
       this.txtFileName3.TabIndex = 9;
       // 
       // lblMRCRetailMsg
       // 
       this.lblMRCRetailMsg.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.lblMRCRetailMsg.AutoSize = true;
-      this.lblMRCRetailMsg.Location = new System.Drawing.Point(616, 53);
+      this.lblMRCRetailMsg.Location = new System.Drawing.Point(569, 53);
       this.lblMRCRetailMsg.Name = "lblMRCRetailMsg";
       this.lblMRCRetailMsg.Size = new System.Drawing.Size(0, 13);
       this.lblMRCRetailMsg.TabIndex = 21;
@@ -303,7 +309,7 @@ namespace CCI.DesktopClient.Screens
       // 
       this.lblMRCWholesaleMsg.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.lblMRCWholesaleMsg.AutoSize = true;
-      this.lblMRCWholesaleMsg.Location = new System.Drawing.Point(616, 28);
+      this.lblMRCWholesaleMsg.Location = new System.Drawing.Point(569, 28);
       this.lblMRCWholesaleMsg.Name = "lblMRCWholesaleMsg";
       this.lblMRCWholesaleMsg.Size = new System.Drawing.Size(0, 13);
       this.lblMRCWholesaleMsg.TabIndex = 20;
@@ -314,12 +320,12 @@ namespace CCI.DesktopClient.Screens
             | System.Windows.Forms.AnchorStyles.Right)));
       this.txtFileName2.Location = new System.Drawing.Point(148, 49);
       this.txtFileName2.Name = "txtFileName2";
-      this.txtFileName2.Size = new System.Drawing.Size(462, 20);
+      this.txtFileName2.Size = new System.Drawing.Size(415, 20);
       this.txtFileName2.TabIndex = 6;
       // 
       // btnImport
       // 
-      this.btnImport.Location = new System.Drawing.Point(128, 510);
+      this.btnImport.Location = new System.Drawing.Point(140, 469);
       this.btnImport.Name = "btnImport";
       this.btnImport.Size = new System.Drawing.Size(75, 23);
       this.btnImport.TabIndex = 3;
@@ -333,7 +339,7 @@ namespace CCI.DesktopClient.Screens
             | System.Windows.Forms.AnchorStyles.Right)));
       this.txtFileName1.Location = new System.Drawing.Point(148, 24);
       this.txtFileName1.Name = "txtFileName1";
-      this.txtFileName1.Size = new System.Drawing.Size(462, 20);
+      this.txtFileName1.Size = new System.Drawing.Size(415, 20);
       this.txtFileName1.TabIndex = 1;
       // 
       // btnFindFolder
@@ -349,6 +355,8 @@ namespace CCI.DesktopClient.Screens
       // 
       // panel1
       // 
+      this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.panel1.Controls.Add(this.label7);
       this.panel1.Controls.Add(this.txtFileName1);
       this.panel1.Controls.Add(this.label1);
@@ -358,7 +366,7 @@ namespace CCI.DesktopClient.Screens
       this.panel1.Controls.Add(this.txtFileName2);
       this.panel1.Location = new System.Drawing.Point(22, 52);
       this.panel1.Name = "panel1";
-      this.panel1.Size = new System.Drawing.Size(728, 94);
+      this.panel1.Size = new System.Drawing.Size(681, 94);
       this.panel1.TabIndex = 28;
       // 
       // label7
@@ -391,7 +399,7 @@ namespace CCI.DesktopClient.Screens
       // btnPostDetails
       // 
       this.btnPostDetails.Enabled = false;
-      this.btnPostDetails.Location = new System.Drawing.Point(265, 510);
+      this.btnPostDetails.Location = new System.Drawing.Point(277, 469);
       this.btnPostDetails.Name = "btnPostDetails";
       this.btnPostDetails.Size = new System.Drawing.Size(75, 23);
       this.btnPostDetails.TabIndex = 32;
@@ -402,7 +410,7 @@ namespace CCI.DesktopClient.Screens
       // label6
       // 
       this.label6.AutoSize = true;
-      this.label6.Location = new System.Drawing.Point(81, 515);
+      this.label6.Location = new System.Drawing.Point(93, 474);
       this.label6.Name = "label6";
       this.label6.Size = new System.Drawing.Size(41, 13);
       this.label6.TabIndex = 28;
@@ -411,7 +419,7 @@ namespace CCI.DesktopClient.Screens
       // label11
       // 
       this.label11.AutoSize = true;
-      this.label11.Location = new System.Drawing.Point(218, 515);
+      this.label11.Location = new System.Drawing.Point(230, 474);
       this.label11.Name = "label11";
       this.label11.Size = new System.Drawing.Size(41, 13);
       this.label11.TabIndex = 33;
@@ -420,7 +428,7 @@ namespace CCI.DesktopClient.Screens
       // label12
       // 
       this.label12.AutoSize = true;
-      this.label12.Location = new System.Drawing.Point(50, 542);
+      this.label12.Location = new System.Drawing.Point(62, 501);
       this.label12.Name = "label12";
       this.label12.Size = new System.Drawing.Size(63, 13);
       this.label12.TabIndex = 38;
@@ -435,7 +443,7 @@ namespace CCI.DesktopClient.Screens
       this.grdImportLog.Dock = System.Windows.Forms.DockStyle.Fill;
       this.grdImportLog.Location = new System.Drawing.Point(0, 0);
       this.grdImportLog.Name = "grdImportLog";
-      this.grdImportLog.Size = new System.Drawing.Size(478, 629);
+      this.grdImportLog.Size = new System.Drawing.Size(439, 629);
       this.grdImportLog.TabIndex = 39;
       // 
       // splitMain
@@ -473,8 +481,8 @@ namespace CCI.DesktopClient.Screens
       // splitMain.Panel2
       // 
       this.splitMain.Panel2.Controls.Add(this.grdImportLog);
-      this.splitMain.Size = new System.Drawing.Size(1254, 629);
-      this.splitMain.SplitterDistance = 772;
+      this.splitMain.Size = new System.Drawing.Size(1148, 629);
+      this.splitMain.SplitterDistance = 705;
       this.splitMain.TabIndex = 40;
       // 
       // ckDownload
@@ -491,7 +499,7 @@ namespace CCI.DesktopClient.Screens
       // 
       this.btnReloadFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.btnReloadFiles.Enabled = false;
-      this.btnReloadFiles.Location = new System.Drawing.Point(700, 14);
+      this.btnReloadFiles.Location = new System.Drawing.Point(651, 13);
       this.btnReloadFiles.Name = "btnReloadFiles";
       this.btnReloadFiles.Size = new System.Drawing.Size(50, 23);
       this.btnReloadFiles.TabIndex = 3;
@@ -506,19 +514,21 @@ namespace CCI.DesktopClient.Screens
       this.txtBasePath.Enabled = false;
       this.txtBasePath.Location = new System.Drawing.Point(313, 16);
       this.txtBasePath.Name = "txtBasePath";
-      this.txtBasePath.Size = new System.Drawing.Size(381, 20);
+      this.txtBasePath.Size = new System.Drawing.Size(332, 20);
       this.txtBasePath.TabIndex = 2;
       // 
       // txtBillDate
       // 
       this.txtBillDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-      this.txtBillDate.Location = new System.Drawing.Point(130, 542);
+      this.txtBillDate.Location = new System.Drawing.Point(142, 501);
       this.txtBillDate.Name = "txtBillDate";
       this.txtBillDate.Size = new System.Drawing.Size(200, 20);
       this.txtBillDate.TabIndex = 48;
       // 
       // panel5
       // 
+      this.panel5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.panel5.Controls.Add(this.ckImportLedgerOnly);
       this.panel5.Controls.Add(this.ckRequireLedger);
       this.panel5.Controls.Add(this.label13);
@@ -527,7 +537,7 @@ namespace CCI.DesktopClient.Screens
       this.panel5.Controls.Add(this.txtFileName8);
       this.panel5.Location = new System.Drawing.Point(22, 387);
       this.panel5.Name = "panel5";
-      this.panel5.Size = new System.Drawing.Size(728, 76);
+      this.panel5.Size = new System.Drawing.Size(680, 76);
       this.panel5.TabIndex = 47;
       // 
       // ckImportLedgerOnly
@@ -539,17 +549,21 @@ namespace CCI.DesktopClient.Screens
       this.ckImportLedgerOnly.TabIndex = 29;
       this.ckImportLedgerOnly.Text = "Import Ledger Only";
       this.ckImportLedgerOnly.UseVisualStyleBackColor = true;
+      this.ckImportLedgerOnly.Visible = false;
       this.ckImportLedgerOnly.CheckedChanged += new System.EventHandler(this.ckImportLedgerOnly_CheckedChanged);
       // 
       // ckRequireLedger
       // 
       this.ckRequireLedger.AutoSize = true;
+      this.ckRequireLedger.Checked = true;
+      this.ckRequireLedger.CheckState = System.Windows.Forms.CheckState.Checked;
       this.ckRequireLedger.Location = new System.Drawing.Point(6, 56);
       this.ckRequireLedger.Name = "ckRequireLedger";
       this.ckRequireLedger.Size = new System.Drawing.Size(131, 17);
       this.ckRequireLedger.TabIndex = 28;
       this.ckRequireLedger.Text = "Require Ledger Import";
       this.ckRequireLedger.UseVisualStyleBackColor = true;
+      this.ckRequireLedger.Visible = false;
       // 
       // label13
       // 
@@ -583,12 +597,12 @@ namespace CCI.DesktopClient.Screens
             | System.Windows.Forms.AnchorStyles.Right)));
       this.txtFileName8.Location = new System.Drawing.Point(148, 20);
       this.txtFileName8.Name = "txtFileName8";
-      this.txtFileName8.Size = new System.Drawing.Size(462, 20);
+      this.txtFileName8.Size = new System.Drawing.Size(414, 20);
       this.txtFileName8.TabIndex = 25;
       // 
       // btnUndoImport
       // 
-      this.btnUndoImport.Location = new System.Drawing.Point(463, 511);
+      this.btnUndoImport.Location = new System.Drawing.Point(475, 470);
       this.btnUndoImport.Name = "btnUndoImport";
       this.btnUndoImport.Size = new System.Drawing.Size(74, 22);
       this.btnUndoImport.TabIndex = 46;
@@ -599,7 +613,7 @@ namespace CCI.DesktopClient.Screens
       // txtErrorMessage
       // 
       this.txtErrorMessage.BorderStyle = System.Windows.Forms.BorderStyle.None;
-      this.txtErrorMessage.Location = new System.Drawing.Point(15, 569);
+      this.txtErrorMessage.Location = new System.Drawing.Point(27, 528);
       this.txtErrorMessage.Name = "txtErrorMessage";
       this.txtErrorMessage.Size = new System.Drawing.Size(617, 13);
       this.txtErrorMessage.TabIndex = 45;
@@ -608,7 +622,7 @@ namespace CCI.DesktopClient.Screens
       // lblUndoPostMsg
       // 
       this.lblUndoPostMsg.AutoSize = true;
-      this.lblUndoPostMsg.Location = new System.Drawing.Point(558, 539);
+      this.lblUndoPostMsg.Location = new System.Drawing.Point(570, 498);
       this.lblUndoPostMsg.Name = "lblUndoPostMsg";
       this.lblUndoPostMsg.Size = new System.Drawing.Size(0, 13);
       this.lblUndoPostMsg.TabIndex = 44;
@@ -616,7 +630,7 @@ namespace CCI.DesktopClient.Screens
       // btnUndoPost
       // 
       this.btnUndoPost.Enabled = false;
-      this.btnUndoPost.Location = new System.Drawing.Point(543, 510);
+      this.btnUndoPost.Location = new System.Drawing.Point(555, 469);
       this.btnUndoPost.Name = "btnUndoPost";
       this.btnUndoPost.Size = new System.Drawing.Size(75, 23);
       this.btnUndoPost.TabIndex = 43;
@@ -627,7 +641,7 @@ namespace CCI.DesktopClient.Screens
       // lblQBExportMsg
       // 
       this.lblQBExportMsg.AutoSize = true;
-      this.lblQBExportMsg.Location = new System.Drawing.Point(422, 553);
+      this.lblQBExportMsg.Location = new System.Drawing.Point(434, 512);
       this.lblQBExportMsg.Name = "lblQBExportMsg";
       this.lblQBExportMsg.Size = new System.Drawing.Size(0, 13);
       this.lblQBExportMsg.TabIndex = 42;
@@ -635,7 +649,7 @@ namespace CCI.DesktopClient.Screens
       // lblPostedMsg
       // 
       this.lblPostedMsg.AutoSize = true;
-      this.lblPostedMsg.Location = new System.Drawing.Point(280, 542);
+      this.lblPostedMsg.Location = new System.Drawing.Point(292, 501);
       this.lblPostedMsg.Name = "lblPostedMsg";
       this.lblPostedMsg.Size = new System.Drawing.Size(0, 13);
       this.lblPostedMsg.TabIndex = 39;
@@ -644,10 +658,11 @@ namespace CCI.DesktopClient.Screens
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(1254, 629);
+      this.ClientSize = new System.Drawing.Size(1148, 629);
       this.Controls.Add(this.splitMain);
       this.Name = "frmImports";
       this.Text = "Imports";
+      this.Load += new System.EventHandler(this.frmImports_Load);
       this.panel4.ResumeLayout(false);
       this.panel4.PerformLayout();
       this.panel3.ResumeLayout(false);

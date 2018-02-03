@@ -70,22 +70,24 @@
       // 
       // btnLogin
       // 
+      this.btnLogin.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(200)))), ((int)(((byte)(150)))));
       this.btnLogin.Location = new System.Drawing.Point(266, 152);
       this.btnLogin.Name = "btnLogin";
       this.btnLogin.Size = new System.Drawing.Size(75, 23);
       this.btnLogin.TabIndex = 5;
       this.btnLogin.Text = "Login";
-      this.btnLogin.UseVisualStyleBackColor = true;
+      this.btnLogin.UseVisualStyleBackColor = false;
       this.btnLogin.Click += new System.EventHandler(this.btnLogin_Click);
       // 
       // btnCancel
       // 
+      this.btnCancel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(200)))), ((int)(((byte)(150)))));
       this.btnCancel.Location = new System.Drawing.Point(73, 152);
       this.btnCancel.Name = "btnCancel";
       this.btnCancel.Size = new System.Drawing.Size(75, 23);
       this.btnCancel.TabIndex = 6;
       this.btnCancel.Text = "Cancel";
-      this.btnCancel.UseVisualStyleBackColor = true;
+      this.btnCancel.UseVisualStyleBackColor = false;
       this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
       // 
       // lblTitle
@@ -160,6 +162,7 @@
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+      this.BackColor = System.Drawing.SystemColors.ControlLightLight;
       this.ClientSize = new System.Drawing.Size(411, 197);
       this.Controls.Add(this.lblNewPassword2);
       this.Controls.Add(this.txtNewPassword2);
