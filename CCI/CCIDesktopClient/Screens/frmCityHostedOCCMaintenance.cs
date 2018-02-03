@@ -110,7 +110,7 @@ namespace CCI.DesktopClient.Screens
       DateTime billDate = dtBillDate.Value;
       string retailUSOC = CHSAJUSTMENTUSOC;
       decimal retailAmount = CommonFunctions.CDecimal(txtRetailAmount.Text);
-      string description = txtDescription.Text;
+      string description = txtDescription.Text.Replace("'","''"); // escape single quotes so the db insert statement doesn't throw an error
       int? ret = _dataSource.updateOCCAdjustment(ID, customerID, billDate, retailUSOC, retailAmount, description, SecurityContext.User, "ManualAdjustment");
       reloadGrid(true);
       MessageBox.Show("Record saved");
@@ -153,5 +153,12 @@ namespace CCI.DesktopClient.Screens
 
     #endregion
 
+    private void btnClear_Click(object sender, EventArgs e)
+    {
+      srchCustomer.Text = string.Empty;
+      srchDealer.Text = string.Empty;
+      srchOCCAdjustments.Clear();
+      srchOCCAdjustments.ClearSearch();
+    }
   }
 }

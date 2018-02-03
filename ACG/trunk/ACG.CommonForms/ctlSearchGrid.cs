@@ -498,11 +498,12 @@ namespace ACG.CommonForms
           UserOptionCollection options = new UserOptionCollection(option.Option);
           foreach (KeyValuePair<string, UserOption> entry in options)
             applyUserOption(entry.Value);
+          tslblCurrentSavedSearch.Text = name;
         }
       }
       _searchPaneEdited = false; // set edit flag to false since we just loaded the search pane
     }
-    public void DeleteNamedSearch(string name)
+    public bool DeleteNamedSearch(string name)
     {
       string nothingToDelete = "There is no saved search found to delete.";
       string title = "Delete Saved Search";
@@ -510,33 +511,40 @@ namespace ACG.CommonForms
       if (string.IsNullOrEmpty(name))
       {
         MessageBox.Show(nothingToDelete, title);
-        return;
+        return false;
       }
-      // get the current user
-      IScreenBase parent = CommonFormFunctions.getParentForm(this);
-      if (parent == null || parent.SecurityContext == null)
-        return;
-      string user = parent.SecurityContext.User;
-      string optiontype = string.Format("NamedSearch:{0}",name);
-      // check to see if it is there
-      UserOption option = _dataSource.getUserOption(user, optiontype, NameType.ToString());
-      if (option == null) // if null then it is not
+      DialogResult ans = MessageBox.Show("Delete Save Search " + name + "?", title, MessageBoxButtons.YesNo);
+      if (ans == DialogResult.Yes)
       {
-        MessageBox.Show(nothingToDelete, title); // so inform the user
-        return;
-      }
+        // get the current user
+        IScreenBase parent = CommonFormFunctions.getParentForm(this);
+        if (parent == null || parent.SecurityContext == null)
+          return false;
+        string user = parent.SecurityContext.User;
+        string optiontype = string.Format("NamedSearch:{0}", name);
+        // check to see if it is there
+        UserOption option = _dataSource.getUserOption(user, optiontype, NameType.ToString());
+        if (option == null) // if null then it is not
+        {
+          MessageBox.Show(nothingToDelete, title); // so inform the user
+          return false;
+        }
 
-      if (!_searchPaneEdited && !string.IsNullOrEmpty(name) && !NameType.Equals("None", StringComparison.CurrentCultureIgnoreCase))
-      {
-        // delete the user option
-        _dataSource.deleteUserOption(user, optiontype, NameType.ToString());
-        // reset the grid
-        _searchCriteria.Clear();
-        grdSearch.Rows.Clear();
-        // tell the user we did it
-        MessageBox.Show("Saved Search Deleted.", title);
+        if (!_searchPaneEdited && !string.IsNullOrEmpty(name) && !NameType.Equals("None", StringComparison.CurrentCultureIgnoreCase))
+        {
+          // delete the user option
+          _dataSource.deleteUserOption(user, optiontype, NameType.ToString());
+          // reset the grid
+          _searchCriteria.Clear();
+          grdSearch.Rows.Clear();
+          // tell the user we did it
+          MessageBox.Show("Saved Search Deleted.", title);
+        }
+        _searchPaneEdited = false; // set edit flag to false since we just loaded the search pane
+        return true;
       }
-      _searchPaneEdited = false; // set edit flag to false since we just loaded the search pane
+      else
+        return false;
     }
     public void SelectFirst()
     {
@@ -749,25 +757,7 @@ namespace ACG.CommonForms
     }
     private void tsbtnSaveOptions_Click(object sender, EventArgs e)
     {
-      string optionName;
-      if (string.IsNullOrEmpty(srchNamedSearch.Text))
-      {
-        optionName = Interaction.InputBox("Search Save Name", "Save a Named Search");
-        if (!string.IsNullOrEmpty(optionName))
-          saveNamedUserOptions(optionName);
-      }
-      else
-      {
-        optionName = srchNamedSearch.Text;
-        if (!string.IsNullOrEmpty(optionName))
-        {
-          DialogResult ans = MessageBox.Show(string.Format("Do you want to save Named Search '{0}'", optionName), "Save Named Search", MessageBoxButtons.YesNo);
-          if (ans == DialogResult.Yes)
-            saveNamedUserOptions(optionName);
-        }
-      }
-
-
+      savedSearchSave(tslblCurrentSavedSearch.Text);
     }
     private void srchNamedSearch_OnSelected(object sender, EventArgs e)
     {
@@ -802,8 +792,15 @@ namespace ACG.CommonForms
     }
     private void btnDeleteSavedSearch_Click(object sender, EventArgs e)
     {
-      DeleteNamedSearch(srchNamedSearch.Text); // delete the named search
-      srchNamedSearch.Text = string.Empty; // and clear the field
+      if (string.IsNullOrEmpty(tslblCurrentSavedSearch.Text))
+        MessageBox.Show("No named search to delete");
+      else
+        deleteSavedSearch(tslblCurrentSavedSearch.Text);
+    }
+    private void tsbthNewSavedSearch_Click(object sender, EventArgs e)
+    {
+      tslblCurrentSavedSearch.Text = string.Empty;
+      savedSearchSave(tslblCurrentSavedSearch.Text);
     }
     #endregion
 
@@ -880,6 +877,39 @@ namespace ACG.CommonForms
     #endregion
 
     #region private methods
+    private void deleteSavedSearch(string name)
+    {
+      if (DeleteNamedSearch(name)) // delete the named search, returns true if successful
+      {
+        srchNamedSearch.Text = string.Empty; // and clear the field
+        tslblCurrentSavedSearch.Text = string.Empty;
+      }
+    }
+    private void savedSearchSave(string name)
+    {
+      string optionName;
+      if (string.IsNullOrEmpty(name))
+      {
+        optionName = Interaction.InputBox("Search Save Name", "Save a Named Search");
+        if (!string.IsNullOrEmpty(optionName))
+        {
+          saveNamedUserOptions(optionName);
+          tslblCurrentSavedSearch.Text = optionName;
+          srchNamedSearch.Text = string.Empty;
+        }
+      }
+      else
+      {
+        optionName = name;
+        DialogResult ans = MessageBox.Show(string.Format("Do you want to save Named Search '{0}'", optionName), "Save Named Search", MessageBoxButtons.YesNo);
+        if (ans == DialogResult.Yes)
+        {
+          saveNamedUserOptions(optionName);
+          tslblCurrentSavedSearch.Text = optionName;
+          srchNamedSearch.Text = string.Empty;
+        }
+      }
+    }
     private void search()
     {
       Cursor.Current = Cursors.WaitCursor;
@@ -1530,6 +1560,7 @@ namespace ACG.CommonForms
     }
 
     #endregion
+
 
   }
 }

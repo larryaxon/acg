@@ -35,11 +35,15 @@
       System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
       this.splitMain = new System.Windows.Forms.SplitContainer();
       this.splitSelect = new System.Windows.Forms.SplitContainer();
-      this.btnDeleteSavedSearch = new System.Windows.Forms.Button();
+      this.srchNamedSearch = new ACG.CommonForms.ctlSearch();
       this.toolStripSearch = new System.Windows.Forms.ToolStrip();
       this.tsbtnSearch = new System.Windows.Forms.ToolStripButton();
       this.tsbtnExport = new System.Windows.Forms.ToolStripButton();
       this.tsbtnClear = new System.Windows.Forms.ToolStripButton();
+      this.tslblSavedSearchLabel = new System.Windows.Forms.ToolStripLabel();
+      this.tslblCurrentSavedSearch = new System.Windows.Forms.ToolStripLabel();
+      this.tsbthNewSavedSearch = new System.Windows.Forms.ToolStripButton();
+      this.tsbtnDeleteSavedSearch = new System.Windows.Forms.ToolStripButton();
       this.tsbtnSaveOptions = new System.Windows.Forms.ToolStripButton();
       this.grdSearch = new System.Windows.Forms.DataGridView();
       this.lblMRCTotal = new System.Windows.Forms.Label();
@@ -56,7 +60,6 @@
       this.copyCellToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.btnCollapseSearch = new System.Windows.Forms.Button();
       this.btnShowFields = new System.Windows.Forms.Button();
-      this.srchNamedSearch = new ACG.CommonForms.ctlSearch();
       this.splitMain.Panel1.SuspendLayout();
       this.splitMain.Panel2.SuspendLayout();
       this.splitMain.SuspendLayout();
@@ -99,7 +102,6 @@
       // splitSelect.Panel1
       // 
       this.splitSelect.Panel1.Controls.Add(this.srchNamedSearch);
-      this.splitSelect.Panel1.Controls.Add(this.btnDeleteSavedSearch);
       this.splitSelect.Panel1.Controls.Add(this.toolStripSearch);
       this.splitSelect.Panel1.Controls.Add(this.grdSearch);
       this.splitSelect.Panel1.Controls.Add(this.lblMRCTotal);
@@ -114,19 +116,37 @@
       this.splitSelect.Panel2.Controls.Add(this.label1);
       this.splitSelect.Panel2.Controls.Add(this.lstFields);
       this.splitSelect.Size = new System.Drawing.Size(452, 448);
-      this.splitSelect.SplitterDistance = 234;
+      this.splitSelect.SplitterDistance = 265;
       this.splitSelect.TabIndex = 11;
       // 
-      // btnDeleteSavedSearch
+      // srchNamedSearch
       // 
-      this.btnDeleteSavedSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnDeleteSavedSearch.Location = new System.Drawing.Point(207, 22);
-      this.btnDeleteSavedSearch.Name = "btnDeleteSavedSearch";
-      this.btnDeleteSavedSearch.Size = new System.Drawing.Size(22, 20);
-      this.btnDeleteSavedSearch.TabIndex = 10;
-      this.btnDeleteSavedSearch.Text = "X";
-      this.btnDeleteSavedSearch.UseVisualStyleBackColor = true;
-      this.btnDeleteSavedSearch.Click += new System.EventHandler(this.btnDeleteSavedSearch_Click);
+      this.srchNamedSearch.AddNewMode = false;
+      this.srchNamedSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.srchNamedSearch.AutoAddNewMode = false;
+      this.srchNamedSearch.AutoSelectWhenMatch = false;
+      this.srchNamedSearch.AutoTabToNextControlOnSelect = false;
+      this.srchNamedSearch.ClearSearchOnExpand = true;
+      this.srchNamedSearch.ClearSearchWhenComplete = true;
+      this.srchNamedSearch.Collapsed = true;
+      this.srchNamedSearch.CreatedNewItem = false;
+      this.srchNamedSearch.DisplayOnlyDescription = false;
+      this.srchNamedSearch.DisplayOnlyID = true;
+      this.srchNamedSearch.FixKeySpace = "-1";
+      this.srchNamedSearch.ID = "";
+      this.srchNamedSearch.ID_DescSplitter = ":";
+      this.srchNamedSearch.Location = new System.Drawing.Point(6, 22);
+      this.srchNamedSearch.MaxHeight = 228;
+      this.srchNamedSearch.MustExistInList = false;
+      this.srchNamedSearch.MustExistMessage = "You must enter a valid value";
+      this.srchNamedSearch.Name = "srchNamedSearch";
+      this.srchNamedSearch.SearchExec = null;
+      this.srchNamedSearch.ShowCustomerNameWhenSet = true;
+      this.srchNamedSearch.ShowTermedCheckBox = false;
+      this.srchNamedSearch.Size = new System.Drawing.Size(256, 22);
+      this.srchNamedSearch.TabIndex = 0;
+      this.srchNamedSearch.OnSelected += new System.EventHandler<System.EventArgs>(this.srchNamedSearch_OnSelected);
       // 
       // toolStripSearch
       // 
@@ -135,10 +155,14 @@
             this.tsbtnSearch,
             this.tsbtnExport,
             this.tsbtnClear,
+            this.tslblSavedSearchLabel,
+            this.tslblCurrentSavedSearch,
+            this.tsbthNewSavedSearch,
+            this.tsbtnDeleteSavedSearch,
             this.tsbtnSaveOptions});
       this.toolStripSearch.Location = new System.Drawing.Point(0, 423);
       this.toolStripSearch.Name = "toolStripSearch";
-      this.toolStripSearch.Size = new System.Drawing.Size(234, 25);
+      this.toolStripSearch.Size = new System.Drawing.Size(265, 25);
       this.toolStripSearch.TabIndex = 2;
       this.toolStripSearch.Text = "toolStrip1";
       // 
@@ -169,13 +193,43 @@
       this.tsbtnClear.Text = "Clear";
       this.tsbtnClear.Click += new System.EventHandler(this.btnClear_Click);
       // 
+      // tslblSavedSearchLabel
+      // 
+      this.tslblSavedSearchLabel.Name = "tslblSavedSearchLabel";
+      this.tslblSavedSearchLabel.Size = new System.Drawing.Size(77, 22);
+      this.tslblSavedSearchLabel.Text = "Saved Search:";
+      // 
+      // tslblCurrentSavedSearch
+      // 
+      this.tslblCurrentSavedSearch.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold);
+      this.tslblCurrentSavedSearch.Name = "tslblCurrentSavedSearch";
+      this.tslblCurrentSavedSearch.Size = new System.Drawing.Size(0, 22);
+      // 
+      // tsbthNewSavedSearch
+      // 
+      this.tsbthNewSavedSearch.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+      this.tsbthNewSavedSearch.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.tsbthNewSavedSearch.Name = "tsbthNewSavedSearch";
+      this.tsbthNewSavedSearch.Size = new System.Drawing.Size(32, 22);
+      this.tsbthNewSavedSearch.Text = "New";
+      this.tsbthNewSavedSearch.Click += new System.EventHandler(this.tsbthNewSavedSearch_Click);
+      // 
+      // tsbtnDeleteSavedSearch
+      // 
+      this.tsbtnDeleteSavedSearch.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+      this.tsbtnDeleteSavedSearch.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.tsbtnDeleteSavedSearch.Name = "tsbtnDeleteSavedSearch";
+      this.tsbtnDeleteSavedSearch.Size = new System.Drawing.Size(23, 17);
+      this.tsbtnDeleteSavedSearch.Text = "X";
+      this.tsbtnDeleteSavedSearch.Click += new System.EventHandler(this.btnDeleteSavedSearch_Click);
+      // 
       // tsbtnSaveOptions
       // 
       this.tsbtnSaveOptions.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
       this.tsbtnSaveOptions.Image = ((System.Drawing.Image)(resources.GetObject("tsbtnSaveOptions.Image")));
       this.tsbtnSaveOptions.ImageTransparentColor = System.Drawing.Color.Black;
       this.tsbtnSaveOptions.Name = "tsbtnSaveOptions";
-      this.tsbtnSaveOptions.Size = new System.Drawing.Size(23, 22);
+      this.tsbtnSaveOptions.Size = new System.Drawing.Size(23, 20);
       this.tsbtnSaveOptions.Text = "Save";
       this.tsbtnSaveOptions.Click += new System.EventHandler(this.tsbtnSaveOptions_Click);
       // 
@@ -187,7 +241,7 @@
       this.grdSearch.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
       this.grdSearch.Location = new System.Drawing.Point(6, 50);
       this.grdSearch.Name = "grdSearch";
-      this.grdSearch.Size = new System.Drawing.Size(228, 370);
+      this.grdSearch.Size = new System.Drawing.Size(259, 370);
       this.grdSearch.TabIndex = 1;
       this.grdSearch.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.grdSearch_CellValueChanged);
       this.grdSearch.DefaultValuesNeeded += new System.Windows.Forms.DataGridViewRowEventHandler(this.grdSearch_DefaultValuesNeeded);
@@ -200,7 +254,7 @@
       // 
       this.lblMRCTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.lblMRCTotal.AutoSize = true;
-      this.lblMRCTotal.Location = new System.Drawing.Point(52, 10);
+      this.lblMRCTotal.Location = new System.Drawing.Point(83, 10);
       this.lblMRCTotal.Name = "lblMRCTotal";
       this.lblMRCTotal.Size = new System.Drawing.Size(58, 13);
       this.lblMRCTotal.TabIndex = 9;
@@ -219,7 +273,7 @@
       // btnSelectAllFields
       // 
       this.btnSelectAllFields.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnSelectAllFields.Location = new System.Drawing.Point(37, 422);
+      this.btnSelectAllFields.Location = new System.Drawing.Point(6, 422);
       this.btnSelectAllFields.Name = "btnSelectAllFields";
       this.btnSelectAllFields.Size = new System.Drawing.Size(54, 20);
       this.btnSelectAllFields.TabIndex = 2;
@@ -230,7 +284,7 @@
       // btnClearFields
       // 
       this.btnClearFields.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnClearFields.Location = new System.Drawing.Point(97, 422);
+      this.btnClearFields.Location = new System.Drawing.Point(66, 422);
       this.btnClearFields.Name = "btnClearFields";
       this.btnClearFields.Size = new System.Drawing.Size(54, 20);
       this.btnClearFields.TabIndex = 3;
@@ -252,7 +306,7 @@
       // btnRefresh
       // 
       this.btnRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnRefresh.Location = new System.Drawing.Point(157, 422);
+      this.btnRefresh.Location = new System.Drawing.Point(126, 422);
       this.btnRefresh.Name = "btnRefresh";
       this.btnRefresh.Size = new System.Drawing.Size(54, 20);
       this.btnRefresh.TabIndex = 4;
@@ -279,7 +333,7 @@
       this.lstFields.Location = new System.Drawing.Point(4, 26);
       this.lstFields.Name = "lstFields";
       this.lstFields.ScrollAlwaysVisible = true;
-      this.lstFields.Size = new System.Drawing.Size(207, 394);
+      this.lstFields.Size = new System.Drawing.Size(176, 394);
       this.lstFields.Sorted = true;
       this.lstFields.TabIndex = 1;
       this.lstFields.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.lstFields_ItemCheck);
@@ -375,35 +429,6 @@
       this.btnShowFields.UseVisualStyleBackColor = false;
       this.btnShowFields.Click += new System.EventHandler(this.btnShowFields_Click);
       // 
-      // srchNamedSearch
-      // 
-      this.srchNamedSearch.AddNewMode = false;
-      this.srchNamedSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.srchNamedSearch.AutoAddNewMode = false;
-      this.srchNamedSearch.AutoSelectWhenMatch = false;
-      this.srchNamedSearch.AutoTabToNextControlOnSelect = false;
-      this.srchNamedSearch.ClearSearchOnExpand = true;
-      this.srchNamedSearch.ClearSearchWhenComplete = true;
-      this.srchNamedSearch.Collapsed = true;
-      this.srchNamedSearch.CreatedNewItem = false;
-      this.srchNamedSearch.DisplayOnlyDescription = false;
-      this.srchNamedSearch.DisplayOnlyID = true;
-      this.srchNamedSearch.FixKeySpace = "-1";
-      this.srchNamedSearch.ID = "";
-      this.srchNamedSearch.ID_DescSplitter = ":";
-      this.srchNamedSearch.Location = new System.Drawing.Point(6, 22);
-      this.srchNamedSearch.MaxHeight = 228;
-      this.srchNamedSearch.MustExistInList = false;
-      this.srchNamedSearch.MustExistMessage = "You must enter a valid value";
-      this.srchNamedSearch.Name = "srchNamedSearch";
-      this.srchNamedSearch.SearchExec = null;
-      this.srchNamedSearch.ShowCustomerNameWhenSet = true;
-      this.srchNamedSearch.ShowTermedCheckBox = false;
-      this.srchNamedSearch.Size = new System.Drawing.Size(202, 22);
-      this.srchNamedSearch.TabIndex = 0;
-      this.srchNamedSearch.OnSelected += new System.EventHandler<System.EventArgs>(this.srchNamedSearch_OnSelected);
-      // 
       // ctlSearchGrid
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -457,6 +482,9 @@
     private System.Windows.Forms.ToolStripButton tsbtnClear;
     private System.Windows.Forms.DataGridView grdSearch;
     private ACG.CommonForms.ctlSearch srchNamedSearch;
-    private System.Windows.Forms.Button btnDeleteSavedSearch;
+    private System.Windows.Forms.ToolStripLabel tslblCurrentSavedSearch;
+    private System.Windows.Forms.ToolStripLabel tslblSavedSearchLabel;
+    private System.Windows.Forms.ToolStripButton tsbthNewSavedSearch;
+    private System.Windows.Forms.ToolStripButton tsbtnDeleteSavedSearch;
   }
 }

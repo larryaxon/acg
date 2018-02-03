@@ -28,7 +28,6 @@
     /// </summary>
     private void InitializeComponent()
     {
-      System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmCityHostedOCCMaintenance));
       this.label1 = new System.Windows.Forms.Label();
       this.srchDealer = new ACG.CommonForms.ctlSearch();
       this.srchCustomer = new ACG.CommonForms.ctlSearch();
@@ -52,6 +51,7 @@
       this.ckAdjustmentsOnly = new System.Windows.Forms.CheckBox();
       this.btnLoad = new System.Windows.Forms.Button();
       this.ckAutoRefresh = new System.Windows.Forms.CheckBox();
+      this.btnClear = new System.Windows.Forms.Button();
       this.splitMain.Panel1.SuspendLayout();
       this.splitMain.Panel2.SuspendLayout();
       this.splitMain.SuspendLayout();
@@ -69,15 +69,24 @@
       // srchDealer
       // 
       this.srchDealer.AddNewMode = false;
+      this.srchDealer.AutoAddNewMode = false;
       this.srchDealer.AutoSelectWhenMatch = false;
+      this.srchDealer.AutoTabToNextControlOnSelect = true;
+      this.srchDealer.ClearSearchOnExpand = false;
       this.srchDealer.ClearSearchWhenComplete = false;
       this.srchDealer.Collapsed = true;
       this.srchDealer.CreatedNewItem = false;
+      this.srchDealer.DisplayOnlyDescription = false;
       this.srchDealer.DisplayOnlyID = false;
+      this.srchDealer.FixKeySpace = "-1";
       this.srchDealer.ID = "";
+      this.srchDealer.ID_DescSplitter = ":";
       this.srchDealer.Location = new System.Drawing.Point(52, 7);
       this.srchDealer.MaxHeight = 228;
+      this.srchDealer.MustExistInList = false;
+      this.srchDealer.MustExistMessage = "You must enter a valid value";
       this.srchDealer.Name = "srchDealer";
+      this.srchDealer.SearchExec = null;
       this.srchDealer.ShowCustomerNameWhenSet = true;
       this.srchDealer.ShowTermedCheckBox = false;
       this.srchDealer.Size = new System.Drawing.Size(273, 25);
@@ -87,15 +96,24 @@
       // srchCustomer
       // 
       this.srchCustomer.AddNewMode = false;
+      this.srchCustomer.AutoAddNewMode = false;
       this.srchCustomer.AutoSelectWhenMatch = false;
+      this.srchCustomer.AutoTabToNextControlOnSelect = true;
+      this.srchCustomer.ClearSearchOnExpand = false;
       this.srchCustomer.ClearSearchWhenComplete = false;
       this.srchCustomer.Collapsed = true;
       this.srchCustomer.CreatedNewItem = false;
+      this.srchCustomer.DisplayOnlyDescription = false;
       this.srchCustomer.DisplayOnlyID = false;
+      this.srchCustomer.FixKeySpace = "-1";
       this.srchCustomer.ID = "";
+      this.srchCustomer.ID_DescSplitter = ":";
       this.srchCustomer.Location = new System.Drawing.Point(387, 7);
       this.srchCustomer.MaxHeight = 228;
+      this.srchCustomer.MustExistInList = false;
+      this.srchCustomer.MustExistMessage = "You must enter a valid value";
       this.srchCustomer.Name = "srchCustomer";
+      this.srchCustomer.SearchExec = null;
       this.srchCustomer.ShowCustomerNameWhenSet = true;
       this.srchCustomer.ShowTermedCheckBox = false;
       this.srchCustomer.Size = new System.Drawing.Size(269, 25);
@@ -163,7 +181,9 @@
       // srchOCCAdjustments
       // 
       this.srchOCCAdjustments.AllowSortByColumn = true;
-      this.srchOCCAdjustments.AutoRefreshWhenFieldChecked = true;
+      this.srchOCCAdjustments.AutoRefreshWhenFieldChecked = false;
+      this.srchOCCAdjustments.AutoSaveUserOptions = false;
+      this.srchOCCAdjustments.BackColor = System.Drawing.SystemColors.ControlLightLight;
       this.srchOCCAdjustments.CanChangeDisplayFields = true;
       this.srchOCCAdjustments.CanChangeDisplaySearchCriteria = true;
       this.srchOCCAdjustments.ColumnName = "CustomerID";
@@ -172,29 +192,41 @@
       this.srchOCCAdjustments.Dock = System.Windows.Forms.DockStyle.Fill;
       this.srchOCCAdjustments.FieldsDefaultIsChecked = true;
       this.srchOCCAdjustments.ForceReloadSearchColumns = false;
+      this.srchOCCAdjustments.IDList = null;
       this.srchOCCAdjustments.IncludeGroupAsCriteria = false;
       this.srchOCCAdjustments.InnerWhere = "";
       this.srchOCCAdjustments.Location = new System.Drawing.Point(0, 0);
       this.srchOCCAdjustments.Name = "srchOCCAdjustments";
       this.srchOCCAdjustments.NameType = CCI.Common.CommonData.UnmatchedNameTypes.Customer;
+      this.srchOCCAdjustments.SearchCriteria = null;
       this.srchOCCAdjustments.Size = new System.Drawing.Size(1236, 361);
       this.srchOCCAdjustments.TabIndex = 0;
       this.srchOCCAdjustments.Title = "Search (0 Records Found)";
       this.srchOCCAdjustments.UniqueIdentifier = "ID";
-      this.srchOCCAdjustments.RowSelected += new CCI.DesktopClient.Common.ctlSearchGrid.RowSelectedHandler(this.srchOCCAdjustments_RowSelected);
+      this.srchOCCAdjustments.UseNamedSearches = false;
+      this.srchOCCAdjustments.RowSelected += new ACG.CommonForms.ctlSearchGrid.RowSelectedHandler(this.srchOCCAdjustments_RowSelected);
       // 
       // txtCustomer
       // 
       this.txtCustomer.AddNewMode = false;
+      this.txtCustomer.AutoAddNewMode = false;
       this.txtCustomer.AutoSelectWhenMatch = false;
+      this.txtCustomer.AutoTabToNextControlOnSelect = true;
+      this.txtCustomer.ClearSearchOnExpand = false;
       this.txtCustomer.ClearSearchWhenComplete = false;
       this.txtCustomer.Collapsed = true;
       this.txtCustomer.CreatedNewItem = false;
+      this.txtCustomer.DisplayOnlyDescription = false;
       this.txtCustomer.DisplayOnlyID = false;
+      this.txtCustomer.FixKeySpace = "-1";
       this.txtCustomer.ID = "";
+      this.txtCustomer.ID_DescSplitter = ":";
       this.txtCustomer.Location = new System.Drawing.Point(90, 14);
       this.txtCustomer.MaxHeight = 228;
+      this.txtCustomer.MustExistInList = false;
+      this.txtCustomer.MustExistMessage = "You must enter a valid value";
       this.txtCustomer.Name = "txtCustomer";
+      this.txtCustomer.SearchExec = null;
       this.txtCustomer.ShowCustomerNameWhenSet = true;
       this.txtCustomer.ShowTermedCheckBox = false;
       this.txtCustomer.Size = new System.Drawing.Size(321, 25);
@@ -336,11 +368,22 @@
       this.ckAutoRefresh.Text = "Auto Refresh";
       this.ckAutoRefresh.UseVisualStyleBackColor = true;
       // 
+      // btnClear
+      // 
+      this.btnClear.Location = new System.Drawing.Point(1074, 4);
+      this.btnClear.Name = "btnClear";
+      this.btnClear.Size = new System.Drawing.Size(75, 23);
+      this.btnClear.TabIndex = 9;
+      this.btnClear.Text = "Clear";
+      this.btnClear.UseVisualStyleBackColor = true;
+      this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
+      // 
       // frmCityHostedOCCMaintenance
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(1240, 533);
+      this.Controls.Add(this.btnClear);
       this.Controls.Add(this.ckAutoRefresh);
       this.Controls.Add(this.btnLoad);
       this.Controls.Add(this.ckAdjustmentsOnly);
@@ -388,5 +431,6 @@
     private System.Windows.Forms.CheckBox ckAdjustmentsOnly;
     private System.Windows.Forms.Button btnLoad;
     private System.Windows.Forms.CheckBox ckAutoRefresh;
+    private System.Windows.Forms.Button btnClear;
   }
 }
