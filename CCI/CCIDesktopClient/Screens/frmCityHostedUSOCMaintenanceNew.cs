@@ -756,7 +756,7 @@ namespace CCI.DesktopClient.Screens
         {
           case "StartDate":
           case "EndDate":
-            if (cell.Value != null) // null is valid value
+            if (cell.Value != null && cell.Value != System.DBNull.Value) // null is valid value
             {
               if (!CommonFunctions.IsDateTime(cell.Value.ToString())) // but if its not a good date
               {
@@ -771,7 +771,7 @@ namespace CCI.DesktopClient.Screens
             }
             break;
           case "USOC":
-            if (cell.Value == null) // there is no USOC
+            if (cell.Value == null || cell.Value == System.DBNull.Value) // there is no USOC
               cell.Value = txtRetailUSOC.Text; // then use the one from the current tab
             break;
           case "MRC":
