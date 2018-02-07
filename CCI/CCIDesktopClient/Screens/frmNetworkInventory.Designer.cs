@@ -87,7 +87,6 @@
       this.label1 = new System.Windows.Forms.Label();
       this.txtLastModifiedBy = new System.Windows.Forms.TextBox();
       this.srchNetworkInventory = new CCI.DesktopClient.Common.ctlSearchGrid();
-      this.label16 = new System.Windows.Forms.Label();
       this.splitMain.Panel1.SuspendLayout();
       this.splitMain.Panel2.SuspendLayout();
       this.splitMain.SuspendLayout();
@@ -212,6 +211,7 @@
       this.splitMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+      this.splitMain.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
       this.splitMain.Location = new System.Drawing.Point(12, 36);
       this.splitMain.Name = "splitMain";
       this.splitMain.Orientation = System.Windows.Forms.Orientation.Horizontal;
@@ -223,7 +223,6 @@
       // 
       // splitMain.Panel2
       // 
-      this.splitMain.Panel2.Controls.Add(this.label16);
       this.splitMain.Panel2.Controls.Add(this.srchNetworkInventory);
       this.splitMain.Size = new System.Drawing.Size(1127, 638);
       this.splitMain.SplitterDistance = 304;
@@ -392,6 +391,7 @@
       this.srchPhysicalInventory.AllowSortByColumn = true;
       this.srchPhysicalInventory.AutoRefreshWhenFieldChecked = false;
       this.srchPhysicalInventory.AutoSaveUserOptions = false;
+      this.srchPhysicalInventory.BackColor = System.Drawing.SystemColors.ControlLightLight;
       this.srchPhysicalInventory.CanChangeDisplayFields = true;
       this.srchPhysicalInventory.CanChangeDisplaySearchCriteria = true;
       this.srchPhysicalInventory.ColumnName = "";
@@ -816,7 +816,7 @@
       // txtLastModifiedBy
       // 
       this.txtLastModifiedBy.Enabled = false;
-      this.txtLastModifiedBy.Location = new System.Drawing.Point(745, 111);
+      this.txtLastModifiedBy.Location = new System.Drawing.Point(682, 112);
       this.txtLastModifiedBy.Name = "txtLastModifiedBy";
       this.txtLastModifiedBy.Size = new System.Drawing.Size(138, 20);
       this.txtLastModifiedBy.TabIndex = 12;
@@ -824,14 +824,17 @@
       // srchNetworkInventory
       // 
       this.srchNetworkInventory.AllowSortByColumn = true;
+      this.srchNetworkInventory.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.srchNetworkInventory.AutoRefreshWhenFieldChecked = false;
       this.srchNetworkInventory.AutoSaveUserOptions = false;
+      this.srchNetworkInventory.BackColor = System.Drawing.SystemColors.ControlLightLight;
       this.srchNetworkInventory.CanChangeDisplayFields = true;
       this.srchNetworkInventory.CanChangeDisplaySearchCriteria = true;
       this.srchNetworkInventory.ColumnName = "CustomerName";
       this.srchNetworkInventory.DisplayFields = false;
-      this.srchNetworkInventory.DisplaySearchCriteria = true;
-      this.srchNetworkInventory.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.srchNetworkInventory.DisplaySearchCriteria = false;
       this.srchNetworkInventory.FieldsDefaultIsChecked = true;
       this.srchNetworkInventory.ForceReloadSearchColumns = false;
       this.srchNetworkInventory.IDList = null;
@@ -847,15 +850,6 @@
       this.srchNetworkInventory.UniqueIdentifier = "ID";
       this.srchNetworkInventory.UseNamedSearches = false;
       this.srchNetworkInventory.RowSelected += new ACG.CommonForms.ctlSearchGrid.RowSelectedHandler(this.srchNetworkInventory_RowSelected);
-      // 
-      // label16
-      // 
-      this.label16.AutoSize = true;
-      this.label16.Location = new System.Drawing.Point(8, 4);
-      this.label16.Name = "label16";
-      this.label16.Size = new System.Drawing.Size(122, 13);
-      this.label16.TabIndex = 2;
-      this.label16.Text = " New Network Inventory";
       // 
       // frmNetworkInventory
       // 
@@ -876,7 +870,6 @@
       this.Load += new System.EventHandler(this.frmCityCareNetworkInventory_Load);
       this.splitMain.Panel1.ResumeLayout(false);
       this.splitMain.Panel2.ResumeLayout(false);
-      this.splitMain.Panel2.PerformLayout();
       this.splitMain.ResumeLayout(false);
       this.pnlNewNetworkInventory.ResumeLayout(false);
       this.pnlNewNetworkInventory.PerformLayout();
@@ -895,7 +888,6 @@
     private System.Windows.Forms.Label label15;
     private System.Windows.Forms.TextBox txtOrderSearch;
     private System.Windows.Forms.Button btnSearch;
-    private System.Windows.Forms.Label label16;
     private Common.ctlSearchGrid srchNetworkInventory;
     private ACG.CommonForms.ctlSearch ctlCustomerSearch;
     private ACG.CommonForms.ctlSearch ctlLocationSearch;
