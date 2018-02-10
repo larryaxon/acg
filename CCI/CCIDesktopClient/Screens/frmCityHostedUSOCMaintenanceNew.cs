@@ -366,13 +366,25 @@ namespace CCI.DesktopClient.Screens
       string retail = CommonFunctions.CString(row.Cells[colRetailUSOC].Value);
       string wholesale = CommonFunctions.CString(row.Cells[colWholesaleUSOC].Value).Trim();
       if (string.IsNullOrEmpty(retail))
+      {
         lstRetailUsocs.ClearSelected();
+        srchRetailUsocMatching.Text = string.Empty;
+      }
       else
+      {
         CommonFormFunctions.setComboBoxCell(lstRetailUsocs, retail);
+        srchRetailUsocMatching.Text = retail;
+      }
       if (string.IsNullOrEmpty(wholesale))
+      {
         lstWholesaleUsocs.ClearSelected();
+        srchWholesaleUsocMatching.Text = string.Empty;
+      }
       else
+      {
         CommonFormFunctions.setComboBoxCell(lstWholesaleUsocs, wholesale);
+        srchWholesaleUsocMatching.Text = wholesale;
+      }
       matchUsocs(false);
     }
     private DateTime? getDateValue(object o)
@@ -400,39 +412,39 @@ namespace CCI.DesktopClient.Screens
         return;
       if (string.IsNullOrEmpty(mode))
         return;
-      if (mode.Equals(modeWholesale))
-      {
-        string wholesaleUsoc;
-        object w = row.Cells[colWholesaleUSOC];
-        if (w == null)
-          wholesaleUsoc = string.Empty;
-        else
-          wholesaleUsoc = CommonFunctions.CString(((DataGridViewCell)w).Value);
-        if (!txtWholesaleUSOC.Text.Equals(wholesaleUsoc, StringComparison.CurrentCultureIgnoreCase)) // only reload if this screen has not been loaded with this usoc
-          loadWholesaleFields(row);
-      }
-      else if (mode.Equals(modeRetail))
-      {
-        string retailUsoc;
-        object r = row.Cells[colRetailUSOC];
-        if (r == null)
-          retailUsoc = string.Empty;
-        else
-          retailUsoc = CommonFunctions.CString(((DataGridViewCell)r).Value);
-        if (!txtRetailUSOC.Text.Equals(retailUsoc, StringComparison.CurrentCultureIgnoreCase)) // only reload if this screen has not been loaded with this usoc
-        {
-          loadRetailFields(row);
-        }
-      }
-      else if (mode.Equals(modeMatching))
-        loadMatchingFields(row); // don;t worry about reload of this screen it is fast and simple
+      // 2-10-2018 LLA Got rid of looking at mode to decide whether to load tabs. Just load all of them unless there's no data
+      string wholesaleUsoc;
+      object w = row.Cells[colWholesaleUSOC];
+      if (w == null)
+        wholesaleUsoc = string.Empty;
+      else
+        wholesaleUsoc = CommonFunctions.CString(((DataGridViewCell)w).Value);
+      string retailUsoc;
+      object r = row.Cells[colRetailUSOC];
+      if (r == null)
+        retailUsoc = string.Empty;
+      else
+        retailUsoc = CommonFunctions.CString(((DataGridViewCell)r).Value);
+      loadWholesaleFields(row);
+      loadRetailFields(row);
+      loadMatchingFields(row); // don't worry about reload of this screen it is fast and simple
     }
     private void matchUsocs(bool save)
     {
-      string retail = lstRetailUsocs.Text;
-      string wholesale = lstWholesaleUsocs.Text;
+      string retail = srchRetailUsocMatching.Text;
+      string wholesale = srchWholesaleUsocMatching.Text;
       string primaryCarrier = cboCarrier.Text;
-      lblUsocMatching.Text = string.Format("Retail {0} = Wholesale {1}", retail, wholesale);
+      if (string.IsNullOrEmpty(retail))
+        if (string.IsNullOrEmpty(wholesale))
+          lblUsocMatching.Text = "No Retail or Wholesale Usoc selected";
+        else
+          lblUsocMatching.Text = string.Format("Wholesale Usoc {0} is Unmatched", wholesale);
+      else
+        if (string.IsNullOrEmpty(wholesale))
+          lblUsocMatching.Text = string.Format("Retail Usoc {0} is Unmatched", retail);
+        else
+          lblUsocMatching.Text = string.Format("Retail {0} = Wholesale {1}", retail, wholesale);
+
       if (save)
       {
         int? ret = _dataSource.reassignWholesaleUSOC(retail, wholesale, primaryCarrier);
@@ -443,20 +455,21 @@ namespace CCI.DesktopClient.Screens
     }
     private void unmatchUsocs(bool save)
     {
-      lblUsocMatching.Text = string.Empty;
+
       string retail = lstRetailUsocs.Text;
       string primaryCarrier = cboCarrier.Text;
       string wholesale = lstWholesaleUsocs.Text;
+      lblUsocMatching.Text = string.Format("Retail {0} and Wholesale {1} are Unmatched", retail, wholesale);
       if (save)
       {
         // disconect retail
-        int? ret = _dataSource.reassignWholesaleUSOC(retail, retail, primaryCarrier);
+        int? ret = _dataSource.reassignWholesaleUSOC(retail, string.Empty, primaryCarrier);
         if (ret != null && ret == -1)
           MessageBox.Show("UnMatch Retail to Wholesale USOC was not successfull");
         // disconnect whoesale
         if (retail.Equals(wholesale, StringComparison.CurrentCultureIgnoreCase))
         {
-          ret = _dataSource.reassignWholesaleUSOC(wholesale, wholesale, primaryCarrier);
+          ret = _dataSource.reassignWholesaleUSOC(string.Empty, wholesale, primaryCarrier);
           if (ret != null && ret == -1)
             MessageBox.Show("UnMatch Retail to Wholesale USOC was not successfull");
         }
@@ -709,24 +722,18 @@ namespace CCI.DesktopClient.Screens
       // select the list item to match selected item
       CommonFormFunctions.setComboBoxCell(lstWholesaleUsocs, srchWholesaleUsocMatching.Text);
     }
-
-    #endregion
-
     private void lstRetailUsocs_SelectedIndexChanged(object sender, EventArgs e)
     {
       srchRetailUsocMatching.Text = lstRetailUsocs.Text;
     }
-
     private void lstWholesaleUsocs_SelectedIndexChanged(object sender, EventArgs e)
     {
       srchWholesaleUsocMatching.Text = lstWholesaleUsocs.Text;
     }
-
     private void btnWholesaleSave_Click(object sender, EventArgs e)
     {
-       saveWholesale();
+      saveWholesale();
     }
-
     private void tabMaintenance_DrawItem(object sender, DrawItemEventArgs e)
     {
       TabPage page = tabMaintenance.TabPages[e.Index];
@@ -737,13 +744,11 @@ namespace CCI.DesktopClient.Screens
       paddedBounds.Offset(1, yOffset);
       TextRenderer.DrawText(e.Graphics, page.Text, Font, paddedBounds, page.ForeColor);
     }
-
     private void grdDealerCosts_RowLeave(object sender, DataGridViewCellEventArgs e)
     {
       if (!_dealerCostDirtyRows.Contains(e.RowIndex))
         _dealerCostDirtyRows.Add(e.RowIndex);
     }
-
     private void grdDealerCosts_RowValidating(object sender, DataGridViewCellCancelEventArgs e)
     {
       DataGridViewRow row = grdDealerCosts.Rows[e.RowIndex];
@@ -790,5 +795,8 @@ namespace CCI.DesktopClient.Screens
 
       }
     }
+    #endregion
+
+
   }
 }

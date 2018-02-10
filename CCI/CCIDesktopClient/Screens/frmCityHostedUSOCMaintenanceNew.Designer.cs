@@ -224,6 +224,7 @@
       this.tabMaintenance.Size = new System.Drawing.Size(1418, 320);
       this.tabMaintenance.TabIndex = 19;
       this.tabMaintenance.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.tabMaintenance_DrawItem);
+      this.tabMaintenance.SelectedIndexChanged += new System.EventHandler(this.tabMaintenance_SelectedIndexChanged);
       // 
       // tabRetail
       // 
@@ -815,6 +816,7 @@
       this.srchWholesaleUsocMatching.ShowTermedCheckBox = false;
       this.srchWholesaleUsocMatching.Size = new System.Drawing.Size(939, 27);
       this.srchWholesaleUsocMatching.TabIndex = 113;
+      this.srchWholesaleUsocMatching.OnSelected += new System.EventHandler<System.EventArgs>(this.srchWholesaleUsocMatching_OnSelected);
       // 
       // srchRetailUsocMatching
       // 
@@ -841,6 +843,7 @@
       this.srchRetailUsocMatching.ShowTermedCheckBox = false;
       this.srchRetailUsocMatching.Size = new System.Drawing.Size(327, 27);
       this.srchRetailUsocMatching.TabIndex = 112;
+      this.srchRetailUsocMatching.OnSelected += new System.EventHandler<System.EventArgs>(this.srchRetailUsocMatching_OnSelected);
       // 
       // lblUsocMatching
       // 
@@ -861,6 +864,7 @@
       this.lstWholesaleUsocs.Name = "lstWholesaleUsocs";
       this.lstWholesaleUsocs.Size = new System.Drawing.Size(939, 173);
       this.lstWholesaleUsocs.TabIndex = 11;
+      this.lstWholesaleUsocs.SelectedIndexChanged += new System.EventHandler(this.lstWholesaleUsocs_SelectedIndexChanged);
       // 
       // btnUnmatchUsoc
       // 
@@ -870,6 +874,7 @@
       this.btnUnmatchUsoc.TabIndex = 10;
       this.btnUnmatchUsoc.Text = "Unmatch";
       this.btnUnmatchUsoc.UseVisualStyleBackColor = true;
+      this.btnUnmatchUsoc.Click += new System.EventHandler(this.btnUnmatchUsoc_Click);
       // 
       // btnMatchUsoc
       // 
@@ -879,6 +884,7 @@
       this.btnMatchUsoc.TabIndex = 9;
       this.btnMatchUsoc.Text = "Match";
       this.btnMatchUsoc.UseVisualStyleBackColor = true;
+      this.btnMatchUsoc.Click += new System.EventHandler(this.btnMatchUsoc_Click);
       // 
       // lstRetailUsocs
       // 
@@ -889,6 +895,7 @@
       this.lstRetailUsocs.Name = "lstRetailUsocs";
       this.lstRetailUsocs.Size = new System.Drawing.Size(326, 173);
       this.lstRetailUsocs.TabIndex = 8;
+      this.lstRetailUsocs.SelectedIndexChanged += new System.EventHandler(this.lstRetailUsocs_SelectedIndexChanged);
       // 
       // label4
       // 
