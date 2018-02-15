@@ -60,8 +60,8 @@ namespace CCI.DesktopClient.Screens
     public frmCityHostedUSOCMaintenanceNew() 
     {
       InitializeComponent();
-      txtRetailUSOC.SearchExec = new SearchDataSourceProductList();
-      txtWholesaleUSOC.SearchExec = new SearchDataSourceProductList();
+      //txtRetailUSOC.SearchExec = new SearchDataSourceProductList();
+      //txtWholesaleUSOC.SearchExec = new SearchDataSourceProductList();
       srchRetailUsocMatching.SearchExec = new SearchDataSourceProductList();
       srchWholesaleUsocMatching.SearchExec = new SearchDataSourceProductList();
       resetUsocSearch(cboCarrier.Text);
@@ -98,7 +98,7 @@ namespace CCI.DesktopClient.Screens
         {
           if (cType == typeof(CheckBox))
             ((CheckBox)c).Checked = false;
-          else if (cType == typeof(TextBox) || cType == typeof(ComboBox) || cType == typeof(ACG.CommonForms.ctlSearch))
+          else if (cType == typeof(TextBox) || cType == typeof(ComboBox) || cType == typeof(ACG.CommonForms.ctlSearch) || cType == typeof(DateTimePicker))
             c.Text = string.Empty;
         }
       }
@@ -335,10 +335,10 @@ namespace CCI.DesktopClient.Screens
       string wholesaleUSOC = txtWholesaleUSOC.Text = CommonFunctions.CString(row.Cells[colWholesaleUSOC].Value).Trim();
       #region Wholesale data
       txtWholesaleDescription.Text = CommonFunctions.CString(row.Cells[colWholesaleDescription].Value);
-      if (string.IsNullOrEmpty(wholesaleUSOC))
-        txtWholesaleUSOC.AddNewMode = true;
-      else
-        txtWholesaleUSOC.AddNewMode = false;
+      //if (string.IsNullOrEmpty(wholesaleUSOC))
+      //  txtWholesaleUSOC.AddNewMode = true;
+      //else
+      //  txtWholesaleUSOC.AddNewMode = false;
       txtWholesaleMRC.Text = CommonFunctions.CString(row.Cells[colWholesaleMRC].Value);
       txtWholesaleNRC.Text = CommonFunctions.CString(row.Cells[colWholesaleNRC].Value);
       DateTime? dt = getDateValue(row.Cells[colWholesaleStartDate].Value);
@@ -618,12 +618,12 @@ namespace CCI.DesktopClient.Screens
     }
     private void resetUsocSearch(string primaryCarrier)
     {
-      ((SearchDataSourceProductList)txtRetailUSOC.SearchExec).Carrier = DEFAULTRETAILCARRIER;
-      ((SearchDataSourceProductList)txtRetailUSOC.SearchExec).PrimaryCarrier = primaryCarrier;
+      //((SearchDataSourceProductList)txtRetailUSOC.SearchExec).Carrier = DEFAULTRETAILCARRIER;
+      //((SearchDataSourceProductList)txtRetailUSOC.SearchExec).PrimaryCarrier = primaryCarrier;
       ((SearchDataSourceProductList)srchRetailUsocMatching.SearchExec).Carrier = DEFAULTRETAILCARRIER;
       ((SearchDataSourceProductList)srchRetailUsocMatching.SearchExec).PrimaryCarrier = primaryCarrier;
-      ((SearchDataSourceProductList)txtWholesaleUSOC.SearchExec).Carrier = primaryCarrier;
-      ((SearchDataSourceProductList)txtWholesaleUSOC.SearchExec).PrimaryCarrier = primaryCarrier;
+      //((SearchDataSourceProductList)txtWholesaleUSOC.SearchExec).Carrier = primaryCarrier;
+      //((SearchDataSourceProductList)txtWholesaleUSOC.SearchExec).PrimaryCarrier = primaryCarrier;
       ((SearchDataSourceProductList)srchWholesaleUsocMatching.SearchExec).Carrier = primaryCarrier;
       ((SearchDataSourceProductList)srchWholesaleUsocMatching.SearchExec).PrimaryCarrier = primaryCarrier;
     }
@@ -685,7 +685,7 @@ namespace CCI.DesktopClient.Screens
     private void btnRetailNew_Click(object sender, EventArgs e)
     {
       clearTabPage(tabRetail);
-      txtRetailUSOC.AddNewMode = true;
+      //txtRetailUSOC.AddNewMode = true;
       txtRetailUSOC.Enabled = true;
     }
     private void btnRetailCancel_Click(object sender, EventArgs e)
@@ -702,8 +702,9 @@ namespace CCI.DesktopClient.Screens
     }
     private void btnWholesaleNew_Click(object sender, EventArgs e)
     {
+      txtWholesaleUSOC.Enabled = true; // Now you can add a new usoc
+      //txtWholesaleUSOC.AddNewMode = true;
       clearTabPage(tabWholesale);
-      txtWholesaleUSOC.AddNewMode = true;
     }
     private void btnWholesaleCancel_Click(object sender, EventArgs e)
     {
