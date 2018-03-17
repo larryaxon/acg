@@ -223,6 +223,23 @@ update hostedmatchedmrc
    inner join externalidmapping x WITH (NOLOCK) on m.customerid = x.externalid
  where isnumeric(m.customerid) <> 1
 
+
+ 	RAISERROR ('Perform wholesale usoc exception fixups from ImportUSOCMatchingExceptions table', 0, 1) WITH NOWAIT
+	-- delete the unmatched wholesale usocs that are in the exception list
+Delete 
+from  hostedmatchedmrc 
+WHERE Coalesce(WholesaleBillDate, RetailBillDate) = @BillDate
+  AND WholesaleUSOC in (Select distinct WholesaleUSOCToDelete from ImportUSOCMatchingExceptions)
+  and RetailUSOC is null
+
+-- now find the retail usocs in the exception list and update the wholesale usoc and cost from the table
+UPDATE HostedMatchedMRC  
+   SET WholesaleUSOC = Coalesce(e.WholesaleUSOCToReplace, e.WholesaleUSOCToDelete),
+       WholesaleAmount = e.WholesaleCost,
+	   WholesaleQty = RetailQty
+  FROM HostedMatchedMRC m
+  INNER JOIN ImportUSOCMatchingExceptions e on m.RetailUSOC = e.RetailUSOCToCopy and getdate() between isnull(e.StartDate, '1/1/1900') and isnull(e.EndDate,'12/31/2100')
+
 	RAISERROR ('Post MRC Details Complete', 0, 1) WITH NOWAIT
 
 END
