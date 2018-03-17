@@ -562,5 +562,11 @@ namespace CCI.DesktopClient
       ScreenBase frm = new frmCityHostedUSOCMaintenanceNew();
       ShowForm(frm, true);
     }
+
+    private void wholealeUSOCImportExceptionsToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      ScreenBase frm = new frmImportUSOCExceptions();
+      ShowForm(frm, true);
+    }
   }
 }

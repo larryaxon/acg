@@ -104,6 +104,7 @@
     <Compile Include="Data\DataSource\DataSource.Products.cs" />
     <Compile Include="Data\DataSource\DataSource.ScreenDefinition.cs" />
     <Compile Include="Data\DataSource\DataSource.SearchGrid.cs" />
+    <Compile Include="Data\DataSource\DataSource.WhoilesaleImportExceptions.cs" />
     <Compile Include="Data\EntityAttributes.cs" />
     <Compile Include="Data\EntityBase.cs" />
     <Compile Include="Data\EntityDB.cs" />

@@ -121,6 +121,7 @@
       this.statusStrip = new System.Windows.Forms.StatusStrip();
       this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
       this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+      this.wholealeUSOCImportExceptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.menuStrip.SuspendLayout();
       this.toolStrip.SuspendLayout();
       this.statusStrip.SuspendLayout();
@@ -351,7 +352,8 @@
             this.dealerPricingToolStripMenuItem,
             this.oCCAdjustmentsToolStripMenuItem,
             this.creditMemosToolStripMenuItem,
-            this.dealerRetailUSOCPricingToolStripMenuItem});
+            this.dealerRetailUSOCPricingToolStripMenuItem,
+            this.wholealeUSOCImportExceptionsToolStripMenuItem});
       this.cityhostedToolStripMenuItem.Name = "cityhostedToolStripMenuItem";
       this.cityhostedToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
       this.cityhostedToolStripMenuItem.Text = "City Hosted";
@@ -359,77 +361,77 @@
       // monthlyCycleToolStripMenuItem
       // 
       this.monthlyCycleToolStripMenuItem.Name = "monthlyCycleToolStripMenuItem";
-      this.monthlyCycleToolStripMenuItem.Size = new System.Drawing.Size(220, 22);
+      this.monthlyCycleToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
       this.monthlyCycleToolStripMenuItem.Text = "CH Financials Cycle";
       this.monthlyCycleToolStripMenuItem.Click += new System.EventHandler(this.monthlyCycleToolStripMenuItem_Click);
       // 
       // cityHostedUsocNewToolStripMenuItem
       // 
       this.cityHostedUsocNewToolStripMenuItem.Name = "cityHostedUsocNewToolStripMenuItem";
-      this.cityHostedUsocNewToolStripMenuItem.Size = new System.Drawing.Size(220, 22);
+      this.cityHostedUsocNewToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
       this.cityHostedUsocNewToolStripMenuItem.Text = "City Hosted Usoc Maintenance";
       this.cityHostedUsocNewToolStripMenuItem.Click += new System.EventHandler(this.cityHostedUsocNewToolStripMenuItem_Click);
       // 
       // networkInventoryToolStripMenuItem
       // 
       this.networkInventoryToolStripMenuItem.Name = "networkInventoryToolStripMenuItem";
-      this.networkInventoryToolStripMenuItem.Size = new System.Drawing.Size(220, 22);
+      this.networkInventoryToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
       this.networkInventoryToolStripMenuItem.Text = "Network Inventory";
       this.networkInventoryToolStripMenuItem.Click += new System.EventHandler(this.networkInventoryToolStripMenuItem_Click);
       // 
       // cashReceiptsToolStripMenuItem
       // 
       this.cashReceiptsToolStripMenuItem.Name = "cashReceiptsToolStripMenuItem";
-      this.cashReceiptsToolStripMenuItem.Size = new System.Drawing.Size(220, 22);
+      this.cashReceiptsToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
       this.cashReceiptsToolStripMenuItem.Text = "Cash Receipts";
       this.cashReceiptsToolStripMenuItem.Click += new System.EventHandler(this.cashReceiptsToolStripMenuItem_Click);
       // 
       // customerMaintenanceToolStripMenuItem1
       // 
       this.customerMaintenanceToolStripMenuItem1.Name = "customerMaintenanceToolStripMenuItem1";
-      this.customerMaintenanceToolStripMenuItem1.Size = new System.Drawing.Size(220, 22);
+      this.customerMaintenanceToolStripMenuItem1.Size = new System.Drawing.Size(239, 22);
       this.customerMaintenanceToolStripMenuItem1.Text = "Customer Maintenance";
       this.customerMaintenanceToolStripMenuItem1.Click += new System.EventHandler(this.customerMaintenanceToolStripMenuItem1_Click);
       // 
       // customersWithMissingInfoToolStripMenuItem
       // 
       this.customersWithMissingInfoToolStripMenuItem.Name = "customersWithMissingInfoToolStripMenuItem";
-      this.customersWithMissingInfoToolStripMenuItem.Size = new System.Drawing.Size(220, 22);
+      this.customersWithMissingInfoToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
       this.customersWithMissingInfoToolStripMenuItem.Text = "Customers with Missing Info";
       this.customersWithMissingInfoToolStripMenuItem.Click += new System.EventHandler(this.customersWithMissingInfoToolStripMenuItem_Click);
       // 
       // dealerMaintenanceToolStripMenuItem1
       // 
       this.dealerMaintenanceToolStripMenuItem1.Name = "dealerMaintenanceToolStripMenuItem1";
-      this.dealerMaintenanceToolStripMenuItem1.Size = new System.Drawing.Size(220, 22);
+      this.dealerMaintenanceToolStripMenuItem1.Size = new System.Drawing.Size(239, 22);
       this.dealerMaintenanceToolStripMenuItem1.Text = "Dealer Maintenance";
       this.dealerMaintenanceToolStripMenuItem1.Click += new System.EventHandler(this.dealerMaintenanceToolStripMenuItem1_Click);
       // 
       // dealerPricingToolStripMenuItem
       // 
       this.dealerPricingToolStripMenuItem.Name = "dealerPricingToolStripMenuItem";
-      this.dealerPricingToolStripMenuItem.Size = new System.Drawing.Size(220, 22);
+      this.dealerPricingToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
       this.dealerPricingToolStripMenuItem.Text = "Dealer Pricing";
       this.dealerPricingToolStripMenuItem.Click += new System.EventHandler(this.dealerPricingToolStripMenuItem_Click);
       // 
       // oCCAdjustmentsToolStripMenuItem
       // 
       this.oCCAdjustmentsToolStripMenuItem.Name = "oCCAdjustmentsToolStripMenuItem";
-      this.oCCAdjustmentsToolStripMenuItem.Size = new System.Drawing.Size(220, 22);
+      this.oCCAdjustmentsToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
       this.oCCAdjustmentsToolStripMenuItem.Text = "OCC Adjustments";
       this.oCCAdjustmentsToolStripMenuItem.Click += new System.EventHandler(this.oCCAdjustmentsToolStripMenuItem_Click);
       // 
       // creditMemosToolStripMenuItem
       // 
       this.creditMemosToolStripMenuItem.Name = "creditMemosToolStripMenuItem";
-      this.creditMemosToolStripMenuItem.Size = new System.Drawing.Size(220, 22);
+      this.creditMemosToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
       this.creditMemosToolStripMenuItem.Text = "Credit Memos";
       this.creditMemosToolStripMenuItem.Click += new System.EventHandler(this.CreditMemosToolStripMenuItem_Click);
       // 
       // dealerRetailUSOCPricingToolStripMenuItem
       // 
       this.dealerRetailUSOCPricingToolStripMenuItem.Name = "dealerRetailUSOCPricingToolStripMenuItem";
-      this.dealerRetailUSOCPricingToolStripMenuItem.Size = new System.Drawing.Size(220, 22);
+      this.dealerRetailUSOCPricingToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
       this.dealerRetailUSOCPricingToolStripMenuItem.Text = "Dealer Retail USOC Pricing";
       this.dealerRetailUSOCPricingToolStripMenuItem.Click += new System.EventHandler(this.dealerRetailUSOCPricingToolStripMenuItem_Click);
       // 
@@ -874,6 +876,13 @@
       this.toolStripStatusLabel.Size = new System.Drawing.Size(38, 17);
       this.toolStripStatusLabel.Text = "Status";
       // 
+      // wholealeUSOCImportExceptionsToolStripMenuItem
+      // 
+      this.wholealeUSOCImportExceptionsToolStripMenuItem.Name = "wholealeUSOCImportExceptionsToolStripMenuItem";
+      this.wholealeUSOCImportExceptionsToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
+      this.wholealeUSOCImportExceptionsToolStripMenuItem.Text = "Wholeale USOC Import Exceptions";
+      this.wholealeUSOCImportExceptionsToolStripMenuItem.Click += new System.EventHandler(this.wholealeUSOCImportExceptionsToolStripMenuItem_Click);
+      // 
       // MainForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -991,6 +1000,7 @@
     private System.Windows.Forms.ToolStripMenuItem maintenanceScreensToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem genericMaintenanceScreenSetupToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem cityHostedUsocNewToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem wholealeUSOCImportExceptionsToolStripMenuItem;
   }
 }
 

@@ -368,6 +368,12 @@
     <Compile Include="Screens\frmGroups.Designer.cs">
       <DependentUpon>frmGroups.cs</DependentUpon>
     </Compile>
+    <Compile Include="Screens\frmImportUSOCExceptions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmImportUSOCExceptions.Designer.cs">
+      <DependentUpon>frmImportUSOCExceptions.cs</DependentUpon>
+    </Compile>
     <Compile Include="Screens\frmItemCategories.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -588,6 +594,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Screens\frmGroups.resx">
       <DependentUpon>frmGroups.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmImportUSOCExceptions.resx">
+      <DependentUpon>frmImportUSOCExceptions.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Screens\frmNetworkInventory.resx">
       <DependentUpon>frmNetworkInventory.cs</DependentUpon>
