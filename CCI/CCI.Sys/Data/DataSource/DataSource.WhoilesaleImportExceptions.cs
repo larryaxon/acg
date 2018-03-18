@@ -16,7 +16,7 @@ namespace CCI.Sys.Data
   {
     public DataSet getWholesaleExceptions()
     {
-      string sql = @"Select WholesaleUSOCToDelete, RetailUSOCToCopy, WholesaleCost,StartDate,EndDate, CustomerID, LastModifiedDateTime, LastModifiedBy from ImportUSOCMatchingExceptions ";
+      string sql = @"Select ID, WholesaleUSOCToDelete, RetailUSOCToCopy, WholesaleCost,StartDate,EndDate, LastModifiedDateTime, LastModifiedBy from ImportUSOCMatchingExceptions ";
       return getDataFromSQL(sql);
     }
     public int? saveWholesaleExceptions(int? id, string wholesaleUsoc, string retailUsoc, string wholesaleReplaceUsoc, decimal cost, DateTime? startDate, 
@@ -44,7 +44,7 @@ WHERE ID = {0}";
           id, 
           wholesaleUsoc, 
           retailUsoc, 
-          string.IsNullOrEmpty(wholesaleReplaceUsoc) ? wholesaleUsoc : "'" + wholesaleReplaceUsoc + "'" , 
+          string.IsNullOrEmpty(wholesaleReplaceUsoc) ? wholesaleUsoc : wholesaleReplaceUsoc, 
           cost.ToString(), 
           startDate == null ? "null" : "'" + ((DateTime)startDate).ToShortDateString() + "'", 
           endDate == null ? "null" : "'" + ((DateTime)endDate).ToShortDateString() + "'", 

@@ -207,7 +207,7 @@ namespace CCI.DesktopClient.Screens
         id = Convert.ToInt32(sTest);
       wholesaleUsoc = ((ctlSearch)pnlEditPanel.Controls["ctlWholesaleUSOCToDelete"]).Text;
       retailUsoc = ((ctlSearch)pnlEditPanel.Controls["ctlRetailUSOCToCopy"]).Text;
-      wholesaleReplaceUsoc = ((ctlSearch)pnlEditPanel.Controls["ctlWholesaleUSOCToReplace"]).Text;
+      wholesaleReplaceUsoc = wholesaleUsoc;
       sTest = pnlEditPanel.Controls["ctlStartDate"].Text;
       if (string.IsNullOrEmpty(sTest))
         startDate = null;
@@ -218,11 +218,11 @@ namespace CCI.DesktopClient.Screens
         endDate = null;
       else
         endDate = Convert.ToDateTime(sTest);
-      sTest = ((ctlSearch)pnlEditPanel.Controls["ctlCustomerID"]).Text;
-      if (string.IsNullOrEmpty(sTest))
+      //sTest = ((ctlSearch)pnlEditPanel.Controls["ctlCustomerID"]).Text;
+      //if (string.IsNullOrEmpty(sTest))
         customerId = null;
-      else
-        customerId = sTest;
+      //else
+      //  customerId = sTest;
       sTest = pnlEditPanel.Controls["ctlWholesaleCost"].Text;
       if (string.IsNullOrEmpty(sTest))
         cost = 0;
