@@ -230,12 +230,12 @@ namespace CCI.DesktopClient.Screens
       }
       return criteria;
     }
-    private void loadRetailFields(DataGridViewRow row)
+    private void loadRetailFields(DataGridViewRow row, bool clearFirst = true)
     {
       if (row == null)
         return;
-
-      clear();
+      if (clearFirst)
+        clear();
 
 
       #region Retail data
@@ -326,12 +326,12 @@ namespace CCI.DesktopClient.Screens
       //  row.Cells[cellIndex] = newCell;
       //}
     }
-    private void loadWholesaleFields(DataGridViewRow row)
+    private void loadWholesaleFields(DataGridViewRow row, bool clearFirst = true)
     {
       if (row == null)
         return;
-
-      clear();
+      if (clearFirst)
+        clear();
       string wholesaleUSOC = txtWholesaleUSOC.Text = CommonFunctions.CString(row.Cells[colWholesaleUSOC].Value).Trim();
       #region Wholesale data
       txtWholesaleDescription.Text = CommonFunctions.CString(row.Cells[colWholesaleDescription].Value);
@@ -426,7 +426,7 @@ namespace CCI.DesktopClient.Screens
       else
         retailUsoc = CommonFunctions.CString(((DataGridViewCell)r).Value);
       loadWholesaleFields(row);
-      loadRetailFields(row);
+      loadRetailFields(row, false);
       loadMatchingFields(row); // don't worry about reload of this screen it is fast and simple
     }
     private void matchUsocs(bool save)
