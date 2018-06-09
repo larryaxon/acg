@@ -92,6 +92,13 @@ where e.entitytype = 'customer'";
       returnmsg = updateDataFromSQLReturnErrorDescription(string.Format(sql));
       return returnmsg;
     }
+    public Exception execResetInvoices(DateTime billdate)
+    {
+      Exception returnmsg;
+      string sql = string.Format("exec ClearInvoicesForPeriod '{0}'", billdate);
+      returnmsg = updateDataFromSQLReturnErrorDescription(string.Format(sql));
+      return returnmsg;
+    }
 
     public DateTime selectBillingDatefromTemp(string Table)
     {

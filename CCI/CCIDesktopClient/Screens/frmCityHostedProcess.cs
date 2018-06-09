@@ -411,6 +411,13 @@ namespace CCI.DesktopClient.Screens
               else
                 MessageBox.Show(string.Format(PROCESSERROR, stat));
               break;
+            case "clearinvoicesforperiod":
+              stat = processClearInvoices();
+              if (stat.Equals("Ready"))
+                checkOffProcess(step.Form, true);
+              else
+                MessageBox.Show(string.Format(PROCESSERROR, stat));
+              break;
           }
         }
       }
@@ -683,6 +690,29 @@ namespace CCI.DesktopClient.Screens
         Exception returnmsg = _dataSource.execUnpostInvoices(_billDate);
         if (returnmsg != null)
           validexportmsg = string.Format("Error Processing Invoice Unpost: <{0}>", CommonFunctions.getInnerException(returnmsg).Message);
+        lblProcessStatus.Visible = false;
+
+        Cursor.Current = Cursors.Default;
+      }
+      return validexportmsg;
+    }
+    
+    private string processClearInvoices()
+    {
+      string validexportmsg = "Ready";
+      DialogResult ans = MessageBox.Show("Reset Invoice data for this period. Are you sure you want to do this? This will delete all imported and modified invoice data for this period.",
+        "Reset All Invoice Data for this Period", MessageBoxButtons.YesNo);
+      if (ans == DialogResult.No)
+        validexportmsg = "Reset was not performed";
+      else
+      {
+        lblProcessStatus.Text = "Processing Reset Invoice Data...";
+        lblProcessStatus.Visible = true;
+
+        Cursor.Current = Cursors.WaitCursor;
+        Exception returnmsg = _dataSource.execResetInvoices(_billDate);
+        if (returnmsg != null)
+          validexportmsg = string.Format("Error Processing Reset All: <{0}>", CommonFunctions.getInnerException(returnmsg).Message);
         lblProcessStatus.Visible = false;
 
         Cursor.Current = Cursors.Default;
