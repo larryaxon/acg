@@ -255,10 +255,28 @@ namespace CCI.DesktopClient.Screens
     {
       if (!string.IsNullOrEmpty(txtMacAddress.Text) && !string.IsNullOrEmpty(txtPhysicalInventoryNotes.Text))
       {
-        int? id = _dataSource.savePhysicalInventory(txtNewNetInvID.Text, txtMacAddress.Text, txtPhysicalInventoryNotes.Text, SecurityContext.User);
+        int? id = _dataSource.savePhysicalInventory(txtPhysicalInventoryID.Text,  txtNewNetInvID.Text, txtMacAddress.Text, txtPhysicalInventoryNotes.Text, SecurityContext.User);
         if (id != null && string.IsNullOrEmpty(txtPhysicalInventoryID.Text))
           txtPhysicalInventoryID.Text = ((int)id).ToString();  // set the ID in the screen if we need one and have one
         srchPhysicalInventory.ReLoad();
+      }
+    }
+    private void quickEntrySavePhysicalInventory()
+    {
+      if (!string.IsNullOrEmpty(txtQEMacAddress.Text) && !string.IsNullOrEmpty(txtQENotes.Text) && !string.IsNullOrEmpty(txtQEUsoc.Text))
+      {
+        string customerid = txtNewCustomer.Text;
+        string location = txtNewLocation.Text;
+        string usoc = txtQEUsoc.Text;
+        int? netInvId = _dataSource.getNetworkInventoryFromPhysicalInventory(customerid, usoc, location, DateTime.Today);
+        if (netInvId == null)
+          MessageBox.Show("Cannot find NetworkInventory for this customer, location, and usoc");
+        {
+          int? id = _dataSource.savePhysicalInventory(null, ((int)netInvId).ToString(), txtQEMacAddress.Text, txtQENotes.Text, SecurityContext.User);
+          srchPhysicalInventory.ReLoad();
+          clearQuickEntry();
+          txtQEUsoc.Focus();
+        }
       }
     }
     private void clearPhysicalInventory()
@@ -318,6 +336,7 @@ namespace CCI.DesktopClient.Screens
         ((SearchDataSourceEntity)ctlLocationSearch.SearchExec).EntityOwner = ctlCustomerSearch.Text;
         search();
         txtNewAccount.Text = getSaddleBackID(txtNewCustomer.Text);
+        txtDealer.Text = _dataSource.getDealerForCustomer(txtNewCustomer.Text);
 
       }
 
@@ -453,6 +472,62 @@ namespace CCI.DesktopClient.Screens
       ((SearchDataSourceProductList)txtNewItemID.SearchExec).PrimaryCarrier = txtPrimaryCarrier.Text;
       //((SearchDataSourceProductList)txtNewItemID.SearchExec).Carrier = txtPrimaryCarrier.Text;
 
+    }
+
+    private void btnNewPhysicalInventory_Click(object sender, EventArgs e)
+    {
+      // clear out the fields to enter a new one
+      txtPhysicalInventoryID.Text = string.Empty;
+      txtMacAddress.Text = string.Empty;
+      txtPhysicalInventoryNotes.Text = string.Empty;
+    }
+
+    private void btnQuickEntryPhysicalInventory_Click(object sender, EventArgs e)
+    {
+      if (!string.IsNullOrEmpty(txtNewCustomer.Text) && !string.IsNullOrEmpty(txtNewLocation.Text))
+      {
+        txtQEUsoc.Items.Clear();
+        txtQEUsoc.Items.AddRange(_dataSource.getUsocsForNetworkInventory(txtNewCustomer.Text, txtNewLocation.Text));
+        swapQuickEntry(true);
+      }
+      else
+        MessageBox.Show("You cannot enter Quick Entry mode unless you have a customer and location selected.");
+    }
+
+    private void btnQENormalEntry_Click(object sender, EventArgs e)
+    {
+      swapQuickEntry(false);
+    }
+    private void swapQuickEntry(bool qeMode)
+    {
+      lblPhysicalInventoryID.Visible = !qeMode;
+      lblMacAddress.Visible = !qeMode;
+      lblNotes.Visible = !qeMode;
+      txtPhysicalInventoryNotes.Visible = !qeMode;
+      txtMacAddress.Visible = !qeMode;
+      txtPhysicalInventoryID.Visible = !qeMode;
+      btnSavePhysicalInventory.Visible = !qeMode;
+      btnNewPhysicalInventory.Visible = !qeMode;
+      btnDeletehysicalInventory.Visible = !qeMode;
+      btnQuickEntryPhysicalInventory.Visible = !qeMode;
+      lblQEUsoc.Visible = qeMode;
+      txtQEUsoc.Visible = qeMode;
+      lblQEMacAddress.Visible = qeMode;
+      txtQEMacAddress.Visible = qeMode;
+      lblQENotes.Visible = qeMode;
+      txtQENotes.Visible = qeMode;
+      btnQENormalEntry.Visible = qeMode;
+    }
+    private void clearQuickEntry()
+    {
+      txtQEUsoc.Text = string.Empty;
+      txtQEMacAddress.Text = string.Empty;
+      txtQENotes.Text = string.Empty;
+    }
+
+    private void txtQENotes_Leave(object sender, EventArgs e)
+    {
+      quickEntrySavePhysicalInventory();
     }
   }
 }

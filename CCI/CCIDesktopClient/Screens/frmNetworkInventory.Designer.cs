@@ -38,15 +38,27 @@
       this.label14 = new System.Windows.Forms.Label();
       this.splitMain = new System.Windows.Forms.SplitContainer();
       this.pnlNewNetworkInventory = new System.Windows.Forms.Panel();
+      this.txtDealer = new System.Windows.Forms.TextBox();
+      this.lblDealer = new System.Windows.Forms.Label();
       this.txtNewItemID = new ACG.CommonForms.ctlSearch();
       this.grpPhysInventory = new System.Windows.Forms.GroupBox();
+      this.txtQEUsoc = new System.Windows.Forms.ComboBox();
+      this.btnQENormalEntry = new System.Windows.Forms.Button();
+      this.txtQENotes = new System.Windows.Forms.TextBox();
+      this.lblQENotes = new System.Windows.Forms.Label();
+      this.txtQEMacAddress = new System.Windows.Forms.TextBox();
+      this.lblQEMacAddress = new System.Windows.Forms.Label();
+      this.lblQEUsoc = new System.Windows.Forms.Label();
+      this.btnQuickEntryPhysicalInventory = new System.Windows.Forms.Button();
+      this.lblPhysicalInventoryID = new System.Windows.Forms.Label();
+      this.btnNewPhysicalInventory = new System.Windows.Forms.Button();
       this.txtPhysicalInventoryID = new System.Windows.Forms.TextBox();
       this.btnDeletehysicalInventory = new System.Windows.Forms.Button();
       this.btnSavePhysicalInventory = new System.Windows.Forms.Button();
       this.txtPhysicalInventoryNotes = new System.Windows.Forms.TextBox();
-      this.label6 = new System.Windows.Forms.Label();
+      this.lblNotes = new System.Windows.Forms.Label();
       this.txtMacAddress = new System.Windows.Forms.TextBox();
-      this.label5 = new System.Windows.Forms.Label();
+      this.lblMacAddress = new System.Windows.Forms.Label();
       this.srchPhysicalInventory = new CCI.DesktopClient.Common.ctlSearchGrid();
       this.txtPrimaryCarrier = new ACG.CommonForms.ctlSearch();
       this.txtNewLocation = new ACG.CommonForms.ctlSearch();
@@ -230,6 +242,8 @@
       // 
       // pnlNewNetworkInventory
       // 
+      this.pnlNewNetworkInventory.Controls.Add(this.txtDealer);
+      this.pnlNewNetworkInventory.Controls.Add(this.lblDealer);
       this.pnlNewNetworkInventory.Controls.Add(this.txtNewItemID);
       this.pnlNewNetworkInventory.Controls.Add(this.grpPhysInventory);
       this.pnlNewNetworkInventory.Controls.Add(this.txtPrimaryCarrier);
@@ -276,6 +290,24 @@
       this.pnlNewNetworkInventory.Size = new System.Drawing.Size(1127, 304);
       this.pnlNewNetworkInventory.TabIndex = 36;
       // 
+      // txtDealer
+      // 
+      this.txtDealer.Enabled = false;
+      this.txtDealer.Location = new System.Drawing.Point(603, 83);
+      this.txtDealer.Name = "txtDealer";
+      this.txtDealer.Size = new System.Drawing.Size(217, 20);
+      this.txtDealer.TabIndex = 81;
+      // 
+      // lblDealer
+      // 
+      this.lblDealer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+      this.lblDealer.AutoSize = true;
+      this.lblDealer.Location = new System.Drawing.Point(559, 86);
+      this.lblDealer.Name = "lblDealer";
+      this.lblDealer.Size = new System.Drawing.Size(38, 13);
+      this.lblDealer.TabIndex = 80;
+      this.lblDealer.Text = "Dealer";
+      // 
       // txtNewItemID
       // 
       this.txtNewItemID.AddNewMode = false;
@@ -306,15 +338,26 @@
       // 
       // grpPhysInventory
       // 
-      this.grpPhysInventory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+      this.grpPhysInventory.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+      this.grpPhysInventory.Controls.Add(this.txtQEUsoc);
+      this.grpPhysInventory.Controls.Add(this.btnQENormalEntry);
+      this.grpPhysInventory.Controls.Add(this.txtQENotes);
+      this.grpPhysInventory.Controls.Add(this.lblQENotes);
+      this.grpPhysInventory.Controls.Add(this.txtQEMacAddress);
+      this.grpPhysInventory.Controls.Add(this.lblQEMacAddress);
+      this.grpPhysInventory.Controls.Add(this.lblQEUsoc);
+      this.grpPhysInventory.Controls.Add(this.btnQuickEntryPhysicalInventory);
+      this.grpPhysInventory.Controls.Add(this.lblPhysicalInventoryID);
+      this.grpPhysInventory.Controls.Add(this.btnNewPhysicalInventory);
       this.grpPhysInventory.Controls.Add(this.txtPhysicalInventoryID);
       this.grpPhysInventory.Controls.Add(this.btnDeletehysicalInventory);
       this.grpPhysInventory.Controls.Add(this.btnSavePhysicalInventory);
       this.grpPhysInventory.Controls.Add(this.txtPhysicalInventoryNotes);
-      this.grpPhysInventory.Controls.Add(this.label6);
+      this.grpPhysInventory.Controls.Add(this.lblNotes);
       this.grpPhysInventory.Controls.Add(this.txtMacAddress);
-      this.grpPhysInventory.Controls.Add(this.label5);
+      this.grpPhysInventory.Controls.Add(this.lblMacAddress);
       this.grpPhysInventory.Controls.Add(this.srchPhysicalInventory);
       this.grpPhysInventory.Location = new System.Drawing.Point(5, 143);
       this.grpPhysInventory.Name = "grpPhysInventory";
@@ -323,17 +366,128 @@
       this.grpPhysInventory.TabStop = false;
       this.grpPhysInventory.Text = "Physical Inventory";
       // 
+      // txtQEUsoc
+      // 
+      this.txtQEUsoc.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.txtQEUsoc.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+      this.txtQEUsoc.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+      this.txtQEUsoc.FormattingEnabled = true;
+      this.txtQEUsoc.Location = new System.Drawing.Point(50, 130);
+      this.txtQEUsoc.Name = "txtQEUsoc";
+      this.txtQEUsoc.Size = new System.Drawing.Size(88, 21);
+      this.txtQEUsoc.TabIndex = 0;
+      // 
+      // btnQENormalEntry
+      // 
+      this.btnQENormalEntry.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnQENormalEntry.Location = new System.Drawing.Point(6, 102);
+      this.btnQENormalEntry.Name = "btnQENormalEntry";
+      this.btnQENormalEntry.Size = new System.Drawing.Size(78, 26);
+      this.btnQENormalEntry.TabIndex = 94;
+      this.btnQENormalEntry.Text = "Normal Entry";
+      this.btnQENormalEntry.UseVisualStyleBackColor = true;
+      this.btnQENormalEntry.Visible = false;
+      this.btnQENormalEntry.Click += new System.EventHandler(this.btnQENormalEntry_Click);
+      // 
+      // txtQENotes
+      // 
+      this.txtQENotes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.txtQENotes.Location = new System.Drawing.Point(416, 128);
+      this.txtQENotes.Name = "txtQENotes";
+      this.txtQENotes.Size = new System.Drawing.Size(399, 20);
+      this.txtQENotes.TabIndex = 2;
+      this.txtQENotes.Visible = false;
+      this.txtQENotes.Leave += new System.EventHandler(this.txtQENotes_Leave);
+      // 
+      // lblQENotes
+      // 
+      this.lblQENotes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.lblQENotes.AutoSize = true;
+      this.lblQENotes.Location = new System.Drawing.Point(368, 133);
+      this.lblQENotes.Name = "lblQENotes";
+      this.lblQENotes.Size = new System.Drawing.Size(35, 13);
+      this.lblQENotes.TabIndex = 92;
+      this.lblQENotes.Text = "Notes";
+      this.lblQENotes.Visible = false;
+      // 
+      // txtQEMacAddress
+      // 
+      this.txtQEMacAddress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.txtQEMacAddress.Location = new System.Drawing.Point(219, 131);
+      this.txtQEMacAddress.Name = "txtQEMacAddress";
+      this.txtQEMacAddress.Size = new System.Drawing.Size(145, 20);
+      this.txtQEMacAddress.TabIndex = 1;
+      this.txtQEMacAddress.Visible = false;
+      // 
+      // lblQEMacAddress
+      // 
+      this.lblQEMacAddress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.lblQEMacAddress.AutoSize = true;
+      this.lblQEMacAddress.Location = new System.Drawing.Point(144, 134);
+      this.lblQEMacAddress.Name = "lblQEMacAddress";
+      this.lblQEMacAddress.Size = new System.Drawing.Size(69, 13);
+      this.lblQEMacAddress.TabIndex = 90;
+      this.lblQEMacAddress.Text = "Mac Address";
+      this.lblQEMacAddress.Visible = false;
+      // 
+      // lblQEUsoc
+      // 
+      this.lblQEUsoc.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.lblQEUsoc.AutoSize = true;
+      this.lblQEUsoc.Location = new System.Drawing.Point(7, 135);
+      this.lblQEUsoc.Name = "lblQEUsoc";
+      this.lblQEUsoc.Size = new System.Drawing.Size(37, 13);
+      this.lblQEUsoc.TabIndex = 88;
+      this.lblQEUsoc.Text = "USOC";
+      this.lblQEUsoc.Visible = false;
+      // 
+      // btnQuickEntryPhysicalInventory
+      // 
+      this.btnQuickEntryPhysicalInventory.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnQuickEntryPhysicalInventory.Location = new System.Drawing.Point(508, 102);
+      this.btnQuickEntryPhysicalInventory.Name = "btnQuickEntryPhysicalInventory";
+      this.btnQuickEntryPhysicalInventory.Size = new System.Drawing.Size(78, 26);
+      this.btnQuickEntryPhysicalInventory.TabIndex = 87;
+      this.btnQuickEntryPhysicalInventory.Text = "Quick Entry";
+      this.btnQuickEntryPhysicalInventory.UseVisualStyleBackColor = true;
+      this.btnQuickEntryPhysicalInventory.Click += new System.EventHandler(this.btnQuickEntryPhysicalInventory_Click);
+      // 
+      // lblPhysicalInventoryID
+      // 
+      this.lblPhysicalInventoryID.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.lblPhysicalInventoryID.AutoSize = true;
+      this.lblPhysicalInventoryID.Location = new System.Drawing.Point(733, 108);
+      this.lblPhysicalInventoryID.Name = "lblPhysicalInventoryID";
+      this.lblPhysicalInventoryID.Size = new System.Drawing.Size(21, 13);
+      this.lblPhysicalInventoryID.TabIndex = 86;
+      this.lblPhysicalInventoryID.Text = "ID:";
+      // 
+      // btnNewPhysicalInventory
+      // 
+      this.btnNewPhysicalInventory.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnNewPhysicalInventory.Location = new System.Drawing.Point(256, 102);
+      this.btnNewPhysicalInventory.Name = "btnNewPhysicalInventory";
+      this.btnNewPhysicalInventory.Size = new System.Drawing.Size(78, 26);
+      this.btnNewPhysicalInventory.TabIndex = 85;
+      this.btnNewPhysicalInventory.Text = "New";
+      this.btnNewPhysicalInventory.UseVisualStyleBackColor = true;
+      this.btnNewPhysicalInventory.Click += new System.EventHandler(this.btnNewPhysicalInventory_Click);
+      // 
       // txtPhysicalInventoryID
       // 
-      this.txtPhysicalInventoryID.Location = new System.Drawing.Point(433, 108);
+      this.txtPhysicalInventoryID.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+      this.txtPhysicalInventoryID.Enabled = false;
+      this.txtPhysicalInventoryID.Location = new System.Drawing.Point(760, 106);
       this.txtPhysicalInventoryID.Name = "txtPhysicalInventoryID";
-      this.txtPhysicalInventoryID.Size = new System.Drawing.Size(35, 20);
+      this.txtPhysicalInventoryID.Size = new System.Drawing.Size(55, 20);
       this.txtPhysicalInventoryID.TabIndex = 84;
       this.txtPhysicalInventoryID.WordWrap = false;
       // 
       // btnDeletehysicalInventory
       // 
-      this.btnDeletehysicalInventory.Location = new System.Drawing.Point(340, 102);
+      this.btnDeletehysicalInventory.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnDeletehysicalInventory.Location = new System.Drawing.Point(424, 102);
       this.btnDeletehysicalInventory.Name = "btnDeletehysicalInventory";
       this.btnDeletehysicalInventory.Size = new System.Drawing.Size(78, 26);
       this.btnDeletehysicalInventory.TabIndex = 83;
@@ -342,7 +496,8 @@
       // 
       // btnSavePhysicalInventory
       // 
-      this.btnSavePhysicalInventory.Location = new System.Drawing.Point(256, 102);
+      this.btnSavePhysicalInventory.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.btnSavePhysicalInventory.Location = new System.Drawing.Point(340, 102);
       this.btnSavePhysicalInventory.Name = "btnSavePhysicalInventory";
       this.btnSavePhysicalInventory.Size = new System.Drawing.Size(78, 26);
       this.btnSavePhysicalInventory.TabIndex = 82;
@@ -352,43 +507,47 @@
       // 
       // txtPhysicalInventoryNotes
       // 
-      this.txtPhysicalInventoryNotes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+      this.txtPhysicalInventoryNotes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.txtPhysicalInventoryNotes.Location = new System.Drawing.Point(76, 130);
+      this.txtPhysicalInventoryNotes.Location = new System.Drawing.Point(76, 131);
       this.txtPhysicalInventoryNotes.Name = "txtPhysicalInventoryNotes";
       this.txtPhysicalInventoryNotes.Size = new System.Drawing.Size(742, 20);
       this.txtPhysicalInventoryNotes.TabIndex = 81;
       // 
-      // label6
+      // lblNotes
       // 
-      this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.label6.AutoSize = true;
-      this.label6.Location = new System.Drawing.Point(35, 133);
-      this.label6.Name = "label6";
-      this.label6.Size = new System.Drawing.Size(35, 13);
-      this.label6.TabIndex = 80;
-      this.label6.Text = "Notes";
+      this.lblNotes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.lblNotes.AutoSize = true;
+      this.lblNotes.Location = new System.Drawing.Point(35, 109);
+      this.lblNotes.Name = "lblNotes";
+      this.lblNotes.Size = new System.Drawing.Size(35, 13);
+      this.lblNotes.TabIndex = 80;
+      this.lblNotes.Text = "Notes";
       // 
       // txtMacAddress
       // 
+      this.txtMacAddress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.txtMacAddress.Location = new System.Drawing.Point(76, 105);
       this.txtMacAddress.Name = "txtMacAddress";
       this.txtMacAddress.Size = new System.Drawing.Size(167, 20);
       this.txtMacAddress.TabIndex = 79;
       // 
-      // label5
+      // lblMacAddress
       // 
-      this.label5.AutoSize = true;
-      this.label5.Location = new System.Drawing.Point(1, 108);
-      this.label5.Name = "label5";
-      this.label5.Size = new System.Drawing.Size(69, 13);
-      this.label5.TabIndex = 78;
-      this.label5.Text = "Mac Address";
+      this.lblMacAddress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+      this.lblMacAddress.AutoSize = true;
+      this.lblMacAddress.Location = new System.Drawing.Point(1, 135);
+      this.lblMacAddress.Name = "lblMacAddress";
+      this.lblMacAddress.Size = new System.Drawing.Size(69, 13);
+      this.lblMacAddress.TabIndex = 78;
+      this.lblMacAddress.Text = "Mac Address";
       // 
       // srchPhysicalInventory
       // 
       this.srchPhysicalInventory.AllowSortByColumn = true;
+      this.srchPhysicalInventory.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.srchPhysicalInventory.AutoRefreshWhenFieldChecked = false;
       this.srchPhysicalInventory.AutoSaveUserOptions = false;
       this.srchPhysicalInventory.BackColor = System.Drawing.SystemColors.ControlLightLight;
@@ -406,7 +565,7 @@
       this.srchPhysicalInventory.Name = "srchPhysicalInventory";
       this.srchPhysicalInventory.NameType = CCI.Common.CommonData.UnmatchedNameTypes.None;
       this.srchPhysicalInventory.SearchCriteria = null;
-      this.srchPhysicalInventory.Size = new System.Drawing.Size(798, 80);
+      this.srchPhysicalInventory.Size = new System.Drawing.Size(809, 80);
       this.srchPhysicalInventory.TabIndex = 77;
       this.srchPhysicalInventory.Title = "Search (0 Records Found)";
       this.srchPhysicalInventory.UniqueIdentifier = "ID";
@@ -504,7 +663,7 @@
       // 
       this.dtTransactionDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.dtTransactionDate.Format = "d";
-      this.dtTransactionDate.Location = new System.Drawing.Point(943, 78);
+      this.dtTransactionDate.Location = new System.Drawing.Point(944, 78);
       this.dtTransactionDate.Name = "dtTransactionDate";
       this.dtTransactionDate.Size = new System.Drawing.Size(177, 20);
       this.dtTransactionDate.TabIndex = 14;
@@ -514,7 +673,7 @@
       // 
       this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.label2.AutoSize = true;
-      this.label2.Location = new System.Drawing.Point(835, 82);
+      this.label2.Location = new System.Drawing.Point(834, 82);
       this.label2.Name = "label2";
       this.label2.Size = new System.Drawing.Size(89, 13);
       this.label2.TabIndex = 74;
@@ -524,7 +683,7 @@
       // 
       this.dtNewExpDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.dtNewExpDate.Format = "d";
-      this.dtNewExpDate.Location = new System.Drawing.Point(943, 147);
+      this.dtNewExpDate.Location = new System.Drawing.Point(944, 147);
       this.dtNewExpDate.Name = "dtNewExpDate";
       this.dtNewExpDate.Size = new System.Drawing.Size(177, 20);
       this.dtNewExpDate.TabIndex = 17;
@@ -534,7 +693,7 @@
       // 
       this.dtNewEndDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.dtNewEndDate.Format = "d";
-      this.dtNewEndDate.Location = new System.Drawing.Point(943, 124);
+      this.dtNewEndDate.Location = new System.Drawing.Point(944, 124);
       this.dtNewEndDate.Name = "dtNewEndDate";
       this.dtNewEndDate.Size = new System.Drawing.Size(177, 20);
       this.dtNewEndDate.TabIndex = 16;
@@ -544,7 +703,7 @@
       // 
       this.dtNewStartDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.dtNewStartDate.Format = "d";
-      this.dtNewStartDate.Location = new System.Drawing.Point(943, 101);
+      this.dtNewStartDate.Location = new System.Drawing.Point(944, 101);
       this.dtNewStartDate.Name = "dtNewStartDate";
       this.dtNewStartDate.Size = new System.Drawing.Size(177, 20);
       this.dtNewStartDate.TabIndex = 15;
@@ -554,7 +713,7 @@
       // 
       this.dtNewDateInstalled.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.dtNewDateInstalled.Format = "d";
-      this.dtNewDateInstalled.Location = new System.Drawing.Point(943, 55);
+      this.dtNewDateInstalled.Location = new System.Drawing.Point(944, 55);
       this.dtNewDateInstalled.Name = "dtNewDateInstalled";
       this.dtNewDateInstalled.Size = new System.Drawing.Size(177, 20);
       this.dtNewDateInstalled.TabIndex = 13;
@@ -591,7 +750,7 @@
       // 
       this.label36.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.label36.AutoSize = true;
-      this.label36.Location = new System.Drawing.Point(835, 151);
+      this.label36.Location = new System.Drawing.Point(834, 151);
       this.label36.Name = "label36";
       this.label36.Size = new System.Drawing.Size(51, 13);
       this.label36.TabIndex = 72;
@@ -604,13 +763,13 @@
       this.txtNewAccount.Enabled = false;
       this.txtNewAccount.Location = new System.Drawing.Point(110, 83);
       this.txtNewAccount.Name = "txtNewAccount";
-      this.txtNewAccount.Size = new System.Drawing.Size(710, 20);
+      this.txtNewAccount.Size = new System.Drawing.Size(443, 20);
       this.txtNewAccount.TabIndex = 5;
       // 
       // btnNewCancel
       // 
       this.btnNewCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnNewCancel.Location = new System.Drawing.Point(910, 172);
+      this.btnNewCancel.Location = new System.Drawing.Point(907, 172);
       this.btnNewCancel.Name = "btnNewCancel";
       this.btnNewCancel.Size = new System.Drawing.Size(65, 23);
       this.btnNewCancel.TabIndex = 19;
@@ -649,7 +808,7 @@
       // 
       this.label31.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.label31.AutoSize = true;
-      this.label31.Location = new System.Drawing.Point(835, 105);
+      this.label31.Location = new System.Drawing.Point(834, 105);
       this.label31.Name = "label31";
       this.label31.Size = new System.Drawing.Size(55, 13);
       this.label31.TabIndex = 65;
@@ -687,7 +846,7 @@
       // btnNewDelete
       // 
       this.btnNewDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnNewDelete.Location = new System.Drawing.Point(1059, 173);
+      this.btnNewDelete.Location = new System.Drawing.Point(1055, 173);
       this.btnNewDelete.Name = "btnNewDelete";
       this.btnNewDelete.Size = new System.Drawing.Size(65, 20);
       this.btnNewDelete.TabIndex = 23;
@@ -735,7 +894,7 @@
       // btnNewSave
       // 
       this.btnNewSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-      this.btnNewSave.Location = new System.Drawing.Point(910, 199);
+      this.btnNewSave.Location = new System.Drawing.Point(907, 199);
       this.btnNewSave.Name = "btnNewSave";
       this.btnNewSave.Size = new System.Drawing.Size(65, 22);
       this.btnNewSave.TabIndex = 21;
@@ -774,7 +933,7 @@
       // 
       this.label25.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.label25.AutoSize = true;
-      this.label25.Location = new System.Drawing.Point(835, 59);
+      this.label25.Location = new System.Drawing.Point(834, 59);
       this.label25.Name = "label25";
       this.label25.Size = new System.Drawing.Size(72, 13);
       this.label25.TabIndex = 47;
@@ -791,7 +950,7 @@
       // 
       this.label26.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.label26.AutoSize = true;
-      this.label26.Location = new System.Drawing.Point(835, 128);
+      this.label26.Location = new System.Drawing.Point(834, 128);
       this.label26.Name = "label26";
       this.label26.Size = new System.Drawing.Size(52, 13);
       this.label26.TabIndex = 49;
@@ -937,9 +1096,21 @@
     private System.Windows.Forms.Button btnDeletehysicalInventory;
     private System.Windows.Forms.Button btnSavePhysicalInventory;
     private System.Windows.Forms.TextBox txtPhysicalInventoryNotes;
-    private System.Windows.Forms.Label label6;
+    private System.Windows.Forms.Label lblNotes;
     private System.Windows.Forms.TextBox txtMacAddress;
-    private System.Windows.Forms.Label label5;
+    private System.Windows.Forms.Label lblMacAddress;
     private System.Windows.Forms.TextBox txtPhysicalInventoryID;
+    private System.Windows.Forms.Label lblDealer;
+    private System.Windows.Forms.TextBox txtDealer;
+    private System.Windows.Forms.Button btnNewPhysicalInventory;
+    private System.Windows.Forms.Label lblPhysicalInventoryID;
+    private System.Windows.Forms.Button btnQuickEntryPhysicalInventory;
+    private System.Windows.Forms.Button btnQENormalEntry;
+    private System.Windows.Forms.TextBox txtQENotes;
+    private System.Windows.Forms.Label lblQENotes;
+    private System.Windows.Forms.TextBox txtQEMacAddress;
+    private System.Windows.Forms.Label lblQEMacAddress;
+    private System.Windows.Forms.Label lblQEUsoc;
+    private System.Windows.Forms.ComboBox txtQEUsoc;
   }
 }

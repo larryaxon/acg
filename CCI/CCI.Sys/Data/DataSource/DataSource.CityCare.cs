@@ -267,21 +267,57 @@ where ni.ID = {0}",id));
       }
       return ret;
     }
-    public int? savePhysicalInventory(string id, string macAddress, string notes, string user)
+    public int? savePhysicalInventory(string id, string netInvId, string macAddress, string notes, string user)
     {
-      // TODO: need both net inv id and phys inv id
       string sql;
       if (string.IsNullOrEmpty(id) || id == "-1")
-        sql = @"INSERT INTO PhysicalInventory (MacAddress, Notes, CreatedBy, CreatedDateTIme, ModifiedBy, ModifiedDateTime)
-VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}')";
+        sql = @"INSERT INTO PhysicalInventory (NetWorkInventoryID, MacAddress, Notes, CreatedBy, CreatedDateTIme, ModifiedBy, ModifiedDateTime)
+VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}')";
       else
         sql = @"UPDATE PhysicalInventory
-SET MacAddress = '{0}', Notes = '{1}', CreatedBy = '{2}', CreatedDateTime = '{3}', ModifiedBy = '{4}', ModifiedDateTime = '{5}'
-WHERE ID = {6}";
+SET NetWorkInventoryID = '{0}', MacAddress = '{1}', Notes = '{2}', CreatedBy = '{3}', CreatedDateTime = '{4}', ModifiedBy = '{5}', ModifiedDateTime = '{6}'
+WHERE ID = {7}";
       DateTime date = DateTime.Now;
-      sql = string.Format(sql, macAddress, notes, user, date, user, date, id);
+      sql = string.Format(sql, netInvId, macAddress, notes, user, date, user, date, id);
       int? ret = updateDataFromSQL(sql);
       return ret;
+    }
+    public int? getNetworkInventoryFromPhysicalInventory(string customerid, string usoc, string location, DateTime asOfDate)
+    {
+      // find all current NetworkInventoryRecords that have available quantity for mac address and that match this customer, usoc, and location.
+      // alo try to find one that has a quantity that is higher than the number of existing matching physical inventory records.
+      // we just sort with the most available at the top, so if we have consumed ALL of the available "slots", we still get one.
+      // That way, we don't keep the user from entering data even if they don't add up.
+      string sql = @"select ni.ID, ni.ItemID, ni.Customer, ni.Location, ni.Quantity, isnull(pi.PICount, 0) PICount,
+  ni.Quantity - isnull(pi.PICount, 0) QtyRemaining
+   from NetworkInventory ni
+  left join (select NetworkInventoryID NiId, count(*) PICount FROM PhysicalInventory GROUP BY NetworkInventoryID) pi 
+	on ni.ID = pi.NiId
+  where Customer = '{0}' and Location = '{1}' and ItemID = '{2}'
+  order by ni.Quantity - isnull(pi.PICount, 0) desc";
+      sql = string.Format(sql, customerid, location, usoc);
+      using (DataSet ds = getDataFromSQL(string.Format(sql, customerid, location, usoc)))
+      {
+        if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+          return null;
+        return CommonFunctions.CInt(ds.Tables[0].Rows[0]["ID"]);
+      }
+
+    }
+    public string[] getUsocsForNetworkInventory(string customerid, string location)
+    {
+      string sql = @"  select distinct ItemId Usoc from NetworkInventory
+  where customer = '{0}' and location = '{1}'
+  order by ItemID";
+      using (DataSet ds = getDataFromSQL(string.Format(sql, customerid, location)))
+      {
+        if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
+          return new string[0];
+        List<string> usocs = new List<string>();
+        for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+          usocs.Add(CommonFunctions.CString(ds.Tables[0].Rows[i]["Usoc"]));
+        return usocs.ToArray();
+      }
     }
     private string printDate(DateTime? dt)
     {

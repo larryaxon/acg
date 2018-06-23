@@ -53,6 +53,27 @@ namespace CCI.Sys.Data
       ds = null;
       return list;
     }
+    public string getDealerForCustomer(string customerID)
+    {
+      string sql = @"Select isnull(d.LegalName, 'CCI as CHS Dealer') DealerName
+          from entity c 
+          inner join (
+			select distinct Customer from NetworkInventory where Carrier = 'CityHosted'
+			) ni on ni.Customer = c.Entity
+          left join SalesOrDealerCustomers dc on c.Entity = dc.customer 
+		  left join entity d on d.entity = dc.SalesOrDealer
+		  Where c.entity = '21146'";
+      using (DataSet ds = getDataFromSQL(sql))
+      {
+        if (ds == null)
+          return null;
+        if (ds.Tables.Count == 1 && ds.Tables[0].Rows.Count > 0)
+          return CommonFunctions.CString(ds.Tables[0].Rows[0]["DealerName"]);
+        else
+          return null;
+      }
+
+    }
     public int? moveDealerCustomers(ArrayList customerList, string dealer, string user)
     {
       // first we need to check to see which customers are in the table
