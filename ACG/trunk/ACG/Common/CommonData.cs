@@ -87,13 +87,13 @@ namespace ACG.Common
      */
     private static bool bypassFunctionError = false;
     private static bool throwErrorOnDataTypeConversion = false;
-    private static bool saveDebugItem = false;
+    //private static bool saveDebugItem = false;
     private static bool throwDataConversionException = false;
     private static bool logAttributeChanges = false;
     private static bool useNonXMLCall = false;
     private static bool bypassAsyncActionProcessing = false;
     private static bool displayNonXMLOption = true;
-    private static bool useCCIConfig = true;
+    //private static bool useCCIConfig = true;
 
     /*
      * End system flags

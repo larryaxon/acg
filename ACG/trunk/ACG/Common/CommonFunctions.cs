@@ -663,7 +663,7 @@ namespace ACG.Common
         for (int i = 0; i < fieldNames.GetLength(0); i++)
         {
           string fieldName = fieldNames[i];
-          if (!string.IsNullOrEmpty(fieldName)) ;
+          if (!string.IsNullOrEmpty(fieldName)) 
           switch (whereToSearch)
           {
             case SearchIn.Prefix:
