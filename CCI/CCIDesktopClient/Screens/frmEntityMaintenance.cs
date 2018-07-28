@@ -537,11 +537,11 @@ namespace CCI.DesktopClient.Screens
       {
         if (CCISecurityContext.EntityUserInfo != null)
         {
-          TableHeader thState = (TableHeader)CCISecurityContext.EntityUserInfo.getValue("StateList");
+          TableHeader thState = (TableHeader)TAGFunctions.evaluateFunction(TAGFunctions.EnumFunctions.CTableHeader, CCISecurityContext.EntityUserInfo.getValue("StateList"));
           if (thState == null)
           {
             EntityAttributesCollection dummyEAC = _dataSource.getAttributes("Dummy", "Entity", EntityType, null, DateTime.Today, true);
-            thState = (TableHeader)dummyEAC.getValue(string.Format("Dummy.Entity.{0}.StateList",EntityType));
+            thState = (TableHeader)TAGFunctions.evaluateFunction(TAGFunctions.EnumFunctions.CTableHeader, dummyEAC.getValue(string.Format("Dummy.Entity.{0}.StateList",EntityType)));
           }
           if (thState != null)
           {
