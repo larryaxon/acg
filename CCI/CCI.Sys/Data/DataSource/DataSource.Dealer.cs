@@ -55,14 +55,14 @@ namespace CCI.Sys.Data
     }
     public string getDealerForCustomer(string customerID)
     {
-      string sql = @"Select isnull(d.LegalName, 'CCI as CHS Dealer') DealerName
+      string sql = string.Format(@"Select isnull(d.LegalName, 'CCI as CHS Dealer') DealerName
           from entity c 
           inner join (
 			select distinct Customer from NetworkInventory where Carrier = 'CityHosted'
 			) ni on ni.Customer = c.Entity
           left join SalesOrDealerCustomers dc on c.Entity = dc.customer 
 		  left join entity d on d.entity = dc.SalesOrDealer
-		  Where c.entity = '21146'";
+		  Where c.entity = '{0}'", customerID);
       using (DataSet ds = getDataFromSQL(sql))
       {
         if (ds == null)

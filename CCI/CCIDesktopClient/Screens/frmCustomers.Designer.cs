@@ -59,15 +59,15 @@
       this.tabMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.tabMain.Size = new System.Drawing.Size(814, 344);
+      this.tabMain.Size = new System.Drawing.Size(774, 344);
       // 
       // tabLocations
       // 
-      this.tabLocations.Size = new System.Drawing.Size(806, 318);
+      this.tabLocations.Size = new System.Drawing.Size(766, 318);
       // 
       // ctlLocations1
       // 
-      this.ctlLocations1.Size = new System.Drawing.Size(800, 312);
+      this.ctlLocations1.Size = new System.Drawing.Size(760, 312);
       // 
       // btnRefreshFromCitycare
       // 
@@ -263,7 +263,7 @@
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(1196, 413);
+      this.ClientSize = new System.Drawing.Size(1156, 413);
       this.Controls.Add(this.txtDBA);
       this.Controls.Add(this.lblDBA);
       this.Controls.Add(this.grpBillingAddress);
