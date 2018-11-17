@@ -35,6 +35,7 @@
       this.label2 = new System.Windows.Forms.Label();
       this.tabMain = new System.Windows.Forms.TabControl();
       this.tabLocations = new System.Windows.Forms.TabPage();
+      this.ctlLocations1 = new CCI.DesktopClient.Common.ctlContacts();
       this.txtStatus = new System.Windows.Forms.ComboBox();
       this.lblStatus = new System.Windows.Forms.Label();
       this.grpAddress = new System.Windows.Forms.GroupBox();
@@ -61,7 +62,6 @@
       this.lblEntity = new System.Windows.Forms.Label();
       this.txtEntity = new System.Windows.Forms.TextBox();
       this.txtLegalName = new System.Windows.Forms.TextBox();
-      this.ctlLocations1 = new CCI.DesktopClient.Common.ctlContacts();
       this.tabMain.SuspendLayout();
       this.tabLocations.SuspendLayout();
       this.grpAddress.SuspendLayout();
@@ -74,6 +74,7 @@
       this.ctlEntitySearch1.AutoAddNewMode = false;
       this.ctlEntitySearch1.AutoSelectWhenMatch = false;
       this.ctlEntitySearch1.AutoTabToNextControlOnSelect = true;
+      this.ctlEntitySearch1.ClearSearchOnExpand = false;
       this.ctlEntitySearch1.ClearSearchWhenComplete = true;
       this.ctlEntitySearch1.Collapsed = true;
       this.ctlEntitySearch1.CreatedNewItem = false;
@@ -155,6 +156,35 @@
       this.tabLocations.TabIndex = 1;
       this.tabLocations.Text = "Locations";
       this.tabLocations.UseVisualStyleBackColor = true;
+      // 
+      // ctlLocations1
+      // 
+      this.ctlLocations1.ColumnNames = new string[] {
+        "ContactType",
+        "FirstName",
+        "LegalName",
+        "Phone",
+        "CellPhone",
+        "EmailAddress",
+        "Address1",
+        "Address2",
+        "City",
+        "State",
+        "Zip",
+        "Entity",
+        "EntityOwner",
+        "EntityType"};
+      this.ctlLocations1.Dock = System.Windows.Forms.DockStyle.Fill;
+      this.ctlLocations1.EntityOwner = null;
+      this.ctlLocations1.EntityOwnerType = null;
+      this.ctlLocations1.EntityType = "Location";
+      this.ctlLocations1.IncludeGrandChildren = false;
+      this.ctlLocations1.Location = new System.Drawing.Point(3, 3);
+      this.ctlLocations1.Name = "ctlLocations1";
+      this.ctlLocations1.SecurityContext = null;
+      this.ctlLocations1.Size = new System.Drawing.Size(795, 110);
+      this.ctlLocations1.StateList = null;
+      this.ctlLocations1.TabIndex = 1;
       // 
       // txtStatus
       // 
@@ -331,7 +361,7 @@
       this.lblNewRecord.AutoSize = true;
       this.lblNewRecord.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.lblNewRecord.ForeColor = System.Drawing.Color.Red;
-      this.lblNewRecord.Location = new System.Drawing.Point(482, 6);
+      this.lblNewRecord.Location = new System.Drawing.Point(592, 3);
       this.lblNewRecord.Name = "lblNewRecord";
       this.lblNewRecord.Size = new System.Drawing.Size(158, 20);
       this.lblNewRecord.TabIndex = 10;
@@ -416,35 +446,6 @@
       this.txtLegalName.TabIndex = 2;
       this.txtLegalName.Tag = "";
       this.txtLegalName.TextChanged += new System.EventHandler(this.txtLegalName_TextChanged);
-      // 
-      // ctlLocations1
-      // 
-      this.ctlLocations1.ColumnNames = new string[] {
-        "ContactType",
-        "FirstName",
-        "LegalName",
-        "Phone",
-        "CellPhone",
-        "EmailAddress",
-        "Address1",
-        "Address2",
-        "City",
-        "State",
-        "Zip",
-        "Entity",
-        "EntityOwner",
-        "EntityType"};
-      this.ctlLocations1.Dock = System.Windows.Forms.DockStyle.Fill;
-      this.ctlLocations1.EntityOwner = null;
-      this.ctlLocations1.EntityOwnerType = null;
-      this.ctlLocations1.EntityType = "Location";
-      this.ctlLocations1.IncludeGrandChildren = false;
-      this.ctlLocations1.Location = new System.Drawing.Point(3, 3);
-      this.ctlLocations1.Name = "ctlLocations1";
-      this.ctlLocations1.SecurityContext = null;
-      this.ctlLocations1.Size = new System.Drawing.Size(795, 110);
-      this.ctlLocations1.StateList = null;
-      this.ctlLocations1.TabIndex = 1;
       // 
       // frmEntityMaintenance
       // 

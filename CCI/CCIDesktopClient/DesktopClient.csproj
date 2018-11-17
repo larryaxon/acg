@@ -382,6 +382,12 @@
     <Compile Include="Screens\frmItemCategories.Designer.cs">
       <DependentUpon>frmItemCategories.cs</DependentUpon>
     </Compile>
+    <Compile Include="Screens\frmMasterCustomerMaintenance.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmMasterCustomerMaintenance.Designer.cs">
+      <DependentUpon>frmMasterCustomerMaintenance.cs</DependentUpon>
+    </Compile>
     <Compile Include="Screens\frmNetworkInventory.cs">
       <SubType>Form</SubType>
     </Compile>

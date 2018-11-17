@@ -49,9 +49,13 @@
       this.textBox7 = new System.Windows.Forms.TextBox();
       this.lblDBA = new System.Windows.Forms.Label();
       this.txtDBA = new System.Windows.Forms.TextBox();
+      this.tabRelationships = new System.Windows.Forms.TabPage();
+      this.ctlEntityOwner = new ACG.CommonForms.ctlSearch();
+      this.label9 = new System.Windows.Forms.Label();
       this.tabMain.SuspendLayout();
       this.tabLocations.SuspendLayout();
       this.grpBillingAddress.SuspendLayout();
+      this.tabRelationships.SuspendLayout();
       this.SuspendLayout();
       // 
       // tabMain
@@ -59,21 +63,24 @@
       this.tabMain.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.tabMain.Size = new System.Drawing.Size(774, 344);
+      this.tabMain.Controls.Add(this.tabRelationships);
+      this.tabMain.Size = new System.Drawing.Size(779, 344);
+      this.tabMain.Controls.SetChildIndex(this.tabRelationships, 0);
+      this.tabMain.Controls.SetChildIndex(this.tabLocations, 0);
       // 
       // tabLocations
       // 
-      this.tabLocations.Size = new System.Drawing.Size(766, 318);
+      this.tabLocations.Size = new System.Drawing.Size(771, 318);
       // 
       // ctlLocations1
       // 
-      this.ctlLocations1.Size = new System.Drawing.Size(760, 312);
+      this.ctlLocations1.Size = new System.Drawing.Size(765, 312);
       // 
       // btnRefreshFromCitycare
       // 
       this.btnRefreshFromCitycare.Location = new System.Drawing.Point(871, 3);
       this.btnRefreshFromCitycare.Name = "btnRefreshFromCitycare";
-      this.btnRefreshFromCitycare.Size = new System.Drawing.Size(132, 23);
+      this.btnRefreshFromCitycare.Size = new System.Drawing.Size(67, 23);
       this.btnRefreshFromCitycare.TabIndex = 15;
       this.btnRefreshFromCitycare.Text = "Refresh from CityCare";
       this.btnRefreshFromCitycare.UseVisualStyleBackColor = true;
@@ -259,11 +266,59 @@
       this.txtDBA.Size = new System.Drawing.Size(320, 20);
       this.txtDBA.TabIndex = 20;
       // 
+      // tabRelationships
+      // 
+      this.tabRelationships.Controls.Add(this.ctlEntityOwner);
+      this.tabRelationships.Controls.Add(this.label9);
+      this.tabRelationships.Location = new System.Drawing.Point(4, 22);
+      this.tabRelationships.Name = "tabRelationships";
+      this.tabRelationships.Size = new System.Drawing.Size(771, 318);
+      this.tabRelationships.TabIndex = 2;
+      this.tabRelationships.Text = "Relationships";
+      this.tabRelationships.UseVisualStyleBackColor = true;
+      // 
+      // ctlEntityOwner
+      // 
+      this.ctlEntityOwner.AddNewMode = false;
+      this.ctlEntityOwner.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.ctlEntityOwner.AutoAddNewMode = false;
+      this.ctlEntityOwner.AutoSelectWhenMatch = false;
+      this.ctlEntityOwner.AutoTabToNextControlOnSelect = true;
+      this.ctlEntityOwner.ClearSearchOnExpand = false;
+      this.ctlEntityOwner.ClearSearchWhenComplete = false;
+      this.ctlEntityOwner.Collapsed = true;
+      this.ctlEntityOwner.CreatedNewItem = false;
+      this.ctlEntityOwner.DisplayOnlyDescription = false;
+      this.ctlEntityOwner.DisplayOnlyID = false;
+      this.ctlEntityOwner.FixKeySpace = "-1";
+      this.ctlEntityOwner.ID = "";
+      this.ctlEntityOwner.ID_DescSplitter = ":";
+      this.ctlEntityOwner.Location = new System.Drawing.Point(142, 15);
+      this.ctlEntityOwner.MaxHeight = 228;
+      this.ctlEntityOwner.MustExistInList = true;
+      this.ctlEntityOwner.MustExistMessage = "You must enter a valid value";
+      this.ctlEntityOwner.Name = "ctlEntityOwner";
+      this.ctlEntityOwner.SearchExec = null;
+      this.ctlEntityOwner.ShowCustomerNameWhenSet = false;
+      this.ctlEntityOwner.ShowTermedCheckBox = false;
+      this.ctlEntityOwner.Size = new System.Drawing.Size(608, 222);
+      this.ctlEntityOwner.TabIndex = 1;
+      // 
+      // label9
+      // 
+      this.label9.AutoSize = true;
+      this.label9.Location = new System.Drawing.Point(15, 15);
+      this.label9.Name = "label9";
+      this.label9.Size = new System.Drawing.Size(86, 13);
+      this.label9.TabIndex = 0;
+      this.label9.Text = "Master Customer";
+      // 
       // frmCustomers
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(1156, 413);
+      this.ClientSize = new System.Drawing.Size(1161, 413);
       this.Controls.Add(this.txtDBA);
       this.Controls.Add(this.lblDBA);
       this.Controls.Add(this.grpBillingAddress);
@@ -286,6 +341,8 @@
       this.tabLocations.ResumeLayout(false);
       this.grpBillingAddress.ResumeLayout(false);
       this.grpBillingAddress.PerformLayout();
+      this.tabRelationships.ResumeLayout(false);
+      this.tabRelationships.PerformLayout();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -314,5 +371,8 @@
     private System.Windows.Forms.Button btnSyncBillingAddress;
     private System.Windows.Forms.Label lblDBA;
     private System.Windows.Forms.TextBox txtDBA;
+    private System.Windows.Forms.TabPage tabRelationships;
+    private ACG.CommonForms.ctlSearch ctlEntityOwner;
+    private System.Windows.Forms.Label label9;
   }
 }

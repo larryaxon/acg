@@ -65,6 +65,7 @@
       this.oCCAdjustmentsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.creditMemosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.dealerRetailUSOCPricingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.wholealeUSOCImportExceptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.reportsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.analyticsReportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.productsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -121,7 +122,7 @@
       this.statusStrip = new System.Windows.Forms.StatusStrip();
       this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
       this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-      this.wholealeUSOCImportExceptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.masterCustomerMaintenanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.menuStrip.SuspendLayout();
       this.toolStrip.SuspendLayout();
       this.statusStrip.SuspendLayout();
@@ -353,7 +354,8 @@
             this.oCCAdjustmentsToolStripMenuItem,
             this.creditMemosToolStripMenuItem,
             this.dealerRetailUSOCPricingToolStripMenuItem,
-            this.wholealeUSOCImportExceptionsToolStripMenuItem});
+            this.wholealeUSOCImportExceptionsToolStripMenuItem,
+            this.masterCustomerMaintenanceToolStripMenuItem});
       this.cityhostedToolStripMenuItem.Name = "cityhostedToolStripMenuItem";
       this.cityhostedToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
       this.cityhostedToolStripMenuItem.Text = "City Hosted";
@@ -434,6 +436,13 @@
       this.dealerRetailUSOCPricingToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
       this.dealerRetailUSOCPricingToolStripMenuItem.Text = "Dealer Retail USOC Pricing";
       this.dealerRetailUSOCPricingToolStripMenuItem.Click += new System.EventHandler(this.dealerRetailUSOCPricingToolStripMenuItem_Click);
+      // 
+      // wholealeUSOCImportExceptionsToolStripMenuItem
+      // 
+      this.wholealeUSOCImportExceptionsToolStripMenuItem.Name = "wholealeUSOCImportExceptionsToolStripMenuItem";
+      this.wholealeUSOCImportExceptionsToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
+      this.wholealeUSOCImportExceptionsToolStripMenuItem.Text = "Wholeale USOC Import Exceptions";
+      this.wholealeUSOCImportExceptionsToolStripMenuItem.Click += new System.EventHandler(this.wholealeUSOCImportExceptionsToolStripMenuItem_Click);
       // 
       // reportsToolStripMenuItem
       // 
@@ -876,12 +885,12 @@
       this.toolStripStatusLabel.Size = new System.Drawing.Size(38, 17);
       this.toolStripStatusLabel.Text = "Status";
       // 
-      // wholealeUSOCImportExceptionsToolStripMenuItem
+      // masterCustomerMaintenanceToolStripMenuItem
       // 
-      this.wholealeUSOCImportExceptionsToolStripMenuItem.Name = "wholealeUSOCImportExceptionsToolStripMenuItem";
-      this.wholealeUSOCImportExceptionsToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
-      this.wholealeUSOCImportExceptionsToolStripMenuItem.Text = "Wholeale USOC Import Exceptions";
-      this.wholealeUSOCImportExceptionsToolStripMenuItem.Click += new System.EventHandler(this.wholealeUSOCImportExceptionsToolStripMenuItem_Click);
+      this.masterCustomerMaintenanceToolStripMenuItem.Name = "masterCustomerMaintenanceToolStripMenuItem";
+      this.masterCustomerMaintenanceToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
+      this.masterCustomerMaintenanceToolStripMenuItem.Text = "Master Customer Maintenance";
+      this.masterCustomerMaintenanceToolStripMenuItem.Click += new System.EventHandler(this.masterCustomerMaintenanceToolStripMenuItem_Click);
       // 
       // MainForm
       // 
@@ -1001,6 +1010,7 @@
     private System.Windows.Forms.ToolStripMenuItem genericMaintenanceScreenSetupToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem cityHostedUsocNewToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem wholealeUSOCImportExceptionsToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem masterCustomerMaintenanceToolStripMenuItem;
   }
 }
 

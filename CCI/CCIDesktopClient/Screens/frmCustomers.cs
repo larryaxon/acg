@@ -10,6 +10,7 @@ using CCI.DesktopClient.Common;
 using CCI.Common;
 
 using ChargifyNET;
+using CCI.Sys.Data;
 
 namespace CCI.DesktopClient.Screens
 {
@@ -31,12 +32,15 @@ namespace CCI.DesktopClient.Screens
       DisableExceptionFieldList.Add("btnMerge");
       txtEntity.SendToBack();
       txtLegalName.SendToBack();
+      ctlEntityOwner.SearchExec = new SearchDataSourceEntity(_entityType);
+
     }
     public new void Init(string entity)
     {
       base.Init(entity);
               // then add the CHS customer tab
       TabPage cust;
+      TabPage relations;
       if (!tabMain.TabPages.ContainsKey(custTabName)) // only add this the first time through
       {
         tabMain.TabPages.Add(custTabName, "Saddleback Customer Info");
@@ -122,6 +126,8 @@ namespace CCI.DesktopClient.Screens
         cust = tabMain.TabPages[custTabName];
         cust.Controls["txtAlternateID"].Text = CommonFunctions.CString(_eac.Entities[entity].Fields["AlternateID"].Value);
         cust.Controls["txtPaymentType"].Text = CommonFunctions.CString(_eac.getValue(entity + ".Entity.Customer.PaymentType"));
+        relations = tabMain.TabPages["tabRelationships"];
+//        relations.Controls["ctlSearchMasterCustomer"].Text = CommonFunctions.CString(_eac.Entities[entity].Fields["EntityOwner"].Value);
       }
       reloadNetworkInventory();
         
