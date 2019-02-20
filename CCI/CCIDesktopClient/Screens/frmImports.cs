@@ -1191,13 +1191,11 @@ No if you have not and wish to be safe, and Cancel if you want to ignore and con
     }
     private void openSpreadsheet(string filename)
     {
-        appExl = new Excel.ApplicationClass(); 
-        workbook = appExl.Workbooks.Open(filename, Missing.Value,
-            Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value,
-            Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value,
-            Missing.Value, Missing.Value, Missing.Value);
-        NwSheet = (Excel.Worksheet)workbook.Sheets.get_Item(1);
-        ShtRange = NwSheet.UsedRange;
+      //Create COM Objects. Create a COM object for everything that is referenced
+      appExl = new Excel.Application();
+      workbook = appExl.Workbooks.Open(filename);
+      NwSheet = (Excel.Worksheet)workbook.Sheets[1];
+      ShtRange = NwSheet.UsedRange;
     }
     private void closeExcel()
     {
