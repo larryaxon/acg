@@ -8,8 +8,10 @@ using System.Windows.Forms;
 
 using CCI.DesktopClient.Common;
 using CCI.Common;
+using CCI.Sys.Data;
 
 using ChargifyNET;
+using ACG.CommonForms;
 
 namespace CCI.DesktopClient.Screens
 {
@@ -31,53 +33,93 @@ namespace CCI.DesktopClient.Screens
       DisableExceptionFieldList.Add("btnMerge");
       txtEntity.SendToBack();
       txtLegalName.SendToBack();
+      txtEntityOwner.SendToBack();
+      txtEntityOwner.SearchExec = new SearchDataSourceEntity("MasterCustomer");
     }
     public new void Init(string entity)
     {
       base.Init(entity);
-              // then add the CHS customer tab
+
+      // then add the CHS customer tab
       TabPage cust;
       if (!tabMain.TabPages.ContainsKey(custTabName)) // only add this the first time through
       {
-        tabMain.TabPages.Add(custTabName, "Saddleback Customer Info");
+        tabMain.TabPages.Add(custTabName, "Customer Info");
         cust = tabMain.TabPages[custTabName];
+
         Label labelAltID = new Label();
         labelAltID.Name = "lblAlternateID";
-        labelAltID.Text = "Saddleback Customer ID";
-        //Label labelRPMID = new Label();
-        //labelRPMID.Name = "lblRPMID";
-        //labelRPMID.Text = "RPM Customer ID";
+        labelAltID.Text = "Alternate Customer ID";
+
         Label labelPaymentType = new Label();
         labelPaymentType.Name = "lblPaymentType";
         labelPaymentType.Text = "Payment Type";
         TextBox textAltID = new TextBox();
         textAltID.Name = "txtAlternateID";
         textAltID.Validating += new CancelEventHandler(textAltID_Validating);
-        //TextBox textRPMID = new TextBox();
-        //textRPMID.Name = "txtRPMID";
+
         ComboBox comboPaymentType = new ComboBox();
         comboPaymentType.Name = "txtPaymentType";
         comboPaymentType.Items.AddRange(new string[] { "ACH", "Check", "CreditCard" });
-        //Label labelChargifySubscription = new Label();
-        //labelChargifySubscription.Name = "lblChargifySubscription";
-        //labelChargifySubscription.Text = "Chargify Subscription ID";
-        //TextBox textChargifySubscription = new TextBox();
-        //textChargifySubscription.Name = "txtChargifySubscription";
-        //comboPaymentType.Text = "ACH";
+
+
+        //Label labelMasterCustomer = new Label();
+        //labelMasterCustomer.Name = "lblMasterCustomer";
+        //labelMasterCustomer.Text = "Master Customer";
+        //ctlSearch txtEntityOwner = new ctlSearch();
+        //txtEntityOwner.Name = "txtEntityOwner";
+        //txtEntityOwner.ShowTermedCheckBox = false;
+        //txtEntityOwner.ShowCustomerNameWhenSet = true;
+        //txtEntityOwner.AutoAddNewMode = false;
+        //txtEntityOwner.AutoSelectWhenMatch = false;
+        //txtEntityOwner.AutoTabToNextControlOnSelect = false;
+        //txtEntityOwner.ClearSearchWhenComplete = false;
+        //txtEntityOwner.DisplayOnlyID = false;
+        //txtEntityOwner.MustExistInList = true;
+
+        Label labelAgent = new Label();
+        labelAgent.Name = "lblAgent";
+        labelAgent.Text = "Agent";
+        ctlSearch  srchAgent = new ctlSearch();
+        srchAgent.Name = "txtAgent";
+        srchAgent.SearchExec = new SearchDataSourceEntity("Agent");
+        srchAgent.ShowTermedCheckBox = false;
+        srchAgent.ShowCustomerNameWhenSet = true;
+        srchAgent.AutoAddNewMode = false;
+        srchAgent.AutoSelectWhenMatch = false;
+        srchAgent.AutoTabToNextControlOnSelect = false;
+        srchAgent.ClearSearchWhenComplete = false;
+        srchAgent.DisplayOnlyID = false;
+        srchAgent.MustExistInList = true;
+
+        //cust.Controls.Add(labelMasterCustomer);
+        //cust.Controls.Add(txtEntityOwner);
+
+
         cust.Controls.Add(labelAltID);
         cust.Controls.Add(textAltID);
-        //cust.Controls.Add(labelRPMID);
-        //cust.Controls.Add(textRPMID);
+
         cust.Controls.Add(labelPaymentType);
         cust.Controls.Add(comboPaymentType);
-        //cust.Controls.Add(labelChargifySubscription);
-        //cust.Controls.Add(textChargifySubscription);
+
+        cust.Controls.Add(labelAgent);
+        cust.Controls.Add(srchAgent);
+
         int margin = 10;
         int labelleft = 10;
         int top = 20;
         int labelwidth = 135;
         int textwidth = 135;
         int textleft = labelleft + labelwidth + margin;
+
+        //labelMasterCustomer.Left = labelleft;
+        //labelMasterCustomer.Top = top; 
+        //labelMasterCustomer.Width = labelwidth;
+        //txtEntityOwner.Top = labelMasterCustomer.Top;
+        //txtEntityOwner.Left = textleft;
+        //txtEntityOwner.Width = textwidth * 3;
+        //txtEntityOwner.Collapsed = true;
+
         labelAltID.Left = labelleft;
         labelAltID.Top = top;
         labelAltID.Width = labelwidth;
@@ -85,12 +127,6 @@ namespace CCI.DesktopClient.Screens
         textAltID.Top = top;
         textAltID.Width = textwidth;
 
-        //labelRPMID.Left = labelleft;
-        //labelRPMID.Top = labelAltID.Top + labelAltID.Height + margin;
-        //labelRPMID.Width = labelwidth;
-        //textRPMID.Top = labelRPMID.Top;
-        //textRPMID.Left = textleft;
-        //textRPMID.Width = textwidth;
 
         labelPaymentType.Left = labelleft;
         labelPaymentType.Top = labelAltID.Top + labelAltID.Height + margin;
@@ -98,18 +134,25 @@ namespace CCI.DesktopClient.Screens
         comboPaymentType.Top = labelPaymentType.Top;
         comboPaymentType.Left = textleft;
         comboPaymentType.Width = textwidth;
-        //labelChargifySubscription.Left = labelleft;
-        //labelChargifySubscription.Top = labelPaymentType.Top + labelPaymentType.Height + margin;
-        //textChargifySubscription.Top = labelChargifySubscription.Top;
-        //textChargifySubscription.Left = textleft;
-        //textChargifySubscription.Width = textwidth;
-          
+
+
+        labelAgent.Left = labelleft;
+        labelAgent.Top = labelPaymentType.Top + labelPaymentType.Height + margin;
+        labelAgent.Width = labelwidth;
+        srchAgent.Top = labelAgent.Top;
+        srchAgent.Left = textleft;
+        srchAgent.Width = textwidth * 3;
+
+        srchAgent.Collapsed = true;
+
+
+
       }
       if (!tabMain.TabPages.ContainsKey(networkInventoryTabName))
       {
         tabMain.TabPages.Add(networkInventoryTabName, "Network Inventory");
         TabPage netinv = tabMain.TabPages[networkInventoryTabName];
-        ctlSearchGrid srch = new ctlSearchGrid();
+        CCI.DesktopClient.Common.ctlSearchGrid srch = new CCI.DesktopClient.Common.ctlSearchGrid();
         srch.Name = networkInventoryGridname;
         netinv.Controls.Add(srch);
         srch.DisplaySearchCriteria = false;
@@ -122,6 +165,12 @@ namespace CCI.DesktopClient.Screens
         cust = tabMain.TabPages[custTabName];
         cust.Controls["txtAlternateID"].Text = CommonFunctions.CString(_eac.Entities[entity].Fields["AlternateID"].Value);
         cust.Controls["txtPaymentType"].Text = CommonFunctions.CString(_eac.getValue(entity + ".Entity.Customer.PaymentType"));
+        string agentID = _dataSource.getAgentForCustomer(entity);
+        if (!string.IsNullOrWhiteSpace(agentID))
+          ((ctlSearch)cust.Controls["txtAgent"]).Text = agentID;
+        //((ctlSearch)cust.Controls["srchAgent"]).Visible = true;
+        //((ctlSearch)cust.Controls["txtEntityOwner"]).Text = CommonFunctions.CString(_eac.Entities[entity].Fields["EntityOwner"].Value); 
+
       }
       reloadNetworkInventory();
         
@@ -187,9 +236,9 @@ namespace CCI.DesktopClient.Screens
         {
           if (!string.IsNullOrEmpty(_entity))
           {
-            ctlSearchGrid srch = (ctlSearchGrid)tabMain.Controls[networkInventoryTabName].Controls[networkInventoryGridname];
+            CCI.DesktopClient.Common.ctlSearchGrid srch = (CCI.DesktopClient.Common.ctlSearchGrid)tabMain.Controls[networkInventoryTabName].Controls[networkInventoryGridname];
             Dictionary<string, string[]> criteria = new Dictionary<string, string[]>(StringComparer.CurrentCultureIgnoreCase);
-            criteria.Add("Customer", new string[] { ctlSearchGrid.opEQUALS, _entity });
+            criteria.Add("Customer", new string[] { CCI.DesktopClient.Common.ctlSearchGrid.opEQUALS, _entity });
             srch.SearchCriteria = criteria;
             srch.ReLoad();
           }
@@ -204,7 +253,7 @@ namespace CCI.DesktopClient.Screens
       string chargifySubscription = string.Empty;
       if (_canAccessChargify)
       {
-        DialogResult ans = CommonFormFunctions.InputBox("Create New Customer from Chargify Subscription",
+        DialogResult ans = CCI.DesktopClient.Common.CommonFormFunctions.InputBox("Create New Customer from Chargify Subscription",
           "If you want to create this customer from a Chargify Subscription, enter it here. If you do not want to create a new Customer, press Cancel.",
           ref chargifySubscription);
         if (ans == System.Windows.Forms.DialogResult.Cancel)
@@ -227,7 +276,7 @@ namespace CCI.DesktopClient.Screens
         legalName = string.Format("{0} {0}", customer.FirstName, customer.LastName);
       legalName = legalName.Trim();
       if (string.IsNullOrEmpty(legalName))
-        CommonFormFunctions.showMessage("This chargify customer has no name. We cannot add that customer");
+        CCI.DesktopClient.Common.CommonFormFunctions.showMessage("This chargify customer has no name. We cannot add that customer");
       else
       {
         NewWithName(legalName);
@@ -252,7 +301,7 @@ namespace CCI.DesktopClient.Screens
         ISubscription chargifySubscription = chargify.getSubscription(id);
         if (chargifySubscription == null)
         {
-          CommonFormFunctions.showMessage("That subscription does not exist in Chargify");
+          CCI.DesktopClient.Common.CommonFormFunctions.showMessage("That subscription does not exist in Chargify");
           return null;
         }
         if (!tabMain.TabPages.ContainsKey(custTabName)) // now update the subscription on the screen and in the customer record
@@ -268,7 +317,7 @@ namespace CCI.DesktopClient.Screens
       }
       catch (Exception ex)
       {
-        CommonFormFunctions.showException(ex);
+        CCI.DesktopClient.Common.CommonFormFunctions.showException(ex);
         return null;
       }
     }
@@ -282,7 +331,7 @@ namespace CCI.DesktopClient.Screens
       }
       catch (Exception ex)
       {
-        CommonFormFunctions.showException(ex);
+        CCI.DesktopClient.Common.CommonFormFunctions.showException(ex);
       }
     }
     private void copyBillingFromPrimaryAddress()
@@ -296,14 +345,7 @@ namespace CCI.DesktopClient.Screens
       txtBillingCellPhone.Text = txtCellPhone.Text;
     }
 
-    //private void ckCopyFromAddress_CheckedChanged(object sender, EventArgs e)
-    //{
-    //  if (ckCopyFromAddress.Checked)
-    //    copyBillingFromPrimaryAddress();
-    //  else
-    //    CommonFormFunctions.clearFields(this.grpBillingAddress);
 
-    //}
 
     private void btnSyncBillingAddress_Click(object sender, EventArgs e)
     {

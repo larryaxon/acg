@@ -28,7 +28,6 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.btnRefreshFromCitycare = new System.Windows.Forms.Button();
       this.btnMerge = new System.Windows.Forms.Button();
       this.grpBillingAddress = new System.Windows.Forms.GroupBox();
       this.btnSyncBillingAddress = new System.Windows.Forms.Button();
@@ -49,6 +48,7 @@
       this.textBox7 = new System.Windows.Forms.TextBox();
       this.lblDBA = new System.Windows.Forms.Label();
       this.txtDBA = new System.Windows.Forms.TextBox();
+      this.txtEntityOwner = new ACG.CommonForms.ctlSearch();
       this.tabMain.SuspendLayout();
       this.tabLocations.SuspendLayout();
       this.grpBillingAddress.SuspendLayout();
@@ -65,28 +65,21 @@
       // 
       this.tabLocations.Size = new System.Drawing.Size(766, 318);
       // 
+      // lblNewRecord
+      // 
+      this.lblNewRecord.Location = new System.Drawing.Point(367, 3);
+      // 
       // ctlLocations1
       // 
       this.ctlLocations1.Size = new System.Drawing.Size(760, 312);
       // 
-      // btnRefreshFromCitycare
-      // 
-      this.btnRefreshFromCitycare.Location = new System.Drawing.Point(871, 3);
-      this.btnRefreshFromCitycare.Name = "btnRefreshFromCitycare";
-      this.btnRefreshFromCitycare.Size = new System.Drawing.Size(132, 23);
-      this.btnRefreshFromCitycare.TabIndex = 15;
-      this.btnRefreshFromCitycare.Text = "Refresh from CityCare";
-      this.btnRefreshFromCitycare.UseVisualStyleBackColor = true;
-      this.btnRefreshFromCitycare.Visible = false;
-      this.btnRefreshFromCitycare.Click += new System.EventHandler(this.btnRefreshFromCitycare_Click);
-      // 
       // btnMerge
       // 
-      this.btnMerge.Location = new System.Drawing.Point(754, 4);
+      this.btnMerge.Location = new System.Drawing.Point(945, 3);
       this.btnMerge.Name = "btnMerge";
-      this.btnMerge.Size = new System.Drawing.Size(111, 23);
+      this.btnMerge.Size = new System.Drawing.Size(58, 23);
       this.btnMerge.TabIndex = 16;
-      this.btnMerge.Text = "Merge Customer";
+      this.btnMerge.Text = "Merge";
       this.btnMerge.UseVisualStyleBackColor = true;
       this.btnMerge.Click += new System.EventHandler(this.btnMerge_Click);
       // 
@@ -256,32 +249,58 @@
       // 
       this.txtDBA.Location = new System.Drawing.Point(351, 28);
       this.txtDBA.Name = "txtDBA";
-      this.txtDBA.Size = new System.Drawing.Size(320, 20);
+      this.txtDBA.Size = new System.Drawing.Size(303, 20);
       this.txtDBA.TabIndex = 20;
+      // 
+      // txtEntityOwner
+      // 
+      this.txtEntityOwner.AddNewMode = false;
+      this.txtEntityOwner.AutoAddNewMode = false;
+      this.txtEntityOwner.AutoSelectWhenMatch = false;
+      this.txtEntityOwner.AutoTabToNextControlOnSelect = true;
+      this.txtEntityOwner.ClearSearchOnExpand = false;
+      this.txtEntityOwner.ClearSearchWhenComplete = false;
+      this.txtEntityOwner.Collapsed = true;
+      this.txtEntityOwner.CreatedNewItem = false;
+      this.txtEntityOwner.DisplayOnlyDescription = true;
+      this.txtEntityOwner.DisplayOnlyID = false;
+      this.txtEntityOwner.FixKeySpace = "-1";
+      this.txtEntityOwner.ID = "";
+      this.txtEntityOwner.ID_DescSplitter = ":";
+      this.txtEntityOwner.Location = new System.Drawing.Point(531, 3);
+      this.txtEntityOwner.MaxHeight = 228;
+      this.txtEntityOwner.MustExistInList = false;
+      this.txtEntityOwner.MustExistMessage = "You must enter a valid value";
+      this.txtEntityOwner.Name = "txtEntityOwner";
+      this.txtEntityOwner.SearchExec = null;
+      this.txtEntityOwner.ShowCustomerNameWhenSet = true;
+      this.txtEntityOwner.ShowTermedCheckBox = false;
+      this.txtEntityOwner.Size = new System.Drawing.Size(303, 22);
+      this.txtEntityOwner.TabIndex = 21;
       // 
       // frmCustomers
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(1156, 413);
+      this.ClientSize = new System.Drawing.Size(1196, 569);
+      this.Controls.Add(this.txtEntityOwner);
       this.Controls.Add(this.txtDBA);
       this.Controls.Add(this.lblDBA);
       this.Controls.Add(this.grpBillingAddress);
       this.Controls.Add(this.textBox7);
       this.Controls.Add(this.btnMerge);
-      this.Controls.Add(this.btnRefreshFromCitycare);
       this.Name = "frmCustomers";
       this.Text = "frmCustomers";
       this.Controls.SetChildIndex(this.txtLegalName, 0);
       this.Controls.SetChildIndex(this.txtEntity, 0);
       this.Controls.SetChildIndex(this.lblNewRecord, 0);
-      this.Controls.SetChildIndex(this.btnRefreshFromCitycare, 0);
       this.Controls.SetChildIndex(this.btnMerge, 0);
       this.Controls.SetChildIndex(this.textBox7, 0);
       this.Controls.SetChildIndex(this.grpBillingAddress, 0);
       this.Controls.SetChildIndex(this.tabMain, 0);
       this.Controls.SetChildIndex(this.lblDBA, 0);
       this.Controls.SetChildIndex(this.txtDBA, 0);
+      this.Controls.SetChildIndex(this.txtEntityOwner, 0);
       this.tabMain.ResumeLayout(false);
       this.tabLocations.ResumeLayout(false);
       this.grpBillingAddress.ResumeLayout(false);
@@ -292,8 +311,6 @@
     }
 
     #endregion
-
-    private System.Windows.Forms.Button btnRefreshFromCitycare;
     private System.Windows.Forms.Button btnMerge;
     private System.Windows.Forms.GroupBox grpBillingAddress;
     private System.Windows.Forms.TextBox txtBillingCellPhone;
@@ -314,5 +331,6 @@
     private System.Windows.Forms.Button btnSyncBillingAddress;
     private System.Windows.Forms.Label lblDBA;
     private System.Windows.Forms.TextBox txtDBA;
+    private ACG.CommonForms.ctlSearch txtEntityOwner;
   }
 }

@@ -55,24 +55,12 @@ namespace CCI.Sys.Data
     }
     public string getDealerForCustomer(string customerID)
     {
-      string sql = string.Format(@"Select isnull(d.LegalName, 'CCI as CHS Dealer') DealerName
-          from entity c 
-          inner join (
-			select distinct Customer from NetworkInventory where Carrier = 'CityHosted'
-			) ni on ni.Customer = c.Entity
-          left join SalesOrDealerCustomers dc on c.Entity = dc.customer 
-		  left join entity d on d.entity = dc.SalesOrDealer
-		  Where c.entity = '{0}'", customerID);
-      using (DataSet ds = getDataFromSQL(sql))
-      {
-        if (ds == null)
-          return null;
-        if (ds.Tables.Count == 1 && ds.Tables[0].Rows.Count > 0)
-          return CommonFunctions.CString(ds.Tables[0].Rows[0]["DealerName"]);
-        else
-          return null;
-      }
+      return getDealerOrAgentForCustomer(customerID, "Dealer", true);
 
+    }
+    public string getAgentForCustomer(string customerID)
+    {
+      return getDealerOrAgentForCustomer(customerID, "Agent", false);
     }
     public int? moveDealerCustomers(ArrayList customerList, string dealer, string user)
     {
@@ -143,6 +131,28 @@ or (item =  'Dealer') order by case when e.entitytype = 'Dealer' then legalname 
       DataSet ds = getDataFromSQL(sql);
       return CommonFunctions.toPickList(ds, "entity", "name");
     }
+    public string getDealerOrAgentForCustomer(string customerID, string salesType, bool returnName = true)
+    {
+      string returnFieldName = returnName ? "DealerName" : "Entity";
+      string sql = string.Format(@"Select d.Entity,  isnull(d.LegalName, 'CCI as CHS Dealer') DealerName
+          from entity c 
+          inner join (
+			select distinct Customer from NetworkInventory where Carrier = 'CityHosted'
+			) ni on ni.Customer = c.Entity
+          left join SalesOrDealerCustomers dc on c.Entity = dc.customer 
+		  left join entity d on d.entity = dc.SalesOrDealer
+		  Where c.entity = '{0}' and dc.SalesType = '{1}'", customerID, salesType);
+      using (DataSet ds = getDataFromSQL(sql))
+      {
+        if (ds == null)
+          return null;
+        if (ds.Tables.Count == 1 && ds.Tables[0].Rows.Count > 0)
+          return CommonFunctions.CString(ds.Tables[0].Rows[0][returnFieldName]);
+        else
+          return null;
+      }
+    }
+
     public PickListEntries getSalesPersonList()
     {
       string sql = @"select distinct e.Entity, firstname + ' ' + legalname Name from vw_attributenonxml a
