@@ -49,10 +49,19 @@
       this.lblDBA = new System.Windows.Forms.Label();
       this.txtDBA = new System.Windows.Forms.TextBox();
       this.txtEntityOwner = new ACG.CommonForms.ctlSearch();
+      this.label9 = new System.Windows.Forms.Label();
       this.tabMain.SuspendLayout();
       this.tabLocations.SuspendLayout();
       this.grpBillingAddress.SuspendLayout();
       this.SuspendLayout();
+      // 
+      // txtLegalName
+      // 
+      this.txtLegalName.TabIndex = 3;
+      // 
+      // txtEntity
+      // 
+      this.txtEntity.TabIndex = 2;
       // 
       // tabMain
       // 
@@ -78,7 +87,7 @@
       this.btnMerge.Location = new System.Drawing.Point(945, 3);
       this.btnMerge.Name = "btnMerge";
       this.btnMerge.Size = new System.Drawing.Size(58, 23);
-      this.btnMerge.TabIndex = 16;
+      this.btnMerge.TabIndex = 6;
       this.btnMerge.Text = "Merge";
       this.btnMerge.UseVisualStyleBackColor = true;
       this.btnMerge.Click += new System.EventHandler(this.btnMerge_Click);
@@ -250,7 +259,7 @@
       this.txtDBA.Location = new System.Drawing.Point(351, 28);
       this.txtDBA.Name = "txtDBA";
       this.txtDBA.Size = new System.Drawing.Size(303, 20);
-      this.txtDBA.TabIndex = 20;
+      this.txtDBA.TabIndex = 4;
       // 
       // txtEntityOwner
       // 
@@ -262,12 +271,12 @@
       this.txtEntityOwner.ClearSearchWhenComplete = false;
       this.txtEntityOwner.Collapsed = true;
       this.txtEntityOwner.CreatedNewItem = false;
-      this.txtEntityOwner.DisplayOnlyDescription = true;
+      this.txtEntityOwner.DisplayOnlyDescription = false;
       this.txtEntityOwner.DisplayOnlyID = false;
       this.txtEntityOwner.FixKeySpace = "-1";
       this.txtEntityOwner.ID = "";
       this.txtEntityOwner.ID_DescSplitter = ":";
-      this.txtEntityOwner.Location = new System.Drawing.Point(531, 3);
+      this.txtEntityOwner.Location = new System.Drawing.Point(636, 3);
       this.txtEntityOwner.MaxHeight = 228;
       this.txtEntityOwner.MustExistInList = false;
       this.txtEntityOwner.MustExistMessage = "You must enter a valid value";
@@ -276,13 +285,23 @@
       this.txtEntityOwner.ShowCustomerNameWhenSet = true;
       this.txtEntityOwner.ShowTermedCheckBox = false;
       this.txtEntityOwner.Size = new System.Drawing.Size(303, 22);
-      this.txtEntityOwner.TabIndex = 21;
+      this.txtEntityOwner.TabIndex = 1;
+      // 
+      // label9
+      // 
+      this.label9.AutoSize = true;
+      this.label9.Location = new System.Drawing.Point(531, 8);
+      this.label9.Name = "label9";
+      this.label9.Size = new System.Drawing.Size(86, 13);
+      this.label9.TabIndex = 22;
+      this.label9.Text = "Master Customer";
       // 
       // frmCustomers
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(1196, 569);
+      this.Controls.Add(this.label9);
       this.Controls.Add(this.txtEntityOwner);
       this.Controls.Add(this.txtDBA);
       this.Controls.Add(this.lblDBA);
@@ -301,6 +320,7 @@
       this.Controls.SetChildIndex(this.lblDBA, 0);
       this.Controls.SetChildIndex(this.txtDBA, 0);
       this.Controls.SetChildIndex(this.txtEntityOwner, 0);
+      this.Controls.SetChildIndex(this.label9, 0);
       this.tabMain.ResumeLayout(false);
       this.tabLocations.ResumeLayout(false);
       this.grpBillingAddress.ResumeLayout(false);
@@ -332,5 +352,6 @@
     private System.Windows.Forms.Label lblDBA;
     private System.Windows.Forms.TextBox txtDBA;
     private ACG.CommonForms.ctlSearch txtEntityOwner;
+    private System.Windows.Forms.Label label9;
   }
 }

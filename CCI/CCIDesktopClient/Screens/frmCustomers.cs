@@ -33,7 +33,7 @@ namespace CCI.DesktopClient.Screens
       DisableExceptionFieldList.Add("btnMerge");
       txtEntity.SendToBack();
       txtLegalName.SendToBack();
-      txtEntityOwner.SendToBack();
+      txtEntityOwner.BringToFront();
       txtEntityOwner.SearchExec = new SearchDataSourceEntity("MasterCustomer");
     }
     public new void Init(string entity)
@@ -62,20 +62,12 @@ namespace CCI.DesktopClient.Screens
         comboPaymentType.Name = "txtPaymentType";
         comboPaymentType.Items.AddRange(new string[] { "ACH", "Check", "CreditCard" });
 
-
-        //Label labelMasterCustomer = new Label();
-        //labelMasterCustomer.Name = "lblMasterCustomer";
-        //labelMasterCustomer.Text = "Master Customer";
-        //ctlSearch txtEntityOwner = new ctlSearch();
-        //txtEntityOwner.Name = "txtEntityOwner";
-        //txtEntityOwner.ShowTermedCheckBox = false;
-        //txtEntityOwner.ShowCustomerNameWhenSet = true;
-        //txtEntityOwner.AutoAddNewMode = false;
-        //txtEntityOwner.AutoSelectWhenMatch = false;
-        //txtEntityOwner.AutoTabToNextControlOnSelect = false;
-        //txtEntityOwner.ClearSearchWhenComplete = false;
-        //txtEntityOwner.DisplayOnlyID = false;
-        //txtEntityOwner.MustExistInList = true;
+        Label labelDay2 = new Label();
+        labelDay2.Name = "lblDay2YN";
+        labelDay2.Text = "Day 2";
+        ComboBox textDay2 = new ComboBox();
+        textDay2.Name = "txtDay2YN";
+        textDay2.Items.AddRange(new string[] { "Y", "N" });
 
         Label labelAgent = new Label();
         labelAgent.Name = "lblAgent";
@@ -92,33 +84,29 @@ namespace CCI.DesktopClient.Screens
         srchAgent.DisplayOnlyID = false;
         srchAgent.MustExistInList = true;
 
-        //cust.Controls.Add(labelMasterCustomer);
-        //cust.Controls.Add(txtEntityOwner);
-
-
         cust.Controls.Add(labelAltID);
         cust.Controls.Add(textAltID);
 
         cust.Controls.Add(labelPaymentType);
         cust.Controls.Add(comboPaymentType);
 
+        cust.Controls.Add(labelDay2);
+        cust.Controls.Add(textDay2);
+
         cust.Controls.Add(labelAgent);
         cust.Controls.Add(srchAgent);
 
+        setPosition(null, labelAltID, textAltID);
+        setPosition(labelAltID, labelPaymentType, comboPaymentType);
+        setPosition(labelPaymentType, labelDay2, textDay2);
+        setPosition(labelDay2, labelAgent, srchAgent, 3);
+/*
         int margin = 10;
         int labelleft = 10;
         int top = 20;
         int labelwidth = 135;
         int textwidth = 135;
         int textleft = labelleft + labelwidth + margin;
-
-        //labelMasterCustomer.Left = labelleft;
-        //labelMasterCustomer.Top = top; 
-        //labelMasterCustomer.Width = labelwidth;
-        //txtEntityOwner.Top = labelMasterCustomer.Top;
-        //txtEntityOwner.Left = textleft;
-        //txtEntityOwner.Width = textwidth * 3;
-        //txtEntityOwner.Collapsed = true;
 
         labelAltID.Left = labelleft;
         labelAltID.Top = top;
@@ -136,16 +124,21 @@ namespace CCI.DesktopClient.Screens
         comboPaymentType.Width = textwidth;
 
 
+        labelDay2.Left = labelleft;
+        labelDay2.Top = labelPaymentType.Top + labelPaymentType.Height + margin;
+        labelDay2.Width = labelwidth;
+        textDay2.Top = labelDay2.Top;
+        textDay2.Left = textleft;
+
         labelAgent.Left = labelleft;
-        labelAgent.Top = labelPaymentType.Top + labelPaymentType.Height + margin;
+        labelAgent.Top = labelDay2.Top + labelDay2.Height + margin;
         labelAgent.Width = labelwidth;
         srchAgent.Top = labelAgent.Top;
         srchAgent.Left = textleft;
         srchAgent.Width = textwidth * 3;
+*/
 
         srchAgent.Collapsed = true;
-
-
 
       }
       if (!tabMain.TabPages.ContainsKey(networkInventoryTabName))
@@ -174,6 +167,25 @@ namespace CCI.DesktopClient.Screens
       }
       reloadNetworkInventory();
         
+    }
+    private void setPosition(Label lastLabel, Label thisLabel, Control thisControl, int widthmultiplier = 1)
+    {
+      const int margin = 10;
+      const int labelleft = 10;
+      const int top = 20;
+      const int labelwidth = 135;
+      const int textwidth = 135;
+      const int textleft = labelleft + labelwidth + margin;
+
+      thisLabel.Left = labelleft;
+      if (lastLabel == null)
+        thisLabel.Top = top;
+      else
+        thisLabel.Top = lastLabel.Top + lastLabel.Height + margin;
+      thisLabel.Width = labelwidth;
+      thisControl.Top = thisLabel.Top;
+      thisControl.Left = textleft;
+      thisControl.Width = textwidth * widthmultiplier;
     }
     private void textAltID_Validating(object sender, CancelEventArgs e)
     {

@@ -380,9 +380,23 @@ namespace CCI.DesktopClient.Screens
         if (_dataSource.IsEntityField(fldName))
         {
           //TODO LMV66 This is a patch!!
-          if(!(string.IsNullOrEmpty(c.Text) && fldName.Equals("EntityType", StringComparison.CurrentCultureIgnoreCase)))
-            if (!(fldName.Equals("EntityOwner", StringComparison.CurrentCultureIgnoreCase)))  //Temporary fix for entityowner being nulled ABW / LMV
-              en.Fields.setValue(fldName, c.Text);
+          // LLA 2019 Fixed patch to work better if we want to save the entity owner
+          // if the fields is entitytype or entityowner then it cannot be null, so just ignore
+          if (string.IsNullOrEmpty(c.Text) && fldName.Equals("EntityType", StringComparison.CurrentCultureIgnoreCase))
+            return;
+          if (fldName.Equals("EntityOwner", StringComparison.CurrentCultureIgnoreCase))
+          {
+            if (c is ACG.CommonForms.ctlSearch)
+            {
+              ACG.CommonForms.ctlSearch srch = c as ACG.CommonForms.ctlSearch;
+              string val = srch.Text;
+              if (!string.IsNullOrWhiteSpace(val))
+                en.Fields.setValue(fldName, val);
+            }
+            return;
+          }
+          // if we are here then we can set the value
+          en.Fields.setValue(fldName, c.Text);
         }
         else
         {
