@@ -99,6 +99,13 @@
       this.label1 = new System.Windows.Forms.Label();
       this.txtLastModifiedBy = new System.Windows.Forms.TextBox();
       this.srchNetworkInventory = new CCI.DesktopClient.Common.ctlSearchGrid();
+      this.label5 = new System.Windows.Forms.Label();
+      this.txtMasterCustomer = new System.Windows.Forms.TextBox();
+      this.label6 = new System.Windows.Forms.Label();
+      this.txtAgent = new System.Windows.Forms.TextBox();
+      this.label7 = new System.Windows.Forms.Label();
+      this.txtDay2YN = new System.Windows.Forms.TextBox();
+      ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
       this.splitMain.Panel1.SuspendLayout();
       this.splitMain.Panel2.SuspendLayout();
       this.splitMain.SuspendLayout();
@@ -237,11 +244,17 @@
       // 
       this.splitMain.Panel2.Controls.Add(this.srchNetworkInventory);
       this.splitMain.Size = new System.Drawing.Size(1127, 638);
-      this.splitMain.SplitterDistance = 304;
+      this.splitMain.SplitterDistance = 228;
       this.splitMain.TabIndex = 2;
       // 
       // pnlNewNetworkInventory
       // 
+      this.pnlNewNetworkInventory.Controls.Add(this.txtDay2YN);
+      this.pnlNewNetworkInventory.Controls.Add(this.label7);
+      this.pnlNewNetworkInventory.Controls.Add(this.txtAgent);
+      this.pnlNewNetworkInventory.Controls.Add(this.label6);
+      this.pnlNewNetworkInventory.Controls.Add(this.txtMasterCustomer);
+      this.pnlNewNetworkInventory.Controls.Add(this.label5);
       this.pnlNewNetworkInventory.Controls.Add(this.txtDealer);
       this.pnlNewNetworkInventory.Controls.Add(this.lblDealer);
       this.pnlNewNetworkInventory.Controls.Add(this.txtNewItemID);
@@ -287,7 +300,7 @@
       this.pnlNewNetworkInventory.Dock = System.Windows.Forms.DockStyle.Fill;
       this.pnlNewNetworkInventory.Location = new System.Drawing.Point(0, 0);
       this.pnlNewNetworkInventory.Name = "pnlNewNetworkInventory";
-      this.pnlNewNetworkInventory.Size = new System.Drawing.Size(1127, 304);
+      this.pnlNewNetworkInventory.Size = new System.Drawing.Size(1127, 228);
       this.pnlNewNetworkInventory.TabIndex = 36;
       // 
       // txtDealer
@@ -361,10 +374,11 @@
       this.grpPhysInventory.Controls.Add(this.srchPhysicalInventory);
       this.grpPhysInventory.Location = new System.Drawing.Point(5, 143);
       this.grpPhysInventory.Name = "grpPhysInventory";
-      this.grpPhysInventory.Size = new System.Drawing.Size(824, 156);
+      this.grpPhysInventory.Size = new System.Drawing.Size(824, 0);
       this.grpPhysInventory.TabIndex = 78;
       this.grpPhysInventory.TabStop = false;
       this.grpPhysInventory.Text = "Physical Inventory";
+      this.grpPhysInventory.Visible = false;
       // 
       // txtQEUsoc
       // 
@@ -372,7 +386,7 @@
       this.txtQEUsoc.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
       this.txtQEUsoc.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
       this.txtQEUsoc.FormattingEnabled = true;
-      this.txtQEUsoc.Location = new System.Drawing.Point(50, 130);
+      this.txtQEUsoc.Location = new System.Drawing.Point(50, -7);
       this.txtQEUsoc.Name = "txtQEUsoc";
       this.txtQEUsoc.Size = new System.Drawing.Size(88, 21);
       this.txtQEUsoc.TabIndex = 0;
@@ -380,7 +394,7 @@
       // btnQENormalEntry
       // 
       this.btnQENormalEntry.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.btnQENormalEntry.Location = new System.Drawing.Point(6, 102);
+      this.btnQENormalEntry.Location = new System.Drawing.Point(6, -35);
       this.btnQENormalEntry.Name = "btnQENormalEntry";
       this.btnQENormalEntry.Size = new System.Drawing.Size(78, 26);
       this.btnQENormalEntry.TabIndex = 94;
@@ -393,7 +407,7 @@
       // 
       this.txtQENotes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.txtQENotes.Location = new System.Drawing.Point(416, 128);
+      this.txtQENotes.Location = new System.Drawing.Point(416, -9);
       this.txtQENotes.Name = "txtQENotes";
       this.txtQENotes.Size = new System.Drawing.Size(399, 20);
       this.txtQENotes.TabIndex = 2;
@@ -404,7 +418,7 @@
       // 
       this.lblQENotes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.lblQENotes.AutoSize = true;
-      this.lblQENotes.Location = new System.Drawing.Point(368, 133);
+      this.lblQENotes.Location = new System.Drawing.Point(368, -4);
       this.lblQENotes.Name = "lblQENotes";
       this.lblQENotes.Size = new System.Drawing.Size(35, 13);
       this.lblQENotes.TabIndex = 92;
@@ -414,7 +428,7 @@
       // txtQEMacAddress
       // 
       this.txtQEMacAddress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.txtQEMacAddress.Location = new System.Drawing.Point(219, 131);
+      this.txtQEMacAddress.Location = new System.Drawing.Point(219, -6);
       this.txtQEMacAddress.Name = "txtQEMacAddress";
       this.txtQEMacAddress.Size = new System.Drawing.Size(145, 20);
       this.txtQEMacAddress.TabIndex = 1;
@@ -424,7 +438,7 @@
       // 
       this.lblQEMacAddress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.lblQEMacAddress.AutoSize = true;
-      this.lblQEMacAddress.Location = new System.Drawing.Point(144, 134);
+      this.lblQEMacAddress.Location = new System.Drawing.Point(144, -3);
       this.lblQEMacAddress.Name = "lblQEMacAddress";
       this.lblQEMacAddress.Size = new System.Drawing.Size(69, 13);
       this.lblQEMacAddress.TabIndex = 90;
@@ -435,7 +449,7 @@
       // 
       this.lblQEUsoc.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.lblQEUsoc.AutoSize = true;
-      this.lblQEUsoc.Location = new System.Drawing.Point(7, 135);
+      this.lblQEUsoc.Location = new System.Drawing.Point(7, -2);
       this.lblQEUsoc.Name = "lblQEUsoc";
       this.lblQEUsoc.Size = new System.Drawing.Size(37, 13);
       this.lblQEUsoc.TabIndex = 88;
@@ -445,7 +459,7 @@
       // btnQuickEntryPhysicalInventory
       // 
       this.btnQuickEntryPhysicalInventory.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.btnQuickEntryPhysicalInventory.Location = new System.Drawing.Point(508, 102);
+      this.btnQuickEntryPhysicalInventory.Location = new System.Drawing.Point(508, -35);
       this.btnQuickEntryPhysicalInventory.Name = "btnQuickEntryPhysicalInventory";
       this.btnQuickEntryPhysicalInventory.Size = new System.Drawing.Size(78, 26);
       this.btnQuickEntryPhysicalInventory.TabIndex = 87;
@@ -457,7 +471,7 @@
       // 
       this.lblPhysicalInventoryID.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
       this.lblPhysicalInventoryID.AutoSize = true;
-      this.lblPhysicalInventoryID.Location = new System.Drawing.Point(733, 108);
+      this.lblPhysicalInventoryID.Location = new System.Drawing.Point(733, -29);
       this.lblPhysicalInventoryID.Name = "lblPhysicalInventoryID";
       this.lblPhysicalInventoryID.Size = new System.Drawing.Size(21, 13);
       this.lblPhysicalInventoryID.TabIndex = 86;
@@ -466,7 +480,7 @@
       // btnNewPhysicalInventory
       // 
       this.btnNewPhysicalInventory.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.btnNewPhysicalInventory.Location = new System.Drawing.Point(256, 102);
+      this.btnNewPhysicalInventory.Location = new System.Drawing.Point(256, -35);
       this.btnNewPhysicalInventory.Name = "btnNewPhysicalInventory";
       this.btnNewPhysicalInventory.Size = new System.Drawing.Size(78, 26);
       this.btnNewPhysicalInventory.TabIndex = 85;
@@ -478,7 +492,7 @@
       // 
       this.txtPhysicalInventoryID.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
       this.txtPhysicalInventoryID.Enabled = false;
-      this.txtPhysicalInventoryID.Location = new System.Drawing.Point(760, 106);
+      this.txtPhysicalInventoryID.Location = new System.Drawing.Point(760, -31);
       this.txtPhysicalInventoryID.Name = "txtPhysicalInventoryID";
       this.txtPhysicalInventoryID.Size = new System.Drawing.Size(55, 20);
       this.txtPhysicalInventoryID.TabIndex = 84;
@@ -487,7 +501,7 @@
       // btnDeletehysicalInventory
       // 
       this.btnDeletehysicalInventory.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.btnDeletehysicalInventory.Location = new System.Drawing.Point(424, 102);
+      this.btnDeletehysicalInventory.Location = new System.Drawing.Point(424, -35);
       this.btnDeletehysicalInventory.Name = "btnDeletehysicalInventory";
       this.btnDeletehysicalInventory.Size = new System.Drawing.Size(78, 26);
       this.btnDeletehysicalInventory.TabIndex = 83;
@@ -497,7 +511,7 @@
       // btnSavePhysicalInventory
       // 
       this.btnSavePhysicalInventory.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.btnSavePhysicalInventory.Location = new System.Drawing.Point(340, 102);
+      this.btnSavePhysicalInventory.Location = new System.Drawing.Point(340, -35);
       this.btnSavePhysicalInventory.Name = "btnSavePhysicalInventory";
       this.btnSavePhysicalInventory.Size = new System.Drawing.Size(78, 26);
       this.btnSavePhysicalInventory.TabIndex = 82;
@@ -509,7 +523,7 @@
       // 
       this.txtPhysicalInventoryNotes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.txtPhysicalInventoryNotes.Location = new System.Drawing.Point(76, 131);
+      this.txtPhysicalInventoryNotes.Location = new System.Drawing.Point(76, -6);
       this.txtPhysicalInventoryNotes.Name = "txtPhysicalInventoryNotes";
       this.txtPhysicalInventoryNotes.Size = new System.Drawing.Size(742, 20);
       this.txtPhysicalInventoryNotes.TabIndex = 81;
@@ -518,7 +532,7 @@
       // 
       this.lblNotes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.lblNotes.AutoSize = true;
-      this.lblNotes.Location = new System.Drawing.Point(35, 109);
+      this.lblNotes.Location = new System.Drawing.Point(35, -28);
       this.lblNotes.Name = "lblNotes";
       this.lblNotes.Size = new System.Drawing.Size(35, 13);
       this.lblNotes.TabIndex = 80;
@@ -527,7 +541,7 @@
       // txtMacAddress
       // 
       this.txtMacAddress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-      this.txtMacAddress.Location = new System.Drawing.Point(76, 105);
+      this.txtMacAddress.Location = new System.Drawing.Point(76, -32);
       this.txtMacAddress.Name = "txtMacAddress";
       this.txtMacAddress.Size = new System.Drawing.Size(167, 20);
       this.txtMacAddress.TabIndex = 79;
@@ -536,7 +550,7 @@
       // 
       this.lblMacAddress.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
       this.lblMacAddress.AutoSize = true;
-      this.lblMacAddress.Location = new System.Drawing.Point(1, 135);
+      this.lblMacAddress.Location = new System.Drawing.Point(1, -2);
       this.lblMacAddress.Name = "lblMacAddress";
       this.lblMacAddress.Size = new System.Drawing.Size(69, 13);
       this.lblMacAddress.TabIndex = 78;
@@ -565,7 +579,7 @@
       this.srchPhysicalInventory.Name = "srchPhysicalInventory";
       this.srchPhysicalInventory.NameType = CCI.Common.CommonData.UnmatchedNameTypes.None;
       this.srchPhysicalInventory.SearchCriteria = null;
-      this.srchPhysicalInventory.Size = new System.Drawing.Size(809, 80);
+      this.srchPhysicalInventory.Size = new System.Drawing.Size(809, 0);
       this.srchPhysicalInventory.TabIndex = 77;
       this.srchPhysicalInventory.Title = "Search (0 Records Found)";
       this.srchPhysicalInventory.UniqueIdentifier = "ID";
@@ -999,16 +1013,71 @@
       this.srchNetworkInventory.IDList = null;
       this.srchNetworkInventory.IncludeGroupAsCriteria = false;
       this.srchNetworkInventory.InnerWhere = "";
-      this.srchNetworkInventory.Location = new System.Drawing.Point(0, 0);
+      this.srchNetworkInventory.Location = new System.Drawing.Point(0, 14);
       this.srchNetworkInventory.Name = "srchNetworkInventory";
       this.srchNetworkInventory.NameType = CCI.Common.CommonData.UnmatchedNameTypes.Customer;
       this.srchNetworkInventory.SearchCriteria = null;
-      this.srchNetworkInventory.Size = new System.Drawing.Size(1127, 330);
+      this.srchNetworkInventory.Size = new System.Drawing.Size(1127, 392);
       this.srchNetworkInventory.TabIndex = 0;
       this.srchNetworkInventory.Title = "Search (0 Records Found)";
       this.srchNetworkInventory.UniqueIdentifier = "ID";
       this.srchNetworkInventory.UseNamedSearches = false;
       this.srchNetworkInventory.RowSelected += new ACG.CommonForms.ctlSearchGrid.RowSelectedHandler(this.srchNetworkInventory_RowSelected);
+      // 
+      // label5
+      // 
+      this.label5.AutoSize = true;
+      this.label5.Location = new System.Drawing.Point(8, 145);
+      this.label5.Name = "label5";
+      this.label5.Size = new System.Drawing.Size(86, 13);
+      this.label5.TabIndex = 82;
+      this.label5.Text = "Master Customer";
+      // 
+      // txtMasterCustomer
+      // 
+      this.txtMasterCustomer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.txtMasterCustomer.Enabled = false;
+      this.txtMasterCustomer.Location = new System.Drawing.Point(108, 142);
+      this.txtMasterCustomer.Name = "txtMasterCustomer";
+      this.txtMasterCustomer.Size = new System.Drawing.Size(711, 20);
+      this.txtMasterCustomer.TabIndex = 83;
+      // 
+      // label6
+      // 
+      this.label6.AutoSize = true;
+      this.label6.Location = new System.Drawing.Point(8, 170);
+      this.label6.Name = "label6";
+      this.label6.Size = new System.Drawing.Size(35, 13);
+      this.label6.TabIndex = 84;
+      this.label6.Text = "Agent";
+      // 
+      // txtAgent
+      // 
+      this.txtAgent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.txtAgent.Enabled = false;
+      this.txtAgent.Location = new System.Drawing.Point(107, 167);
+      this.txtAgent.Name = "txtAgent";
+      this.txtAgent.Size = new System.Drawing.Size(712, 20);
+      this.txtAgent.TabIndex = 85;
+      // 
+      // label7
+      // 
+      this.label7.AutoSize = true;
+      this.label7.Location = new System.Drawing.Point(8, 193);
+      this.label7.Name = "label7";
+      this.label7.Size = new System.Drawing.Size(35, 13);
+      this.label7.TabIndex = 86;
+      this.label7.Text = "Day 2";
+      // 
+      // txtDay2YN
+      // 
+      this.txtDay2YN.Enabled = false;
+      this.txtDay2YN.Location = new System.Drawing.Point(107, 190);
+      this.txtDay2YN.Name = "txtDay2YN";
+      this.txtDay2YN.Size = new System.Drawing.Size(100, 20);
+      this.txtDay2YN.TabIndex = 87;
       // 
       // frmNetworkInventory
       // 
@@ -1029,6 +1098,7 @@
       this.Load += new System.EventHandler(this.frmCityCareNetworkInventory_Load);
       this.splitMain.Panel1.ResumeLayout(false);
       this.splitMain.Panel2.ResumeLayout(false);
+      ((System.ComponentModel.ISupportInitialize)(this.splitMain)).EndInit();
       this.splitMain.ResumeLayout(false);
       this.pnlNewNetworkInventory.ResumeLayout(false);
       this.pnlNewNetworkInventory.PerformLayout();
@@ -1112,5 +1182,11 @@
     private System.Windows.Forms.Label lblQEMacAddress;
     private System.Windows.Forms.Label lblQEUsoc;
     private System.Windows.Forms.ComboBox txtQEUsoc;
+    private System.Windows.Forms.TextBox txtDay2YN;
+    private System.Windows.Forms.Label label7;
+    private System.Windows.Forms.TextBox txtAgent;
+    private System.Windows.Forms.Label label6;
+    private System.Windows.Forms.TextBox txtMasterCustomer;
+    private System.Windows.Forms.Label label5;
   }
 }

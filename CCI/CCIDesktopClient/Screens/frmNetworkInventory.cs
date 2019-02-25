@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using CCI.DesktopClient.Common;
 using CCI.Common;
 using CCI.Sys.Data;
+using TAGBOSS.Common.Model;
 
 namespace CCI.DesktopClient.Screens
 {
@@ -71,6 +72,14 @@ namespace CCI.DesktopClient.Screens
       string customer = ctlCustomerSearch.Text;
       string location = ctlLocationSearch.Text;
       string orderid = txtOrderSearch.Text;
+      // Populate new fields from master customer project
+      txtAgent.Text = _dataSource.getAgentForCustomer(customer);
+      EntityAttributesCollection eac = _dataSource.getEntity(customer, "Customer", DateTime.Now);
+      string entityOwner = CommonFunctions.CString(eac.getValue(customer + ".EntityOwner"));
+      txtMasterCustomer.Text = CommonFunctions.CString(_dataSource.getEntity(entityOwner, "MasterCustomer", DateTime.Now).getValue(entityOwner + ".LegalName"));
+      string day2YN = CommonFunctions.CString(eac.getValue(customer + ".Entity.Customer.Day2YN")); //  Entities[0].ItemTypes["Entity"].Items["Customer"].Attributes["Day2YN"].
+      txtDay2YN.Text = day2YN.Equals("Y", StringComparison.CurrentCultureIgnoreCase) ? "Yes" : "No";
+      // end master customer fields
       Dictionary<string, string[]> criteriaNew = new Dictionary<string, string[]>(StringComparer.CurrentCultureIgnoreCase);
       if (ckActiveInventoryOnly.Checked)
         criteriaNew.Add("Active", new string[] { ctlSearchGrid.opEQUALS, "Yes" });
