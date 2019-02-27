@@ -38,6 +38,12 @@
       this.label14 = new System.Windows.Forms.Label();
       this.splitMain = new System.Windows.Forms.SplitContainer();
       this.pnlNewNetworkInventory = new System.Windows.Forms.Panel();
+      this.txtDay2YN = new System.Windows.Forms.TextBox();
+      this.label7 = new System.Windows.Forms.Label();
+      this.txtAgent = new System.Windows.Forms.TextBox();
+      this.label6 = new System.Windows.Forms.Label();
+      this.txtMasterCustomer = new System.Windows.Forms.TextBox();
+      this.label5 = new System.Windows.Forms.Label();
       this.txtDealer = new System.Windows.Forms.TextBox();
       this.lblDealer = new System.Windows.Forms.Label();
       this.txtNewItemID = new ACG.CommonForms.ctlSearch();
@@ -99,12 +105,6 @@
       this.label1 = new System.Windows.Forms.Label();
       this.txtLastModifiedBy = new System.Windows.Forms.TextBox();
       this.srchNetworkInventory = new CCI.DesktopClient.Common.ctlSearchGrid();
-      this.label5 = new System.Windows.Forms.Label();
-      this.txtMasterCustomer = new System.Windows.Forms.TextBox();
-      this.label6 = new System.Windows.Forms.Label();
-      this.txtAgent = new System.Windows.Forms.TextBox();
-      this.label7 = new System.Windows.Forms.Label();
-      this.txtDay2YN = new System.Windows.Forms.TextBox();
       ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
       this.splitMain.Panel1.SuspendLayout();
       this.splitMain.Panel2.SuspendLayout();
@@ -302,6 +302,61 @@
       this.pnlNewNetworkInventory.Name = "pnlNewNetworkInventory";
       this.pnlNewNetworkInventory.Size = new System.Drawing.Size(1127, 228);
       this.pnlNewNetworkInventory.TabIndex = 36;
+      // 
+      // txtDay2YN
+      // 
+      this.txtDay2YN.Enabled = false;
+      this.txtDay2YN.Location = new System.Drawing.Point(107, 190);
+      this.txtDay2YN.Name = "txtDay2YN";
+      this.txtDay2YN.Size = new System.Drawing.Size(100, 20);
+      this.txtDay2YN.TabIndex = 87;
+      // 
+      // label7
+      // 
+      this.label7.AutoSize = true;
+      this.label7.Location = new System.Drawing.Point(8, 193);
+      this.label7.Name = "label7";
+      this.label7.Size = new System.Drawing.Size(35, 13);
+      this.label7.TabIndex = 86;
+      this.label7.Text = "Day 2";
+      // 
+      // txtAgent
+      // 
+      this.txtAgent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.txtAgent.Enabled = false;
+      this.txtAgent.Location = new System.Drawing.Point(107, 167);
+      this.txtAgent.Name = "txtAgent";
+      this.txtAgent.Size = new System.Drawing.Size(712, 20);
+      this.txtAgent.TabIndex = 85;
+      // 
+      // label6
+      // 
+      this.label6.AutoSize = true;
+      this.label6.Location = new System.Drawing.Point(8, 170);
+      this.label6.Name = "label6";
+      this.label6.Size = new System.Drawing.Size(35, 13);
+      this.label6.TabIndex = 84;
+      this.label6.Text = "Agent";
+      // 
+      // txtMasterCustomer
+      // 
+      this.txtMasterCustomer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.txtMasterCustomer.Enabled = false;
+      this.txtMasterCustomer.Location = new System.Drawing.Point(108, 142);
+      this.txtMasterCustomer.Name = "txtMasterCustomer";
+      this.txtMasterCustomer.Size = new System.Drawing.Size(711, 20);
+      this.txtMasterCustomer.TabIndex = 83;
+      // 
+      // label5
+      // 
+      this.label5.AutoSize = true;
+      this.label5.Location = new System.Drawing.Point(8, 145);
+      this.label5.Name = "label5";
+      this.label5.Size = new System.Drawing.Size(86, 13);
+      this.label5.TabIndex = 82;
+      this.label5.Text = "Master Customer";
       // 
       // txtDealer
       // 
@@ -766,9 +821,9 @@
       this.label36.AutoSize = true;
       this.label36.Location = new System.Drawing.Point(834, 151);
       this.label36.Name = "label36";
-      this.label36.Size = new System.Drawing.Size(51, 13);
+      this.label36.Size = new System.Drawing.Size(94, 13);
       this.label36.TabIndex = 72;
-      this.label36.Text = "Exp Date";
+      this.label36.Text = "Contract Exp Date";
       // 
       // txtNewAccount
       // 
@@ -824,9 +879,9 @@
       this.label31.AutoSize = true;
       this.label31.Location = new System.Drawing.Point(834, 105);
       this.label31.Name = "label31";
-      this.label31.Size = new System.Drawing.Size(55, 13);
+      this.label31.Size = new System.Drawing.Size(98, 13);
       this.label31.TabIndex = 65;
-      this.label31.Text = "Start Date";
+      this.label31.Text = "Contract Start Date";
       // 
       // txtNewNRC
       // 
@@ -966,9 +1021,9 @@
       this.label26.AutoSize = true;
       this.label26.Location = new System.Drawing.Point(834, 128);
       this.label26.Name = "label26";
-      this.label26.Size = new System.Drawing.Size(52, 13);
+      this.label26.Size = new System.Drawing.Size(91, 13);
       this.label26.TabIndex = 49;
-      this.label26.Text = "End Date";
+      this.label26.Text = "Service End Date";
       // 
       // txtNewOrderID
       // 
@@ -1023,61 +1078,6 @@
       this.srchNetworkInventory.UniqueIdentifier = "ID";
       this.srchNetworkInventory.UseNamedSearches = false;
       this.srchNetworkInventory.RowSelected += new ACG.CommonForms.ctlSearchGrid.RowSelectedHandler(this.srchNetworkInventory_RowSelected);
-      // 
-      // label5
-      // 
-      this.label5.AutoSize = true;
-      this.label5.Location = new System.Drawing.Point(8, 145);
-      this.label5.Name = "label5";
-      this.label5.Size = new System.Drawing.Size(86, 13);
-      this.label5.TabIndex = 82;
-      this.label5.Text = "Master Customer";
-      // 
-      // txtMasterCustomer
-      // 
-      this.txtMasterCustomer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.txtMasterCustomer.Enabled = false;
-      this.txtMasterCustomer.Location = new System.Drawing.Point(108, 142);
-      this.txtMasterCustomer.Name = "txtMasterCustomer";
-      this.txtMasterCustomer.Size = new System.Drawing.Size(711, 20);
-      this.txtMasterCustomer.TabIndex = 83;
-      // 
-      // label6
-      // 
-      this.label6.AutoSize = true;
-      this.label6.Location = new System.Drawing.Point(8, 170);
-      this.label6.Name = "label6";
-      this.label6.Size = new System.Drawing.Size(35, 13);
-      this.label6.TabIndex = 84;
-      this.label6.Text = "Agent";
-      // 
-      // txtAgent
-      // 
-      this.txtAgent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.txtAgent.Enabled = false;
-      this.txtAgent.Location = new System.Drawing.Point(107, 167);
-      this.txtAgent.Name = "txtAgent";
-      this.txtAgent.Size = new System.Drawing.Size(712, 20);
-      this.txtAgent.TabIndex = 85;
-      // 
-      // label7
-      // 
-      this.label7.AutoSize = true;
-      this.label7.Location = new System.Drawing.Point(8, 193);
-      this.label7.Name = "label7";
-      this.label7.Size = new System.Drawing.Size(35, 13);
-      this.label7.TabIndex = 86;
-      this.label7.Text = "Day 2";
-      // 
-      // txtDay2YN
-      // 
-      this.txtDay2YN.Enabled = false;
-      this.txtDay2YN.Location = new System.Drawing.Point(107, 190);
-      this.txtDay2YN.Name = "txtDay2YN";
-      this.txtDay2YN.Size = new System.Drawing.Size(100, 20);
-      this.txtDay2YN.TabIndex = 87;
       // 
       // frmNetworkInventory
       // 

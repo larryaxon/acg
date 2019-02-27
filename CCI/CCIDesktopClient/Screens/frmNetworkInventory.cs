@@ -37,7 +37,12 @@ namespace CCI.DesktopClient.Screens
     public void Init()
     {
       srchNetworkInventory.Init(CommonData.UnmatchedNameTypes.SearchNetworkInventory, null);
-      srchPhysicalInventory.Init("Physical Inventory", null);   
+      srchPhysicalInventory.Init("Physical Inventory", null);
+      ctlCustomerSearch.BringToFront();
+      ctlLocationSearch.BringToFront();
+      txtNewCustomer.BringToFront();
+      txtNewLocation.BringToFront();
+      txtPrimaryCarrier.BringToFront();
     }
     public new void Save()
     {
