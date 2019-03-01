@@ -505,14 +505,14 @@
     private System.Windows.Forms.Panel pnlLoading;
     private System.Windows.Forms.Label lblLoading;
     private System.Windows.Forms.Button btnNew;
-    private System.Windows.Forms.Label lblEntity;
+    protected System.Windows.Forms.Label lblEntity;
     protected System.Windows.Forms.TextBox txtEntity;
     private System.Windows.Forms.Button btnCancelNew;
     private System.Windows.Forms.Label lblStatus;
     private System.Windows.Forms.ComboBox txtStatus;
     protected System.Windows.Forms.TextBox txtCellPhone;
     private System.Windows.Forms.Label lblCell;
-    private ACG.CommonForms.ctlSearch ctlEntitySearch1;
+    protected ACG.CommonForms.ctlSearch ctlEntitySearch1;
     protected System.Windows.Forms.TabControl tabMain;
     protected System.Windows.Forms.TabPage tabLocations;
     protected System.Windows.Forms.Label lblNewRecord;

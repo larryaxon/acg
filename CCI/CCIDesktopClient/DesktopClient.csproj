@@ -292,6 +292,18 @@
     <Compile Include="Screens\frmAttributes.Designer.cs">
       <DependentUpon>frmAttributes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Screens\frmAgentMaintenance.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmAgentMaintenance.Designer.cs">
+      <DependentUpon>frmAgentMaintenance.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmMasterCustomerMaintenance.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmMasterCustomerMaintenance.Designer.cs">
+      <DependentUpon>frmMasterCustomerMaintenance.cs</DependentUpon>
+    </Compile>
     <Compile Include="Screens\frmCarrierMaintenance.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -599,6 +611,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Screens\frmImportUSOCExceptions.resx">
       <DependentUpon>frmImportUSOCExceptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmAgentMaintenance.resx">
+      <DependentUpon>frmAgentMaintenance.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmMasterCustomerMaintenance.resx">
+      <DependentUpon>frmMasterCustomerMaintenance.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Screens\frmNetworkInventory.resx">
       <DependentUpon>frmNetworkInventory.cs</DependentUpon>
