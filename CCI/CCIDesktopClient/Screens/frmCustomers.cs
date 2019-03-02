@@ -168,6 +168,14 @@ namespace CCI.DesktopClient.Screens
       reloadNetworkInventory();
         
     }
+    public new void Save()
+    {
+      base.Save();
+      ctlSearch c = (ctlSearch)tabMain.TabPages[custTabName].Controls["txtAgent"];
+      string agent = c.Text;
+
+      _dataSource.moveDealerCustomers(new System.Collections.ArrayList() { txtEntity.Text }, agent, SecurityContext.User, "Agent");
+    }
     private void setPosition(Label lastLabel, Label thisLabel, Control thisControl, int widthmultiplier = 1)
     {
       const int margin = 10;

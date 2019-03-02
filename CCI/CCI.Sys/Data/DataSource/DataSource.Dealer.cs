@@ -62,11 +62,11 @@ namespace CCI.Sys.Data
     {
       return getDealerOrAgentForCustomer(customerID, "Agent", false);
     }
-    public int? moveDealerCustomers(ArrayList customerList, string dealer, string user)
+    public int? moveDealerCustomers(ArrayList customerList, string dealer, string user, string salesType = "Dealer")
     {
       // first we need to check to see which customers are in the table
       string inClause = CommonFunctions.ToList(customerList.ToArray(), "'");
-      string sql = string.Format("select distinct customer from SalesOrDealerCustomers where Customer in ({1})", dealer, inClause);
+      string sql = string.Format("select distinct customer from SalesOrDealerCustomers where Customer in ({1}) and SalesType = '{2}'", dealer, inClause, salesType);
       DataSet ds = getDataFromSQL(sql);
       ArrayList oldCustomers = new ArrayList();
       if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
@@ -85,8 +85,8 @@ namespace CCI.Sys.Data
       if (oldCustomers.Count > 0)
       {
         inClause = CommonFunctions.ToList(oldCustomers.ToArray(), "'");
-        sql = string.Format("update SalesOrDealerCustomers set SalesOrDealer = '{0}', LastModifiedBy = '{1}', LastModifiedDateTime = '{2}' where Customer in ({3})", 
-          dealer, user, DateTime.Today.ToShortDateString(), inClause);
+        sql = string.Format("update SalesOrDealerCustomers set SalesOrDealer = '{0}', LastModifiedBy = '{1}', LastModifiedDateTime = '{2}' where Customer in ({3}) and SalesType = '{4}'", 
+          dealer, user, DateTime.Today.ToShortDateString(), inClause, salesType);
         ret = updateDataFromSQL(sql);
       }
       if (ret == null || ret >= 0)
@@ -95,8 +95,8 @@ namespace CCI.Sys.Data
         {
           foreach (string newCust in newCustomers)
           {
-            sql = string.Format("insert into SalesOrDealerCustomers (SalesOrDealer, Customer, LastModifiedBy, LastModifiedDateTime) Values('{0}','{1}','{2}','{3}')",
-              dealer, newCust, user, DateTime.Today.ToShortDateString());
+            sql = string.Format("insert into SalesOrDealerCustomers (SalesOrDealer, Customer, LastModifiedBy, LastModifiedDateTime, SalesType) Values('{0}','{1}','{2}','{3}', '{4}')",
+              dealer, newCust, user, DateTime.Today.ToShortDateString(), salesType);
             ret = updateDataFromSQL(sql);
             if (ret != null && ret == -1)
               break;
