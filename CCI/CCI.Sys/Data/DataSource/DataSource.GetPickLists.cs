@@ -47,7 +47,7 @@ namespace CCI.Sys.Data
             else
             {
               sql = string.Format(@"select distinct c.Entity Customer, c.LegalName CustomerName from entity d
-                    inner join salesordealercustomers dc on d.entity = dc.salesordealer
+                    inner join salesordealercustomers dc on d.entity = dc.salesordealer and dc.SalesType = 'Dealer'
                     inner join entity c on c.entity = dc.customer
                     where d.entitytype = 'Dealer' and d.entity = '{0}' {1}"
                 , CommonFunctions.fixUpStringForSQL(dealer)

@@ -26,7 +26,7 @@ namespace CCI.Sys.Data
       // changed 6-6-2013 to exclude customers from other dealers
       string sql = string.Format(@"select coalesce(d.SalesOrDealer, 'CCIDealer') Dealer, c.Entity + ': ' + c.LegalName Customer 
           from entity c 
-          left join SalesOrDealerCustomers d on c.Entity = d.customer 
+          left join SalesOrDealerCustomers d on c.Entity = d.customer and d.SalesType = 'Dealer'
           inner join (
 			select distinct Customer from NetworkInventory where Carrier = 'CityHosted'
 			--union select distinct Customer from Orders where OrderType = 'Quote'
@@ -139,7 +139,7 @@ or (item =  'Dealer') order by case when e.entitytype = 'Dealer' then legalname 
           inner join (
 			select distinct Customer from NetworkInventory where Carrier = 'CityHosted'
 			) ni on ni.Customer = c.Entity
-          left join SalesOrDealerCustomers dc on c.Entity = dc.customer 
+          left join SalesOrDealerCustomers dc on c.Entity = dc.customer and dc.SalesType = 'Dealer'
 		  left join entity d on d.entity = dc.SalesOrDealer
 		  Where c.entity = '{0}' and dc.SalesType = '{1}'", customerID, salesType);
       using (DataSet ds = getDataFromSQL(sql))
@@ -242,7 +242,7 @@ where (item =  'user' and name = 'salesperson' and Value = 'Yes')  order by firs
       if (string.IsNullOrEmpty(orderid))
         return string.Empty;
       string sql = @"select s.salesordealer from orders o
-  inner join salesordealercustomers s on o.customer = s.customer where o.id = " + orderid;
+  inner join salesordealercustomers s on o.customer = s.customer and s.SalesType = 'Dealer' where o.id = " + orderid;
       DataSet ds = getDataFromSQL(sql);
       if (ds == null)
         return string.Empty;

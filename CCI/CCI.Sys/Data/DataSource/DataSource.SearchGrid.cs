@@ -515,7 +515,7 @@ FROM HostedProcessCycle) s ";
     case when occ.MatchedBy = 'ManualAdjustment' then 'Yes' else 'No' end ManualAdjustment
     from hostedmatchedocc occ
     inner join Entity e on e.Entity = occ.CustomerID
-    left join SalesOrDealerCustomers dlr on occ.CustomerID = dlr.Customer) a";
+    left join SalesOrDealerCustomers dlr on occ.CustomerID = dlr.Customer and dlr.SalesType = 'Dealer') a";
           orderbyClause = " order by CustomerName, BillDate, RetailUSOC ";
           overridewhere = true;
           break;

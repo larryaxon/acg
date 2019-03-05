@@ -283,7 +283,7 @@ namespace CCI.Sys.Data
       sql = addClause(sql, "Zip", zip, false);
       sql = addClause(sql, "EntityType", entityType, false);
       if (!string.IsNullOrEmpty(salesOwner))
-        sql.Append(string.Format(" and Entity in (select distinct Customer from salesordealercustomers where SalesOrDealer = '{0}') ",salesOwner));
+        sql.Append(string.Format(" and Entity in (select distinct Customer from salesordealercustomers where SalesOrDealer = '{0}' and SalesType = 'Dealer') ",salesOwner));
       sql.Append(" ORDER BY LegalName, Entity");
       return getDataFromSQL(sql.ToString());
     }

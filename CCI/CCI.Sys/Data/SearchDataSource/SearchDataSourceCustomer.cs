@@ -12,11 +12,11 @@ namespace CCI.Sys.Data
   {
     private string _dealer = null;
     public string Dealer { get { return _dealer; } set { _dealer = value; } }
-    public SearchDataSourceCustomer() : base("Customer", "CCI")
+    public SearchDataSourceCustomer() : base("Customer", null)
     {
       _sql =
 @"Select isnull(dlr.SalesOrDealer, 'CCIDealer') Dealer, Entity, LegalName from Entity e 
-left join SalesOrDealerCustomers dlr on e.Entity = dlr.Customer
+left join SalesOrDealerCustomers dlr on e.Entity = dlr.Customer and dlr.SalesType = 'Dealer'
 WHERE EntityType = 'Customer'";
     }
     public new string[] Search(string criteria, bool useExactID)

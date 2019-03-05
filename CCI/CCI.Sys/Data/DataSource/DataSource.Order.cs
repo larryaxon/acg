@@ -188,7 +188,7 @@ namespace CCI.Sys.Data
         }
         sql = makeInsertSQL(fieldList, valueList, CommonData.tableEXTERNALIDMAPPING);
         updateDataFromSQL(sql);
-        sql = string.Format("insert into SalesOrDealerCustomers (SalesOrDealer, Customer, LastModifiedBy, LastModifiedDateTime) Values ('{0}', '{1}', '{2}', '{3}')",
+        sql = string.Format("insert into SalesOrDealerCustomers (SalesOrDealer, Customer, LastModifiedBy, LastModifiedDateTime, SalesType) Values ('{0}', '{1}', '{2}', '{3}', 'Dealer')",
           dealer, newCustomerID, response.SecurityContext.User, DateTime.Now.ToString(CommonData.FORMATLONGDATETIME));
         updateDataFromSQL(sql);
       }
@@ -493,7 +493,7 @@ namespace CCI.Sys.Data
 	            ,h.ccamounttopay * -1 DealerContribution
 	        FROM OrderDetail o 
 	        LEFT JOIN Orders h on o.orderid = h.id
-	        LEFT JOIN SalesOrDealerCustomers dc on dc.Customer = h.customer
+	        LEFT JOIN SalesOrDealerCustomers dc on dc.Customer = h.customer and dc.SalesType = 'Dealer'
 	        LEFT JOIN HostedDealerCosts dlr on dlr.Dealer = dc.SalesOrDealer and dlr.itemid = o.ItemID
 	        LEFT Join HostedDealerCosts lvl on lvl.Dealer = '{1}' and lvl.ItemID = o.ItemID
 	        WHERE o.OrderID = {0} 
