@@ -62,7 +62,27 @@ namespace CCI.Sys.Data
     {
       return getDealerOrAgentForCustomer(customerID, "Agent", false);
     }
-    public int? moveDealerCustomers(ArrayList customerList, string dealer, string user, string salesType = "Dealer")
+    public bool dealerExistsForCustomer(string customerid, string dealer, string salesType)
+    {
+      string sql = string.Format("Select Customer from SalesOrDealerCustomers WHERE Customer = '{0}' and SalesOrDealer = '{1}' and SalesType = '{2}'",
+        customerid, dealer, salesType);
+      DataSet ds = getDataFromSQL(sql);
+      bool exists = ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0;
+      if (ds != null)
+      {
+        ds.Clear();
+        ds = null;
+      }
+      return exists;
+    }
+    public void deleteDealerForCustomer(string customerid, string dealer, string salesType)
+    {
+      string sql = string.Format("Delete from SalesOrDealerCustomers WHERE Customer = '{0}' and SalesOrDealer = '{1}' and SalesType = '{2}'",
+        customerid, dealer, salesType);
+      updateDataFromSQL(sql);
+
+    }
+public int? moveDealerCustomers(ArrayList customerList, string dealer, string user, string salesType = "Dealer")
     {
       // first we need to check to see which customers are in the table
       string inClause = CommonFunctions.ToList(customerList.ToArray(), "'");
@@ -139,9 +159,9 @@ or (item =  'Dealer') order by case when e.entitytype = 'Dealer' then legalname 
           inner join (
 			select distinct Customer from NetworkInventory where Carrier = 'CityHosted'
 			) ni on ni.Customer = c.Entity
-          left join SalesOrDealerCustomers dc on c.Entity = dc.customer and dc.SalesType = 'Dealer'
+          left join SalesOrDealerCustomers dc on c.Entity = dc.customer and dc.SalesType = '{1}'
 		  left join entity d on d.entity = dc.SalesOrDealer
-		  Where c.entity = '{0}' and dc.SalesType = '{1}'", customerID, salesType);
+		  Where c.entity = '{0}' ", customerID, salesType);
       using (DataSet ds = getDataFromSQL(sql))
       {
         if (ds == null)

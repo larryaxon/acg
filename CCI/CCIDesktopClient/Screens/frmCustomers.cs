@@ -82,7 +82,7 @@ namespace CCI.DesktopClient.Screens
         srchAgent.AutoTabToNextControlOnSelect = false;
         srchAgent.ClearSearchWhenComplete = false;
         srchAgent.DisplayOnlyID = false;
-        srchAgent.MustExistInList = true;
+        srchAgent.MustExistInList = false;
 
         cust.Controls.Add(labelAltID);
         cust.Controls.Add(textAltID);
@@ -170,11 +170,25 @@ namespace CCI.DesktopClient.Screens
     }
     public new void Save()
     {
-      base.Save();
       ctlSearch c = (ctlSearch)tabMain.TabPages[custTabName].Controls["txtAgent"];
       string agent = c.Text;
-
-      _dataSource.moveDealerCustomers(new System.Collections.ArrayList() { txtEntity.Text }, agent, SecurityContext.User, "Agent");
+      if (string.IsNullOrWhiteSpace(agent)) // they deleted the agent on the screen
+      {
+        agent = _dataSource.getAgentForCustomer(Entity); // get the old value from the database
+        _dataSource.deleteDealerForCustomer(Entity, agent, "Agent"); // and then delete it
+      }
+      else
+      {
+        /*
+         * I had to get rid of the flag "must exist in list" to allow them to delete it. So they could have entered a bad agent id.
+         * So let's check this, and dont update (and let them know) if the agent does not exist
+         */
+        if (_dataSource.ExistsEntityInDB(agent, "Agent")) // if they exist
+          _dataSource.moveDealerCustomers(new System.Collections.ArrayList() { txtEntity.Text }, agent, SecurityContext.User, "Agent"); // then update the agent for this customer
+        else
+          CCI.DesktopClient.Common.CommonFormFunctions.showMessage("Agent " + agent + " does not exist. Agent for this Customer has not been changed.");
+      }
+      base.Save();
     }
     private void setPosition(Label lastLabel, Label thisLabel, Control thisControl, int widthmultiplier = 1)
     {

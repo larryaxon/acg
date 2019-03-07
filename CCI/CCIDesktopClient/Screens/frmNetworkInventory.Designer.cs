@@ -360,6 +360,8 @@
       // 
       // txtDealer
       // 
+      this.txtDealer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.txtDealer.Enabled = false;
       this.txtDealer.Location = new System.Drawing.Point(603, 83);
       this.txtDealer.Name = "txtDealer";
@@ -368,7 +370,6 @@
       // 
       // lblDealer
       // 
-      this.lblDealer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.lblDealer.AutoSize = true;
       this.lblDealer.Location = new System.Drawing.Point(559, 86);
       this.lblDealer.Name = "lblDealer";
@@ -827,8 +828,6 @@
       // 
       // txtNewAccount
       // 
-      this.txtNewAccount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
       this.txtNewAccount.Enabled = false;
       this.txtNewAccount.Location = new System.Drawing.Point(110, 83);
       this.txtNewAccount.Name = "txtNewAccount";
@@ -1043,10 +1042,12 @@
       // 
       // txtLastModifiedBy
       // 
+      this.txtLastModifiedBy.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
       this.txtLastModifiedBy.Enabled = false;
-      this.txtLastModifiedBy.Location = new System.Drawing.Point(682, 112);
+      this.txtLastModifiedBy.Location = new System.Drawing.Point(633, 112);
       this.txtLastModifiedBy.Name = "txtLastModifiedBy";
-      this.txtLastModifiedBy.Size = new System.Drawing.Size(138, 20);
+      this.txtLastModifiedBy.Size = new System.Drawing.Size(187, 20);
       this.txtLastModifiedBy.TabIndex = 12;
       // 
       // srchNetworkInventory

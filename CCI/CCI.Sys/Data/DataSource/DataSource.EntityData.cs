@@ -117,6 +117,20 @@ namespace CCI.Sys.Data
     {
       return _ea.existsEntity(entity);
     }
+    public bool ExistsEntityInDB(string entity, string entityType)
+    {
+      string sql = string.Format("Select Entity from Entity WHERE Entity = '{0}' and EntityType = '{1}'", entity, entityType);
+      if (string.IsNullOrWhiteSpace(entityType))
+        sql = string.Format("Select Entity from Entity WHERE Entity = '{0}'", entity);
+      DataSet ds = getDataFromSQL(sql);
+      bool exists = ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0;
+      if (ds != null)
+      {
+        ds.Clear();
+        ds = null;
+      }
+      return exists;
+    }
     public bool IsEntityField(string fieldName)
     {
       return _ea.IsEntityField(fieldName);

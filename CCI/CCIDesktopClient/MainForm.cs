@@ -580,5 +580,17 @@ namespace CCI.DesktopClient
       ScreenBase frm = new frmAgentMaintenance();
       ShowForm(frm, true);
     }
+
+    private void agentMaintenanceToolStripMenuItem1_Click(object sender, EventArgs e)
+    {
+      ScreenBase frm = new frmAgentMaintenance();
+      ShowForm(frm, true);
+    }
+
+    private void masterCustomerMaintenanceToolStripMenuItem1_Click(object sender, EventArgs e)
+    {
+      ScreenBase frm = new frmMasterCustomerMaintenance();
+      ShowForm(frm, true);
+    }
   }
 }

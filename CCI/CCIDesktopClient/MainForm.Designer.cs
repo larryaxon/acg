@@ -76,6 +76,7 @@
       this.carrierMaintenanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.dealerMaintenanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.masterCustomerMaintenanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.agentMaintenanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.unmatchedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.unmatchedCustomersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
       this.unmatchedCustomersFromImportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -123,7 +124,8 @@
       this.statusStrip = new System.Windows.Forms.StatusStrip();
       this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
       this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-      this.agentMaintenanceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+      this.agentMaintenanceToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+      this.masterCustomerMaintenanceToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
       this.menuStrip.SuspendLayout();
       this.toolStrip.SuspendLayout();
       this.statusStrip.SuspendLayout();
@@ -352,6 +354,8 @@
             this.customersWithMissingInfoToolStripMenuItem,
             this.dealerMaintenanceToolStripMenuItem1,
             this.dealerPricingToolStripMenuItem,
+            this.agentMaintenanceToolStripMenuItem1,
+            this.masterCustomerMaintenanceToolStripMenuItem1,
             this.oCCAdjustmentsToolStripMenuItem,
             this.creditMemosToolStripMenuItem,
             this.dealerRetailUSOCPricingToolStripMenuItem,
@@ -521,6 +525,13 @@
       this.masterCustomerMaintenanceToolStripMenuItem.Size = new System.Drawing.Size(220, 22);
       this.masterCustomerMaintenanceToolStripMenuItem.Text = "Master Customer Maintenance";
       this.masterCustomerMaintenanceToolStripMenuItem.Click += new System.EventHandler(this.masterCustomerMaintenanceToolStripMenuItem_Click);
+      // 
+      // agentMaintenanceToolStripMenuItem
+      // 
+      this.agentMaintenanceToolStripMenuItem.Name = "agentMaintenanceToolStripMenuItem";
+      this.agentMaintenanceToolStripMenuItem.Size = new System.Drawing.Size(220, 22);
+      this.agentMaintenanceToolStripMenuItem.Text = "Agent Maintenance";
+      this.agentMaintenanceToolStripMenuItem.Click += new System.EventHandler(this.agentMaintenanceToolStripMenuItem_Click);
       // 
       // unmatchedToolStripMenuItem
       // 
@@ -894,12 +905,19 @@
       this.toolStripStatusLabel.Size = new System.Drawing.Size(38, 17);
       this.toolStripStatusLabel.Text = "Status";
       // 
-      // agentMaintenanceToolStripMenuItem
+      // agentMaintenanceToolStripMenuItem1
       // 
-      this.agentMaintenanceToolStripMenuItem.Name = "agentMaintenanceToolStripMenuItem";
-      this.agentMaintenanceToolStripMenuItem.Size = new System.Drawing.Size(220, 22);
-      this.agentMaintenanceToolStripMenuItem.Text = "Agent Maintenance";
-      this.agentMaintenanceToolStripMenuItem.Click += new System.EventHandler(this.agentMaintenanceToolStripMenuItem_Click);
+      this.agentMaintenanceToolStripMenuItem1.Name = "agentMaintenanceToolStripMenuItem1";
+      this.agentMaintenanceToolStripMenuItem1.Size = new System.Drawing.Size(239, 22);
+      this.agentMaintenanceToolStripMenuItem1.Text = "Agent Maintenance";
+      this.agentMaintenanceToolStripMenuItem1.Click += new System.EventHandler(this.agentMaintenanceToolStripMenuItem1_Click);
+      // 
+      // masterCustomerMaintenanceToolStripMenuItem1
+      // 
+      this.masterCustomerMaintenanceToolStripMenuItem1.Name = "masterCustomerMaintenanceToolStripMenuItem1";
+      this.masterCustomerMaintenanceToolStripMenuItem1.Size = new System.Drawing.Size(239, 22);
+      this.masterCustomerMaintenanceToolStripMenuItem1.Text = "Master Customer Maintenance";
+      this.masterCustomerMaintenanceToolStripMenuItem1.Click += new System.EventHandler(this.masterCustomerMaintenanceToolStripMenuItem1_Click);
       // 
       // MainForm
       // 
@@ -1021,6 +1039,8 @@
     private System.Windows.Forms.ToolStripMenuItem wholealeUSOCImportExceptionsToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem masterCustomerMaintenanceToolStripMenuItem;
     private System.Windows.Forms.ToolStripMenuItem agentMaintenanceToolStripMenuItem;
+    private System.Windows.Forms.ToolStripMenuItem agentMaintenanceToolStripMenuItem1;
+    private System.Windows.Forms.ToolStripMenuItem masterCustomerMaintenanceToolStripMenuItem1;
   }
 }
 
