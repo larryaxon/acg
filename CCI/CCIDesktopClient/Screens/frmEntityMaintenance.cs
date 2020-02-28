@@ -107,6 +107,7 @@ namespace CCI.DesktopClient.Screens
       if (!string.IsNullOrEmpty(entity))
       {
         _entity = entity;
+        ctlLocations1.EntityOwner = _entity;
         txtEntity.Text = _entity;
         _eac = _dataSource.getEntity(_entity, _entityType, _effectiveDate);
           /*

@@ -79,6 +79,7 @@ namespace CCI.DesktopClient.Screens
       if (!checkPricing || alreadyHasPricingLevel("Gold", CommonData.PastDateTime, CommonData.FutureDateTime))
       {
         base.Save();
+        base.EntityType = "Dealer";
         loadDealerCost();
         loadDealerCustomers();
       }
