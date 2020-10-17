@@ -1,0 +1,227 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ACGModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="BibleVerses">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Username" Type="varchar" MaxLength="50" />
+          <Property Name="Sequence" Type="int" />
+          <Property Name="VerseGroup" Type="varchar" MaxLength="50" />
+          <Property Name="Book" Type="varchar" MaxLength="50" />
+          <Property Name="Chapter" Type="int" />
+          <Property Name="Verse" Type="int" />
+          <Property Name="ToVerse" Type="int" />
+          <Property Name="Text" Type="varchar" MaxLength="4096" />
+          <Property Name="StartDate" Type="datetime" />
+          <Property Name="EndDate" Type="datetime" />
+          <Property Name="Comment" Type="varchar" MaxLength="4096" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+          <Property Name="DateTimeModified" Type="datetime" />
+          <Property Name="Language" Type="varchar" MaxLength="50" />
+          <Property Name="Translation" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="CodeMaster">
+          <Key>
+            <PropertyRef Name="CodeType" />
+            <PropertyRef Name="Code" />
+          </Key>
+          <Property Name="CodeType" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Code" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="LastVerseDisplayed">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Username" Type="varchar" MaxLength="50" />
+          <Property Name="VerseGroup" Type="varchar" MaxLength="50" />
+          <Property Name="LastVerseID" Type="int" />
+        </EntityType>
+        <EntityType Name="Logins">
+          <Key>
+            <PropertyRef Name="Username" />
+          </Key>
+          <Property Name="Username" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="50" />
+          <Property Name="Role" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="UserVerseGroups">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Username" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="VerseGroup" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="IsDefault" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="ACGModelStoreContainer">
+          <EntitySet Name="BibleVerses" EntityType="Self.BibleVerses" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CodeMaster" EntityType="Self.CodeMaster" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LastVerseDisplayed" EntityType="Self.LastVerseDisplayed" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Logins" EntityType="Self.Logins" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserVerseGroups" EntityType="Self.UserVerseGroups" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ACGModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="CodeMaster">
+          <Key>
+            <PropertyRef Name="CodeType" />
+            <PropertyRef Name="Code" />
+          </Key>
+          <Property Name="CodeType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Login">
+          <Key>
+            <PropertyRef Name="Username" />
+          </Key>
+          <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Role" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="UserVerseGroup">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="VerseGroup" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="IsDefault" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="ACGEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CodeMasters" EntityType="Self.CodeMaster" />
+          <EntitySet Name="Logins" EntityType="Self.Login" />
+          <EntitySet Name="UserVerseGroups" EntityType="Self.UserVerseGroup" />
+          <EntitySet Name="BibleVerses" EntityType="ACGModel.BibleVerse" />
+          <EntitySet Name="LastVerseDisplayeds" EntityType="ACGModel.LastVerseDisplayed" />
+        </EntityContainer>
+        <EntityType Name="BibleVerse">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Sequence" Type="Int32" />
+          <Property Name="VerseGroup" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Book" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Chapter" Type="Int32" />
+          <Property Name="Verse" Type="Int32" />
+          <Property Name="ToVerse" Type="Int32" />
+          <Property Name="Text" Type="String" MaxLength="4096" FixedLength="false" Unicode="false" />
+          <Property Name="StartDate" Type="DateTime" Precision="3" />
+          <Property Name="EndDate" Type="DateTime" Precision="3" />
+          <Property Name="Comment" Type="String" MaxLength="4096" FixedLength="false" Unicode="false" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <Property Name="DateTimeModified" Type="DateTime" Precision="3" />
+          <Property Name="Language" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Translation" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="LastVerseDisplayed">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="VerseGroup" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="LastVerseID" Type="Int32" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ACGModelStoreContainer" CdmEntityContainer="ACGEntities">
+          <EntitySetMapping Name="CodeMasters">
+            <EntityTypeMapping TypeName="ACGModel.CodeMaster">
+              <MappingFragment StoreEntitySet="CodeMaster">
+                <ScalarProperty Name="CodeType" ColumnName="CodeType" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Logins">
+            <EntityTypeMapping TypeName="ACGModel.Login">
+              <MappingFragment StoreEntitySet="Logins">
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Role" ColumnName="Role" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserVerseGroups">
+            <EntityTypeMapping TypeName="ACGModel.UserVerseGroup">
+              <MappingFragment StoreEntitySet="UserVerseGroups">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="VerseGroup" ColumnName="VerseGroup" />
+                <ScalarProperty Name="IsDefault" ColumnName="IsDefault" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BibleVerses">
+            <EntityTypeMapping TypeName="ACGModel.BibleVerse">
+              <MappingFragment StoreEntitySet="BibleVerses">
+                <ScalarProperty Name="Translation" ColumnName="Translation" />
+                <ScalarProperty Name="Language" ColumnName="Language" />
+                <ScalarProperty Name="DateTimeModified" ColumnName="DateTimeModified" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="ToVerse" ColumnName="ToVerse" />
+                <ScalarProperty Name="Verse" ColumnName="Verse" />
+                <ScalarProperty Name="Chapter" ColumnName="Chapter" />
+                <ScalarProperty Name="Book" ColumnName="Book" />
+                <ScalarProperty Name="VerseGroup" ColumnName="VerseGroup" />
+                <ScalarProperty Name="Sequence" ColumnName="Sequence" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LastVerseDisplayeds">
+            <EntityTypeMapping TypeName="ACGModel.LastVerseDisplayed">
+              <MappingFragment StoreEntitySet="LastVerseDisplayed">
+                <ScalarProperty Name="LastVerseID" ColumnName="LastVerseID" />
+                <ScalarProperty Name="VerseGroup" ColumnName="VerseGroup" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

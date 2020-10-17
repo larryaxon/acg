@@ -1,0 +1,26 @@
+﻿@model BibleVerses.Models.BibleVerseGUIModel
+
+@{
+  ViewBag.Title = "Home";
+}
+<link href="~/Content/site.css" rel="stylesheet" />
+<h2>Home</h2>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#authtoken").val("@Model.AuthenticationToken");
+
+    });
+
+</script>
+
+
+
+<div >
+    <h2>Your Verse</h2>
+    <div id="myverse">
+      <p class="bibleverse">
+        @Model.Verse
+      </p>
+
+
+</div>
