@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BibleAPI.cs" />
     <Compile Include="CommonData.cs" />
     <Compile Include="CommonFunctions.cs" />
     <Compile Include="DateTimeParser.cs" />

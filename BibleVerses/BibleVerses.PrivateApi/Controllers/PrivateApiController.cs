@@ -33,6 +33,15 @@ namespace BibleVerses.Api.Controllers
         return processor.GetNextVerse(username, group);
       }
     }
+    [HttpGet]
+    [Route("api/bibles")]
+    public Dictionary<string, string> GetBibleList(string language="eng")
+    {
+      using (VerseProcessor processor = new VerseProcessor())
+      {
+        return processor.GetBibleList(language);
+      }
+    }
     [HttpPost]
     [Route("api/verses")]
     public int SaveVerse(BibleVerseModel verse)
