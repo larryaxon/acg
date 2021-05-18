@@ -29,6 +29,7 @@ namespace BibleVerses.Common
     {
       return CallBibleService("bibles", new Dictionary<string, object>() { { PARMLANGUAG, language } }, Method.GET );
     }
+    public static dynamic GetBooks()
 
     public static dynamic CallBibleService(string command, Dictionary<string, object> data, Method verb)
     {
