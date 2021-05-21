@@ -10,11 +10,125 @@ GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+-- tweak HostedImportTaxes for compatibility
+ALTER TABLE Hostedimporttaxes
+alter column TaxType nvarchar(1024) Null
 
 
-/****** Object:  StoredProcedure [dbo].[ImportHostedMRCRetail]    Script Date: 5/18/2021 12:26:59 PM ******/
+ALTER TABLE Hostedimporttaxes
+alter column [Title] nvarchar(256) Null
+
+
+/****** Object:  StoredProcedure [dbo].[ImportHostedLedger]    Script Date: 5/21/2021 9:37:44 AM ******/
+DROP PROCEDURE [dbo].[ImportHostedLedger]
+GO
+
+-- =============================================
+-- Author:		Larry Axon
+-- Create date: 5/20/2021
+-- Description:	Import csv format ledger import to existing table
+-- =============================================
+--exec [dbo].[ImportHostedTax] 'C:\Data\Saddleback Imports\2021\2021-05\Completed\Tax-202105.csv', '202105'
+CREATE PROCEDURE [dbo].[ImportHostedLedger]	(@FilePath nvarchar (255),@BillDate varchar(10), @FirstRow int = 2)
+	
+AS
+BEGIN
+/*
+Transaction_id	uomID	Tax_Type_Code	Tax_Type	State	County	City	Zip	Sales_Type	Net_Amount	Tot_Tax	Gross_Amount	Account_Number	Invoice_Number	Bill_Number	DocCode	CREATED_DATE	TotalGrossRevenue	TotalTax	TotalRevenue	BundleName	ProductName	External_Id	Country	Plan_Name	Identifier	Charge_From	Charge_To	Bill_Start_Date	Bill_End_Date
+4DEF4F7E-AA4E-11EB-942D-D4DF72495A0E	1.37E+18	126	State Universal Service Fund-Toll	AZ	MARICOPA	PHOENIX	85029	1002	0.222704	0.000704	0.2	17867	IN-80008213429	BI23136		May 1, 2021, 12:24 AM	0.2	0.022704	0.222704		DID Numbers-Retail/DID Numbers	1956	UNITED STATES	DID Numbers	SUB7674	5/1/21	5/31/21	4/1/21	4/30/21
+*/
+--DROP TABLE HostedTempTax
+--Truncate Table HostedTempTax
+if object_id (N'"HostedTempLedger"', N'U') is NULL
+	CREATE TABLE [dbo].[HostedTempLedger](
+		[Account Number_1] [varchar](50) NULL,
+		[Subscriber Name] [varchar](50) NULL,
+		[Invoice Number] [varchar](50) NULL,
+		[Billing Period Start] [varchar](50) NULL,
+		[Billing Period End] [varchar](50) NULL,
+		[Created Date] [varchar](50) NULL,
+		[Notified Date] [varchar](50) NULL,
+		[Due Date] [varchar](50) NULL,
+		[Last Payment Date] [varchar](50) NULL,
+		[Collection Entry Date] [varchar](50) NULL,
+		[Status] [varchar](50) NULL,
+		[Currency] [varchar](50) NULL,
+		[Recurring charges] [varchar](50) NULL,
+		[Onetime charges] [varchar](50) NULL,
+		[Usage charges] [varchar](50) NULL,
+		[Adjustment] [varchar](50) NULL,
+		[Payment] [varchar](50) NULL,
+		[Late Fees] [varchar](50) NULL,
+		[Other Charges   Credits] [varchar](50) NULL,
+		[Taxes] [varchar](50) NULL,
+		[Invoice Amount] [varchar](50) NULL,
+		[Current Due] [varchar](50) NULL,
+		[Seller Name] [varchar](50) NULL,
+		[External_Id] [varchar](50) NULL,
+		[Account Status] [varchar](50) NULL,
+		[Billing Charge From] [varchar](50) NULL,
+		[Billing Charge To] [varchar](50) NULL
+	) ON [PRIMARY]
+
+	
+
+	delete from [dbo].HostedTempLedger;
+
+	Declare @BulkInsert nvarchar(2000);
+	Declare @ImportFileName nvarchar(255);
+	Set @ImportFileName = @FilePath;
+
+	Set @BulkInsert =
+		N'BULK INSERT dbo.HostedTempLedger FROM ''' +
+		@ImportFileName +
+		N''' WITH (FIRSTROW = ' + Convert(varchar(5), @FirstRow) + ', FIELDTERMINATOR = '','', ROWTERMINATOR = ''\n'')'
+	
+	EXEC sp_executesql @BulkInsert;
+
+	INSERT into [dbo].[HostedImportLedger] ([Customer]
+      ,[CustomerName]
+      ,[TransactionDate]
+      ,[Title]
+      ,[Amount]
+      ,[BillDate]
+      ,[MatchedBy]
+      ,[MatchedDateTime])
+	SELECT * from (
+		Select [Account Number_1] AS Customer,
+			   [Subscriber Name] as CustomrName,
+			   Convert(date,[Created Date]) as [TransactionDate],
+			   'Invoice' AS [Title],
+				   convert(decimal(10,2),[Recurring charges] ) +
+					convert(decimal(10,2),[Onetime charges] ) +
+					convert(decimal(10,2),[Usage charges] ) +
+					convert(decimal(10,2),[Adjustment] ) +
+					convert(decimal(10,2),[Late Fees] ) +
+					convert(decimal(10,2),[Other Charges   Credits] ) +
+					convert(decimal(10,2),[Taxes] ) 
+				AS Amount,
+				Convert(date,Convert(varchar(2),Month(Convert(date, [Billing Charge To]))) + '/01/' + Convert(varchar(4), Year(Convert(date, [Billing Charge To])))) AS BillDate,
+				null MatchedBy,
+				null MatchedDateTime
+			FROM [dbo].HostedTempLedger
+		) ledger
+		WHERE ledger.BillDate = @BillDate and Amount <> 0
+			
+
+			   
+		delete from [dbo].HostedTempLedger;   
+
+
+
+END
+
+
+GO
+
+/****** Object:  StoredProcedure [dbo].[ImportHostedMRCRetail]    Script Date: 5/21/2021 10:00:10 AM ******/
 DROP PROCEDURE [dbo].[ImportHostedMRCRetail]
 GO
+
+
 
 -- =============================================
 -- Author:		Larry Axon
@@ -59,15 +173,16 @@ Cust Acct Nr	Service Name	Billing Acct Nr	Working Acct Nr	USOC	Title	Qty	Price	A
 		N'BULK INSERT dbo.HostedTempMRCRetail FROM ''' +
 		@ImportFileName +
 		N''' WITH (FIRSTROW = ' + Convert(varchar(5), @FirstRow) + ', FIELDTERMINATOR = '','', ROWTERMINATOR = ''\n'')'
-	
+	print @BulkInsert
 	EXEC sp_executesql @BulkInsert;
-    if not exists (select top 1 [Bill Date]
-                 from HostedTempMRCRetail 
-                where [Bill Date] <> @BillDate)
-       begin
+    --if not exists (select top 1 [Bill Date]
+    --             from HostedTempMRCRetail 
+    --            where [Bill Date] <> @BillDate)
+    --   begin
             print 'Good Date'
 			insert into [dbo].[HostedImportMRCRetail] (customernumber,CustomerName, MasterBTN, BTN, USOC, [Product Description], Qty, Price, Amount, ConnectionDate, BillDate)
-			 select --left('00000000',8 - len([Cust Acct Nr])) + 
+			 select * FROM (
+				Select 
 					[Cust Acct Nr] as customernumber,
 					[Service Name] as CustomerName,
 					replace(replace(replace(replace([Billing Acct Nr],' ',''),'(',''),')',''),'-','') as MasterBTN,
@@ -79,26 +194,21 @@ Cust Acct Nr	Service Name	Billing Acct Nr	Working Acct Nr	USOC	Title	Qty	Price	A
 					[Amt Billed] as Amount,
 					Convert(datetime, substring([Conn Date], 5,2) + '/' + substring([Conn Date], 7,2) + '/' + substring([Conn Date], 1, 4)) as ConnectionDate,
 					Convert(datetime, substring([Bill Date], 5,2) + '/' + substring([Bill Date], 7,2) + '/' + substring([Bill Date], 1, 4)) as BillDate
-			   from [dbo].[HostedTempMRCRetail];
+			   from [dbo].[HostedTempMRCRetail]) mrc
+			WHERE BillDate = @BillDate;
 			   
 			delete from [dbo].[HostedTempMRCRetail];   
-       end
-    else
-       begin
-            print 'Bad Date'
-       end
+
 
 END
 
 
 GO
 
-
-/****** Object:  StoredProcedure [dbo].[ImportHostedMRCWholesale]    Script Date: 5/18/2021 12:39:57 PM ******/
+/****** Object:  StoredProcedure [dbo].[ImportHostedMRCWholesale]    Script Date: 5/21/2021 10:02:40 AM ******/
 DROP PROCEDURE [dbo].[ImportHostedMRCWholesale]
 GO
-
--- =============================================
+ =============================================
 -- Author:		Larry Axon
 -- Create date: 9/19/2015
 -- Description:	Import csv format mrc Wholesale import to existing table
@@ -145,13 +255,11 @@ Cust Acct Nr	Service Name	Billing Acct Nr	Working Acct Nr	USOC	Title	Qty	Price	A
 	
 	EXEC sp_executesql @BulkInsert;
 
-    if not exists (select top 1 [Bill Date]
-                 from HostedTempMRCWholesale 
-                where [Bill Date] <> @BillDate)
-       begin
+
             print 'Good Date'
 			insert into [dbo].[HostedImportMRCWholesale] (customernumber,CustomerName, MasterBTN, BTN, USOC, [Product Description], Qty, Price, Amount, ConnectionDate, BillDate)
-			 select --left('00000000',8 - len([Cust Acct Nr])) + 
+			 select * FROM (
+				SELECT
 					[Cust Acct Nr] as customernumber,
 					[Service Name] as CustomerName,
 					replace(replace(replace(replace([Billing Acct Nr],' ',''),'(',''),')',''),'-','') as MasterBTN,
@@ -163,22 +271,24 @@ Cust Acct Nr	Service Name	Billing Acct Nr	Working Acct Nr	USOC	Title	Qty	Price	A
 					[Amt Billed] as Amount,
 					Convert(datetime, substring([Conn Date], 5,2) + '/' + substring([Conn Date], 7,2) + '/' + substring([Conn Date], 1, 4)) as ConnectionDate,
 					Convert(datetime, substring([Bill Date], 5,2) + '/' + substring([Bill Date], 7,2) + '/' + substring([Bill Date], 1, 4)) as BillDate
-			   from [dbo].[HostedTempMRCWholesale];
+			   from [dbo].[HostedTempMRCWholesale]
+			   ) mrc
+			   WHERE mrc.BillDate = @BillDate
 			   
 			delete from [dbo].[HostedTempMRCWholesale];   
-       end
-    else
-       begin
-            print 'Bad Date'
-       end
+
 
 END
 
-
 GO
 
-DROP PROCEDURE [ImportHostedOCCRetail]
+
+/****** Object:  StoredProcedure [dbo].[ImportHostedOCCRetail]    Script Date: 5/21/2021 10:08:01 AM ******/
+DROP PROCEDURE [dbo].[ImportHostedOCCRetail]
 GO
+
+
+
 -- =============================================
 -- Author:		Larry Axon
 -- Create date: 9/19/2015
@@ -235,7 +345,8 @@ Cust Acct Nr	Service Name	Billing Acct Nr	Working Acct Nr	USOC	Title	Qty	Price	A
 			  ,[USOC]
 			  ,[Service]
 			  ,[BillDate])
-			 select left('00000000',8 - len([Customer])) + [Customer] as Customer,
+			 select * FROM (
+				SELECT [Customer] as Customer,
 					replace(replace(replace(replace([MasterBTN],' ',''),'(',''),')',''),'-','') as MasterBTN,
 					replace(replace(replace(replace([BTN],' ',''),'(',''),')',''),'-','') as BTN,
 					[Date], 
@@ -245,7 +356,9 @@ Cust Acct Nr	Service Name	Billing Acct Nr	Working Acct Nr	USOC	Title	Qty	Price	A
 					Service,
 					Convert(date, substring(BillDate,5,2) + '/' + SUBSTRING(BillDate, 7,2) + '/' + SUBSTRING(BillDate, 1, 4)) BillDate
 			   from [dbo].[HostedTempOCCRetail]
-			   WHERE isnull(USOC, '') != ''; -- filter out the FS/CCI interco charges
+			   WHERE isnull(USOC, '') != '' -- filter out the FS/CCI interco charges
+			   ) occ
+			   WHERE BillDate = @BillDate
 			   
 			delete from [dbo].[HostedTempOCCRetail];   
        end
@@ -259,13 +372,9 @@ END
 
 GO
 
-
-
-/****** Object:  StoredProcedure [dbo].[ImportHostedOCCWholesale]    Script Date: 5/18/2021 1:16:23 PM ******/
+/****** Object:  StoredProcedure [dbo].[ImportHostedOCCWholesale]    Script Date: 5/21/2021 10:11:39 AM ******/
 DROP PROCEDURE [dbo].[ImportHostedOCCWholesale]
 GO
-
-
 
 -- =============================================
 -- Author:		Larry Axon
@@ -325,7 +434,8 @@ Cust Acct Nr	Service Name	Billing Acct Nr	Working Acct Nr	USOC	Title	Qty	Price	A
 			  ,[USOC]
 			  ,[Service]
 			  ,[BillDate])
-			 select left('00000000',8 - len([Customer])) + [Customer] as Customer,
+			 select * from (
+				SELECT [Customer] as Customer,
 					replace(replace(replace(replace([MasterBTN],' ',''),'(',''),')',''),'-','') as MasterBTN,
 					replace(replace(replace(replace([BTN],' ',''),'(',''),')',''),'-','') as BTN,
 					[Date], 
@@ -335,7 +445,9 @@ Cust Acct Nr	Service Name	Billing Acct Nr	Working Acct Nr	USOC	Title	Qty	Price	A
 					Service,
 					Convert(date, substring(BillDate,5,2) + '/' + SUBSTRING(BillDate, 7,2) + '/' + SUBSTRING(BillDate, 1, 4)) BillDate			   
 					from [dbo].[HostedTempOCCWholesale]
-			   WHERE isnull(USOC, '') != ''; -- filter out the FS/CCI interco charges
+			   WHERE isnull(USOC, '') != '' -- filter out the FS/CCI interco charges
+			   ) occ
+			   WHERE occ.BillDate = @BillDate
 			   
 			delete from [dbo].[HostedTempOCCWholesale];   
        end
@@ -349,10 +461,10 @@ END
 
 
 
+
 GO
 
-
-/****** Object:  StoredProcedure [dbo].[ImportHostedTollRetail]    Script Date: 5/18/2021 1:39:02 PM ******/
+/****** Object:  StoredProcedure [dbo].[ImportHostedTollRetail]    Script Date: 5/21/2021 10:16:30 AM ******/
 DROP PROCEDURE [dbo].[ImportHostedTollRetail]
 GO
 
@@ -398,48 +510,37 @@ BEGIN
 	
 	EXEC sp_executesql @BulkInsert;
 
-    if not exists (select top 1 billingyear,billingmonth 
-                 from hostedtemptollretail 
-                where billingyear <> @billingyear or billingmonth <> @BillingMonth)
-       begin
-            print 'Good Date'
-			insert into hostedimporttollretail (customernumber,billingyear,billingmonth,btn,messagetype,fromnumber,calldate,duration,
-					tonumber,tocity,tostate,rate,charge)
-			 select --left('00000000',8 - len(customernumber)) + 
-					customernumber,billingyear,billingmonth,
-					replace(replace(replace(replace(btn,' ',''),'(',''),')',''),'-','') as btn,
-					messagetype,replace(replace(replace(replace(fromnumber,' ',''),'(',''),')',''),'-','') as fromnumber,calldate,
-					duration,replace(replace(replace(replace(tonumber,' ',''),'(',''),')',''),'-','') as tonumber,tocity,tostate,
-					rate,charge
-			   from HostedTempTollRetail;
+	insert into hostedimporttollretail (customernumber,billingyear,billingmonth,btn,messagetype,fromnumber,calldate,duration,
+			tonumber,tocity,tostate,rate,charge)
+	select * FROM (
+		SELECT
+			customernumber,billingyear,billingmonth,
+			replace(replace(replace(replace(btn,' ',''),'(',''),')',''),'-','') as btn,
+			messagetype,replace(replace(replace(replace(fromnumber,' ',''),'(',''),')',''),'-','') as fromnumber,calldate,
+			duration,replace(replace(replace(replace(tonumber,' ',''),'(',''),')',''),'-','') as tonumber,tocity,tostate,
+			rate,charge
+		from HostedTempTollRetail
+		) toll
+	WHERE toll.BillingMonth = @BillingMonth and toll.BillingYear = @BillingYear
 			   
-			delete from hostedtemptollretail;   
-       end
-    else
-       begin
-            print 'Bad Date'
-       end
+	delete from hostedtemptollretail;   
+
 
 END
 
 
-
-
 GO
 
-
-
-
-
-/****** Object:  StoredProcedure [dbo].[ImportHostedTollWholesale]    Script Date: 5/18/2021 1:37:24 PM ******/
+/****** Object:  StoredProcedure [dbo].[ImportHostedTollWholesale]    Script Date: 5/21/2021 10:19:49 AM ******/
 DROP PROCEDURE [dbo].[ImportHostedTollWholesale]
 GO
 
--- =============================================
+--=========================================
 -- Author:		<Author,,Name>
 -- Create date: <Create Date,,>
 -- Description:	<Description,,>
 -- =============================================
+-- DROP TABLE [dbo].[HostedTempTollWholesale]
 CREATE PROCEDURE [dbo].[ImportHostedTollWholesale] (@FileName nvarchar (255),@BillingYear varchar (10),@BillingMonth varchar (10), @FirstRow int = 2)
 AS
 BEGIN
@@ -449,7 +550,7 @@ BEGIN
 			[BillingMonth] [nvarchar](10) NULL,
 			[BillingYear] [nvarchar](10) NULL,
 			[BTN] [nvarchar](25) NULL,
-			[CallNumber] [float] NOT NULL,
+			[CallNumber] [float]  NULL,
 			[Charge] [float] NULL,
 			[CustomerNumber] [nvarchar](25) NULL,
 			[CallDate] [datetime] NULL,
@@ -482,43 +583,38 @@ BEGIN
 	
 	EXEC sp_executesql @BulkInsert;
 
-    if not exists (select top 1 billingyear,billingmonth 
-                 from hostedtemptollwholesale 
-                where billingyear <> @BillingYear or billingmonth <> @BillingMonth)
-       begin
-  			insert into hostedimporttollwholesale (billingmonth,billingyear,btn,callnumber,charge,customernumber,calldate,duration,
-					fromnumber,fromstate,carrierid,messagetype,ocpid,rate,rateclass,settlementcode,tocity,toreference,tonumber,tostate,
-					usageaccountcode)
-			 select billingmonth,billingyear,replace(replace(replace(replace(btn,' ',''),'(',''),')',''),'-','') as btn,callnumber,charge,
-					customernumber,calldate,duration,replace(replace(replace(replace(fromnumber,' ',''),'(',''),')',''),'-','') as fromnumber,
-					fromstate,carrierid,messagetype,ocpid,rate,rateclass,settlementcode,tocity,toreference,
-					replace(replace(replace(replace(tonumber,' ',''),'(',''),')',''),'-','') as tonumber,tostate,usageaccountcode
-			   from HostedTempTollWholesale;
-  			delete from dbo.hostedtemptollwholesale;   
-  	   end
+    --if not exists (select top 1 billingyear,billingmonth 
+    --             from hostedtemptollwholesale 
+    --            where billingyear <> @BillingYear or billingmonth <> @BillingMonth)
+    --   begin
+  	insert into hostedimporttollwholesale (billingmonth,billingyear,btn,callnumber,charge,customernumber,calldate,duration,
+			fromnumber,fromstate,carrierid,messagetype,ocpid,rate,rateclass,settlementcode,tocity,toreference,tonumber,tostate,
+			usageaccountcode)
+	select * FROM (
+		SELECT billingmonth,billingyear,replace(replace(replace(replace(btn,' ',''),'(',''),')',''),'-','') as btn,callnumber,charge,
+				customernumber,calldate,duration,replace(replace(replace(replace(fromnumber,' ',''),'(',''),')',''),'-','') as fromnumber,
+				fromstate,carrierid,messagetype,ocpid,rate,rateclass,settlementcode,tocity,toreference,
+				replace(replace(replace(replace(tonumber,' ',''),'(',''),')',''),'-','') as tonumber,tostate,usageaccountcode
+		from HostedTempTollWholesale
+		) toll
+	WHERE toll.BillingMonth = @BillingMonth and toll.BillingYear = @BillingYear;
+
+  	delete from dbo.hostedtemptollwholesale;   
+
 
 END
 
 
 
-
 GO
 
 
 
 
-/****** Object:  StoredProcedure [dbo].[ImportHostedTax]    Script Date: 5/18/2021 4:01:52 PM ******/
+
+/****** Object:  StoredProcedure [dbo].[ImportHostedTax]    Script Date: 5/21/2021 10:13:41 AM ******/
 DROP PROCEDURE [dbo].[ImportHostedTax]
 GO
-
-/****** Object:  StoredProcedure [dbo].[ImportHostedTax]    Script Date: 5/18/2021 4:01:52 PM ******/
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
-
 
 -- =============================================
 -- Author:		Larry Axon
@@ -584,12 +680,9 @@ Create Table HostedTempTax (
 	
 	EXEC sp_executesql @BulkInsert;
 
-    if not exists (select top 1 [Charge_From]
-                 from HostedTempTax 
-                where [Charge_From] not between @BillDate and DateAdd(month, 1, @BilLDate))
-       begin
-            print 'Good Date'
-			insert into [dbo].[HostedImportTaxes] ([Customer]
+
+
+	insert into [dbo].[HostedImportTaxes] ([Customer]
       ,[MasterBTN]
       ,[Level]
       ,[LevelType]
@@ -600,7 +693,8 @@ Create Table HostedTempTax (
       ,[TaxAmount]
       ,[BillDate]
       ,[Sign])
-			 select 
+			 select * FROM
+				(Select 
 					Account_Number as [Customer],
 					'' as MasterBTN,
 					'' as Level,
@@ -610,22 +704,21 @@ Create Table HostedTempTax (
 					Tax_Type as TaxType,
 					ProductName as Title,
 					Tot_Tax as Amount,
-					Charge_From as ConnectionDate,
-					Charge_From as BillDate
-			   from [dbo].HostedTempTax;
+					case when isdate(Charge_From) = 1 then Convert(date,Charge_From) else null end as ConnectionDate ,
+					case when isdate(Charge_From) = 1 then Convert(date,Charge_From) else null end as BillDate
+			   from [dbo].HostedTempTax
+			   WHERE case when isdate(Charge_From) = 1 then Convert(date,Charge_From) else '1/1/1900' end between @BillDate and dateadd(month, 1, @BillDate)
+			   ) tax
+			WHERE tax.BillDate = @BillDate
 			   
-			delete from [dbo].HostedTempTax;   
-       end
-    else
-       begin
-            print 'Bad Date'
-       end
+	delete from [dbo].HostedTempTax;   
+
 
 
 END
+
+
 GO
-
-
 
 
 

@@ -18,7 +18,13 @@ GO
 /****** Object:  View [dbo].[LLAFluentStreamCustomerIDs]    Script Date: 5/18/2021 10:59:55 AM ******/
 DROP VIEW [dbo].[LLAFluentStreamCustomerIDs]
 GO
-
+--select * from [dbo].[LLAFluentStreamCustomerIDs]
+Create View [dbo].[LLAFluentStreamCustomerIDs] as
+select c.Entity, c.EntityOwner, c.LegalName, x.[Customer Name],c.AlternateName,c.AlternateID, x.[Account ID] FluentStreamID
+from LLACustomerAccountDataExportWithNewIDs x
+inner join Entity c on c.AlternateID = x.OldExternalID
+where entitytype = 'Customer' and getdate() between isnull(startdate, '1/1/1900') and isnull(enddate, '12/31/2100')
+GO
 
 
 /***************************************************************************************************************
@@ -28,13 +34,6 @@ Update PROCS and VIEWS to use new table
 ****************************************************************************************************************/
 /****** Object:  StoredProcedure [dbo].[CashReceiptsCustomerList]    Script Date: 5/17/2021 12:05:41 PM ******/
 DROP PROCEDURE [dbo].[CashReceiptsCustomerList]
-GO
-
-/****** Object:  StoredProcedure [dbo].[CashReceiptsCustomerList]    Script Date: 5/17/2021 12:05:41 PM ******/
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
 GO
 
 --exec CashReceiptsCustomerList '5/1/2021', '5/30/2021'
