@@ -188,9 +188,9 @@ Values ('{0}','{1}','{1} Pricing Level','{2}','{3}')"
           sql = "Select CarrierName from vw_UnmatchedCarriers order by CarrierName";
           break;
         case CommonData.UnmatchedNameTypes.CityHostedCustomer:
-//          sql = @"select distinct customerid customer from hostedmatchedmrc  c
-//                      left join ExternalIDMapping map on c.customerid = map.ExternalID and map.EntityType = 'customer'
-//                    where  c.customerid not like '2%' and map.ExternalID is null";
+          //          sql = @"select distinct customerid customer from hostedmatchedmrc  c
+          //                      left join ExternalIDMapping map on c.customerid = map.ExternalID and map.EntityType = 'customer'
+          //                    where  c.customerid not like '2%' and map.ExternalID is null";
           sql = @"select distinct customername customer 
                     from hostedimportmrcwholesale mw 
                       left join ExternalIDMapping map on mw.customername = map.externalid and map.EntityType = 'customer'
@@ -198,14 +198,15 @@ Values ('{0}','{1}','{1} Pricing Level','{2}','{3}')"
                   union
                   select distinct customername customer 
                     from hostedimportmrcretail mr 
-                      left join entity e on e.alternateid = mr.customernumber
+					  left join EntityAlternateIDs aid on aid.ExternalID = mr.CustomerNumber and mr.billdate between aid.StartDate and aid.EndDate
+                      left join entity e on e.Entity = aid.Entity
                       left join ExternalIDMapping map on mr.customername = map.externalid and map.EntityType = 'customer'
-                    where  e.entity is null and map.internalid is null
-                  union
-                  select distinct customer customer 
-                    from hostedimportoccwholesale ow 
-                      left join ExternalIDMapping map on ow.customer = map.externalid and map.EntityType = 'customer'
-                    where  map.internalid is null and ow.customer not in ('80008154','80008213')";
+                    where  e.entity is null and map.internalid is null";
+                  //union
+                  //select distinct customer customer 
+                  //  from hostedimportoccwholesale ow 
+                  //    left join ExternalIDMapping map on ow.customer = map.externalid and map.EntityType = 'customer'
+                  //  where  map.internalid is null and ow.customer not in ('80008154','80008213')";
           break;
         case CommonData.UnmatchedNameTypes.CityHostedUnmatchedBTNs:
           includeNewCustomer = false;

@@ -88,6 +88,7 @@ namespace CCI.DesktopClient.Screens
       this.panel2.SuspendLayout();
       this.panel1.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.grdImportLog)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.splitMain)).BeginInit();
       this.splitMain.Panel1.SuspendLayout();
       this.splitMain.Panel2.SuspendLayout();
       this.splitMain.SuspendLayout();
@@ -549,7 +550,6 @@ namespace CCI.DesktopClient.Screens
       this.ckImportLedgerOnly.TabIndex = 29;
       this.ckImportLedgerOnly.Text = "Import Ledger Only";
       this.ckImportLedgerOnly.UseVisualStyleBackColor = true;
-      this.ckImportLedgerOnly.Visible = false;
       this.ckImportLedgerOnly.CheckedChanged += new System.EventHandler(this.ckImportLedgerOnly_CheckedChanged);
       // 
       // ckRequireLedger
@@ -675,6 +675,7 @@ namespace CCI.DesktopClient.Screens
       this.splitMain.Panel1.ResumeLayout(false);
       this.splitMain.Panel1.PerformLayout();
       this.splitMain.Panel2.ResumeLayout(false);
+      ((System.ComponentModel.ISupportInitialize)(this.splitMain)).EndInit();
       this.splitMain.ResumeLayout(false);
       this.panel5.ResumeLayout(false);
       this.panel5.PerformLayout();

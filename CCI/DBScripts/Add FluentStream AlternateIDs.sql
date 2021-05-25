@@ -56,7 +56,7 @@ GO
 /*
      STEP TWO: Execute the Proc to change alternateid in Entity and add old value to attribute
 */
-DECLARE @AttributeStepRun as bit = 1
+DECLARE @AttributeStepRun as bit = 0
 IF @AttributeStepRun = 0
 BEGIN
 	EXEC LLA_TEMP_UpdateNewFLuentStreamCuxtomerIDs
@@ -105,10 +105,12 @@ where x.Item = 'Customer'
 
 -- Add new FluentStream IDs
 INSERT INTO EntityAlternateIDs (Entity, StartDate, EndDate, ExternalServiceName, ExternalID)
-select e.entity, '5/1/2021', '12/31/2100', 'FluentStream' ExternalServiceName, e.AlternateID ExternalID
+select distinct e.entity, '5/1/2021', '12/31/2100', 'FluentStream' ExternalServiceName, e.AlternateID ExternalID
 FROM entity e
+where e.entitytype = 'Customer'
 
 
 --select * From EntityAlternateIDs where ExternalServiceName = 'FluentStream'
 
 --select * from vw_AttributeNonXML where itemtype = 'entity' and item = 'customer' and name = 'AlternateID'
+
