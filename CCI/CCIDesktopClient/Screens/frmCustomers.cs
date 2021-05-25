@@ -47,16 +47,24 @@ namespace CCI.DesktopClient.Screens
         tabMain.TabPages.Add(custTabName, "Customer Info");
         cust = tabMain.TabPages[custTabName];
 
+        Label labelOldAltID = new Label();
+        labelOldAltID.Name = "lblOldAlternateID";
+        labelOldAltID.Text = "Saddleback Customer ID";
+        TextBox textOldAltID = new TextBox();
+        textOldAltID.Name = "txtOldAlternateID";
+        textOldAltID.Validating += new CancelEventHandler(textOldAltID_Validating);
+
         Label labelAltID = new Label();
-        labelAltID.Name = "lblAlternateID";
-        labelAltID.Text = "Alternate Customer ID";
+        labelAltID.Name = "lblOldAlternateID";
+        labelAltID.Text = "Saddleback Customer ID";
+        TextBox textAltID = new TextBox();
+        textAltID.Name = "txtOldAlternateID";
+        textAltID.Validating += new CancelEventHandler(textOldAltID_Validating);
 
         Label labelPaymentType = new Label();
         labelPaymentType.Name = "lblPaymentType";
         labelPaymentType.Text = "Payment Type";
-        TextBox textAltID = new TextBox();
-        textAltID.Name = "txtAlternateID";
-        textAltID.Validating += new CancelEventHandler(textAltID_Validating);
+
 
         ComboBox comboPaymentType = new ComboBox();
         comboPaymentType.Name = "txtPaymentType";
@@ -84,8 +92,8 @@ namespace CCI.DesktopClient.Screens
         srchAgent.DisplayOnlyID = false;
         srchAgent.MustExistInList = false;
 
-        cust.Controls.Add(labelAltID);
-        cust.Controls.Add(textAltID);
+        cust.Controls.Add(labelOldAltID);
+        cust.Controls.Add(textOldAltID);
 
         cust.Controls.Add(labelPaymentType);
         cust.Controls.Add(comboPaymentType);
@@ -96,8 +104,8 @@ namespace CCI.DesktopClient.Screens
         cust.Controls.Add(labelAgent);
         cust.Controls.Add(srchAgent);
 
-        setPosition(null, labelAltID, textAltID);
-        setPosition(labelAltID, labelPaymentType, comboPaymentType);
+        setPosition(null, labelOldAltID, textOldAltID);
+        setPosition(labelOldAltID, labelPaymentType, comboPaymentType);
         setPosition(labelPaymentType, labelDay2, textDay2);
         setPosition(labelDay2, labelAgent, srchAgent, 3);
 /*
@@ -211,6 +219,17 @@ namespace CCI.DesktopClient.Screens
     }
     private void textAltID_Validating(object sender, CancelEventArgs e)
     {
+      /*
+       * this is the new Fluentstream customer id
+       * We put it in BOTH Entity.AlternateID AND EntityAlternateIDs table
+       */
+      string msg = "Fluentstream ID is invalid";
+      string altID = ((TextBox)sender).Text;
+      // I think the Entity.AlternateID is automatically updated by the screen framework
+      // SO now we check if this ID exists in EntityAlternateIDs
+    }
+    private void textOldAltID_Validating(object sender, CancelEventArgs e)
+    {
     /*
     * Make changes to allow for the new vendor
     * 
@@ -234,15 +253,15 @@ namespace CCI.DesktopClient.Screens
           altID = CommonFunctions.CInt(altID).ToString("00000000");
         }
         // look for another customer that has the same alternate id
-        string entity = null;
-        if (!lblNewRecord.Visible) // not a new record
-          entity = Entity;
-        if (_dataSource.existsAlternateID(entity, altID, EntityType))
-        {
-          e.Cancel = true;
-          ((TextBox)sender).Undo();
-          MessageBox.Show("That Saddleback ID already exists for another customer");
-        }
+        //string entity = null;
+        //if (!lblNewRecord.Visible) // not a new record
+        //  entity = Entity;
+        //if (_dataSource.existsAlternateID(entity, altID, EntityType))
+        //{
+        //  e.Cancel = true;
+        //  ((TextBox)sender).Undo();
+        //  MessageBox.Show("That Saddleback ID already exists for another customer");
+        //}
         //((TextBox)sender).Text = altID;
       }
     }

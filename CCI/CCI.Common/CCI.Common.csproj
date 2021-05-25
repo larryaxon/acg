@@ -88,6 +88,7 @@
     <Compile Include="CCISerializer.cs" />
     <Compile Include="CCITable.cs" />
     <Compile Include="Chargify.cs" />
+    <Compile Include="EntityAlternateID.cs" />
     <Compile Include="FieldValidation.cs" />
     <Compile Include="FormTypes.cs" />
     <Compile Include="MRCMatchingSelectedItem.cs" />

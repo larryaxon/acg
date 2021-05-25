@@ -89,6 +89,7 @@
     <Compile Include="Data\DataSource\DataSource.CreditMemos.cs" />
     <Compile Include="Data\DataSource\DataSource.Customer.cs" />
     <Compile Include="Data\DataSource\DataSource.Dealer.cs" />
+    <Compile Include="Data\DataSource\DataSource.EntityAlternateIDs.cs" />
     <Compile Include="Data\DataSource\DataSource.EntityData.cs" />
     <Compile Include="Data\DataSource\DataSource.Exceptions.cs" />
     <Compile Include="Data\DataSource\DataSource.FollowUps.cs" />
