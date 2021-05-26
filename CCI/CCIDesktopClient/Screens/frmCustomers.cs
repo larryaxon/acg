@@ -165,6 +165,8 @@ namespace CCI.DesktopClient.Screens
       {
         cust = tabMain.TabPages[custTabName];
         cust.Controls["txtAlternateID"].Text = CommonFunctions.CString(_eac.Entities[entity].Fields["AlternateID"].Value);
+        cust.Controls["txtOldAlternateID"].Text = CommonFunctions.CString(_eac.Entities[entity].Fields["OldAlternateID"].Value);
+
         cust.Controls["txtPaymentType"].Text = CommonFunctions.CString(_eac.getValue(entity + ".Entity.Customer.PaymentType"));
         string agentID = _dataSource.getAgentForCustomer(entity);
         if (!string.IsNullOrWhiteSpace(agentID))
@@ -223,10 +225,53 @@ namespace CCI.DesktopClient.Screens
        * this is the new Fluentstream customer id
        * We put it in BOTH Entity.AlternateID AND EntityAlternateIDs table
        */
-      string msg = "Fluentstream ID is invalid";
+      string msg = "Fluentstream ID is required";
       string altID = ((TextBox)sender).Text;
+      if (string.IsNullOrWhiteSpace(altID)) // this is reqauired
+      {
+        e.Cancel = true;
+        ((TextBox)sender).Undo();
+        MessageBox.Show(msg);
+      }
       // I think the Entity.AlternateID is automatically updated by the screen framework
       // SO now we check if this ID exists in EntityAlternateIDs
+      EntityAlternateID entityRecord = _dataSource.getEntityAlternateIDFromEntity(_entity, DateTime.Now);
+      EntityAlternateID altRecord = _dataSource.getEntityAlternateIDFromExternalID(altID, DateTime.Now);
+      if (entityRecord == null) // there is NO EntityAlternateID record for this alt id or entity
+      {
+        if (altRecord == null)// there is NO EntityAlternateID record for this alt id or entity
+          _dataSource.saveEntityAlternateID(_entity, altID); // so save it
+        else
+        {
+          // in this case, the alt id is taken by someone else
+          msg = "That Fluentstream ID is already taken";
+          e.Cancel = true;
+          ((TextBox)sender).Undo();
+          MessageBox.Show(msg);
+        }
+      }
+      else
+      {
+        if (entityRecord.ExternalID.Equals(altID, StringComparison.CurrentCultureIgnoreCase)) // record is already there so do nothing
+        {
+          ;// do nothing
+        }
+        else
+        {
+          if (!altRecord.Entity.Equals(_entity)) // alt d is taken
+          {
+            // in this case, the alt id is taken by someone else
+            msg = "That Fluentstream ID is already taken";
+            e.Cancel = true;
+            ((TextBox)sender).Undo();
+            MessageBox.Show(msg);
+          }
+          else
+          {
+            ;// in theory. this is the same case as do nothing above so we alsod do nothing
+          }
+        }
+      }
     }
     private void textOldAltID_Validating(object sender, CancelEventArgs e)
     {
