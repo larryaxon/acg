@@ -19,7 +19,15 @@ from LLACustomerAccountDataExportWithNewIDs x
 inner join Entity c on c.AlternateID = x.OldExternalID
 where entitytype = 'Customer' and getdate() between isnull(startdate, '1/1/1900') and isnull(enddate, '12/31/2100')
 GO
-
+DROP VIEW vw_FluentStreamParentAccounts
+GO
+Create View vw_FluentStreamParentAccounts as 
+	select b.[Account ID] ParentID, a.[Account ID] AccountID, a.OldExternalID, a.[Billing Account Number] BillingAcct,
+		a.[Customer Name] CustomerName, a.[Parent Account] ParentName --, a.[Customer Name] CustomerName , a.{Parent Account] ParentName
+	 from ( SElECT * FROM LLACustomerAccountDataExportWithNewIDs 
+			where isnull([parent account], '') != '') a
+	INNER JOIN LLACustomerAccountDataExportWithNewIDs b on a.[Parent Account] = b.[Customer Name]
+GO
 
 -- Create procedure to update Entity and Attribute tables
 /****** Object:  StoredProcedure [dbo].[LLA_TEMP_UpdateNewFLuentStreamCuxtomerIDs]    Script Date: 5/18/2021 11:01:17 AM ******/
@@ -109,6 +117,21 @@ select distinct e.entity, '5/1/2021', '12/31/2100', 'FluentStream' ExternalServi
 FROM entity e
 where e.entitytype = 'Customer'
 
+--select * into LLAEntityAlternateIDsBackup from EntityAlternateIDs
+
+Update aid 
+SET ExternalID = p.ParentID
+FROM EntityAlternateIDs aid
+INNER JOIN vw_FluentStreamParentAccounts p on aid.ExternalID = p.AccountID
+
+update e
+SET AlternateID = p.ParentID
+FROM Entity e
+INNER JOIN  vw_FluentStreamParentAccounts p on e.AlternateID = p.AccountID
+
+--Select e.Entity, e.LegalName, e.AlternateID, p.ParentID
+--FROM Entity e
+--INNER JOIN  vw_FluentStreamParentAccounts p on e.AlternateID = p.AccountID
 
 --select * From EntityAlternateIDs where ExternalServiceName = 'FluentStream'
 

@@ -19,16 +19,17 @@ ALTER TABLE Hostedimporttaxes
 alter column [Title] nvarchar(256) Null
 
 
-/****** Object:  StoredProcedure [dbo].[ImportHostedLedger]    Script Date: 5/21/2021 9:37:44 AM ******/
+
+/****** Object:  StoredProcedure [dbo].[ImportHostedLedger]    Script Date: 5/25/2021 7:37:45 PM ******/
 DROP PROCEDURE [dbo].[ImportHostedLedger]
 GO
 
--- =============================================
+- =============================================
 -- Author:		Larry Axon
 -- Create date: 5/20/2021
 -- Description:	Import csv format ledger import to existing table
 -- =============================================
---exec [dbo].[ImportHostedTax] 'C:\Data\Saddleback Imports\2021\2021-05\Completed\Tax-202105.csv', '202105'
+--exec [dbo].[ImportHostedLedger] 'C:\Data\Saddleback Imports\2021\2021-05\Completed\Ledger-202105.csv', '5/1/2021'
 CREATE PROCEDURE [dbo].[ImportHostedLedger]	(@FilePath nvarchar (255),@BillDate varchar(10), @FirstRow int = 2)
 	
 AS
@@ -84,7 +85,7 @@ if object_id (N'"HostedTempLedger"', N'U') is NULL
 		N''' WITH (FIRSTROW = ' + Convert(varchar(5), @FirstRow) + ', FIELDTERMINATOR = '','', ROWTERMINATOR = ''\n'')'
 	
 	EXEC sp_executesql @BulkInsert;
-
+	return
 	INSERT into [dbo].[HostedImportLedger] ([Customer]
       ,[CustomerName]
       ,[TransactionDate]
@@ -94,7 +95,7 @@ if object_id (N'"HostedTempLedger"', N'U') is NULL
       ,[MatchedBy]
       ,[MatchedDateTime])
 	SELECT * from (
-		Select [Account Number_1] AS Customer,
+		Select Coalesce(fs.ParentID, [Account Number_1]) AS Customer,
 			   [Subscriber Name] as CustomrName,
 			   Convert(date,[Created Date]) as [TransactionDate],
 			   'Invoice' AS [Title],
@@ -110,7 +111,9 @@ if object_id (N'"HostedTempLedger"', N'U') is NULL
 				--Convert(date,Convert(varchar(2),Month(Convert(date, [Billing Charge To]))) + '/01/' + Convert(varchar(4), Year(Convert(date, [Billing Charge To])))) AS BillDate,
 				null MatchedBy,
 				null MatchedDateTime
-			FROM [dbo].HostedTempLedger
+			FROM [dbo].HostedTempLedger g
+			LEFT JOIN vw_FluentStreamParentAccounts fs on [dbo].[fnRemoveLeadingZeros](g.[Account Number_1]) = fs.AccountID
+
 		) ledger
 		--WHERE ledger.BillDate = @BillDate and Amount <> 0
 			
@@ -123,9 +126,12 @@ if object_id (N'"HostedTempLedger"', N'U') is NULL
 END
 
 
+
 GO
 
-/****** Object:  StoredProcedure [dbo].[ImportHostedMRCRetail]    Script Date: 5/21/2021 10:00:10 AM ******/
+
+
+/****** Object:  StoredProcedure [dbo].[ImportHostedMRCRetail]    Script Date: 5/25/2021 7:36:21 PM ******/
 DROP PROCEDURE [dbo].[ImportHostedMRCRetail]
 GO
 
@@ -136,8 +142,8 @@ GO
 -- Create date: 9/19/2015
 -- Description:	Import csv format mrc retail import to existing table
 -- =============================================
---exec [dbo].[ImportHostedMRCRetail] 'C:\Users\Larry\Documents\CCI\Saddleback\MRC Retail-20150901.csv', '20150901'
-CREATE PROCEDURE [dbo].[ImportHostedMRCRetail]	(@FilePath nvarchar (255),@BillDate varchar(10), @FirstRow int = 7)
+--exec [dbo].[ImportHostedMRCRetail] 'C:\Data\Saddleback Imports\2021\2021-05\Completed\MRC Retail-202105.csv', '5/1/2021'
+CREATE PROCEDURE [dbo].[ImportHostedMRCRetail]	(@FilePath nvarchar (255),@BillDate varchar(10), @FirstRow int = 3)
 	
 AS
 BEGIN
@@ -176,6 +182,7 @@ Cust Acct Nr	Service Name	Billing Acct Nr	Working Acct Nr	USOC	Title	Qty	Price	A
 		N''' WITH (FIRSTROW = ' + Convert(varchar(5), @FirstRow) + ', FIELDTERMINATOR = '','', ROWTERMINATOR = ''\n'')'
 	print @BulkInsert
 	EXEC sp_executesql @BulkInsert;
+	
     --if not exists (select top 1 [Bill Date]
     --             from HostedTempMRCRetail 
     --            where [Bill Date] <> @BillDate)
@@ -184,7 +191,7 @@ Cust Acct Nr	Service Name	Billing Acct Nr	Working Acct Nr	USOC	Title	Qty	Price	A
 			insert into [dbo].[HostedImportMRCRetail] (customernumber,CustomerName, MasterBTN, BTN, USOC, [Product Description], Qty, Price, Amount, ConnectionDate, BillDate)
 			 select * FROM (
 				Select 
-					[dbo].[fnRemoveLeadingZeros]([Cust Acct Nr]) as customernumber,
+					Coalesce(fs.ParentID, [dbo].[fnRemoveLeadingZeros](right([Cust Acct Nr],8))) as customernumber,
 					[Service Name] as CustomerName,
 					replace(replace(replace(replace([Billing Acct Nr],' ',''),'(',''),')',''),'-','') as MasterBTN,
 					replace(replace(replace(replace([Working Acct Nr],' ',''),'(',''),')',''),'-','') as BTN,
@@ -196,8 +203,10 @@ Cust Acct Nr	Service Name	Billing Acct Nr	Working Acct Nr	USOC	Title	Qty	Price	A
 					Convert(datetime, substring([Conn Date], 5,2) + '/' + substring([Conn Date], 7,2) + '/' + substring([Conn Date], 1, 4)) as ConnectionDate,
 					@BillDate as BillDate
 					--Convert(datetime, substring([Bill Date], 5,2) + '/' + substring([Bill Date], 7,2) + '/' + substring([Bill Date], 1, 4)) as BillDate
-			   from [dbo].[HostedTempMRCRetail]) mrc
-			--WHERE BillDate = @BillDate;
+			   from [dbo].[HostedTempMRCRetail] r
+			   LEFT JOIN vw_FluentStreamParentAccounts fs on [dbo].[fnRemoveLeadingZeros](right(r.[Cust Acct Nr],8)) = fs.AccountID
+			   ) mrc
+
 			   
 			delete from [dbo].[HostedTempMRCRetail];   
 
@@ -205,18 +214,23 @@ Cust Acct Nr	Service Name	Billing Acct Nr	Working Acct Nr	USOC	Title	Qty	Price	A
 END
 
 
+
+
+
 GO
 
-/****** Object:  StoredProcedure [dbo].[ImportHostedMRCWholesale]    Script Date: 5/21/2021 10:02:40 AM ******/
+
+/****** Object:  StoredProcedure [dbo].[ImportHostedMRCWholesale]    Script Date: 5/25/2021 7:38:50 PM ******/
 DROP PROCEDURE [dbo].[ImportHostedMRCWholesale]
 GO
+
  --=============================================
 -- Author:		Larry Axon
 -- Create date: 9/19/2015
 -- Description:	Import csv format mrc Wholesale import to existing table
 -- =============================================
---exec [dbo].[ImportHostedMRCWholesale] 'C:\Users\Larry\Documents\CCI\Saddleback\MRC WHLSL-20150901.csv', '20150901'
-CREATE PROCEDURE [dbo].[ImportHostedMRCWholesale]	(@FilePath nvarchar (255),@BillDate varchar(10), @FirstRow int = 7)
+--exec [dbo].[ImportHostedMRCWholesale] 'C:\Data\Saddleback Imports\2021\2021-05\Completed\MRC WHLSL-202105.csv', '5/1/2021'
+CREATE PROCEDURE [dbo].[ImportHostedMRCWholesale]	(@FilePath nvarchar (255),@BillDate varchar(10), @FirstRow int = 3)
 	
 AS
 BEGIN
@@ -254,7 +268,7 @@ Cust Acct Nr	Service Name	Billing Acct Nr	Working Acct Nr	USOC	Title	Qty	Price	A
 		N'BULK INSERT dbo.HostedTempMRCWholesale FROM ''' +
 		@ImportFileName +
 		N''' WITH (FIRSTROW = ' + convert(varchar(5), @FirstRow) + ', FIELDTERMINATOR = '','', ROWTERMINATOR = ''\n'')'
-	
+	print @BulkInsert
 	EXEC sp_executesql @BulkInsert;
 
 
@@ -262,7 +276,7 @@ Cust Acct Nr	Service Name	Billing Acct Nr	Working Acct Nr	USOC	Title	Qty	Price	A
 			insert into [dbo].[HostedImportMRCWholesale] (customernumber,CustomerName, MasterBTN, BTN, USOC, [Product Description], Qty, Price, Amount, ConnectionDate, BillDate)
 			 select * FROM (
 				SELECT
-					[dbo].[fnRemoveLeadingZeros]([Cust Acct Nr]) as customernumber,
+					Coalesce(fs.ParentID, [dbo].[fnRemoveLeadingZeros](right([Cust Acct Nr],8))) as customernumber,
 					[Service Name] as CustomerName,
 					replace(replace(replace(replace([Billing Acct Nr],' ',''),'(',''),')',''),'-','') as MasterBTN,
 					replace(replace(replace(replace([Working Acct Nr],' ',''),'(',''),')',''),'-','') as BTN,
@@ -274,7 +288,8 @@ Cust Acct Nr	Service Name	Billing Acct Nr	Working Acct Nr	USOC	Title	Qty	Price	A
 					Convert(datetime, substring([Conn Date], 5,2) + '/' + substring([Conn Date], 7,2) + '/' + substring([Conn Date], 1, 4)) as ConnectionDate,
 					@BilLDate as BilLDate
 					--Convert(datetime, substring([Bill Date], 5,2) + '/' + substring([Bill Date], 7,2) + '/' + substring([Bill Date], 1, 4)) as BillDate
-			   from [dbo].[HostedTempMRCWholesale]
+			   from [dbo].[HostedTempMRCWholesale] w
+			   LEFT JOIN vw_FluentStreamParentAccounts fs on [dbo].[fnRemoveLeadingZeros](right(w.[Cust Acct Nr],8)) = fs.AccountID
 			   ) mrc
 			   --WHERE mrc.BillDate = @BillDate
 			   
@@ -283,13 +298,14 @@ Cust Acct Nr	Service Name	Billing Acct Nr	Working Acct Nr	USOC	Title	Qty	Price	A
 
 END
 
+
+
 GO
 
 
-/****** Object:  StoredProcedure [dbo].[ImportHostedOCCRetail]    Script Date: 5/21/2021 10:08:01 AM ******/
+/****** Object:  StoredProcedure [dbo].[ImportHostedOCCRetail]    Script Date: 5/25/2021 7:39:42 PM ******/
 DROP PROCEDURE [dbo].[ImportHostedOCCRetail]
 GO
-
 
 
 -- =============================================
@@ -297,8 +313,8 @@ GO
 -- Create date: 9/19/2015
 -- Description:	Import csv format OCC retail import to existing table
 -- =============================================
---exec [dbo].[ImportHostedOCCRetail] 'C:\Users\Larry\Documents\CCI\Saddleback\OCC Retail-20150901.csv', '20150901'
-CREATE PROCEDURE [dbo].[ImportHostedOCCRetail]	(@FilePath nvarchar (255),@BillDate date, @FirstRow int = 5)
+--exec [dbo].[ImportHostedOCCRetail] 'C:\Data\Saddleback Imports\2021\2021-05\Completed\OCC Retail-202105.csv', '5/1/2021'
+CREATE PROCEDURE [dbo].[ImportHostedOCCRetail]	(@FilePath nvarchar (255),@BillDate date, @FirstRow int = 2)
 	
 AS
 BEGIN
@@ -332,7 +348,7 @@ Cust Acct Nr	Service Name	Billing Acct Nr	Working Acct Nr	USOC	Title	Qty	Price	A
 		N'BULK INSERT dbo.HostedTempOCCRetail FROM ''' +
 		@ImportFileName +
 		N''' WITH (FIRSTROW = ' + convert(varchar(5), @FirstRow) + ', FIELDTERMINATOR = '','', ROWTERMINATOR = ''\n'')'
-	
+	print @BulkInsert
 	EXEC sp_executesql @BulkInsert;
 
 			insert into [dbo].[HostedImportOCCRetail] ([Customer]
@@ -345,7 +361,7 @@ Cust Acct Nr	Service Name	Billing Acct Nr	Working Acct Nr	USOC	Title	Qty	Price	A
 			  ,[Service]
 			  ,[BillDate])
 			 select * FROM (
-				SELECT [dbo].[fnRemoveLeadingZeros]([Customer]) as Customer,
+				SELECT coalesce(fs.ParentID,[dbo].[fnRemoveLeadingZeros]([Customer])) as Customer,
 					replace(replace(replace(replace([MasterBTN],' ',''),'(',''),')',''),'-','') as MasterBTN,
 					replace(replace(replace(replace([BTN],' ',''),'(',''),')',''),'-','') as BTN,
 					[Date], 
@@ -355,7 +371,8 @@ Cust Acct Nr	Service Name	Billing Acct Nr	Working Acct Nr	USOC	Title	Qty	Price	A
 					Service,
 					@BillDate as BillDate
 					--Convert(date, substring(BillDate,5,2) + '/' + SUBSTRING(BillDate, 7,2) + '/' + SUBSTRING(BillDate, 1, 4)) BillDate
-			   from [dbo].[HostedTempOCCRetail]
+			   from [dbo].[HostedTempOCCRetail] r
+			   LEFT JOIN vw_FluentStreamParentAccounts fs on [dbo].[fnRemoveLeadingZeros](r.[Customer]) = fs.AccountID
 			   WHERE isnull(USOC, '') != '' -- filter out the FS/CCI interco charges
 			   ) occ
 			   --WHERE BillDate = @BillDate
@@ -366,9 +383,11 @@ Cust Acct Nr	Service Name	Billing Acct Nr	Working Acct Nr	USOC	Title	Qty	Price	A
 END
 
 
+
+
 GO
 
-/****** Object:  StoredProcedure [dbo].[ImportHostedOCCWholesale]    Script Date: 5/21/2021 10:11:39 AM ******/
+/****** Object:  StoredProcedure [dbo].[ImportHostedOCCWholesale]    Script Date: 5/25/2021 7:40:48 PM ******/
 DROP PROCEDURE [dbo].[ImportHostedOCCWholesale]
 GO
 
@@ -377,8 +396,8 @@ GO
 -- Create date: 9/19/2015
 -- Description:	Import csv format OCC Wholesale import to existing table
 -- =============================================
---exec [dbo].[ImportHostedOCCWholesale] 'C:\Users\Larry\Documents\CCI\Saddleback\OCC Wholesale-20150901.csv', '20150901'
-CREATE PROCEDURE [dbo].[ImportHostedOCCWholesale]	(@FilePath nvarchar (255),@BillDate date, @FirstRow int = 5)
+--exec [dbo].[ImportHostedOCCWholesale] 'C:\Data\Saddleback Imports\2021\2021-05\Completed\OCC WHLSL-202105.csv', '5/1/2021'
+CREATE PROCEDURE [dbo].[ImportHostedOCCWholesale]	(@FilePath nvarchar (255),@BillDate date, @FirstRow int = 2)
 	
 AS
 BEGIN
@@ -413,7 +432,8 @@ Cust Acct Nr	Service Name	Billing Acct Nr	Working Acct Nr	USOC	Title	Qty	Price	A
 		N'BULK INSERT dbo.HostedTempOCCWholesale FROM ''' +
 		@ImportFileName +
 		N''' WITH (FIRSTROW = ' + convert(varchar(5), @FirstRow) + ', FIELDTERMINATOR = '','', ROWTERMINATOR = ''\n'')'
-	
+	print @BulkInsert
+
 	EXEC sp_executesql @BulkInsert;
 	 
 
@@ -428,7 +448,7 @@ Cust Acct Nr	Service Name	Billing Acct Nr	Working Acct Nr	USOC	Title	Qty	Price	A
 			  ,[Service]
 			  ,[BillDate])
 			 select * from (
-				SELECT [dbo].[fnRemoveLeadingZeros]([Customer]) as Customer,
+				SELECT  coalesce(fs.ParentID,[dbo].[fnRemoveLeadingZeros]([Customer])) as Customer,
 					replace(replace(replace(replace([MasterBTN],' ',''),'(',''),')',''),'-','') as MasterBTN,
 					replace(replace(replace(replace([BTN],' ',''),'(',''),')',''),'-','') as BTN,
 					[Date], 
@@ -438,7 +458,9 @@ Cust Acct Nr	Service Name	Billing Acct Nr	Working Acct Nr	USOC	Title	Qty	Price	A
 					Service,
 					@BilLDate as BillDate
 					--Convert(date, substring(BillDate,5,2) + '/' + SUBSTRING(BillDate, 7,2) + '/' + SUBSTRING(BillDate, 1, 4)) BillDate			   
-					from [dbo].[HostedTempOCCWholesale]
+					from [dbo].[HostedTempOCCWholesale] w
+					LEFT JOIN vw_FluentStreamParentAccounts fs on [dbo].[fnRemoveLeadingZeros](w.[Customer]) = fs.AccountID
+
 			   WHERE isnull(USOC, '') != '' -- filter out the FS/CCI interco charges
 			   ) occ
 			   --WHERE occ.BillDate = @BillDate
@@ -452,9 +474,11 @@ END
 
 
 
+
+
 GO
 
-/****** Object:  StoredProcedure [dbo].[ImportHostedTollRetail]    Script Date: 5/21/2021 10:16:30 AM ******/
+/****** Object:  StoredProcedure [dbo].[ImportHostedTollRetail]    Script Date: 5/25/2021 7:41:51 PM ******/
 DROP PROCEDURE [dbo].[ImportHostedTollRetail]
 GO
 
@@ -463,6 +487,7 @@ GO
 -- Create date: <Create Date,,>
 -- Description:	<Description,,>
 -- =============================================
+--exec [dbo].[ImportHostedTollRetail]	'C:\Data\Saddleback Imports\2021\2021-05\Completed\Toll Retail-202105.csv', 2021, 5
 CREATE PROCEDURE [dbo].[ImportHostedTollRetail]	(@FilePath nvarchar (255),@BillingYear varchar(10),@BillingMonth varchar(10), @FirstRow int = 5)
 	
 AS
@@ -497,19 +522,22 @@ BEGIN
 		N'BULK INSERT dbo.HostedTempTollRetail FROM ''' +
 		@ImportFileName +
 		N''' WITH (FIRSTROW = ' + convert(varchar(5), @FirstRow) + ', FIELDTERMINATOR = '','', ROWTERMINATOR = ''\n'')'
-	
+	print @BulkInsert
 	EXEC sp_executesql @BulkInsert;
 
 	insert into hostedimporttollretail (customernumber,billingyear,billingmonth,btn,messagetype,fromnumber,calldate,duration,
 			tonumber,tocity,tostate,rate,charge)
 	select * FROM (
 		SELECT
-			customernumber,@billingyear as BillingYear,@billingmonth as BillingMonth,
+			Coalesce(fs.parentid, customernumber) as customernumber,
+			@billingyear as BillingYear,@billingmonth as BillingMonth,
 			replace(replace(replace(replace(btn,' ',''),'(',''),')',''),'-','') as btn,
 			messagetype,replace(replace(replace(replace(fromnumber,' ',''),'(',''),')',''),'-','') as fromnumber,calldate,
 			duration,replace(replace(replace(replace(tonumber,' ',''),'(',''),')',''),'-','') as tonumber,tocity,tostate,
 			rate,charge
-		from HostedTempTollRetail
+		from HostedTempTollRetail r
+		LEFT JOIN vw_FluentStreamParentAccounts fs on [dbo].[fnRemoveLeadingZeros](r.customernumber) = fs.AccountID
+
 		) toll
 	--WHERE toll.BillingMonth = @BillingMonth and toll.BillingYear = @BillingYear
 			   
@@ -519,11 +547,14 @@ BEGIN
 END
 
 
+
+
 GO
 
-/****** Object:  StoredProcedure [dbo].[ImportHostedTollWholesale]    Script Date: 5/21/2021 10:19:49 AM ******/
+/****** Object:  StoredProcedure [dbo].[ImportHostedTollWholesale]    Script Date: 5/25/2021 7:42:45 PM ******/
 DROP PROCEDURE [dbo].[ImportHostedTollWholesale]
 GO
+
 
 --=========================================
 -- Author:		<Author,,Name>
@@ -531,6 +562,7 @@ GO
 -- Description:	<Description,,>
 -- =============================================
 -- DROP TABLE [dbo].[HostedTempTollWholesale]
+--exec [dbo].[ImportHostedTollWholesale] 'C:\Data\Saddleback Imports\2021\2021-05\Completed\Toll WHLSL-202105.csv', 2021, 5
 CREATE PROCEDURE [dbo].[ImportHostedTollWholesale] (@FileName nvarchar (255),@BillingYear varchar (10),@BillingMonth varchar (10), @FirstRow int = 2)
 AS
 BEGIN
@@ -570,7 +602,7 @@ BEGIN
 		N'BULK INSERT dbo.HostedTempTollWholesale FROM ''' +
 		@ImportFileName +
 		N''' WITH (FIRSTROW = ' + convert(varchar(5), @FirstRow) + ', FIELDTERMINATOR = '','', ROWTERMINATOR = ''\n'')'
-	
+	print @BulkInsert
 	EXEC sp_executesql @BulkInsert;
 
   	insert into hostedimporttollwholesale (billingmonth,billingyear,btn,callnumber,charge,customernumber,calldate,duration,
@@ -578,10 +610,13 @@ BEGIN
 			usageaccountcode)
 	select * FROM (
 		SELECT @BillingMOnth as billingmonth,@BillingYear as billingyear,replace(replace(replace(replace(btn,' ',''),'(',''),')',''),'-','') as btn,callnumber,charge,
-				customernumber,calldate,duration,replace(replace(replace(replace(fromnumber,' ',''),'(',''),')',''),'-','') as fromnumber,
+				coalesce(fs.ParentID, customernumber) as customernumber,
+				calldate,duration,replace(replace(replace(replace(fromnumber,' ',''),'(',''),')',''),'-','') as fromnumber,
 				fromstate,carrierid,messagetype,ocpid,rate,rateclass,settlementcode,tocity,toreference,
 				replace(replace(replace(replace(tonumber,' ',''),'(',''),')',''),'-','') as tonumber,tostate,usageaccountcode
-		from HostedTempTollWholesale
+		from HostedTempTollWholesale tw
+		LEFT JOIN vw_FluentStreamParentAccounts fs on [dbo].[fnRemoveLeadingZeros](tw.customernumber) = fs.AccountID
+
 		) toll
 	--WHERE toll.BillingMonth = @BillingMonth and toll.BillingYear = @BillingYear;
 
@@ -592,25 +627,15 @@ END
 
 
 
+
+
 GO
 
 
 
-
-USE [CityHostedTest]
-GO
-
-/****** Object:  StoredProcedure [dbo].[ImportHostedTax]    Script Date: 5/22/2021 4:25:05 PM ******/
+/****** Object:  StoredProcedure [dbo].[ImportHostedTax]    Script Date: 5/25/2021 7:43:22 PM ******/
 DROP PROCEDURE [dbo].[ImportHostedTax]
 GO
-
-/****** Object:  StoredProcedure [dbo].[ImportHostedTax]    Script Date: 5/22/2021 4:25:05 PM ******/
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
 
 -- =============================================
 -- Author:		Larry Axon
@@ -618,7 +643,8 @@ GO
 -- Description:	Import csv format mrc retail import to existing table
 -- =============================================
 --exec [dbo].[ImportHostedTax] 'C:\Data\Saddleback Imports\2021\2021-05\Completed\Tax-202105.csv', '5/1/2021'
-CREATE PROCEDURE [dbo].[ImportHostedTax]	(@FilePath nvarchar (255),@BillDate datetime, @FirstRow int = 2)
+-- select * from [HostedImportTaxes] where BillDate = '5/1/2021'
+CREATE PROCEDURE [dbo].[ImportHostedTax]	(@FilePath nvarchar (255),@BillDate datetime, @FirstRow int = 2, @UseFormatFile bit = 0)
 	
 AS
 BEGIN
@@ -672,8 +698,12 @@ Create Table HostedTempTax (
 	Set @BulkInsert =
 		N'BULK INSERT dbo.HostedTempTax FROM ''' +
 		@ImportFileName +
-		N''' WITH (FORMATFILE=''C:\Data\FluentStreamTaxFormatFile.xml'', FIRSTROW = ' + Convert(varchar(5), @FirstRow) + ', FIELDTERMINATOR = '','', ROWTERMINATOR = ''\n'')'
+		N''' WITH (';
+	if @UseFormatFile = 1		
+		Set @BulkInsert = @BulkInsert + N'FORMATFILE=''C:\Data\FluentStreamTaxFormatFile.xml'', '
+	Set @BulkInsert = @BulkInsert + N'FIRSTROW = ' + Convert(varchar(5), @FirstRow) + ', FIELDTERMINATOR = '','', ROWTERMINATOR = ''\n'')'
 	
+	print @BulkInsert
 	EXEC sp_executesql @BulkInsert;
 
 
@@ -687,11 +717,10 @@ Create Table HostedTempTax (
       ,[TaxType]
       ,[Title]
       ,[TaxAmount]
-      ,[BillDate]
-      ,[Sign])
+      ,[BillDate])
 			 select * FROM
 				(Select 
-					Account_Number as [Customer],
+					Coalesce(fs.ParentID, Account_Number) as [Customer],
 					'' as MasterBTN,
 					'' as Level,
 					'' AS [LevelType],
@@ -700,11 +729,11 @@ Create Table HostedTempTax (
 					Tax_Type as TaxType,
 					ProductName as Title,
 					Tot_Tax as Amount,
-					case when isdate(Charge_From) = 1 then Convert(date,Charge_From) else null end as ConnectionDate ,
 					@BilLDate as BillDate
-					--case when isdate(Charge_From) = 1 then Convert(date,Charge_From) else null end as BillDate
-			   from [dbo].HostedTempTax
-			   WHERE case when isdate(Charge_From) = 1 then Convert(date,Charge_From) else '1/1/1900' end between @BillDate and dateadd(month, 1, @BillDate)
+			   from [dbo].HostedTempTax tx
+			LEFT JOIN vw_FluentStreamParentAccounts fs on [dbo].[fnRemoveLeadingZeros](tx.Account_Number) = fs.AccountID
+
+			   --WHERE case when isdate(Charge_From) = 1 then Convert(date,Charge_From) else '1/1/1900' end between @BillDate and dateadd(month, 1, @BillDate)
 			   ) tax
 			--WHERE tax.BillDate = @BillDate
 			   
@@ -716,7 +745,14 @@ END
 
 
 
+
+
+
 GO
+
+
+
+
 
 
 /****** Object:  StoredProcedure [dbo].[ProcessMRCDetails]    Script Date: 5/24/2021 12:32:25 PM ******/
