@@ -13,8 +13,8 @@ namespace CCI.Sys.Data
 {
   public partial class DataSource
   {
-    private DateTime _fluentStreamStartDate = new DateTime(2021, 5, 1);
-    private DateTime _fluentStreamEndDate = new DateTime(2100, 12, 31);
+
+    
 
     public EntityAlternateID getEntityAlternateIDFromExternalID(string externalID, DateTime? startDate)
     {
@@ -22,7 +22,7 @@ namespace CCI.Sys.Data
         return null;
       string sql = string.Format(@"Select * from EntityAlternateIDs WHERE ExternalID = '{0}' ", externalID);
       if (startDate != null)
-        sql += string.Format(" and StartDate = '{1}';", ((DateTime)startDate).Date.ToShortDateString());
+        sql += string.Format(" and '{0}' between StartDate and EndDate;", ((DateTime)startDate).Date.ToShortDateString());
       DataSet ds = getDataFromSQL(sql);
       if (ds == null || ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0)
         return null;
@@ -57,21 +57,38 @@ namespace CCI.Sys.Data
       };
       return record;
     }
-    public void saveEntityAlternateID(string entity, string externalID, string serviceName = "FluentStream", DateTime? startDate = null, DateTime? endDate = null)
+    public void saveEntityAlternateID(string entity, string externalID )
     {
-      DateTime dtStart;
-      if (startDate == null)
-        dtStart = _fluentStreamStartDate;
+      string serviceName = "FluentStream";
+      DateTime dtStart  =  new DateTime(2021, 5, 1);
+
+      DateTime dtEnd = new DateTime(2100, 12, 31); ;
+
+      string lookupsql = string.Format("SELECT * FROM EntityAlternateIDs where Entity = '{0}' and ExternalID = '{1}'", entity, externalID);
+      DataSet ds = getDataFromSQL(lookupsql);
+      string sql;
+      if (ds.Tables.Count == 1 && ds.Tables[0].Rows.Count == 1)
+      {
+        ; // do nothing .. its already there
+      }
       else
-        dtStart = (DateTime)startDate;
-      DateTime dtEnd;
-      if (endDate == null)
-        dtEnd = _fluentStreamEndDate;
-      else
-        dtEnd = (DateTime)endDate;
-      string sql = string.Format("INSERT INTO EntityAlternateIDs (Entity, StartDate, EndDate, ExternalServiceName, ExternalID) VALUES ('{0}','{1}', '{2}','{3}','{4}' ",
-        entity, dtStart.ToShortDateString(), dtEnd.ToShortDateString(), serviceName, externalID);
-      updateDataFromSQL(sql);
+      {
+        // try just the entity to see if there is a different one out there
+        lookupsql = string.Format("SELECT * from EntityAlternateIDs where Entity = '{0}' and StartDate = '{1}';", entity, dtStart.ToShortDateString());
+        ds = getDataFromSQL(lookupsql);
+        if (ds.Tables.Count == 0 || ds.Tables[0].Rows.Count == 0) // still no record found
+        {
+          // create a new record
+          sql = string.Format("INSERT INTO EntityAlternateIDs (Entity, StartDate, EndDate, ExternalServiceName, ExternalID) VALUES ('{0}','{1}', '{2}','{3}','{4}') ",
+            entity, dtStart.ToShortDateString(), dtEnd.ToShortDateString(), serviceName, externalID);
+          updateDataFromSQL(sql);
+        }
+        else
+        {
+            sql = string.Format("UPDATE EntityAlternateIDs SET ExternalID = '{0}' WHERE StartDate = '{1}' and  Entity = '{2}'", externalID, dtStart.ToShortDateString(), entity);
+            updateDataFromSQL(sql);
+        }
+      }
     }
   }
 }

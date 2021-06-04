@@ -55,11 +55,11 @@ namespace CCI.DesktopClient.Screens
         textOldAltID.Validating += new CancelEventHandler(textOldAltID_Validating);
 
         Label labelAltID = new Label();
-        labelAltID.Name = "lblOldAlternateID";
-        labelAltID.Text = "Saddleback Customer ID";
+        labelAltID.Name = "lblAlternateID";
+        labelAltID.Text = "New Customer ID";
         TextBox textAltID = new TextBox();
-        textAltID.Name = "txtOldAlternateID";
-        textAltID.Validating += new CancelEventHandler(textOldAltID_Validating);
+        textAltID.Name = "txtAlternateID";
+        textAltID.Validating += new CancelEventHandler(textAltID_Validating);
 
         Label labelPaymentType = new Label();
         labelPaymentType.Name = "lblPaymentType";
@@ -92,6 +92,10 @@ namespace CCI.DesktopClient.Screens
         srchAgent.DisplayOnlyID = false;
         srchAgent.MustExistInList = false;
 
+
+        cust.Controls.Add(labelAltID);
+        cust.Controls.Add(textAltID);
+
         cust.Controls.Add(labelOldAltID);
         cust.Controls.Add(textOldAltID);
 
@@ -104,8 +108,10 @@ namespace CCI.DesktopClient.Screens
         cust.Controls.Add(labelAgent);
         cust.Controls.Add(srchAgent);
 
+
         setPosition(null, labelOldAltID, textOldAltID);
-        setPosition(labelOldAltID, labelPaymentType, comboPaymentType);
+        setPosition(labelOldAltID, labelAltID, textAltID);
+        setPosition(labelAltID, labelPaymentType, comboPaymentType);
         setPosition(labelPaymentType, labelDay2, textDay2);
         setPosition(labelDay2, labelAgent, srchAgent, 3);
 /*
@@ -165,7 +171,8 @@ namespace CCI.DesktopClient.Screens
       {
         cust = tabMain.TabPages[custTabName];
         cust.Controls["txtAlternateID"].Text = CommonFunctions.CString(_eac.Entities[entity].Fields["AlternateID"].Value);
-        cust.Controls["txtOldAlternateID"].Text = CommonFunctions.CString(_eac.Entities[entity].Fields["OldAlternateID"].Value);
+        cust.Controls["txtOldAlternateID"].Text = CommonFunctions.CString(_eac.Entities[entity].ItemTypes["Entity"].Items["Customer"].Attributes["OldAlternateID"].Value);
+
 
         cust.Controls["txtPaymentType"].Text = CommonFunctions.CString(_eac.getValue(entity + ".Entity.Customer.PaymentType"));
         string agentID = _dataSource.getAgentForCustomer(entity);
@@ -198,6 +205,8 @@ namespace CCI.DesktopClient.Screens
         else
           CCI.DesktopClient.Common.CommonFormFunctions.showMessage("Agent " + agent + " does not exist. Agent for this Customer has not been changed.");
       }
+      string altID = tabMain.TabPages[custTabName].Controls["txtAlternateID"].Text;
+      _dataSource.saveEntityAlternateID(_entity, altID);
       base.Save();
     }
     private void setPosition(Label lastLabel, Label thisLabel, Control thisControl, int widthmultiplier = 1)
@@ -236,7 +245,7 @@ namespace CCI.DesktopClient.Screens
       // I think the Entity.AlternateID is automatically updated by the screen framework
       // SO now we check if this ID exists in EntityAlternateIDs
       EntityAlternateID entityRecord = _dataSource.getEntityAlternateIDFromEntity(_entity, DateTime.Now);
-      EntityAlternateID altRecord = _dataSource.getEntityAlternateIDFromExternalID(altID, DateTime.Now);
+      EntityAlternateID altRecord = _dataSource.getEntityAlternateIDFromExternalID(altID,null);
       if (entityRecord == null) // there is NO EntityAlternateID record for this alt id or entity
       {
         if (altRecord == null)// there is NO EntityAlternateID record for this alt id or entity
@@ -258,17 +267,24 @@ namespace CCI.DesktopClient.Screens
         }
         else
         {
-          if (!altRecord.Entity.Equals(_entity)) // alt d is taken
+          if (altRecord == null)
           {
-            // in this case, the alt id is taken by someone else
-            msg = "That Fluentstream ID is already taken";
-            e.Cancel = true;
-            ((TextBox)sender).Undo();
-            MessageBox.Show(msg);
+            ; // do nothing
           }
           else
           {
-            ;// in theory. this is the same case as do nothing above so we alsod do nothing
+            if (!altRecord.Entity.Equals(_entity)) // alt d is taken
+            {
+              // in this case, the alt id is taken by someone else
+              msg = "That Fluentstream ID is already taken";
+              e.Cancel = true;
+              ((TextBox)sender).Undo();
+              MessageBox.Show(msg);
+            }
+            else
+            {
+              ;// in theory. this is the same case as do nothing above so we alsod do nothing
+            }
           }
         }
       }

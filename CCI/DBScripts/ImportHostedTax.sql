@@ -1,10 +1,11 @@
+USE [CityHostedProd]
+GO
 
-
-/****** Object:  StoredProcedure [dbo].[ImportHostedTax]    Script Date: 5/18/2021 4:01:52 PM ******/
+/****** Object:  StoredProcedure [dbo].[ImportHostedTax]    Script Date: 6/4/2021 12:18:32 PM ******/
 DROP PROCEDURE [dbo].[ImportHostedTax]
 GO
 
-/****** Object:  StoredProcedure [dbo].[ImportHostedTax]    Script Date: 5/18/2021 4:01:52 PM ******/
+/****** Object:  StoredProcedure [dbo].[ImportHostedTax]    Script Date: 6/4/2021 12:18:32 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -13,13 +14,20 @@ GO
 
 
 
+
+
+
+
+
 -- =============================================
 -- Author:		Larry Axon
--- Create date: 9/19/2015
+-- Create date: 6-45-2021
 -- Description:	Import csv format mrc retail import to existing table
+-- Modified 6/2021 by LLA for new tax file format
 -- =============================================
---exec [dbo].[ImportHostedTax] 'C:\Data\Saddleback Imports\2021\2021-05\Completed\Tax-202105.csv', '202105'
-CREATE PROCEDURE [dbo].[ImportHostedTax]	(@FilePath nvarchar (255),@BillDate varchar(10), @FirstRow int = 2)
+--exec [dbo].[ImportHostedTax] 'C:\Data\Saddleback Imports\2021\2021-06\Completed\Tax-202106.csv', '6/1/2021'
+-- select * from [HostedImportTaxes] where BillDate = '6/1/2021'
+CREATE PROCEDURE [dbo].[ImportHostedTax]	(@FilePath nvarchar (255),@BillDate datetime, @FirstRow int = 2, @UseFormatFile bit = 0)
 	
 AS
 BEGIN
@@ -30,39 +38,19 @@ Transaction_id	uomID	Tax_Type_Code	Tax_Type	State	County	City	Zip	Sales_Type	Net
 --DROP TABLE HostedTempTax
 --Truncate Table HostedTempTax
 if object_id (N'"HostedTempTax"', N'U') is NULL
-Create Table HostedTempTax (
-	Transaction_id	nvarchar(50) NULL,
-	uomID	nvarchar(50) NULL,
-	Tax_Type_Code	nvarchar(50) NULL,
-	Tax_Type	nvarchar(1024) NULL,
-	[State]	nvarchar(50) NULL,
-	County	nvarchar(256) NULL,
-	City	nvarchar(50) NULL,
-	Zip	nvarchar(50) NULL,
-	Sales_Type	nvarchar(50) NULL,
-	Net_Amount	nvarchar(50) NULL,
-	Tot_Tax	nvarchar(50) NULL,
-	Gross_Amount	nvarchar(50) NULL,
-	Account_Number	nvarchar(50) NULL,
-	Invoice_Number	nvarchar(50) NULL,
-	Bill_Number	nvarchar(50) NULL,
-	DocCode	nvarchar(50) NULL,
-	CREATED_DATE	nvarchar(128) NULL,
-	TotalGrossRevenue	nvarchar(50) NULL,
-	TotalTax	nvarchar(50) NULL,
-	TotalRevenue	nvarchar(50) NULL,
-	BundleName	nvarchar(50) NULL,
-	ProductName	nvarchar(256) NULL,
-	External_Id	nvarchar(50) NULL,
-	Country	nvarchar(256) NULL,
-	Plan_Name	nvarchar(256) NULL,
-	Identifier	nvarchar(50) NULL,
-	Charge_From	nvarchar(256) NULL,
-	Charge_To	nvarchar(256)  NULL,
-	Bill_Start_Date nvarchar(50) NULL,
-	Bill_End_Date	nvarchar(256) NULL)
-	ON [PRIMARY];
-	
+CREATE TABLE [dbo].[HostedTempTax](
+	[Account_Number] [varchar](50) NULL,
+	[Invoice_Number] [varchar](50) NULL,
+	[Tax_Type_Code] [varchar](50) NULL,
+	[State] [varchar](50) NULL,
+	[County] [varchar](50) NULL,
+	[City] [varchar](50) NULL,
+	[Zip] [varchar](50) NULL,
+	[Tax_Type] [varchar](256) NULL,
+	[Tot_Tax_Unrounded] [varchar](50) NULL,
+	[Tot_Tax_Rounded] [varchar](50) NULL,
+	[Gross_Amount] [varchar](50) NULL
+) ON [PRIMARY]
 
 	delete from [dbo].HostedTempTax;
 
@@ -73,16 +61,17 @@ Create Table HostedTempTax (
 	Set @BulkInsert =
 		N'BULK INSERT dbo.HostedTempTax FROM ''' +
 		@ImportFileName +
-		N''' WITH (FORMATFILE=''C:\Data\FluentStreamTaxFormatFile.xml'', FIRSTROW = ' + Convert(varchar(5), @FirstRow) + ', FIELDTERMINATOR = '','', ROWTERMINATOR = ''\n'')'
+		N''' WITH (';
+	if @UseFormatFile = 1		
+		Set @BulkInsert = @BulkInsert + N'FORMATFILE=''C:\Data\FluentStreamTaxFormatFile.xml'', '
+	Set @BulkInsert = @BulkInsert + N'FIRSTROW = ' + Convert(varchar(5), @FirstRow) + ', FIELDTERMINATOR = '','', ROWTERMINATOR = ''\n'')'
 	
+	print @BulkInsert
 	EXEC sp_executesql @BulkInsert;
 
-    if not exists (select top 1 [Charge_From]
-                 from HostedTempTax 
-                where [Charge_From] not between @BillDate and DateAdd(month, 1, @BilLDate))
-       begin
-            print 'Good Date'
-			insert into [dbo].[HostedImportTaxes] ([Customer]
+
+
+	insert into [dbo].[HostedImportTaxes] ([Customer]
       ,[MasterBTN]
       ,[Level]
       ,[LevelType]
@@ -91,30 +80,38 @@ Create Table HostedTempTax (
       ,[TaxType]
       ,[Title]
       ,[TaxAmount]
-      ,[BillDate]
-      ,[Sign])
-			 select 
-					Account_Number as [Customer],
+      ,[BillDate])
+			 select * FROM
+				(Select 
+					Coalesce(fs.ParentID, Account_Number) as [Customer],
 					'' as MasterBTN,
 					'' as Level,
 					'' AS [LevelType],
 					'' as [Jurisdiction],
 					0 as [Rate],
 					Tax_Type as TaxType,
-					ProductName as Title,
-					Tot_Tax as Amount,
-					Charge_From as ConnectionDate,
-					Charge_From as BillDate
-			   from [dbo].HostedTempTax;
+					'' as Title,
+					Convert(decimal(10,5), [Tot_Tax_Unrounded]) as Amount,
+					@BilLDate as BillDate
+			   from [dbo].HostedTempTax tx
+			LEFT JOIN vw_FluentStreamParentAccounts fs on [dbo].[fnRemoveLeadingZeros](tx.Account_Number) = fs.AccountID
+
+			   --WHERE case when isdate(Charge_From) = 1 then Convert(date,Charge_From) else '1/1/1900' end between @BillDate and dateadd(month, 1, @BillDate)
+			   ) tax
+			--WHERE tax.BillDate = @BillDate
 			   
-			delete from [dbo].HostedTempTax;   
-       end
-    else
-       begin
-            print 'Bad Date'
-       end
+	delete from [dbo].HostedTempTax;   
+
 
 
 END
+
+
+
+
+
+
+
 GO
+
 
