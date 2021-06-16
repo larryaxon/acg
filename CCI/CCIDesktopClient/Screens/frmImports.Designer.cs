@@ -33,7 +33,7 @@ namespace CCI.DesktopClient.Screens
       this.label15 = new System.Windows.Forms.Label();
       this.lblTaxesMsg = new System.Windows.Forms.Label();
       this.label2 = new System.Windows.Forms.Label();
-      this.txtFileName7 = new System.Windows.Forms.TextBox();
+      this.txtFileName9 = new System.Windows.Forms.TextBox();
       this.panel3 = new System.Windows.Forms.Panel();
       this.label3 = new System.Windows.Forms.Label();
       this.lblCallRetailMsg = new System.Windows.Forms.Label();
@@ -76,7 +76,7 @@ namespace CCI.DesktopClient.Screens
       this.label13 = new System.Windows.Forms.Label();
       this.lblLedgerMsg = new System.Windows.Forms.Label();
       this.label16 = new System.Windows.Forms.Label();
-      this.txtFileName8 = new System.Windows.Forms.TextBox();
+      this.txtFileName7 = new System.Windows.Forms.TextBox();
       this.btnUndoImport = new System.Windows.Forms.Button();
       this.txtErrorMessage = new System.Windows.Forms.TextBox();
       this.lblUndoPostMsg = new System.Windows.Forms.Label();
@@ -102,11 +102,12 @@ namespace CCI.DesktopClient.Screens
       this.panel4.Controls.Add(this.label15);
       this.panel4.Controls.Add(this.lblTaxesMsg);
       this.panel4.Controls.Add(this.label2);
-      this.panel4.Controls.Add(this.txtFileName7);
+      this.panel4.Controls.Add(this.txtFileName9);
       this.panel4.Location = new System.Drawing.Point(22, 327);
       this.panel4.Name = "panel4";
       this.panel4.Size = new System.Drawing.Size(680, 57);
       this.panel4.TabIndex = 31;
+      this.panel4.Visible = false;
       // 
       // label15
       // 
@@ -134,14 +135,14 @@ namespace CCI.DesktopClient.Screens
       this.label2.TabIndex = 26;
       this.label2.Text = "Taxes:";
       // 
-      // txtFileName7
+      // txtFileName9
       // 
-      this.txtFileName7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+      this.txtFileName9.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.txtFileName7.Location = new System.Drawing.Point(148, 20);
-      this.txtFileName7.Name = "txtFileName7";
-      this.txtFileName7.Size = new System.Drawing.Size(414, 20);
-      this.txtFileName7.TabIndex = 25;
+      this.txtFileName9.Location = new System.Drawing.Point(148, 20);
+      this.txtFileName9.Name = "txtFileName9";
+      this.txtFileName9.Size = new System.Drawing.Size(414, 20);
+      this.txtFileName9.TabIndex = 25;
       // 
       // panel3
       // 
@@ -535,7 +536,7 @@ namespace CCI.DesktopClient.Screens
       this.panel5.Controls.Add(this.label13);
       this.panel5.Controls.Add(this.lblLedgerMsg);
       this.panel5.Controls.Add(this.label16);
-      this.panel5.Controls.Add(this.txtFileName8);
+      this.panel5.Controls.Add(this.txtFileName7);
       this.panel5.Location = new System.Drawing.Point(22, 387);
       this.panel5.Name = "panel5";
       this.panel5.Size = new System.Drawing.Size(680, 76);
@@ -592,14 +593,14 @@ namespace CCI.DesktopClient.Screens
       this.label16.TabIndex = 26;
       this.label16.Text = "Ledger:";
       // 
-      // txtFileName8
+      // txtFileName7
       // 
-      this.txtFileName8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+      this.txtFileName7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.txtFileName8.Location = new System.Drawing.Point(148, 20);
-      this.txtFileName8.Name = "txtFileName8";
-      this.txtFileName8.Size = new System.Drawing.Size(414, 20);
-      this.txtFileName8.TabIndex = 25;
+      this.txtFileName7.Location = new System.Drawing.Point(148, 20);
+      this.txtFileName7.Name = "txtFileName7";
+      this.txtFileName7.Size = new System.Drawing.Size(414, 20);
+      this.txtFileName7.TabIndex = 25;
       // 
       // btnUndoImport
       // 
@@ -714,7 +715,7 @@ namespace CCI.DesktopClient.Screens
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Label lblTaxesMsg;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox txtFileName7;
+        private System.Windows.Forms.TextBox txtFileName9;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label lblOCCRetailMsg;
         private System.Windows.Forms.Button btnPostDetails;
@@ -733,7 +734,7 @@ namespace CCI.DesktopClient.Screens
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label lblLedgerMsg;
         private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.TextBox txtFileName8;
+        private System.Windows.Forms.TextBox txtFileName7;
         private System.Windows.Forms.DateTimePicker txtBillDate;
         private System.Windows.Forms.CheckBox ckRequireLedger;
         private System.Windows.Forms.TextBox txtBasePath;

@@ -531,40 +531,40 @@ namespace CCI.DesktopClient.Screens
         }
         #endregion
         #region Tax
-        if (!_importLedgerOnly && !this.txtFileName7.Text.StartsWith(FILENOTFOUNDPREFIX))
-        {
-          Cursor.Current = Cursors.WaitCursor;
-          string filetype = "Tax Detail";
-          DateTime billdate = txtBillDate.Value;
-          if (ValidImport(billdate, filetype) == false)
-          {
-            // if there is not a stored procedure for this file, then use the special spreadsheet logic. 
-            // note this will need to change if we get another source that needs spreadsheet input but is not Saddleback
-            if (_importSources[_importSource].FileTypes.Where(t => t.FileType == ImportFileTypes.Tax).FirstOrDefault().StoredProcedure.Equals("Spreadsheet", StringComparison.CurrentCultureIgnoreCase))
-            {
-              openSpreadsheet(this.txtFileName7.Text);
-              this.lblTaxesMsg.Text = "Importing...";
-              importTaxes(txtBillDate.Value);
-              closeExcel();
-            }
-            else
-              importfile(ImportFileTypes.Tax, billdate); // just process normally using the stored procedure
-            string user = SecurityContext.User;
-            _dataSource.insertAcctImportLog(user, filetype, this.txtFileName7.Text, billdate, Source);
-            RefreshImportLog();
-            string step = "Tax Detail";
-            _dataSource.insertHostedProcessStep(user, step, billdate, filetype, this.txtFileName7.Text);
-            this.lblTaxesMsg.Text = "Completed...";
-            Cursor.Current = Cursors.Default;
-          }
-          else
-          {
-            this.lblTaxesMsg.Text = "Already Imported.";
-          }
-        }
+        //if (!_importLedgerOnly && !this.txtFileName7.Text.StartsWith(FILENOTFOUNDPREFIX))
+        //{
+        //  Cursor.Current = Cursors.WaitCursor;
+        //  string filetype = "Tax Detail";
+        //  DateTime billdate = txtBillDate.Value;
+        //  if (ValidImport(billdate, filetype) == false)
+        //  {
+        //    // if there is not a stored procedure for this file, then use the special spreadsheet logic. 
+        //    // note this will need to change if we get another source that needs spreadsheet input but is not Saddleback
+        //    if (_importSources[_importSource].FileTypes.Where(t => t.FileType == ImportFileTypes.Tax).FirstOrDefault().StoredProcedure.Equals("Spreadsheet", StringComparison.CurrentCultureIgnoreCase))
+        //    {
+        //      openSpreadsheet(this.txtFileName7.Text);
+        //      this.lblTaxesMsg.Text = "Importing...";
+        //      importTaxes(txtBillDate.Value);
+        //      closeExcel();
+        //    }
+        //    else
+        //      importfile(ImportFileTypes.Tax, billdate); // just process normally using the stored procedure
+        //    string user = SecurityContext.User;
+        //    _dataSource.insertAcctImportLog(user, filetype, this.txtFileName7.Text, billdate, Source);
+        //    RefreshImportLog();
+        //    string step = "Tax Detail";
+        //    _dataSource.insertHostedProcessStep(user, step, billdate, filetype, this.txtFileName7.Text);
+        //    this.lblTaxesMsg.Text = "Completed...";
+        //    Cursor.Current = Cursors.Default;
+        //  }
+        //  else
+        //  {
+        //    this.lblTaxesMsg.Text = "Already Imported.";
+        //  }
+        //}
         #endregion
         #region Ledger
-        if (ckRequireLedger.Checked && !this.txtFileName8.Text.StartsWith(FILENOTFOUNDPREFIX))
+        if (ckRequireLedger.Checked && !this.txtFileName7.Text.StartsWith(FILENOTFOUNDPREFIX))
         {
           Cursor.Current = Cursors.WaitCursor;
           string filetype = "Customer Ledger";
@@ -573,7 +573,7 @@ namespace CCI.DesktopClient.Screens
           {
             if (_importSources[_importSource].FileTypes.Where(t => t.FileType == ImportFileTypes.Ledger).FirstOrDefault().StoredProcedure.Equals("Spreadsheet", StringComparison.CurrentCultureIgnoreCase))
             {
-              openSpreadsheet(this.txtFileName8.Text);
+              openSpreadsheet(this.txtFileName7.Text);
               this.lblLedgerMsg.Text = "Importing...";
               importLedger(txtBillDate.Value);
               closeExcel();
@@ -581,10 +581,10 @@ namespace CCI.DesktopClient.Screens
             else
               importfile(ImportFileTypes.Ledger, billdate);
             string user = SecurityContext.User;
-            _dataSource.insertAcctImportLog(user, filetype, this.txtFileName8.Text, billdate, Source);
+            _dataSource.insertAcctImportLog(user, filetype, this.txtFileName7.Text, billdate, Source);
             RefreshImportLog();
             string step = "Customer Ledger";
-            _dataSource.insertHostedProcessStep(user, step, billdate, filetype, this.txtFileName8.Text);
+            _dataSource.insertHostedProcessStep(user, step, billdate, filetype, this.txtFileName7.Text);
             this.lblLedgerMsg.Text = "Completed...";
             Cursor.Current = Cursors.Default;
           }
@@ -710,7 +710,7 @@ No if you have not and wish to be safe, and Cancel if you want to ignore and con
             this.txtErrorMessage.Text = returnmsg.Message;
           }
         }
-        returnmsg = _dataSource.insertAcctImportLog(user, filetype, this.txtFileName7.Text, billdate, Source);
+        returnmsg = _dataSource.insertAcctImportLog(user, filetype, this.txtFileName9.Text, billdate, Source);
         if (returnmsg == null)
         {
           this.lblPostedMsg.Text = "Posted...";
