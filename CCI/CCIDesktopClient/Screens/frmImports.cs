@@ -70,7 +70,7 @@ namespace CCI.DesktopClient.Screens
       public string StoredProcedure { get; set; }
       public int skiplines { get; set; }
     }
-    private enum ImportFileTypes { MRCWholesale, MRCRetail, OCCWholesale, OCCRetail, TollWholesale, TollRetail, Tax, Ledger };
+    private enum ImportFileTypes { MRCWholesale, MRCRetail, OCCWholesale, OCCRetail, TollWholesale, TollRetail, Ledger, Tax };
     private Dictionary<ImportSource, ImportSourceConfiguration> _importSources = new Dictionary<ImportSource, ImportSourceConfiguration>();
     private const string FILENOTFOUNDPREFIX = "NOT FOUND: ";
     private List<Control> _textBoxes = null;
