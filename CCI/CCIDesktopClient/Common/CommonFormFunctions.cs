@@ -75,7 +75,7 @@ namespace CCI.DesktopClient.Common
         
         DataTable dt = ds.Tables[0];
         int colCount = ds.Tables[0].Columns.Count;
-        if (columns == null || columns.GetLength(0) != colCount)
+        if (columns != null && columns.GetLength(0) != colCount)
           throw new ArgumentException("Can't load grid, column count does not match dataset");
         for (int iCol = 0; iCol < colCount; iCol++)
         {

@@ -859,7 +859,7 @@ No if you have not and wish to be safe, and Cancel if you want to ignore and con
       RefreshImportLog();
       txtBillDate.Value = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
       string filetype = "Posted";
-      string importfiletype = "Tax Detail";
+      string importfiletype = "Customer Ledger";
       DateTime billdate = txtBillDate.Value;
       if (ValidImport(billdate, importfiletype) == true && ValidPost(billdate, filetype) == false)
       {
