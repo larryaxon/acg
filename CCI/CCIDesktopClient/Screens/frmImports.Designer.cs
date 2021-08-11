@@ -551,7 +551,6 @@ namespace CCI.DesktopClient.Screens
       this.ckImportLedgerOnly.TabIndex = 29;
       this.ckImportLedgerOnly.Text = "Import Ledger Only";
       this.ckImportLedgerOnly.UseVisualStyleBackColor = true;
-      this.ckImportLedgerOnly.Visible = false;
       this.ckImportLedgerOnly.CheckedChanged += new System.EventHandler(this.ckImportLedgerOnly_CheckedChanged);
       // 
       // ckRequireLedger

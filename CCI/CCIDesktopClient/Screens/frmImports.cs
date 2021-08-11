@@ -901,6 +901,12 @@ No if you have not and wish to be safe, and Cancel if you want to ignore and con
         case ImportFileTypes.TollWholesale:
           criteria = String.Format(",'{0}', '{1}'", billdate.Year, billdate.Month);
           break;
+        case ImportFileTypes.Ledger:
+          string result = prepareLedgerFile(filepath);
+          if (result != "Success" && result != "File Processed") // failed
+            return new Exception(result);
+          criteria = String.Format(",'{0}'", billdate.ToString("yyyyMMdd"));
+          break;
         default:
           criteria = String.Format(",'{0}'", billdate.ToString("yyyyMMdd"));
           break;
@@ -908,7 +914,43 @@ No if you have not and wish to be safe, and Cancel if you want to ignore and con
       Exception returnmsg = _dataSource.executestoredproc(storedproc, filepath, criteria);
       return returnmsg;
     }
-
+    private string prepareLedgerFile(string filepath)
+    {
+      /*
+       * the ledger file is CSV BUT it uses quotes around some fields to escape the commans inside and SQL doesn't support that.
+       * This routine checks to see if it has been already run. If not, it copies the file, then creates a new version with the quotes and internal commas eliminated
+       */
+      string backupfilename = filepath + "-backup";
+      if (File.Exists(backupfilename))
+        return "File Processed"; // its already there, so assume we are good
+      // create backup
+      string errorPrefix = "Copy";
+      try
+      {
+        File.Copy(filepath, backupfilename);
+        errorPrefix = "Delete";
+        File.Delete(filepath);
+        errorPrefix = "Process";
+        using (var fromFile = new StreamReader(backupfilename))
+        {
+          using (var toFile = new StreamWriter(filepath))
+          {
+            string line = string.Empty;
+            while (line != null)
+            {
+              line = fromFile.ReadLine();
+              string newline = CommonFunctions.ConvertCSVToEliminateQuotes(line);
+              toFile.WriteLine(line);
+            }
+          }
+        }
+      }
+      catch (Exception ex)
+      {
+        return errorPrefix + " failes: " + ex.Message;
+      }
+      return "Success";
+    }
     private void importTaxes(DateTime importdate)
     {
         string importtable = "hostedimporttaxes";

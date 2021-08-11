@@ -83,5 +83,30 @@ namespace CCI.Common
       return fvi.ProductVersion;
 
     }
+
+    public static string ConvertCSVToEliminateQuotes(string instring, bool eliminateCommas = true)
+    {
+      string[] columns = ACG.Common.CommonFunctions.parseString(instring, new string[] { "," });
+      StringBuilder sb = new StringBuilder();
+      foreach (string col in columns)
+      {
+        string newcol = col;
+        if (col.StartsWith("\""))
+        {
+          newcol = col.Substring(1, col.Length - 2); // strip off outside quotes
+
+          if (eliminateCommas)
+          {
+            newcol = newcol.Replace(",", "");
+          }
+        }
+        sb.Append(newcol);
+        sb.Append(",");
+
+      }
+      if (sb.Length > 0)
+        sb.Length--;
+      return sb.ToString();
+    }
   }
 }
