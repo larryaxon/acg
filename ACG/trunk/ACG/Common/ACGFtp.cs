@@ -10,6 +10,44 @@ namespace ACG.Common
 {
   public class ACGFtp
   {
+    private FtpWebRequest _ftpRequest = null;
+    private Uri _baseUri = null;
+    private string _ftpUser = null;
+    private string _ftpPassword = null;
+    public ACGFtp() { }
+    public ACGFtp(string ftpUri, string ftpUser, string ftpPassword)
+    {
+      _baseUri = new Uri(ftpUri);
+      _ftpRequest = (FtpWebRequest)WebRequest.Create(_baseUri);
+      _ftpUser = ftpUser;
+      _ftpPassword = ftpPassword;
+      _ftpRequest.Credentials = new NetworkCredential(_ftpUser, _ftpPassword);
+    }
+    public List<string> getDirectoryListing()
+    {
+      List<string> directoryList = new List<string>();
+      _ftpRequest.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
+
+
+      FtpWebResponse response = (FtpWebResponse)_ftpRequest.GetResponse();
+
+      Stream responseStream = response.GetResponseStream();
+      StreamReader reader = new StreamReader(responseStream);
+      string line = reader.ReadLine();
+      while (line != null)
+      {
+        directoryList.Add(line);
+        line = reader.ReadLine();
+      }
+      //Console.WriteLine(reader.ReadToEnd());
+
+      //Console.WriteLine($"Directory List Complete, status {response.StatusDescription}");
+
+      reader.Close();
+      response.Close();
+      return directoryList;
+    }
+
     /// <summary>
     /// uses ftp to get a file and returns the local file location path.
     /// </summary>
