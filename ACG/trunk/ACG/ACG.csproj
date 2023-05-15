@@ -104,12 +104,26 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\CCI\lib\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Renci.SshNet, Version=2020.0.2.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106, processorArchitecture=MSIL">
+      <HintPath>..\..\..\CCI\CCI.FtpImport\CCI.FtpImport\packages\SSH.NET.2020.0.2\lib\net40\Renci.SshNet.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\..\CCI\CCI.FtpImport\CCI.FtpImport\packages\System.IO.Compression.4.3.0\lib\net46\System.IO.Compression.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.IO.Compression.ZipFile, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\..\..\CCI\CCI.FtpImport\CCI.FtpImport\packages\System.IO.Compression.ZipFile.4.3.0\lib\net46\System.IO.Compression.ZipFile.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Net" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -125,8 +139,11 @@
     <Compile Include="Common\ACGForm.cs" />
     <Compile Include="Common\ACGFormItem.cs" />
     <Compile Include="Common\ACGFtp.cs" />
+    <Compile Include="Common\ACGFtpFileInfo.cs" />
     <Compile Include="Common\ACGSerializer.cs" />
+    <Compile Include="Common\ACGSftp.cs" />
     <Compile Include="Common\ACGTable.cs" />
+    <Compile Include="Common\ACGZip.cs" />
     <Compile Include="Common\Data\SearchDataSourceCCIProducts.cs" />
     <Compile Include="Common\Data\SearchDataSourceCISMaterials.cs" />
     <Compile Include="Common\Data\SearchDataSourceCISEmployees.cs" />
