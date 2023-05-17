@@ -1,0 +1,29 @@
+﻿@model IEnumerable<CCI.WebApi.Models.InvoiceFilesListGUIModel>
+
+@{
+    ViewBag.Title = "@ViewBag.FileListTitle";
+}
+
+<h2>Invoice IQ @ViewBag.FileListTitle</h2>
+
+<p>
+    @Html.ActionLink("Back", "Index")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.FileName)
+        </th>
+
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.FileName)
+        </td>
+
+    </tr>
+}
+
+</table>

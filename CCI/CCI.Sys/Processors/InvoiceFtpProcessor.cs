@@ -171,7 +171,8 @@ namespace CCI.Sys.Processors
       string filename = Path.GetFileName(unzippedfile);
       string targetfolder = Path.Combine(rootFolder, newFolder);
       string targetpath = Path.Combine(targetfolder, filename);
-      File.Move(unzippedfile, targetpath);
+      if (!File.Exists(targetpath))
+        File.Move(unzippedfile, targetpath);
       return targetpath;
     }
     private string moveToHome(string oldPath, string homefolder)
