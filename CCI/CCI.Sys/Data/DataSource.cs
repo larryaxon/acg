@@ -25,7 +25,7 @@ namespace CCI.Sys.Data
     }
     public DateTime? getClosestFollowUpDate(string entity, DateTime? fuDate)
     {
-      string sql = 
+      string sql =
         @"SELECT o.Customer, MIN(o.FollowUpDate) 
             FROM Opportunities o INNER JOIN Entity e 
             ON o.Customer = e.Entity 
@@ -46,7 +46,7 @@ namespace CCI.Sys.Data
       return fuDate;
     }
     #endregion
-    
+
     #region Screens
     #region Commission Exceptions
     public DataSet getScheduledAndActualsWithDifferentTotals()

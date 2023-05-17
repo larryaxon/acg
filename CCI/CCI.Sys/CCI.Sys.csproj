@@ -82,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\AttributeDB.cs" />
+    <Compile Include="Data\DataAccess.cs" />
     <Compile Include="Data\DataAccessBase.cs" />
     <Compile Include="Data\DataAdapterContainer.cs" />
     <Compile Include="Data\DataSource.cs" />
@@ -125,6 +126,7 @@
     <Compile Include="Data\SearchDataSource\SearchDataSourceCarrier.cs" />
     <Compile Include="Data\SecurityDB.cs" />
     <Compile Include="Data\SQLConnectionFactory.cs" />
+    <Compile Include="Processors\InvoiceFtpProcessor.cs" />
     <Compile Include="SecurityEngine\LoadSecurity.cs" />
     <Compile Include="SecurityEngine\SecurityFactory.cs" />
     <Compile Include="SecurityEngine\SecurityGroups.cs" />

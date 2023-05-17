@@ -20,5 +20,13 @@ namespace ACG.Common
         return Name.Substring(Name.LastIndexOf('.') + 1, Name.Length - Name.LastIndexOf('.') - 1);
       }
     }
+    public bool IsZip
+    {
+      get { return (Extension ?? string.Empty) == "zip"; } 
+    }
+    public bool IsPdf
+    {
+      get { return (Extension ?? string.Empty) == "pdf"; }
+    }
   }
 }
