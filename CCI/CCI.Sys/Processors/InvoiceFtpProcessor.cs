@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.Remoting.Channels;
 using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,14 +23,39 @@ namespace CCI.Sys.Processors
     const string APPSETTINGFTPUSERNAME = "FtpUsername";
     const string APPSETTINGFTPPASSWORD = "FtpPassword";
     const string APPSETTINGLOCALFOLDER = "FTPLocalFolder";
+    const string APPSETTINGMAXDAYSTOPROCESS = "InvoiceIQUnibillMaxDaysToProcess";
+
+    const string FILESPROCESSEDFILETYPEINVOICEIQ = "InvoiceIQ";
+    const string FILESPROCESSEDFILETYPEUNIBILL = "Unibill";
     private List<ACGFtpFileInfo> _fileList = null;
     private string _ftpUrl = null;
     private string _ftpUsername = null;
     private string _ftpPassword = null;
     private string _ftpDirectory = "FromIQ";
     private string _localDirectory = "U:\\Data\\InvoiceIQ\\downloads\\";
+    private string _localTextDirecory = "U:\\Data\\InvoiceIQ\\texts\\";
+    private int _maxDaysToProcess = 45; 
     private ACGSftp _sftp = null;
+    private Dictionary<string, string> _unibillTableNames = new Dictionary<string, string>()
+    {
+      { "1", "UnibillFileInfo"},
+      { "2", "UnibillFacePage"},
+      { "3", "UnibillCharge"},
+      { "4", "UnibillUsageCDR"},
+      { "5", "UnibillNotes"},
+      { "6", "UnibillContacts"},
+      { "7", "UnibillOther"}
+
+    };
     #endregion
+
+    public class UnibillFile
+    {
+      public string filepath { get; set; }
+      public Dictionary<string, List<string>> Headers { get; set; }  = new Dictionary<string, List<string>>();
+      public Dictionary<string, List<List<string>>> Records { get; set; } = new Dictionary<string, List<List<string>>>();
+    }
+
     #region public properties
     public List<ACGFtpFileInfo> FileList 
     { 
@@ -95,6 +121,7 @@ namespace CCI.Sys.Processors
     {
       _sftp = new ACGSftp(_ftpUrl, _ftpUsername, _ftpPassword);
       CommonData.SERVERCONFIGFILENAME = CommonData.SERVERCONFIGFILEDEFAULT; // db.config for now
+      _maxDaysToProcess = CommonFunctions.CInt(getAppSetting(APPSETTINGMAXDAYSTOPROCESS), 45);
     }
     public void Dispose()
     {
@@ -111,7 +138,7 @@ namespace CCI.Sys.Processors
     }
     public List<ACGFtpFileInfo> getFilesToProcess()
     {
-      List<string> processedFiles = getFilesProcessed();
+      List<string> processedFiles = getFilesProcessed(FILESPROCESSEDFILETYPEINVOICEIQ);
       List<ACGFtpFileInfo> ftpFiles = FileList.ToList();
       List<ACGFtpFileInfo> filesToProcess = ftpFiles.Where(ftp => !processedFiles.Contains(ftp.FullName)).ToList();
       return filesToProcess;
@@ -161,7 +188,7 @@ namespace CCI.Sys.Processors
       }
       using (DataAccess db = new DataAccess())
       {
-        db.addFileProcessed("InvoiceIQ", file.FullName, DateTime.Now, -1, false, "Download Successful");
+        db.addFileProcessed(FILESPROCESSEDFILETYPEINVOICEIQ, file.FullName, DateTime.Now, -1, false, "Download Successful");
       }
 
     }
@@ -197,7 +224,7 @@ namespace CCI.Sys.Processors
       {
         foreach (ACGFtpFileInfo fileInfo in ftpFiles)
         {
-          db.addFileProcessed("InvoiceIQ", fileInfo.FullName, DateTime.Now, -1, false, "Initial Load");
+          db.addFileProcessed(FILESPROCESSEDFILETYPEINVOICEIQ, fileInfo.FullName, DateTime.Now, -1, false, "Initial Load");
         }
       }
 
@@ -216,8 +243,96 @@ namespace CCI.Sys.Processors
         return zip.Unzip(filename, zipfolder);
       }
     }
+    public void ImportUnibills(string localfolder = null)
+    {
+      List<string> filesToProcess = getUnibillFilesToProcess();
+      foreach (string filename in filesToProcess)
+      {
+        UnibillFile file = getUnibillFileData(filename);
+        saveUnibillFile(file);
+        // save files processed record here
+      }
+    }
     #endregion
     #region private methods
+    private UnibillFile getUnibillFileData(string filename)
+    {
+      UnibillFile file = new UnibillFile();
+      file.filepath = Path.Combine(_localTextDirecory, filename);
+      int recordnumber = 0;
+      // Read the text file line by line
+      using (StreamReader sr = new StreamReader(file.filepath))
+      {
+        string line;
+        while ((line = sr.ReadLine()) != null)
+        {
+          string[] values = line.Split('|');
+          string linetype = values[0];
+          switch (linetype)
+          {
+            case "901":
+            case "903":
+            case "904":
+            case "905":
+              // marker records (begin/end sections, etc.)
+              // we ignore these
+              break;
+            case "902":
+              // get all the header names
+              string rectype = values[1];
+              string[] headernames = new string[values.Length - 2];
+              Array.Copy(values, 2, headernames, 0, values.Length - 2);
+              List<string> names = new List<string>();
+              names.AddRange(headernames);
+              file.Headers.Add(rectype, names);
+              break;
+            case "!":
+            case "2":
+            case "3":
+            case "4":
+            case "5":
+            case "6":
+            case "7":
+              // data records
+              // first get the record type
+              string datarectype = values[1];
+              // next get an ordered list of the values
+              string[] fieldvalues = new string[values.Length - 2];
+              Array.Copy(values, 2, fieldvalues, 0, values.Length - 2);
+              List<string> fields = new List<string>();
+              fields.AddRange(fieldvalues);
+              // now see if this record type is already out there
+              List<List<string>> theserecords;
+              if (file.Records.ContainsKey(datarectype))
+                theserecords = file.Records[datarectype]; // yes, get the current list of records for that type
+              else
+              {
+                theserecords = new List<List<string>>(); // no create a new list of records 
+                file.Records.Add(datarectype, theserecords); // and associate with that type
+              }
+              theserecords.Add(fields); // now add the new record (which is itself a list of fields) to the collection for this record type
+              // Note: since this is a reference we can add it to the variable and it adds it to the collection
+              break;
+          }
+
+        }
+      }
+      return file;
+    }
+    private void saveUnibillFile(UnibillFile file)
+    {
+      foreach (string rectype in file.Headers.Keys)
+      {
+        List<string> headers = file.Headers[rectype]; // now get the list of headers
+        List<List<string>> records = file.Records[rectype]; // next get all the records with matching values
+        string tablename = _unibillTableNames[rectype]; // now get the table name
+        using (DataAccess da = new DataAccess())
+        {
+          DataSet ds = da.getDatasetFromDictionaryData(tablename, headers, records);
+          // now save the dataset here
+        }
+      }
+    }
     private string getAppSetting(string name, string defaultValue = "")
     {
       string val = ConfigurationManager.AppSettings[name];
@@ -232,17 +347,28 @@ namespace CCI.Sys.Processors
       _fileList = _sftp.ListFiles(directory);
       return _fileList;
     }
-    private List<string> getFilesProcessed()
+    private List<string> getFilesProcessed(string filetype)
     {
       List<string> fileNames = new List<string>();
       using (DataAccess db = new DataAccess())
       {
-        DataSet ds = db.getFilesProcessed();
+        DataSet ds = db.getFilesProcessed(filetype);
         DataTable dt = ds.Tables[0];
         foreach (DataRow row in dt.Rows)
           fileNames.Add(row["FileName"].ToString());
         return fileNames;
       }
+    }
+    private List<string> getUnibillFilesToProcess()
+    {
+      DirectoryInfo dir = new DirectoryInfo(_localTextDirecory);
+      DateTime toDate = DateTime.Now;
+      DateTime fromDate =  DateTime.Now.Date.AddDays(-_maxDaysToProcess); // dont go back more than we want to
+      List<string> textfiles = dir.GetFiles().Where(file => file.LastWriteTime >= fromDate && file.LastWriteTime <= toDate).Select(f => f.Name).ToList();
+      List<string> unibillFiles = textfiles.Where(f => f.StartsWith("unibill", StringComparison.CurrentCultureIgnoreCase)).ToList();
+      List<string> unibillFilesProcessed = getFilesProcessed(FILESPROCESSEDFILETYPEUNIBILL);
+      List<string> filesToProcess = unibillFiles.Where(f => !unibillFilesProcessed.Contains(f)).ToList();
+      return filesToProcess;
     }
     #endregion
   }

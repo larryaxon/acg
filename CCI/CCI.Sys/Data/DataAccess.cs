@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace CCI.Sys.Data
 {
@@ -11,9 +13,11 @@ namespace CCI.Sys.Data
   {
     public void Dispose() { }
     #region InvoiceIQ
-    public DataSet getFilesProcessed()
+    public DataSet getFilesProcessed(string filetype = null)
     {
       string sql = "Select * from FilesProcessed";
+      if (!string.IsNullOrWhiteSpace(filetype))
+        sql += "WHERE FileType = '" + filetype + "'";
       DataSet ds = getDataFromSQL(sql);
       if (ds.Tables.Count > 0)
       {
@@ -56,5 +60,21 @@ Insert Into FilesProcessed ([FileType]
 
 
     #endregion
+    public DataSet getDatasetFromDictionaryData(string tablename, List<string> headers, List<List<string>> records)
+    {
+      DataSet ds = new DataSet();
+      DataTable dt = new DataTable();
+      dt.TableName = tablename;
+      ds.Tables.Add(dt);
+      foreach (string headername in headers)
+        dt.Columns.Add(headername);
+      foreach (List<string> record in records)
+      {
+        DataRow row = dt.NewRow();
+        row.ItemArray = records.ToArray();
+        dt.Rows.Add(row);
+      }
+      return ds;
+    }
   }
 }
