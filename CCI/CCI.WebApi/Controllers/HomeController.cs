@@ -18,6 +18,7 @@ namespace CCI.WebApi.Controllers
 
       return View();
     }
+    #region zip files
     public ActionResult ProcessFiles()
     {
       using (InvoiceFtpProcessor processor = new InvoiceFtpProcessor())
@@ -32,10 +33,6 @@ namespace CCI.WebApi.Controllers
         return View("FileList", model); 
       }
     }
-    public ActionResult FileList(List<InvoiceFilesListGUIModel> model)
-    {
-      return View(model);
-    }
     public ActionResult UnprocessedFiles()
     {
       using (InvoiceFtpProcessor processor = new InvoiceFtpProcessor())
@@ -49,6 +46,42 @@ namespace CCI.WebApi.Controllers
         ViewBag.FileListTitle = "Files Not Yet Downloaded";
         return View("FileList", model);
       }
+    }
+    #endregion
+    #region unibill files
+    public ActionResult UnprocessedUnibillFiles()
+    {
+      using (InvoiceFtpProcessor processor = new InvoiceFtpProcessor())
+      {
+        List<string> filesProcessed = processor.ListUnprocessedUnibills();
+        List<InvoiceFilesListGUIModel> model = new List<InvoiceFilesListGUIModel>();
+        foreach (string file in filesProcessed)
+        {
+          model.Add(new InvoiceFilesListGUIModel() { FileName = file });
+        }
+        ViewBag.FileListTitle = "Carvana Files Not Yet Imported";
+        return View("FileList", model);
+      }
+    }
+    public ActionResult ImportUnibillFiles()
+    {
+      using (InvoiceFtpProcessor processor = new InvoiceFtpProcessor())
+      {
+        List<string> filesProcessed = processor.ImportUnibills(10);
+        List<InvoiceFilesListGUIModel> model = new List<InvoiceFilesListGUIModel>();
+        foreach (string file in filesProcessed)
+        {
+          model.Add(new InvoiceFilesListGUIModel() { FileName = file });
+        }
+        ViewBag.FileListTitle = "Carvana Files Imported";
+        return View("FileList", model);
+      }
+    }
+
+    #endregion
+    public ActionResult FileList(List<InvoiceFilesListGUIModel> model)
+    {
+      return View(model);
     }
     private string ConvertListToString(List<string> list)
     {

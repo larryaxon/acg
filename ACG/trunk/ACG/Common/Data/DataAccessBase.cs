@@ -112,27 +112,40 @@ namespace ACG.Common.Data
           else
             returnCode = CommonFunctions.CInt(id);
         }
-        catch(Exception ex) {  }
+        catch (Exception ex) { }
       }
       catch (SqlException e)      // if we get an error
       {
         Logging.LogFactory.GetInstance().GetLog((this)).Error(string.Format("SQL Update Error sql = <{0}>", mySQL), e);
         return -1;                          // and then rethrow the error so the calling program knows it happened
       }
-
-      sqlConnection.Close();
+      finally
+      {
+        sqlConnection.Close();
+      }
       return returnCode;
     }
     public Exception insertDataTabletoSQL(string sqltablename, DataTable dt)
     {
-      
-      try
-      {
+
+        using (SqlBulkCopy bulkCopy = new SqlBulkCopy(this.sqlConnection))
+        {
+        try
+        {
+          bulkCopy.BulkCopyTimeout = 6000;
+          bulkCopy.DestinationTableName = sqltablename;
+          bulkCopy.WriteToServer(dt);
+        }
+        catch (Exception ex)
+        {
+          return ex;
+        }
+        finally
+        {
+          bulkCopy.Close();
+        }
       }
-      catch (Exception ex)
-      {
-        return ex;
-      }
+
       return null;
     }
     public Exception updateDataFromSQLReturnErrorDescription(string mySQL)
@@ -150,8 +163,10 @@ namespace ACG.Common.Data
         Logging.LogFactory.GetInstance().GetLog((this)).Error(string.Format("SQL Update Error sql = <{0}>", mySQL), e);
         return e;                          // and then rethrow the error so the calling program knows it happened
       }
-
-      sqlConnection.Close();
+      finally
+      {
+        sqlConnection.Close();
+      }
       return null;
     }
     public Exception updateSQLWithImage(string mySQL, Byte[] imgByte)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
@@ -17,7 +18,7 @@ namespace CCI.Sys.Data
     {
       string sql = "Select * from FilesProcessed";
       if (!string.IsNullOrWhiteSpace(filetype))
-        sql += "WHERE FileType = '" + filetype + "'";
+        sql += " WHERE FileType = '" + filetype + "'";
       DataSet ds = getDataFromSQL(sql);
       if (ds.Tables.Count > 0)
       {
@@ -25,7 +26,7 @@ namespace CCI.Sys.Data
       }
       return ds;
     }
-    public void addFileProcessed(string FileType
+    public int addFileProcessed(string FileType
       , string FileName
       , DateTime DateTImeProcessed
       , int NbrRecords = -1
@@ -55,23 +56,56 @@ Insert Into FilesProcessed ([FileType]
       (FirstRecordDateTime == null ? "'" + FirstRecordDateTime.ToString() + "'" : "null"),
       (LastRecordDateTime == null ? "'" + LastRecordDateTime.ToString() + "'" : "null") ) ;
 
-      updateDataFromSQL(sql);
+      int? id = updateDataFromSQL(sql);
+      return id ?? 0;
     }
 
 
     #endregion
-    public DataSet getDatasetFromDictionaryData(string tablename, List<string> headers, List<List<string>> records)
+    public DataSet getDatasetFromDictionaryData(string tablename, List<string> headers, List<List<object>> records, Dictionary<string, string> datatypes = null,  bool hasID = false)
     {
       DataSet ds = new DataSet();
       DataTable dt = new DataTable();
       dt.TableName = tablename;
       ds.Tables.Add(dt);
+      dt.Columns.Add("ID");
       foreach (string headername in headers)
         dt.Columns.Add(headername);
-      foreach (List<string> record in records)
+      foreach (List<object> record in records)
       {
         DataRow row = dt.NewRow();
-        row.ItemArray = records.ToArray();
+        object[] rowToAdd;
+        if (hasID)
+        {
+          // this record has a unique id PK so we put an xtra null in the first column
+          rowToAdd = new object[record.Count + 1];
+          try
+          {
+            Array.Copy(record.ToArray(), 0, rowToAdd, 1, record.Count);
+          }
+          catch (Exception ex)
+          {
+
+            for (int i = 0; i < record.Count; i++)
+            {
+              try
+              {
+                rowToAdd[i] = record[i + 1];
+              }
+              catch (Exception e)
+              {
+                rowToAdd[i] = null;
+              }
+
+
+
+            }
+          }
+          rowToAdd[0] = null;
+        }
+        else
+          rowToAdd = record.ToArray(); // just add the record as is
+        row.ItemArray = rowToAdd;
         dt.Rows.Add(row);
       }
       return ds;

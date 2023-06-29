@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Web.Http;
 
 using ACG.Common;
+using System.Diagnostics;
 
 namespace CCI.WebApi.Controllers
 {
@@ -43,6 +44,39 @@ namespace CCI.WebApi.Controllers
         return "Complete";
       }
     }
-
+    [HttpGet]
+    [Route("api/invoiceiq/unibill/import")]
+    public string ImportUnibills(int maxFilesToProcess = -1)
+    {
+      using (InvoiceFtpProcessor processor = new InvoiceFtpProcessor())
+      {
+        try
+        {
+          processor.ImportUnibills(maxFilesToProcess);
+        }
+        catch (Exception ex)
+        {
+          return ex.Message + " Stack Trace = " + ex.StackTrace;
+        }
+        return "Success";
+      }
+    }
+    [HttpGet]
+    [Route("api/invoiceiq/unibill/list")]
+    public List<string> ListUnprocessedUnibills()
+    {
+      using (InvoiceFtpProcessor processor = new InvoiceFtpProcessor())
+      {
+        try
+        {
+          List<string> unimportedunibils = processor.ListUnprocessedUnibills();
+          return unimportedunibils;
+        }
+        catch (Exception ex)
+        {
+          return new List<string>() { ex.Message + " Stack Trace = " + ex.StackTrace };
+        }
+      }
+    }
   }
 }
