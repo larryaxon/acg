@@ -110,5 +110,9 @@ Insert Into FilesProcessed ([FileType]
       }
       return ds;
     }
+    public DataSet GetDataFromSQL(string sql)
+    {
+      return getDataFromSQL(sql);
+    }
   }
 }

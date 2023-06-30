@@ -8,6 +8,11 @@ using System.Web.Http;
 
 using ACG.Common;
 using System.Diagnostics;
+using System.Data;
+using System.IO;
+
+using OfficeOpenXml;
+using System.Net.Http.Headers;
 
 namespace CCI.WebApi.Controllers
 {
@@ -78,5 +83,35 @@ namespace CCI.WebApi.Controllers
         }
       }
     }
+    [HttpGet]
+    [Route("api/invoiceiq/invoice/excel")]
+    public HttpResponseMessage GetInvoice(int id)
+    {
+
+        using (InvoiceFtpProcessor processor = new InvoiceFtpProcessor()) // this is a test, so just grab any existing dataset formatted export
+        {
+          MemoryStream stream = processor.GetInvoice(id);
+          return ToStream(stream, "Invoice" + id.ToString() + ".xlsx");
+        }
+      
+    }
+    private HttpResponseMessage ToStream(MemoryStream stream, string filename)
+    {
+
+      var result = new HttpResponseMessage(HttpStatusCode.OK)
+      {
+        Content = new ByteArrayContent(stream.ToArray())
+      };
+      result.Content.Headers.ContentDisposition =
+          new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment")
+          {
+            FileName = filename
+          };
+      result.Content.Headers.ContentType =
+          new MediaTypeHeaderValue("application/octet-stream");
+
+      return result;
+    }
+
   }
 }

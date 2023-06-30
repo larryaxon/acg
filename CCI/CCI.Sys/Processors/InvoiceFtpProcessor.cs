@@ -14,6 +14,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using OfficeOpenXml;
+
+
 namespace CCI.Sys.Processors
 {
   public class InvoiceFtpProcessor : IDisposable
@@ -508,6 +511,23 @@ namespace CCI.Sys.Processors
     }
 
     #endregion
+    #endregion
+    #region excel invoice
+    public MemoryStream GetInvoice(int fileProcessedId)
+    {
+      using (ExcelProcessor excel = new ExcelProcessor())
+      {
+        using (DataAccess da = new DataAccess())
+        {
+          DataSet ds = da.GetDataFromSQL("Select * from UnibillCharge where FilesProcessedID = " + fileProcessedId.ToString());
+          ExcelWorksheet w = excel.CreateWorksheetFromDataset(ds, "Invoice");
+          w.InsertRow(1, 2);
+          w.Cells["A1"].Value = "Invoice for File Processed " + fileProcessedId.ToString();
+          MemoryStream stream = excel.ToStream();
+          return stream;
+        }
+      }
+    }
     #endregion
 
     #region other private methods
