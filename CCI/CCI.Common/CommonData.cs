@@ -119,5 +119,11 @@ namespace CCI.Common
     public const string fieldSUITE = "Suite";
     public const string fieldSYSTEMDATATYPE = "system_data_type";
     public const string fieldZIP = "Zip";
+
+    // InvoiceIQ and UniBill constants
+    public const string FILESPROCESSEDFILETYPEINVOICEIQ = "InvoiceIQ";
+    public const string FILESPROCESSEDFILETYPEUNIBILL = "Unibill";
+    public const string FILESPROCESSEDFILETYPECREATIOINVENTORY = "CreatioInventory";
+    public const string FILESPROCESSEDFILETYPECREATIOAUDIT = "CreatioAudit";
   }
 }

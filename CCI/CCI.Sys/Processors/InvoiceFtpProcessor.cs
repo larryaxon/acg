@@ -15,27 +15,30 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using OfficeOpenXml;
+using OfficeOpenXml.FormulaParsing.ExpressionGraph;
 
 
 namespace CCI.Sys.Processors
 {
-  public class InvoiceFtpProcessor : IDisposable
+  public class InvoiceFtpProcessor : ImportFileProcessorBase, IDisposable
   {
     #region private properties
     const string APPSETTINGFTPURL = "FTPUrl";
     const string APPSETTINGFTPUSERNAME = "FtpUsername";
     const string APPSETTINGFTPPASSWORD = "FtpPassword";
-    const string APPSETTINGLOCALFOLDER = "FTPLocalFolder";
+    const string APPSETTINGLOCALFTPFOLDER = "FTPLocalFolder";
     const string APPSETTINGMAXDAYSTOPROCESS = "InvoiceIQUnibillMaxDaysToProcess";
 
-    const string FILESPROCESSEDFILETYPEINVOICEIQ = "InvoiceIQ";
-    const string FILESPROCESSEDFILETYPEUNIBILL = "Unibill";
-    private List<ACGFtpFileInfo> _fileList = null;
+    const string FILESPROCESSEDFILETYPEINVOICEIQ = CCI.Common.CommonData.FILESPROCESSEDFILETYPEINVOICEIQ;
+    const string FILESPROCESSEDFILETYPEUNIBILL = CCI.Common.CommonData.FILESPROCESSEDFILETYPEUNIBILL;
+
+    const string FILEDOWNLOADFOLDER = "\\InvoiceIQ\\downloads\\";
+
     private string _ftpUrl = null;
     private string _ftpUsername = null;
     private string _ftpPassword = null;
     private string _ftpDirectory = "FromIQ";
-    private string _localDirectory = "U:\\Data\\InvoiceIQ\\downloads\\";
+
     private string _localTextDirecory = "U:\\Data\\InvoiceIQ\\texts\\";
     private int _maxDaysToProcess = 45; 
     private ACGSftp _sftp = null;
@@ -50,118 +53,37 @@ namespace CCI.Sys.Processors
       { "7", "UnibillOther"}
 
     };
-    private Dictionary<string, string> _dataTypes = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase)
-    {
-      { "ACCT_LEVEL", "int" },
-      { "ACTIVITY_COMP_DATE", "date" },
-      { "AIR_CHG_AMT", "decimal(8,2)" },
-      { "BAL_FWD", "decimal(8,2)" },
-      { "BAL_FWD_ADJ", "decimal(8,2)" },
-      { "BEG_CHG_DATE", "date" },
-      { "BILL_PERIOD_END", "date" },
-      { "BILL_PERIOD_START", "date" },
-      { "CHG_AMT", "decimal(8,2)" },
-      { "CHG_BASIS", "decimal(8,2)" },
-      { "CHG_QTY1_BILLED", "decimal(8,2)" },
-      { "CHG_QTY1_USED", "decimal(8,2)" },
-      { "CHG_QTY2_BILLED", "decimal(8,2)" },
-      { "CHG_QTY2_USED", "decimal(8,2)" },
-      { "CHG_RATE", "decimal(8,2)" },
-      { "CONTRACT_EFF_DATE", "date" },
-      { "CONTRACT_END_DATE", "date" },
-      { "DATA_CHG_AMT", "decimal(8,2)" },
-      { "DATE_ISSUED", "date" },
-      { "DATE_RECEIVED_FROM_SP", "date" },
-      { "DISC_CHG_AMT", "decimal(8,2)" },
-      { "DISC_PCT", "decimal(8,2)" },
-      { "DUE_DATE" , "date" },
-      { "END_CHG_DATE", "date" },
-      { "FEAT_CHG_AMT", "decimal(8,2)" },
-      { "INV_DATE", "date" },
-      { "LD_CHG_AMT", "decimal(8,2)" },
-      { "MSG_CHG_AMT", "decimal(8,2)" },
-      { "ORIG_INV_DATE", "date" },
-      { "PMTS_APP_THRU_DATE", "date" },
-      { "PMTS_RCVD", "decimal(8,2)" },
-      { "PREV_BILL_AMT", "decimal(8,2)" },
-      { "PRORATE_FACTOR", "decimal(8,2)" },
-      { "ROAM_CHG_AMT", "decimal(8,2)" },
-      { "ROAM_TAX_CHG_AMT", "decimal(8,2)" },
-      { "SP_BAL_FWD", "decimal(8,2)" },
-      { "SP_INV_LINE_NUM", "int" },
-      { "SP_TOT_AMT_DUE", "decimal(8,2)" },
-      { "SP_TOT_NEW_CHGS", "decimal(8,2)" },
-      { "SVC_ESTABLISH_DATE", "date" },
-      { "TAX_SUR_CHG_AMT", "decimal(8,2)" },
-      { "TOT_AMT_DUE", "decimal(8,2)" },
-      { "TOT_AMT_DUE_ADJ", "decimal(8,2)" },
-      { "TOT_DISC_AMT", "decimal(8,2)" },
-      { "TOT_MRC_CHGS", "decimal(8,2)" },
-      { "TOT_NEW_CHG_ADJ", "decimal(8,2)" },
-      { "TOT_NEW_CHGS", "decimal(8,2)" },
-      { "TOT_OCC_CHGS", "decimal(8,2)" },
-      { "TOT_TAXSUR", "decimal(8,2)" },
-      { "TOT_USAGE_CHGS", "decimal(8,2)" },
-      { "USG_BAND", "decimal(8,2)" },
-      { "FilesProcessedID", "int" }
 
-    };
 
     #endregion
 
-    public class UnibillFile
+    public class UnibillFile : ImportFileInfo
     {
-      public string filepath { get; set; }
-      public Dictionary<string, List<string>> Headers { get; set; }  = new Dictionary<string, List<string>>();
-      public Dictionary<string, List<List<object>>> Records { get; set; } = new Dictionary<string, List<List<object>>>();
     }
 
-    #region public properties
-    public List<ACGFtpFileInfo> FileList 
-    { 
-      get 
-      {
-        if (_fileList == null)
-          _fileList = GetFileList();
-        return _fileList;
-      } 
-    }
-    public List<string> FileNameList 
-    {  
-      get 
-      {
-        if (_fileList == null)
-          _fileList = GetFileList();
-        return _fileList.Select(f => f.Name).ToList();
-      } 
-    }
-    public string LocalFolder
-    {
-      get { return _localDirectory; }
-      set { _localDirectory = value; }
-    }
     public string FtpFolder
     {
       get { return _ftpDirectory; }
       set { _ftpDirectory = value; }
     }
-
-    #endregion
     #region constructors & dispose
-    public InvoiceFtpProcessor()
+    public InvoiceFtpProcessor() : base()
     {
       _ftpUrl = getAppSetting(APPSETTINGFTPURL, null);
       _ftpUsername = getAppSetting(APPSETTINGFTPUSERNAME, null);
       _ftpPassword = getAppSetting(APPSETTINGFTPPASSWORD, null);
-      _localDirectory = getAppSetting(APPSETTINGLOCALFOLDER, null);
+      _localDirectory = getAppSetting(APPSETTINGLOCALFTPFOLDER, null) + FILEDOWNLOADFOLDER;
       if (_ftpUrl == null || _ftpUsername == null || _ftpPassword == null)
       {
         throw new Exception("FTP settings are invalid");
       }
-      commonConstructor();
+      _sftp = new ACGSftp(_ftpUrl, _ftpUsername, _ftpPassword);
+      _maxDaysToProcess = CommonFunctions.CInt(getAppSetting(APPSETTINGMAXDAYSTOPROCESS), 45);
+      _fileList = GetFileList();
+
 
     }
-    public InvoiceFtpProcessor(string url, string username, string password, string ftpDirectory = null, string localDirectory = null)
+    public InvoiceFtpProcessor(string url, string username, string password, string ftpDirectory = null, string localDirectory = null) : base()
     {
       _ftpUrl = url;
       _ftpUsername = username;
@@ -174,37 +96,39 @@ namespace CCI.Sys.Processors
         _ftpDirectory = ftpDirectory;
       if (localDirectory != null)
         _localDirectory = localDirectory;
-      commonConstructor();
+      _sftp = new ACGSftp(_ftpUrl, _ftpUsername, _ftpPassword);
+      _maxDaysToProcess = CommonFunctions.CInt(getAppSetting(APPSETTINGMAXDAYSTOPROCESS), 45);
+      _fileList = GetFileList();
 
     }
-    private void commonConstructor()
+
+    public new void Dispose()
     {
-      _sftp = new ACGSftp(_ftpUrl, _ftpUsername, _ftpPassword);
-      CommonData.SERVERCONFIGFILENAME = CommonData.SERVERCONFIGFILEDEFAULT; // db.config for now
-      _maxDaysToProcess = CommonFunctions.CInt(getAppSetting(APPSETTINGMAXDAYSTOPROCESS), 45);
-    }
-    public void Dispose()
-    {
+      base.Dispose();
       _sftp.Dispose();
     }
     #endregion
+
+    public List<ACGFileInfo> GetFileList(string directory = null)
+    {
+      if (directory == null)
+        directory = _ftpDirectory;
+      _fileList.Clear();
+      foreach (ACGFtpFileInfo fileInfo in _sftp.ListFiles(directory))
+        _fileList.Add(fileInfo.ToFtpFileInfo());
+      return _fileList;
+    }
     #region download zips
     #region public methods
-    public List<string> ProcessFiles()
+    public List<string> ProcessFiles(string fileType)
     {
-      List<ACGFtpFileInfo> filesToProcess = getFilesToProcess();
-      foreach (ACGFtpFileInfo file in filesToProcess)
-        ProcessFile(file);
+      List<ACGFileInfo> filesToProcess = getFilesToProcess(fileType);
+      foreach (ACGFileInfo file in filesToProcess)
+        ProcessFile(file, fileType);
       return filesToProcess.Select(f => f.Name).ToList();
     }
-    public List<ACGFtpFileInfo> getFilesToProcess()
-    {
-      List<string> processedFiles = getFilesProcessed(FILESPROCESSEDFILETYPEINVOICEIQ);
-      List<ACGFtpFileInfo> ftpFiles = FileList.ToList();
-      List<ACGFtpFileInfo> filesToProcess = ftpFiles.Where(ftp => !processedFiles.Contains(ftp.FullName)).ToList();
-      return filesToProcess;
-    }
-    private void ProcessFile(ACGFtpFileInfo file)
+
+    private void ProcessFile(ACGFileInfo file, string fileType)
     {
       string filename = DownloadFile(file);
       if (file.IsPdf)
@@ -249,7 +173,7 @@ namespace CCI.Sys.Processors
       }
       using (DataAccess db = new DataAccess())
       {
-        db.addFileProcessed(FILESPROCESSEDFILETYPEINVOICEIQ, file.FullName, DateTime.Now, -1, false, "Download Successful");
+        db.addFileProcessed(fileType, file.FullName, DateTime.Now, -1, false, "Download Successful");
       }
 
     }
@@ -277,24 +201,24 @@ namespace CCI.Sys.Processors
       string newPath = Path.Combine(Path.Combine(rootpath, newfolder), filename);
       return newPath;
     }
-    public void InitalFilesProcessedLoad()
+    public void InitalFilesProcessedLoad(string fileType)
     {
-      List<ACGFtpFileInfo> ftpFiles = FileList;
+      List<ACGFileInfo> ftpFiles = FileList;
 
       using (DataAccess db = new DataAccess())
       {
-        foreach (ACGFtpFileInfo fileInfo in ftpFiles)
+        foreach (ACGFileInfo fileInfo in ftpFiles)
         {
-          db.addFileProcessed(FILESPROCESSEDFILETYPEINVOICEIQ, fileInfo.FullName, DateTime.Now, -1, false, "Initial Load");
+          db.addFileProcessed(fileType, fileInfo.FullName, DateTime.Now, -1, false, "Initial Load");
         }
       }
 
     }
-    public string DownloadFile(ACGFtpFileInfo file, string localfolder = null)
+    public string DownloadFile(ACGFileInfo file, string localfolder = null)
     {
       if (localfolder == null)
         localfolder = Path.Combine(_localDirectory, "downloads");
-      string filepath = _sftp.DownloadFile(file, localfolder);
+      string filepath = _sftp.DownloadFile((ACGFtpFileInfo)file, localfolder);
       return filepath;
     }
     public string UnzipFile(string filename, string zipfolder = null)
@@ -306,13 +230,7 @@ namespace CCI.Sys.Processors
     }
 
     #endregion
-    public List<ACGFtpFileInfo> GetFileList(string directory = null)
-    {
-      if (directory == null)
-        directory = _ftpDirectory;
-      _fileList = _sftp.ListFiles(directory);
-      return _fileList;
-    }
+
     #endregion
     #region import unibill
     #region public methods
@@ -338,10 +256,10 @@ namespace CCI.Sys.Processors
     {
       UnibillFile file = new UnibillFile();
       file.filepath = Path.Combine(_localTextDirecory, filename);
-      int fileProssedID = 0;
+      int fileProcessedID = 0;
       using (DataAccess da = new DataAccess())
       {
-        fileProssedID = da.addFileProcessed(FILESPROCESSEDFILETYPEUNIBILL, file.filepath, DateTime.Now, -1, false, "Import Unibill");
+        fileProcessedID = da.addFileProcessed(FILESPROCESSEDFILETYPEUNIBILL, file.filepath, DateTime.Now, -1, false, "Import Unibill");
       }
       // Read the text file line by line
       using (StreamReader sr = new StreamReader(file.filepath))
@@ -387,7 +305,7 @@ namespace CCI.Sys.Processors
               fieldvalues = adjustFieldsForDataType(fieldvalues, file.Headers[datarectype].ToArray());
               int fileprocessedidsub = fieldvalues.Length - 1;
 
-              fieldvalues[fileprocessedidsub] = fileProssedID; // so use the file processed it to uniquely identify this batch
+              fieldvalues[fileprocessedidsub] = fileProcessedID; // so use the file processed it to uniquely identify this batch
               List<object> fields = new List<object>();
               fields.AddRange(fieldvalues);
 
@@ -409,47 +327,6 @@ namespace CCI.Sys.Processors
       }
       return file;
     }
-    private object[] adjustFieldsForDataType(object[] fields, string[] columnNames)
-    {
-      // fixes up fields to be correct for data types
-      object[] fldarray = fields.ToArray();
-      string[] colarray = columnNames.ToArray();
-      for (int i = 0; i < fldarray.Length; i++)
-      {
-        string col = colarray[i];
-        string datatype = "string";
-        if (_dataTypes.ContainsKey(col))
-        {
-          datatype = _dataTypes[col];
-          if (datatype.StartsWith("decimal"))
-            datatype = "decimal";
-        }
-        switch (datatype)
-        {
-          case "string":
-            break;
-          case "date":
-            if (!CommonFunctions.IsDateTime(fldarray[i]))
-              fldarray[i] = null;
-            else
-              fldarray[i] = CommonFunctions.CDateTime(fldarray[i]);
-            break;
-          case "decimal":
-            if (!CommonFunctions.IsNumeric(fldarray[i]))
-              fldarray[i] = null;
-            else
-              fldarray[i] = CommonFunctions.CDecimal(fldarray[i]);
-            break;
-          case "int":
-            if (!CommonFunctions.IsInteger(fldarray[i]))
-              fldarray[i] = null;
-            else
-              fldarray[i] = CommonFunctions.CInt(fldarray[i]);
-            break;
-        }
-      }
-      return fldarray;
-    }
     private void saveUnibillFile(UnibillFile file)
     {
       foreach (string rectype in file.Headers.Keys)
@@ -460,32 +337,12 @@ namespace CCI.Sys.Processors
           // yes, so add the records to the db
           List<List<object>> records = file.Records[rectype]; // next get all the records with matching values
           string tablename = _unibillTableNames[rectype]; // now get the table name
-          using (DataAccess da = new DataAccess())
-          {
-            // all of these UniBill files have an ID so we set the last parm to true
-            DataSet ds = da.getDatasetFromDictionaryData(tablename, headers, records, _dataTypes, true);
-            if (ds != null && ds.Tables.Count > 0)
-            {
-              DataTable dt = ds.Tables[0];
-              string fileProcessedID = dt.Rows[0]["UNIQ_ID"].ToString();
-              if (!CommonFunctions.IsInteger(fileProcessedID))
-                fileProcessedID = "-1";
-              Exception ex = da.insertDataTabletoSQL(tablename, dt);
-              if (ex != null)
-              {
-                // update the files processed record with the error
-                string sql = "Update FilesProcessed SET ErrorMessage = 'Table:" + dt.TableName + " Error=" + ex.Message + "', StackTrace = '" + ex.StackTrace + "' WHERE ID = " + fileProcessedID;
-                da.updateDataFromSQL(sql);
-                throw ex;
-              }
-            }
-          }
+          saveTableFromFileData(tablename, headers, records, _dataTypes, true);
         }
         // else
         //     No: do nothing
       }
     }
-
     private List<string> getUnibillFilesToProcess(int maxFilesToProcess = -1)
     {
       DirectoryInfo dir = new DirectoryInfo(_localTextDirecory);
@@ -530,28 +387,7 @@ namespace CCI.Sys.Processors
     }
     #endregion
 
-    #region other private methods
 
-    private string getAppSetting(string name, string defaultValue = "")
-    {
-      string val = ConfigurationManager.AppSettings[name];
-      if (string.IsNullOrWhiteSpace(val))
-        val = defaultValue;
-      return val;
-    }
-    private List<string> getFilesProcessed(string filetype)
-    {
-      List<string> fileNames = new List<string>();
-      using (DataAccess db = new DataAccess())
-      {
-        DataSet ds = db.getFilesProcessed(filetype);
-        DataTable dt = ds.Tables[0];
-        foreach (DataRow row in dt.Rows)
-          fileNames.Add(row["FileName"].ToString());
-        return fileNames;
-      }
-    }
-    #endregion
   }
 
 }

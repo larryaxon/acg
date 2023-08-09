@@ -141,6 +141,8 @@
     <Compile Include="Data\SearchDataSource\SearchDataSourceCarrier.cs" />
     <Compile Include="Data\SecurityDB.cs" />
     <Compile Include="Data\SQLConnectionFactory.cs" />
+    <Compile Include="Processors\ImportFileProcessorBase.cs" />
+    <Compile Include="Processors\InvoiceCreationProcessor.cs" />
     <Compile Include="Processors\InvoiceFtpProcessor.cs" />
     <Compile Include="SecurityEngine\LoadSecurity.cs" />
     <Compile Include="SecurityEngine\SecurityFactory.cs" />

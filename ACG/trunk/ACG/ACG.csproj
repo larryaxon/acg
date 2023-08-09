@@ -151,6 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\ACGCommands.cs" />
+    <Compile Include="Common\ACGFileInfo.cs" />
     <Compile Include="Common\ACGForm.cs" />
     <Compile Include="Common\ACGFormItem.cs" />
     <Compile Include="Common\ACGFtp.cs" />

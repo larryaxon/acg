@@ -5,16 +5,20 @@
   </section>
   <div class="row">
     <section class="col-md-4">
-      @Html.ActionLink("List Unprocessed Zip Files", "UnprocessedFiles", new { }, new { @class = "btn btn-primary btn-sm detail" })
     </section>
     <section class="col-md-4">
-      @Html.ActionLink("Download Unprocessed Zip Files", "ProcessFiles", new { }, new { @class = "btn btn-primary btn-sm detail" })
+      @Html.ActionLink("List Unprocessed Zip Files", "UnprocessedZipFiles", new { }, new { @class = "btn btn-primary btn-sm detail" })
+    </section>
+    <section class="col-md-4">
+      @Html.ActionLink("Download Unprocessed Zip Files", "ProcessZipFiles", new { }, new { @class = "btn btn-primary btn-sm detail" })
 
     </section>
 
   </div>
   <br />
   <div class="row">
+    <section class="col-md-4">
+    </section>
     <section class="col-md-4">
       @Html.ActionLink("List Unprocessed Carvana Files", "UnprocessedUnibillFiles", new { }, new { @class = "btn btn-primary btn-sm detail" })
     </section>
@@ -23,6 +27,19 @@
 
     </section>
 
+  </div>
+  <br />
+  <div class="row">
+
+    <section class="col-md-4">
+      @Html.ActionLink("Upload Creatio Files", "FileUpload", new { }, new { @class = "btn btn-primary btn-sm detail" })
+    </section>
+    <section class="col-md-4">
+      @Html.ActionLink("List Unprocessed Creatio Files", "UnprocessedNetworkInventoryFiles", new { }, new { @class = "btn btn-primary btn-sm detail" })
+    </section>
+    <section class="col-md-4">
+      @Html.ActionLink("Import Creatio Network Inventory Files", "ImportCreatioNetworkInventory", new { }, new { @class = "btn btn-primary btn-sm detail" })
+    </section>
   </div>
   <div>
 

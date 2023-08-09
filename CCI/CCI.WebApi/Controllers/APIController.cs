@@ -18,14 +18,15 @@ namespace CCI.WebApi.Controllers
 {
   public class APIController : ApiController
   {
-
+    const string FILESPROCESSEDFILETYPEINVOICEIQ = CCI.Common.CommonData.FILESPROCESSEDFILETYPEINVOICEIQ;
+    const string FILESPROCESSEDFILETYPEUNIBILL = CCI.Common.CommonData.FILESPROCESSEDFILETYPEUNIBILL;
     [Route("api/invoiceiq/processfiles")]
     [HttpGet]
     public List<string> ProcessInvoiceIQFiles()
     {
       using (InvoiceFtpProcessor processor = new InvoiceFtpProcessor())
       {
-        List<string> filesProcessed = processor.ProcessFiles();
+        List<string> filesProcessed = processor.ProcessFiles(FILESPROCESSEDFILETYPEINVOICEIQ);
         return filesProcessed;
       }
     }
@@ -35,7 +36,7 @@ namespace CCI.WebApi.Controllers
     {
       using (InvoiceFtpProcessor processor = new InvoiceFtpProcessor())
       {
-        List<string> filesProcessed = processor.getFilesToProcess().Select(f => f.FullName).ToList();
+        List<string> filesProcessed = processor.getFilesToProcess(FILESPROCESSEDFILETYPEINVOICEIQ).Select(f => f.FullName).ToList();
         return filesProcessed;
       }
     }
@@ -45,7 +46,7 @@ namespace CCI.WebApi.Controllers
     {
       using (InvoiceFtpProcessor processor = new InvoiceFtpProcessor())
       {
-        processor.InitalFilesProcessedLoad();
+        processor.InitalFilesProcessedLoad(FILESPROCESSEDFILETYPEINVOICEIQ);
         return "Complete";
       }
     }
@@ -94,6 +95,15 @@ namespace CCI.WebApi.Controllers
           return ToStream(stream, "Invoice" + id.ToString() + ".xlsx");
         }
       
+    }
+    [HttpGet]
+    [Route("api/invoiceiq/uploadpath")]
+    public string GetUploadPath()
+    {
+      using (InvoiceCreationProcessor processor = new InvoiceCreationProcessor())
+      {
+        return processor.LocalFolder;
+      }
     }
     private HttpResponseMessage ToStream(MemoryStream stream, string filename)
     {
