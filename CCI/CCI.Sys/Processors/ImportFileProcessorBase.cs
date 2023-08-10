@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Reflection.Emit;
 using System.Runtime.Remoting.Channels;
@@ -51,6 +52,7 @@ namespace CCI.Sys.Processors
       { "FEAT_CHG_AMT", "decimal(8,2)" },
       { "INV_DATE", "date" },
       { "LD_CHG_AMT", "decimal(8,2)" },
+      { "MRC ($)", "decimal(8,2)" },
       { "MSG_CHG_AMT", "decimal(8,2)" },
       { "ORIG_INV_DATE", "date" },
       { "PMTS_APP_THRU_DATE", "date" },
@@ -110,6 +112,15 @@ namespace CCI.Sys.Processors
       public Dictionary<string, List<string>> Headers { get; set; } = new Dictionary<string, List<string>>();
       public Dictionary<string, List<List<object>>> Records { get; set; } = new Dictionary<string, List<List<object>>>();
     }
+    public class ImportFileSpecs
+    {
+      public string FileType { get; set; }
+      public string TableName { get; set; }
+      public string HeaderLine { get; set; }
+      public bool RepaceAllRecords { get; set; } = false;
+      public bool IsActive { get; set; } = true;
+    }
+    internal List<ImportFileSpecs> _importFileSpecs = new List<ImportFileSpecs>();
     public ImportFileProcessorBase()
     {
       _localDirectory = getAppSetting(APPSETTINGLOCALBASEFOLDER, null);
@@ -118,9 +129,9 @@ namespace CCI.Sys.Processors
     public void Dispose()
     {
     }
-    public List<ACGFileInfo> getFilesToProcess(string fileType)
+    public List<ACGFileInfo> getFilesToProcess(string fileType = null)
     {
-      List<string> processedFiles = getFilesProcessed(fileType);
+      List<string> processedFiles = getFilesProcessed(fileType);  
       List<ACGFileInfo> files = FileList.ToList();
       List<ACGFileInfo> filesToProcess = files.Where(ftp => !processedFiles.Contains(ftp.FullName)).ToList();
       return filesToProcess;
@@ -168,11 +179,82 @@ namespace CCI.Sys.Processors
       }
       return fldarray;
     }
-    internal void saveTableFromFileData(string tablename, List<string> headers, List<List<object>> records, Dictionary<string, string> datatypes, bool hasID)
+    internal ImportFileInfo ImportFile(ACGFileInfo file, out string fileType)
+    {
+      ImportFileInfo importFile = new ImportFileInfo();
+      importFile.filepath = Path.Combine(LocalFolder, file.Name);
+      int fileProcessedID = 0;
+
+      // Read the text file line by line
+      using (StreamReader sr = new StreamReader(importFile.filepath))
+      {
+        string headerline = sr.ReadLine();
+        if (!_importFileSpecs.Where(s => s.HeaderLine.Equals(headerline, StringComparison.CurrentCultureIgnoreCase)).Any())
+          throw new Exception("Import File with Header Line " + headerline + " does not exist");
+        ImportFileSpecs spec = _importFileSpecs.Where(s => s.HeaderLine.Equals(headerline, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
+        fileType = spec.FileType;
+        using (DataAccess da = new DataAccess())
+        {
+          fileProcessedID = da.addFileProcessed(fileType, importFile.filepath, DateTime.Now, -1, false, "Import " + fileType);
+        }
+        string[] headers = headerline.Split(',');
+        string[] allheaders = new string[headers.Length + 1]; // add one for fileprocessedid
+        Array.Copy(headers, 0, allheaders, 0, headers.Length);
+        allheaders[headers.Length] = "FilesProcessedID";
+
+        List<List<object>> theserecords = new List<List<object>>();
+        string line;
+        // Load the data from the csv into headers and collections of fieldvalues
+        while ((line = sr.ReadLine()) != null)
+        {
+          string[] values = ACG.Common.CommonFunctions.parseString(line);
+          object[] fieldvalues = new string[values.Length + 1];
+          Array.Copy(values, 0, fieldvalues, 0, values.Length);
+          // take any values that cannot be converted to the correct datatype and make them null
+          fieldvalues = adjustFieldsForDataType(fieldvalues, allheaders);
+          int fileprocessedidsub = fieldvalues.Length - 1;
+
+          fieldvalues[fileprocessedidsub] = fileProcessedID; // so use the file processed it to uniquely identify this batch
+          List<object> fields = new List<object>();
+          fields.AddRange(fieldvalues);
+          theserecords.Add(fields); // now add the new record (which is itself a list of fields) to the collection for this record type
+        }
+        importFile.Records.Add(fileType, theserecords);
+        importFile.Headers.Add(fileType, allheaders.ToList());
+        return importFile;
+
+      }
+    }
+
+    internal void SaveImportFile(ImportFileInfo file, string tablename, bool replaceall = false)
+    {
+      {
+        foreach (string rectype in file.Headers.Keys)
+        {
+          List<string> headers = file.Headers[rectype]; // now get the list of headers
+          if (file.Records.ContainsKey(rectype)) // does the records collection have this record type?
+          {
+            // yes, so add the records to the db
+            List<List<object>> records = file.Records[rectype]; // next get all the records with matching values
+            saveTableFromFileData(tablename, headers, records, _dataTypes, true, replaceall);
+          }
+          // else
+          //     No: do nothing
+        }
+      }
+    }
+
+    internal void saveTableFromFileData(string tablename, List<string> headers, 
+      List<List<object>> records, Dictionary<string, string> datatypes, bool hasID, bool replaceall = false)
     {
       using (DataAccess da = new DataAccess())
       {
-        // all of these UniBill files have an ID so we set the last parm to true
+        if (replaceall) // this means delete the data before we add it again
+        {
+          string deletesql = "Truncate Table " + tablename;
+          da.updateDataFromSQL(deletesql);
+        }
+        // all of these  files have an ID so we set the last parm to true
         DataSet ds = da.getDatasetFromDictionaryData(tablename, headers, records, _dataTypes, true);
         if (ds != null && ds.Tables.Count > 0)
         {

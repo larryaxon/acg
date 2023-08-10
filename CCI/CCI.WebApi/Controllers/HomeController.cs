@@ -89,21 +89,21 @@ namespace CCI.WebApi.Controllers
     #endregion
 
     #region Create Invoice
-    public ActionResult UnprocessedNetworkInventoryFiles()
+    public ActionResult UnprocessedCreatioFiles()
     {
       using (InvoiceCreationProcessor processor = new InvoiceCreationProcessor())
       {
-        List<string> filesProcessed = processor.ListUnprocessedNetworkInventory();
+        List<string> filesProcessed = processor.ListUnprocessedImportFiles();
         List<InvoiceFilesListGUIModel> model = new List<InvoiceFilesListGUIModel>();
         foreach (string file in filesProcessed)
         {
           model.Add(new InvoiceFilesListGUIModel() { FileName = file });
         }
-        ViewBag.FileListTitle = "Carvana Files Not Yet Imported";
+        ViewBag.FileListTitle = "Creatio Not Yet Imported";
         return View("FileList", model);
       }
     }
-    public ActionResult ImportCreatioNetworkInventory()
+    public ActionResult ImportCreatioFiles()
     {
       using (InvoiceCreationProcessor processor = new InvoiceCreationProcessor())
       {

@@ -25,17 +25,38 @@ namespace CCI.Sys.Processors
     private const string APPSETTINGCREATIOIMPORTFOLDER = "CreatioImportFolder";
     private const string FILETYPECREATIONETWORKINVENTORY = "CreatioNetworkInventory";
     private string _creatioImportFolder = "\\InvoiceIQ\\Creatio\\";
-    public class CreatioNetworkInventoryFile : ImportFileInfo
-    {
-    }
+
+
+
+
     public InvoiceCreationProcessor() : base()
     {
       _creatioImportFolder = getAppSetting(APPSETTINGCREATIOIMPORTFOLDER, _creatioImportFolder);
+      _importFileSpecs = new List<ImportFileSpecs>()
+      {
+        new ImportFileSpecs()
+        {
+          FileType = "NI",
+          TableName = "[dbo].[CreatioNetworkInventory]",
+          HeaderLine = "Number,Carrier,Service Location,Parent Account No.,Child Account No.,Product Nickname,MRC ($),Stage,Status",
+          RepaceAllRecords = true,
+          IsActive = true
+        },
+        new ImportFileSpecs()
+        {
+          FileType = "CreatioAudit",
+          TableName = "[dbo].[CreatioAudit]",
+          HeaderLine = "",
+          RepaceAllRecords = false,
+          IsActive = false
+        }
+      };
       _localDirectory = _localDirectory + _creatioImportFolder;
     }
     public List<string> ImportCreatioNetworkInventory()
     {
-      return ProcessFiles(FILETYPECREATIONETWORKINVENTORY);
+      List<ACGFileInfo> files = GetFileList();
+      return ProcessFiles();
     }
     public List<ACGFileInfo> GetFileList(string directory = null)
     {
@@ -58,81 +79,27 @@ namespace CCI.Sys.Processors
       }
       return _fileList;
     }
-    public List<string> ListUnprocessedNetworkInventory()
+    public List<string> ListUnprocessedImportFiles()
     {
-      List<string> filesToProcess = GetFileList(LocalFolder).Select(f => f.Name).ToList();
-      return filesToProcess;
+      GetFileList(LocalFolder);
+      List<ACGFileInfo> filesToProcess = getFilesToProcess();
+      List<string> filelist = filesToProcess.Select(f => f.Name).ToList();
+      return filelist;
     }
-    public List<string> ProcessFiles(string fileType)
+    public List<string> ProcessFiles()
     {
-      List<ACGFileInfo> filesToProcess = getFilesToProcess(fileType);
+      GetFileList(LocalFolder);
+      List<ACGFileInfo> filesToProcess = getFilesToProcess();
       foreach (ACGFileInfo file in filesToProcess)
-        ProcessFile(file, fileType);
+        ProcessFile(file);
       return filesToProcess.Select(f => f.Name).ToList();
     }
-    private void ProcessFile(ACGFileInfo file, string fileType)
+    private void ProcessFile(ACGFileInfo file)
     {
-      CreatioNetworkInventoryFile niFile = ImportNetworkInventory(file, fileType);
-    }
-    private CreatioNetworkInventoryFile ImportNetworkInventory(ACGFileInfo file, string fileTyp)
-    {
-      CreatioNetworkInventoryFile networkInventory = new CreatioNetworkInventoryFile();
-      networkInventory.filepath = Path.Combine(LocalFolder, file.Name);
-      int fileProcessedID = 0;
-      using (DataAccess da = new DataAccess())
-      {
-        fileProcessedID = da.addFileProcessed(FILETYPECREATIONETWORKINVENTORY, networkInventory.filepath, DateTime.Now, -1, false, "Import Creatio Network Inventory");
-      }
-      // Read the text file line by line
-
-      using (StreamReader sr = new StreamReader(networkInventory.filepath))
-      {
-        string line;
-        line = sr.ReadLine();
-        string[] headers = line.Split(',');
-        string[] allheaders = new string[headers.Length + 1]; // add one for fileprocessedid
-        Array.Copy(headers, 0, allheaders, 0, headers.Length);
-        allheaders[headers.Length] = "FilesProcessedID";
-
-        List<List<object>> theserecords = new List<List<object>>();
-        // Load the data from the csv into headers and collections of fieldvalues
-        while ((line = sr.ReadLine()) != null)
-        {
-          string[] values = ACG.Common.CommonFunctions.parseString(line);
-          object[] fieldvalues = new string[values.Length + 1];
-          Array.Copy(values, 0, fieldvalues, 0, values.Length);
-          // take any values that cannot be converted to the correct datatype and make them null
-          fieldvalues = adjustFieldsForDataType(fieldvalues, headers);
-          int fileprocessedidsub = fieldvalues.Length - 1;
-
-          fieldvalues[fileprocessedidsub] = fileProcessedID; // so use the file processed it to uniquely identify this batch
-          List<object> fields = new List<object>();
-          fields.AddRange(fieldvalues);
-          theserecords.Add(fields); // now add the new record (which is itself a list of fields) to the collection for this record type
-        }
-        networkInventory.Records.Add("NI", theserecords);
-        networkInventory.Headers.Add("NI", allheaders.ToList());
-        return networkInventory;
-
-      }
-    }
-    private void SaveNetworkInventoryFile(CreatioNetworkInventoryFile file)
-    {
-      {
-        foreach (string rectype in file.Headers.Keys)
-        {
-          List<string> headers = file.Headers[rectype]; // now get the list of headers
-          if (file.Records.ContainsKey(rectype)) // does the records collection have this record type?
-          {
-            // yes, so add the records to the db
-            List<List<object>> records = file.Records[rectype]; // next get all the records with matching values
-            string tablename = "[dbo].[CreatioNetworkInventory]"; // now get the table name
-            saveTableFromFileData(tablename, headers, records, _dataTypes, true);
-          }
-          // else
-          //     No: do nothing
-        }
-      }
+      string fileType;
+      ImportFileInfo niFile = ImportFile(file, out fileType);
+      ImportFileSpecs spec = _importFileSpecs.Where(s => s.FileType == fileType).FirstOrDefault();
+      SaveImportFile(niFile, spec.TableName, spec.RepaceAllRecords);
     }
   }
 }
