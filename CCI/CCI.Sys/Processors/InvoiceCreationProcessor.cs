@@ -45,17 +45,18 @@ namespace CCI.Sys.Processors
         new ImportFileSpecs()
         {
           FileType = "CreatioAudit",
-          TableName = "[dbo].[CreatioAudit]",
-          HeaderLine = "",
+          TableName = "[dbo].[CreatioBillAudit]",
+          HeaderLine = "Number,Bill cycle date,Carrier invoice date,Order,Carrier,Location,Product,BAN,Parent,Child,Carrier charges to audit,Order.MRC,Variance (needs to be a calculated field),Total bill,First invoice1,Multi-Site Invoice,Ancillary charges,Comments,Dispute Pending,Dispute Notes,Stage,Status,Install Date,Building Type",
           RepaceAllRecords = false,
-          IsActive = false
+          IsActive = true,
+          FixupHeaderNames = true
         }
       };
       _localDirectory = _localDirectory + _creatioImportFolder;
     }
-    public List<string> ImportCreatioNetworkInventory()
+    public List<string> ImportCreatioFiles()
     {
-      List<ACGFileInfo> files = GetFileList();
+      //List<ACGFileInfo> files = GetFileList();
       return ProcessFiles();
     }
     public List<ACGFileInfo> GetFileList(string directory = null)

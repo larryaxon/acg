@@ -107,7 +107,7 @@ namespace CCI.WebApi.Controllers
     {
       using (InvoiceCreationProcessor processor = new InvoiceCreationProcessor())
       {
-        List<string> filesProcessed = processor.ImportCreatioNetworkInventory();
+        List<string> filesProcessed = processor.ImportCreatioFiles();
         List<InvoiceFilesListGUIModel> model = new List<InvoiceFilesListGUIModel>();
         foreach (string file in filesProcessed)
         {

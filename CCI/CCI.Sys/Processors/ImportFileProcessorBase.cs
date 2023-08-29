@@ -28,12 +28,16 @@ namespace CCI.Sys.Processors
       { "ACCT_LEVEL", "int" },
       { "ACTIVITY_COMP_DATE", "date" },
       { "AIR_CHG_AMT", "decimal(8,2)" },
+      { "Ancillary_charges","bit" },
       { "BAL_FWD", "decimal(8,2)" },
       { "BAL_FWD_ADJ", "decimal(8,2)" },
       { "BEG_CHG_DATE", "date" },
+      { "Bill_cycle_date", "date" },
       { "BILL_PERIOD_END", "date" },
       { "BILL_PERIOD_START", "date" },
+      { "Carrier_invoice_date", "date" },
       { "CHG_AMT", "decimal(8,2)" },
+      { "Carrier_charges_to_audit", "decimal(10,2)" },
       { "CHG_BASIS", "decimal(8,2)" },
       { "CHG_QTY1_BILLED", "decimal(8,2)" },
       { "CHG_QTY1_USED", "decimal(8,2)" },
@@ -47,13 +51,18 @@ namespace CCI.Sys.Processors
       { "DATE_RECEIVED_FROM_SP", "date" },
       { "DISC_CHG_AMT", "decimal(8,2)" },
       { "DISC_PCT", "decimal(8,2)" },
+      { "Dispute_Pending", "bit" },
       { "DUE_DATE" , "date" },
       { "END_CHG_DATE", "date" },
       { "FEAT_CHG_AMT", "decimal(8,2)" },
+      { "First_invoice1", "bit" },
+      { "Install_Date", "date" },
       { "INV_DATE", "date" },
       { "LD_CHG_AMT", "decimal(8,2)" },
       { "MRC ($)", "decimal(8,2)" },
       { "MSG_CHG_AMT", "decimal(8,2)" },
+      { "Multi_Site_Invoice", "bit" },
+      { "Order_MRC", "decimal(10,2)" },
       { "ORIG_INV_DATE", "date" },
       { "PMTS_APP_THRU_DATE", "date" },
       { "PMTS_RCVD", "decimal(8,2)" },
@@ -67,6 +76,7 @@ namespace CCI.Sys.Processors
       { "SP_TOT_NEW_CHGS", "decimal(8,2)" },
       { "SVC_ESTABLISH_DATE", "date" },
       { "TAX_SUR_CHG_AMT", "decimal(8,2)" },
+      { "Total_bill", "decimal(10,2)" },
       { "TOT_AMT_DUE", "decimal(8,2)" },
       { "TOT_AMT_DUE_ADJ", "decimal(8,2)" },
       { "TOT_DISC_AMT", "decimal(8,2)" },
@@ -77,6 +87,7 @@ namespace CCI.Sys.Processors
       { "TOT_TAXSUR", "decimal(8,2)" },
       { "TOT_USAGE_CHGS", "decimal(8,2)" },
       { "USG_BAND", "decimal(8,2)" },
+      { "Variance_needs_to_be_a_calculated_field", "decimal(10,2)" },
       { "FilesProcessedID", "int" }
 
     };
@@ -119,6 +130,7 @@ namespace CCI.Sys.Processors
       public string HeaderLine { get; set; }
       public bool RepaceAllRecords { get; set; } = false;
       public bool IsActive { get; set; } = true;
+      public bool FixupHeaderNames { get; set; } = false;
     }
     internal List<ImportFileSpecs> _importFileSpecs = new List<ImportFileSpecs>();
     public ImportFileProcessorBase()
@@ -175,6 +187,12 @@ namespace CCI.Sys.Processors
             else
               fldarray[i] = CommonFunctions.CInt(fldarray[i]);
             break;
+          case "bit":
+            if (!CommonFunctions.IsBoolean(fldarray[i]))
+              fldarray[i] = null;
+            else
+              fldarray[i] = CommonFunctions.CBoolean(fldarray[i]) ? "true" : "false";
+            break;
         }
       }
       return fldarray;
@@ -197,6 +215,8 @@ namespace CCI.Sys.Processors
         {
           fileProcessedID = da.addFileProcessed(fileType, importFile.filepath, DateTime.Now, -1, false, "Import " + fileType);
         }
+        if (spec.FixupHeaderNames)
+          headerline = headerline.Replace(" ", "_").Replace("-","_");
         string[] headers = headerline.Split(',');
         string[] allheaders = new string[headers.Length + 1]; // add one for fileprocessedid
         Array.Copy(headers, 0, allheaders, 0, headers.Length);
