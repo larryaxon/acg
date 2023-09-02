@@ -28,22 +28,25 @@ namespace ACG.Common
       }
       Directory.CreateDirectory((string)targetdirectory);
       string finaldestination = Path.Combine(destination, targetdirectory);
-      using (var zipArchive = ZipFile.OpenRead(zipFile))
+      if (File.Exists(zipFile))
       {
-        foreach (ZipArchiveEntry entry in zipArchive.Entries)
+        using (var zipArchive = ZipFile.OpenRead(zipFile))
         {
-          string path = Path.Combine(finaldestination, entry.Name);
-          if (IsDirectory(entry))
+          foreach (ZipArchiveEntry entry in zipArchive.Entries)
           {
-            Directory.CreateDirectory(path);
-          }
-          else
-          {
-            using (var stream = entry.Open())
+            string path = Path.Combine(finaldestination, entry.Name);
+            if (IsDirectory(entry))
             {
-              using (var fileStream = File.Create(path))
+              Directory.CreateDirectory(path);
+            }
+            else
+            {
+              using (var stream = entry.Open())
               {
-                stream.CopyTo(fileStream);
+                using (var fileStream = File.Create(path))
+                {
+                  stream.CopyTo(fileStream);
+                }
               }
             }
           }

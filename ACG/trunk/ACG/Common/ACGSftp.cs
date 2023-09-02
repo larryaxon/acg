@@ -34,11 +34,13 @@ namespace ACG.Common
     }
     public string DownloadFile(ACGFtpFileInfo file, string localFolder)
     {
-      string pathLocalFile = localFolder + "\\" + file.Name;
+      string pathLocalFile = Path.Combine(localFolder,file.Name);
+
       using (Stream fileStream = File.OpenWrite(pathLocalFile))
       {
         _sftpClient.DownloadFile(file.FullName, fileStream);
       }
+
       return pathLocalFile;
     }
   }

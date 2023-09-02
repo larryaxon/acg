@@ -72,7 +72,12 @@ namespace CCI.Sys.Processors
       _ftpUrl = getAppSetting(APPSETTINGFTPURL, null);
       _ftpUsername = getAppSetting(APPSETTINGFTPUSERNAME, null);
       _ftpPassword = getAppSetting(APPSETTINGFTPPASSWORD, null);
-      _localDirectory = getAppSetting(APPSETTINGLOCALFTPFOLDER, null) + FILEDOWNLOADFOLDER;
+      const string APPSETTINGLOCALBASEFOLDER = "LocalBaseFolder";
+      string localroot = getAppSetting(APPSETTINGLOCALBASEFOLDER, null);
+      if (FILEDOWNLOADFOLDER.StartsWith(localroot, StringComparison.CurrentCultureIgnoreCase))
+        _localDirectory = FILEDOWNLOADFOLDER;
+      else
+        _localDirectory = localroot + FILEDOWNLOADFOLDER;
       if (_ftpUrl == null || _ftpUsername == null || _ftpPassword == null)
       {
         throw new Exception("FTP settings are invalid");
@@ -113,7 +118,10 @@ namespace CCI.Sys.Processors
     {
       if (directory == null)
         directory = _ftpDirectory;
-      _fileList.Clear();
+      if (_fileList == null)
+        _fileList = new List<ACGFileInfo>();
+      else
+        _fileList.Clear();
       foreach (ACGFtpFileInfo fileInfo in _sftp.ListFiles(directory))
         _fileList.Add(fileInfo.ToFtpFileInfo());
       return _fileList;
@@ -190,7 +198,7 @@ namespace CCI.Sys.Processors
     private string moveToHome(string oldPath, string homefolder)
     {
       string newPath = changeFolder(oldPath, homefolder);
-      if (!File.Exists(newPath))
+      if (File.Exists(oldPath) && !File.Exists(newPath))
         File.Move(oldPath, newPath);
       return newPath;
     }
@@ -217,7 +225,12 @@ namespace CCI.Sys.Processors
     public string DownloadFile(ACGFileInfo file, string localfolder = null)
     {
       if (localfolder == null)
-        localfolder = Path.Combine(_localDirectory, "downloads");
+      {
+        if (_localDirectory.Contains("downloads"))
+          localfolder = _localDirectory;
+        else
+          localfolder = Path.Combine(_localDirectory, "downloads");
+      }
       string filepath = _sftp.DownloadFile((ACGFtpFileInfo)file, localfolder);
       return filepath;
     }
