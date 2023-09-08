@@ -5,9 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
+using System.Net.Http;
+using System.Net;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using System.Linq.Expressions;
 
 namespace CCI.WebApi.Controllers
 {
@@ -174,6 +178,19 @@ namespace CCI.WebApi.Controllers
         return Json("No files selected.");
       }
     }
+    public FileStreamResult DownloadCreatioInvoice(DateTime? fromDate = null, DateTime? toDate = null)
+    {
+      DateTime defaultFromDate = new DateTime(2023, 6, 15);
+      DateTime defaultToDate = new DateTime(2023, 7, 14);
+
+      using (InvoiceCreationProcessor processor = new InvoiceCreationProcessor())
+      {
+        string filename = "Carvana Audit " + DateTime.Today.ToShortDateString() + ".xlsx";
+        MemoryStream stream = processor.GetCreatioInvoice(fromDate ?? defaultFromDate, toDate ?? defaultToDate);
+        FileStreamResult result = ToExcel(stream, filename);
+        return result;
+      }
+    }
     #endregion
     private string ConvertListToString(List<string> list)
     {
@@ -184,5 +201,30 @@ namespace CCI.WebApi.Controllers
       }
       return txt;
     }
+    private HttpResponseMessage ToResponse(MemoryStream stream, string filename)
+    {
+      var result = new HttpResponseMessage(HttpStatusCode.OK)
+      {
+        Content = new ByteArrayContent(stream.ToArray())
+      };
+      result.Content.Headers.ContentDisposition =
+          new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment")
+          {
+            FileName = filename
+          };
+      result.Content.Headers.ContentType =
+          new MediaTypeHeaderValue("application/octet-stream");
+
+      return result;
+    }
+    private FileStreamResult ToExcel(MemoryStream stream, string filename = null)
+    {
+      if (filename == null)
+        filename = "ExcelReport" + "-" + DateTime.Today.ToString() + ".xlsx";
+      stream.Seek(0, 0);
+      FileStreamResult result = new FileStreamResult(stream, "application/vnd.ms-excel") { FileDownloadName = filename }; // and return the text file
+      return result;
+    }
+
   }
 }

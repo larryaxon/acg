@@ -291,5 +291,36 @@ namespace ACG.Common
       }
       return -1;
     }
+    public static string PrettyPrintName(string name)
+    {
+      StringBuilder sb = new StringBuilder();
+
+      for (int i = 0; i < name.Length; i++)
+      {
+        if (name[i] == '_')
+          sb.Append(' ');
+        else
+        {
+          if (i == 0)
+          {
+            if (Char.IsLower(name[i]))
+              sb.Append(Char.ToUpper(name[i]));
+            else
+              sb.Append(name[i]);
+          }
+          else
+          {
+            if (Char.IsUpper(name[i]) && i > 0 && name[i - 1] != ' ')
+              sb.Append(" ");
+            sb.Append(name[i]);
+          }
+        }
+      }
+      string displayName = sb.ToString().Replace("  ", " ").Trim();
+      // a couple of standard all caps tokens get split by this. Let's put them back
+      displayName = displayName.Replace(" I D", " ID").Replace(" D N I S", " DNIS");
+      return displayName;
+    }
+
   }
 }

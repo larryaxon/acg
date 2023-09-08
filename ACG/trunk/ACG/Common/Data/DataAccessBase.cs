@@ -701,27 +701,41 @@ namespace ACG.Common.Data
 
     protected DataSet getDataFromSQL(string mySQL)
     {
-      DataSet dsSQL = new DataSet();
-      SqlCommand command = createCommand();
+      DataSet ds = new DataSet();
+      //SqlCommand command = createCommand();
       // Construct the stored procedure command instance
-      command.CommandType = CommandType.Text;
-      command.CommandText = mySQL;
+      //command.CommandType = CommandType.Text;
+      //command.CommandText = mySQL;
       // Execute the command and return the values in a DataSet instance
       //if (inTransaction)
       //  command.Transaction = thisTransaction;
+      //try
+      //{
+      //  dsSQL.Load(command.ExecuteReader(), LoadOption.PreserveChanges, tables);
+      //}
+      //catch (SqlException e)
+      //{
+      //  //if (inTransaction)
+      //  //  command.Transaction.Rollback();
+      //  throw e;
+      //}
+      //sqlConnection.Close();
+      SqlCommand command = new SqlCommand(mySQL, sqlConnection);
+      SqlDataAdapter da = new SqlDataAdapter();
       try
       {
-        dsSQL.Load(command.ExecuteReader(), LoadOption.PreserveChanges, tables);
+        //if (sql.StartsWith("exec", StringComparison.CurrentCultureIgnoreCase))
+        //  command.CommandType = CommandType.StoredProcedure;
+        //command.Parameters.AddWithValue("@parm1", id);//if you have parameters.
+        da = new SqlDataAdapter(command);
+        da.Fill(ds);
+        //ds.Load(command.ExecuteReader(), LoadOption.PreserveChanges, tables);
       }
-      catch (SqlException e)
+      catch (Exception ex)
       {
-        //if (inTransaction)
-        //  command.Transaction.Rollback();
-        throw e;
+        throw (ex);
       }
-      sqlConnection.Close();
-
-      return dsSQL;
+      return ds;
     }
 
     protected DataSet getDataFromSQL(string[] mySQLs)

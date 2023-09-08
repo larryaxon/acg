@@ -17,6 +17,9 @@ using System.Windows.Forms;
 using OfficeOpenXml;
 using static OfficeOpenXml.ExcelErrorValue;
 using static System.Net.WebRequestMethods;
+using Microsoft.Office.Interop.Excel;
+using System.Net;
+using System.Web.Mvc;
 
 namespace CCI.Sys.Processors
 {
@@ -95,6 +98,67 @@ namespace CCI.Sys.Processors
         ProcessFile(file);
       return filesToProcess.Select(f => f.Name).ToList();
     }
+    public MemoryStream GetCreatioInvoice(DateTime fromDate, DateTime toDate)
+    {
+      Dictionary<string, object> data = new Dictionary<string, object>() { {"@FromDate", fromDate }, { "@ToDate", toDate  } };
+      DataSet ds = GetProcReportDataSetFromQuery("Exec CreatioAuditReport", data);
+      List<string> tabnames = new List<string>() { "Audit", "Understanding your Audit" };
+      Dictionary<int, List<int>> tabSelectMap = new Dictionary<int, List<int>>()
+      {
+        { 1, new List<int>() { 1 } },
+        { 2, new List<int>() { 2 } }
+      };
+
+      using (ExcelProcessor excel = ExcelProcessor.CreateWorkbookFromDataset(ds, tabnames, tabSelectMap))
+      {
+        MemoryStream stream = excel.ToStream();
+        return stream;
+      }
+
+
+    }
+
+
+    public DataSet GetProcReportDataSetFromQuery(string procname, Dictionary<string, object> parms, int maxrecords = -1)
+    {
+      StringBuilder sql = new StringBuilder();
+      if (!procname.TrimStart().StartsWith("exec ", StringComparison.CurrentCultureIgnoreCase))
+        sql.Append("EXEC ");
+      sql.Append(procname);
+      if (parms != null)
+      {
+        sql.Append(' ');
+        foreach (KeyValuePair<string, object> parm in parms)
+        {
+          if (!parm.Key.StartsWith("@"))
+            sql.Append("@"); // flag the parm as a proc parm
+          sql.Append(parm.Key);
+          sql.Append(" = ");
+          string val;
+          if (parm.Value == null)
+            val = "null";
+          else
+          {
+            Type t = parm.Value.GetType();
+            // if this is a string or a date, enclose in quotes (but only of there are not already enclosing quotes)
+            if ((t == typeof(string) || t == typeof(DateTime)) && !parm.Value.ToString().StartsWith("'"))
+              val = "'" + parm.Value.ToString() + "'";
+            else if (t == typeof(bool))
+              val = ((bool)parm.Value) ? "1" : "0";
+            else
+              val = parm.Value.ToString();
+          }
+          sql.Append(val);
+          sql.Append(",");
+        }
+        sql.Length--; // strip last comma
+      }
+      using (DataAccess da = new DataAccess())
+      {
+        return da.GetDataFromSQL(sql.ToString());
+      }
+    }
+
     private void ProcessFile(ACGFileInfo file)
     {
       string fileType;

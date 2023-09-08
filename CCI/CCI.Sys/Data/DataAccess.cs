@@ -60,7 +60,12 @@ Insert Into FilesProcessed ([FileType]
       return id ?? 0;
     }
 
-
+    public DataSet getCreationInvoice(DateTime fromDate, DateTime toDate)
+    {
+      string sql = "SELECT * from [CreatioAuditView] WHERE [Invoice Date] between '" + fromDate.ToShortDateString() + "' AND '" + toDate.ToShortDateString() + "'";
+      DataSet ds = GetDataFromSQL(sql);
+      return ds;
+    }
     #endregion
     public DataSet getDatasetFromDictionaryData(string tablename, List<string> headers, List<List<object>> records, Dictionary<string, string> datatypes = null,  bool hasID = false)
     {
