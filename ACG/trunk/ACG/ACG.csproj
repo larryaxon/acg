@@ -183,6 +183,8 @@
     <Compile Include="Common\Data\SQLConnectionFactory.cs" />
     <Compile Include="Common\EncryptDecryptString.cs" />
     <Compile Include="Common\FormTypes.cs" />
+    <Compile Include="Common\ImportExcelFileInfo.cs" />
+    <Compile Include="Common\ImportFileInfo.cs" />
     <Compile Include="Common\ISecurityContext.cs" />
     <Compile Include="Common\ISortedItemBase.cs" />
     <Compile Include="Common\Logging\Log.cs" />

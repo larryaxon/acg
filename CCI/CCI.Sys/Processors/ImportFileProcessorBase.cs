@@ -117,12 +117,7 @@ namespace CCI.Sys.Processors
 
 
     #endregion
-    public class ImportFileInfo
-    {
-      public string filepath { get; set; }
-      public Dictionary<string, List<string>> Headers { get; set; } = new Dictionary<string, List<string>>();
-      public Dictionary<string, List<List<object>>> Records { get; set; } = new Dictionary<string, List<List<object>>>();
-    }
+
     public class ImportFileSpecs
     {
       public string FileType { get; set; }
@@ -131,6 +126,21 @@ namespace CCI.Sys.Processors
       public bool RepaceAllRecords { get; set; } = false;
       public bool IsActive { get; set; } = true;
       public bool FixupHeaderNames { get; set; } = false;
+      public List<string> HeaderList
+      {
+        get
+        {
+          try
+          {
+            List<string> list = HeaderLine.Split(',').ToList();
+            return list;
+          }
+          catch
+          {
+            return new List<string>();
+          }
+        }
+      }
     }
     internal List<ImportFileSpecs> _importFileSpecs = new List<ImportFileSpecs>();
     public ImportFileProcessorBase()
@@ -199,6 +209,7 @@ namespace CCI.Sys.Processors
     }
     internal ImportFileInfo ImportFile(ACGFileInfo file, out string fileType)
     {
+
       ImportFileInfo importFile = new ImportFileInfo();
       importFile.filepath = Path.Combine(LocalFolder, file.Name);
       int fileProcessedID = 0;
@@ -243,6 +254,58 @@ namespace CCI.Sys.Processors
         importFile.Headers.Add(fileType, allheaders.ToList());
         return importFile;
 
+      }
+    }
+    internal  ImportFileInfo ImportExcelFile(string path, out string fileType)
+    {
+      using (var pck = new OfficeOpenXml.ExcelPackage())
+      {
+        using (var stream = System.IO.File.OpenRead(path))
+        {
+          pck.Load(stream);
+        }
+        var ws = pck.Workbook.Worksheets.First();
+        DataTable tbl = new DataTable();
+        List<string> headerlist = new List<string>();
+        StringBuilder headers = new StringBuilder();
+        List<List<object>> theserecords = new List<List<object>>();
+        foreach (var firstRowCell in ws.Cells[1, 1, 1, ws.Dimension.End.Column])
+        {
+          string header = firstRowCell.Text;
+          headers.Append(header);
+          headers.Append(",");
+          headerlist.Add(header);
+        }
+        headers.Length--; //strip the last comman
+        headerlist.Add("FilesProcessedID");
+        string[] allheaders = new string[headers.Length + 1]; // add one for fileprocessedid
+        Array.Copy(headerlist.ToArray(), 0, allheaders, 0, headers.Length);
+        allheaders[headers.Length] = "FilesProcessedID";
+        string headerline = headers.ToString();
+
+        if (!_importFileSpecs.Where(s => s.HeaderLine.Equals(headerline, StringComparison.CurrentCultureIgnoreCase)).Any())
+          throw new Exception("Import File with Header Line " + headerline + " does not exist");
+        ImportFileSpecs spec = _importFileSpecs.Where(s => s.HeaderLine.Equals(headerline, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
+        fileType = spec.FileType;
+        int startRow = 2;
+        for (int rowNum = startRow; rowNum <= ws.Dimension.End.Row; rowNum++)
+        {
+          var wsRow = ws.Cells[rowNum, 1, rowNum, ws.Dimension.End.Column];
+          object[] values = new object[ws.Dimension.End.Column];
+          for (int icol = 0; icol < wsRow.Columns; icol++)
+            values[icol] = ws.Cells[rowNum, icol + 1].Value;
+          object[] fieldvalues = new string[values.Length + 1];
+          Array.Copy(values, 0, fieldvalues, 0, values.Length);
+          fieldvalues = adjustFieldsForDataType(fieldvalues, allheaders);
+          theserecords.Add(fieldvalues.ToList());
+        }
+        ImportFileInfo importFile = new ImportFileInfo()
+        {
+          filepath = path
+        };
+        importFile.Records.Add(fileType, theserecords);
+        importFile.Headers.Add(fileType, allheaders.ToList());
+        return importFile;
       }
     }
 

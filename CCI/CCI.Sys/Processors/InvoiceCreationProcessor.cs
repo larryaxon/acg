@@ -161,10 +161,19 @@ namespace CCI.Sys.Processors
 
     private void ProcessFile(ACGFileInfo file)
     {
+      List<string> textExtensions = new List<string>() { "txt", "csv" };
+      List<string> excelExtensions = new List<string>() { "xlsx" };
       string fileType;
-      ImportFileInfo niFile = ImportFile(file, out fileType);
+      ImportFileInfo fileinfo;
+
+      string extension = Path.GetExtension(file.Name);
+      if (textExtensions.Contains(extension, StringComparer.CurrentCultureIgnoreCase))
+        fileinfo = ImportFile(file, out fileType);
+      else if (excelExtensions.Contains(extension, StringComparer.CurrentCultureIgnoreCase))
+        fileinfo = ImportExcelFile(file.FullName, out fileType);
+      else return; // we can't import it if we don't know what kind it is
       ImportFileSpecs spec = _importFileSpecs.Where(s => s.FileType == fileType).FirstOrDefault();
-      SaveImportFile(niFile, spec.TableName, spec.RepaceAllRecords);
+      SaveImportFile(fileinfo, spec.TableName, spec.RepaceAllRecords);
     }
   }
 }
