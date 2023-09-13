@@ -1,25 +1,38 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title</title>
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width" />
+  <title>@ViewBag.Title</title>
+  @Styles.Render("~/Content/css")
+  @Scripts.Render("~/bundles/modernizr")
+  @Scripts.Render("~/Scripts/respond.js")
+  @Scripts.Render("~/bundles/modernizr")
+  @Scripts.Render("~/bundles/jquery")
+  @Scripts.Render("~/bundles/bootstrap")
+  @Scripts.Render("~/Scripts/DatePickerReady.js")
+  @Scripts.Render("~/Scripts/jquery-ui.js")
+  @*@Scripts.Render("~/Scripts/jquery-ui-timepicker-addon.js")*@
+
+  @Styles.Render("~/Content/css")
+  @Styles.Render("~/Content/Site.css")
+  @Styles.Render("~/Content/bootstrap.css")
+  @Styles.Render("~/Content/jquery-ui.css")
+  @*@Styles.Render("~/Content/jquery-ui-timepicker-addon.css")*@
+
+  @RenderSection("scripts", required: false)
 </head>
 <body>
 
 
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - City Communications Integrated, Inc.</p>
-        </footer>
-    </div>
+  <div class="container body-content">
+    @RenderBody()
+    <hr />
+    <footer>
+      <p>&copy; @DateTime.Now.Year - City Communications Integrated, Inc.</p>
+    </footer>
+  </div>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+
 </body>
 </html>

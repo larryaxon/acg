@@ -108,9 +108,38 @@ namespace CCI.Sys.Processors
         { 1, new List<int>() { 1 } },
         { 2, new List<int>() { 2 } }
       };
-
-      using (ExcelProcessor excel = ExcelProcessor.CreateWorkbookFromDataset(ds, tabnames, tabSelectMap))
+      /*
+       * Total columns for the spreadsheet. 
+       * Tab 0, Table 0, columns 7-10 (zero based)
+       */
+      Dictionary<int, Dictionary<int, List<int>>> totalcolumns = 
+        new Dictionary<int, Dictionary<int, List<int>>>() 
+        {
+          { 0, new Dictionary<int, List<int>>() { { 0, new List<int>() { 7,8,9,10 } } } }
+        };
+      using (ExcelProcessor excel = ExcelProcessor.CreateWorkbookFromDataset(ds, tabnames, tabSelectMap, null, totalcolumns))
       {
+        // now that we have the spreadsheet, we need to add some data and formatting
+        string logopath = ConfigurationManager.AppSettings["CityCareLogoPath"];
+        excel.AddImage("CityCareLogo", logopath, 0, "A1");
+        /*
+            Customer:	        Carvana LLC
+            Invoice Audit:	5/16/23 - 06/15/23
+        */
+        string daterange = fromDate.ToShortDateString() + " - " + toDate.ToShortDateString();
+        int maintab = 0;
+        int startingrow = 2;
+        int startingcol = 3;
+        excel.SetCellValue(maintab, startingrow, startingcol, "Customer:");
+        excel.SetCellFormat(maintab, startingrow, startingcol, "bold");
+        excel.SetCellValue(maintab, startingrow, startingcol + 1, "Carvana LLC");
+        excel.SetCellFormat(maintab, startingrow, startingcol + 1, "bold");
+        excel.SetCellFormat(maintab, startingrow, startingcol + 1, "center");
+        excel.SetCellValue(maintab, startingrow + 1, startingcol, "Invoice Audit:");
+        excel.SetCellFormat(maintab, startingrow + 1, startingcol, "bold");
+        excel.SetCellValue(maintab, startingrow + 1, startingcol + 1, daterange);
+        excel.SetCellFormat(maintab, startingrow + 1, startingcol + 1, "bold");
+        excel.SetCellFormat(maintab, startingrow + 1, startingcol + 1, "center");
         MemoryStream stream = excel.ToStream();
         return stream;
       }

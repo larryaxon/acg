@@ -90,6 +90,11 @@ namespace CCI.WebApi.Controllers
     {
       return View(model);
     }
+    public ActionResult testtables(string path = null)
+    {
+      ExcelProcessor.GenerateSampleTables(path);
+      return RedirectToAction("Index");
+    }
     #endregion
 
     #region Create Invoice
@@ -180,8 +185,8 @@ namespace CCI.WebApi.Controllers
     }
     public FileStreamResult DownloadCreatioInvoice(DateTime? fromDate = null, DateTime? toDate = null)
     {
-      DateTime defaultFromDate = new DateTime(2023, 6, 15);
-      DateTime defaultToDate = new DateTime(2023, 7, 14);
+      DateTime defaultFromDate = new DateTime(2023, 6, 16);
+      DateTime defaultToDate = new DateTime(2023, 7, 15);
 
       using (InvoiceCreationProcessor processor = new InvoiceCreationProcessor())
       {

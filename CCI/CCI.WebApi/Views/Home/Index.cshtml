@@ -1,57 +1,100 @@
-﻿<main>
+﻿
+<script type="text/javascript">
+  var atoken = "";
+  $(document).ready(function () {
+    $(".datepicker").datepicker();
+    $('#downloadinvoice').hide();
+  });
+  function ShowDownload() {
+    $('#downloadinvoice').show();
+  }
+</script>
+<main>
   <section class="row">
     <h1>City Communications</h1>
     <p class="lead">Invoice IQ site downloads and imports</p>
   </section>
-  <div class="row">
-    <section class="col-md-4">
-    </section>
-    <section class="col-md-4">
-      @Html.ActionLink("List Unprocessed Zip Files", "UnprocessedZipFiles", new { }, new { @class = "btn btn-primary btn-sm detail" })
-    </section>
-    <section class="col-md-4">
-      @Html.ActionLink("Download Unprocessed Zip Files", "ProcessZipFiles", new { }, new { @class = "btn btn-primary btn-sm detail" })
+  <table style="width:70%; margin-left:15%; margin-right:15%;">
+    <tr>
+      <th>
+        Zips and PDFs:
+      </th>
+      <th>
+        Carvana Invoice:
+      </th>
+      <th>
+        Process EDI files:
+      </th>
+    </tr>
+    <tr>
+      <td style="padding:4px">
+        @Html.ActionLink("List Unprocessed Files", "UnprocessedZipFiles", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
+      </td>
+      <td style="padding:4px">
+        @Html.ActionLink("Upload Creatio Files", "FileUpload", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
+      </td>
+      <td style="padding:4px">
+        @Html.ActionLink("List Unprocessed Carvana Files", "UnprocessedUnibillFiles", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:4px">
+        @Html.ActionLink("Download Zips and PDFs Files", "ProcessZipFiles", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
+      </td>
+      <td style="padding:4px">
+        @Html.ActionLink("List Unprocessed Creatio Files", "UnprocessedCreatioFiles", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
+      </td>
+      <td style="padding:4px">
+        @Html.ActionLink("Import Next 10 Unprocessed Carvana  Files", "ImportUnibillFiles", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:4px">
+      </td>
+      <td style="padding:4px">
+        @Html.ActionLink("Import Creatio Files", "ImportCreatioFiles", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
+      </td>
+      <td>
+      </td>
+    </tr>
+    <tr>
+      <td>
+      </td>
+      <td style="padding:4px">
+        <a id="downloadlink" href="javascript:ShowDownload();" class="btn btn-primary btn-sm detail" style="background-color:#0d6efd; width:300px; text-align:center; ">Download Creatio Audit</a>
+        @*@Html.ActionLink("Download Creatio Audit", "DownloadCreatioInvoice", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })*@
+      </td>
+      <td>
+      </td>
+    </tr>
+  </table>
+  <div id="downloadinvoice" >
+    @using (Html.BeginForm("DownloadCreatioInvoice", "Home", FormMethod.Post))
+    {
+    <table>
+      <tr>
+        <td>
+          From Date:
+        </td>
+        <td>
+          @Html.Editor("fromDate", new { htmlAttributes = new { @class = "form-control datepicker", @autocomplete = "off" } })
+        </td>
+      </tr>
+      <tr>
+        <td>
+          To Date:
+        </td>
+        <td>
+          @Html.Editor("toDate", new { htmlAttributes = new { @class = "form-control datepicker", @autocomplete = "off" } })
+        </td>
+      </tr>
+    </table>
+    <input type="submit" value="Download" class="btn btn-primary btn-sm detail" />
 
-    </section>
-
+    }
   </div>
-  <br />
-  <div class="row">
-    <section class="col-md-4">
-    </section>
-    <section class="col-md-4">
-      @Html.ActionLink("List Unprocessed Carvana Files", "UnprocessedUnibillFiles", new { }, new { @class = "btn btn-primary btn-sm detail" })
-    </section>
-    <section class="col-md-4">
-      @Html.ActionLink("Import Next 10 Unprocessed Carvana  Files", "ImportUnibillFiles", new { }, new { @class = "btn btn-primary btn-sm detail" })
 
-    </section>
-
-  </div>
-  <br />
-  <div class="row">
-
-    <section class="col-md-4">
-      @Html.ActionLink("Upload Creatio Files", "FileUpload", new { }, new { @class = "btn btn-primary btn-sm detail" })
-    </section>
-    <section class="col-md-4">
-      @Html.ActionLink("List Unprocessed Creatio Files", "UnprocessedCreatioFiles", new { }, new { @class = "btn btn-primary btn-sm detail" })
-    </section>
-    <section class="col-md-4">
-      @Html.ActionLink("Import Creatio Files", "ImportCreatioFiles", new { }, new { @class = "btn btn-primary btn-sm detail" })
-    </section>
-  </div>
-  <div class="row">
-
-    <section class="col-md-4">
-      @Html.ActionLink("Download Creatio Audit", "DownloadCreatioInvoice", new { }, new { @class = "btn btn-primary btn-sm detail" })
-    </section>
-    <section class="col-md-4">
-    </section>
-    <section class="col-md-4">
-    </section>
-  </div>
-  <div>
-
-  </div>
 </main>
+@*@section Scripts {
+  @Scripts.Render("~/bundles/jqueryval")
+}*@

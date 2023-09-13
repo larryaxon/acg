@@ -16,6 +16,9 @@ using OfficeOpenXml.Table;
 using OfficeOpenXml.FormulaParsing;
 using System.Security.Cryptography;
 using System.Reflection.Emit;
+using System.Configuration;
+using System.Drawing;
+using OfficeOpenXml.ExternalReferences;
 //using CallPoint.Models;
 
 namespace ACG.Common
@@ -24,31 +27,20 @@ namespace ACG.Common
   {
     private ExcelPackage excel;
     private ExcelWorkbook workbook;
+    public static TableStyles TableStyle = TableStyles.Light15;
+    public static bool ShowRowStripes = false;
+    public static int BeginningRowNumber = 5;
     public Dictionary<string, string> NumericFormats = null;
     public List<string> AlignmentFormats = null;
     public ExcelProcessor(Dictionary<string, string> numericformats, List<string> alignmentformats)
     {
-      constructall(numericformats, alignmentformats);
+      constructAll(numericformats, alignmentformats);
     }
     public ExcelProcessor()
     {
-      //List<ReportFormatModel> allformats = ReportingProcessor.GetReportFormats();
-      //Dictionary<string, string> numericFormats = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase);
-      //List<string> alignmentformats = new List<string>();
-      //foreach (ReportFormatModel f in allformats)
-      //{
-      //  if ((f.FormatOutput ?? "Excel") == "Excel")
-      //  {
-      //    if (f.FormatType == "Number")
-      //      numericFormats.Add(f.FormatName, f.FormatString);
-      //    else if (f.FormatType == "Alignment")
-      //      alignmentformats.Add(f.FormatName);
-
-      //  }
-      //}
-      constructall(null, null);
+      constructAll(null, null);
     }
-    private void constructall(Dictionary<string, string> numericformats, List<string> alignmentformats)
+    private void constructAll(Dictionary<string, string> numericformats, List<string> alignmentformats)
     {
       ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
       excel = new ExcelPackage();
@@ -59,6 +51,43 @@ namespace ACG.Common
     public void Dispose()
     {
       excel.Dispose();
+    }
+    public void AddImage(string name, string path, int tab, string location)
+    {
+      string directory = Path.GetDirectoryName(path);
+      string filename = Path.GetFileName(path);
+      FileInfo logo = new DirectoryInfo(directory).GetFiles(filename)[0];
+      ExcelWorksheet sheet = workbook.Worksheets[tab];
+      var picture = sheet.Drawings.AddPicture(name, logo);
+      ExcelRange cell = sheet.Cells[location];
+      int row = cell.Start.Row;
+      int column = cell.Start.Column;
+      
+      picture.SetPosition(row, column);
+
+    }
+    public void SetCellValue(int tab, int row, int col, object value)
+    {
+      workbook.Worksheets[tab].Cells[row, col].Value = value;
+    }
+    public void SetCellFormat(int tab, int row, int col, string format)
+    {
+      ExcelRange cell = workbook.Worksheets[tab].Cells[row, col];
+      switch (format.ToLower())
+      {
+        case "bold":
+          cell.Style.Font.Bold = true;
+          break;
+        case "left":
+          cell.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+          break;
+        case "right":
+          cell.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Right;
+          break;
+        case "center":
+          cell.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+          break;
+      }
     }
     public void Save()
     {
@@ -85,7 +114,8 @@ namespace ACG.Common
       workbook.Worksheets.Delete(name);
     }
     public static ExcelProcessor CreateWorkbookFromDataset(DataSet ds, List<string> tabnames = null, Dictionary<int,
-      List<int>> selectmap = null, Dictionary<int, Dictionary<string, List<int>>> formats = null)
+      List<int>> selectmap = null, Dictionary<int, Dictionary<string, List<int>>> formats = null,
+      Dictionary<int, Dictionary<int, List<int>>> tableswithtotals = null)
     {
       ExcelProcessor workbook = new ExcelProcessor();
       if (ds != null && ds.Tables.Count > 0)
@@ -107,7 +137,7 @@ namespace ACG.Common
           foreach (KeyValuePair<int, List<int>> tabmap in selectmap)
           {
             string locationcol = "A"; // for now, we always place in the left most column. Maybe in the future will will add the ability to change this
-            int locationrow = 1; // start the first select/table in the first row
+            int locationrow = BeginningRowNumber; // start the first select/table in the first row
             int itab = tabmap.Key - 1; // tab number is json is 1 based, but in excel tabs it is zero based
             string tabname = tabarray[itab];
             bool firsttime = true;
@@ -121,14 +151,34 @@ namespace ACG.Common
                 {
                   // yes, so set the row to place the table at 1
                   firsttime = false;
-                  locationrow = 1; // row number in excel is 1 based (no such thing as cell A0)
+                  locationrow = BeginningRowNumber; // row number in excel is 1 based (no such thing as cell A0)
                 }
                 Dictionary<string, List<int>> thisformat;
                 if (formats != null && formats.ContainsKey(tablenbr))
                   thisformat = formats[tablenbr];
                 else
                   thisformat = null;
+
                 workbook.CreateWorksheetFromDataTable(dt, tabname, CellID(locationcol, locationrow), true, thisformat);
+                if (tableswithtotals != null && tableswithtotals.ContainsKey(itab))
+                {
+                  Dictionary<int, List<int>>  tables = tableswithtotals[itab];
+                  foreach (KeyValuePair<int, List<int>> t in tables)
+                  {
+                    int table = t.Key;
+                    List<int> columns = t.Value;
+                    ExcelWorksheet ws  = workbook.workbook.Worksheets[itab];
+                    ExcelTable exceltable = ws.Tables[table]; // first table?
+                    exceltable.ShowTotal = true;
+                    ExcelRange totalrow = ws.Cells[ exceltable.Range.Start.Row, exceltable.Range.Start.Column, exceltable.Range.End.Row, exceltable.Range.End.Column ]; 
+                    totalrow.Style.Numberformat.Format = "#,##0.00;(#,##0.00)";
+                    foreach (int sumcolumn in columns)
+                    {
+                      exceltable.Columns[sumcolumn].TotalsRowFunction = RowFunctions.Sum;
+                    }
+                  }
+
+                }
                 locationrow += dt.Rows.Count + 2; // now move the location down to the bottom for the next one (if there is one)
 
               }
@@ -188,7 +238,8 @@ namespace ACG.Common
         if (nbrcols > 1)
           range.AutoFitColumns();
         //format the table
-        tab.TableStyle = TableStyles.Medium2;
+        tab.TableStyle = TableStyle;
+        tab.ShowRowStripes = ShowRowStripes;
         // now apply formatting
         range = formatCells(range, formats);
       }
@@ -324,6 +375,72 @@ namespace ACG.Common
     public Byte[] ToByteArray()
     {
       return excel.GetAsByteArray();
+    }
+    private static IEnumerable<TableStyles> GetTableStyles()
+    {
+      return Enum.GetValues(typeof(TableStyles)).Cast<TableStyles>();
+    }
+
+   private  static void PrintTable(ExcelWorksheet worksheet, int row, int col, TableStyles style)
+    {
+      var table = worksheet.Tables.Add(worksheet.Cells[row, col, row + 4, col + 3], "");
+      // here you can test to change some other properties of the table, such as:
+      //table.ShowFirstColumn = true;
+      table.TableStyle = style;
+      table.ShowRowStripes = false;
+
+      var c1 = table.Columns.Count();
+      c1++;
+      var range = table.Columns.Add(1);
+      for (var ix = range.Start.Row; ix < range.End.Row; ix++)
+      {
+        worksheet.SetValue(ix, c1, "abc");
+      }
+
+      for (var c = table.Range.Start.Column; c < table.Range.End.Column; c++)
+      {
+        for (var r = table.Range.Start.Row + 1; r < table.Range.End.Row; r++)
+        {
+          worksheet.Cells[r, c].Value = c + r;
+        }
+      }
+    }
+
+    public static void GenerateSampleTables(string FilePath = null)
+    {
+      //ExcelPackage.LicenseContext = LicenseContext.Commercial;
+      // Or if you are using EPPlus in a NonCommercial context:
+      // ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+      ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+      if (FilePath == null)
+      {
+        FilePath = "U:\\Data\\InvoiceIQ\\test\\testexcel.xlsx";
+      }
+      using (var package = new ExcelPackage(new FileInfo(FilePath)))
+      {
+        var ws = package.Workbook.Worksheets.Add("All styles");
+        var row = 1;
+        var col = 1;
+        var i = 0;
+        var styles = GetTableStyles();
+        foreach (var style in styles)
+        {
+          ws.Cells[row, col].Value = style.ToString();
+          ws.Cells[row, col].Style.Font.Bold = true;
+          PrintTable(ws, row + 1, col, style);
+          if (++i % 3 == 0)
+          {
+            row += 7;
+            col = 1;
+          }
+          else
+          {
+            col += 6;
+          }
+        }
+        package.Save();
+      }
+
     }
   }
 }
