@@ -190,8 +190,8 @@ namespace CCI.Sys.Processors
 
     private void ProcessFile(ACGFileInfo file)
     {
-      List<string> textExtensions = new List<string>() { "txt", "csv" };
-      List<string> excelExtensions = new List<string>() { "xlsx" };
+      List<string> textExtensions = new List<string>() { ".txt", ".csv" };
+      List<string> excelExtensions = new List<string>() { ".xlsx" };
       string fileType;
       ImportFileInfo fileinfo;
 

@@ -52,46 +52,29 @@ namespace ACG.Common
     {
       excel.Dispose();
     }
-    public void AddImage(string name, string path, int tab, string location)
-    {
-      string directory = Path.GetDirectoryName(path);
-      string filename = Path.GetFileName(path);
-      FileInfo logo = new DirectoryInfo(directory).GetFiles(filename)[0];
-      ExcelWorksheet sheet = workbook.Worksheets[tab];
-      var picture = sheet.Drawings.AddPicture(name, logo);
-      ExcelRange cell = sheet.Cells[location];
-      int row = cell.Start.Row;
-      int column = cell.Start.Column;
-      
-      picture.SetPosition(row, column);
-
-    }
-    public void SetCellValue(int tab, int row, int col, object value)
-    {
-      workbook.Worksheets[tab].Cells[row, col].Value = value;
-    }
-    public void SetCellFormat(int tab, int row, int col, string format)
-    {
-      ExcelRange cell = workbook.Worksheets[tab].Cells[row, col];
-      switch (format.ToLower())
-      {
-        case "bold":
-          cell.Style.Font.Bold = true;
-          break;
-        case "left":
-          cell.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
-          break;
-        case "right":
-          cell.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Right;
-          break;
-        case "center":
-          cell.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
-          break;
-      }
-    }
+    #region file load/create
     public void Save()
     {
       excel.Save();
+    }
+    public ExcelPackage LoadSpreadsheetFromFile(string path)
+    {
+      using (var stream = System.IO.File.OpenRead(path))
+      {
+        excel.Load(stream);
+      }
+      return excel;
+    }
+    public MemoryStream ToStream()
+    {
+      MemoryStream stream = new MemoryStream();
+      var bytes = excel.GetAsByteArray();
+      stream.Write(bytes, 0, bytes.Length);
+      return stream;
+    }
+    public Byte[] ToByteArray()
+    {
+      return excel.GetAsByteArray();
     }
     public ExcelWorksheet AddSheet(string name)
     {
@@ -114,8 +97,8 @@ namespace ACG.Common
       workbook.Worksheets.Delete(name);
     }
     public static ExcelProcessor CreateWorkbookFromDataset(DataSet ds, List<string> tabnames = null, Dictionary<int,
-      List<int>> selectmap = null, Dictionary<int, Dictionary<string, List<int>>> formats = null,
-      Dictionary<int, Dictionary<int, List<int>>> tableswithtotals = null)
+  List<int>> selectmap = null, Dictionary<int, Dictionary<string, List<int>>> formats = null,
+  Dictionary<int, Dictionary<int, List<int>>> tableswithtotals = null)
     {
       ExcelProcessor workbook = new ExcelProcessor();
       if (ds != null && ds.Tables.Count > 0)
@@ -162,15 +145,15 @@ namespace ACG.Common
                 workbook.CreateWorksheetFromDataTable(dt, tabname, CellID(locationcol, locationrow), true, thisformat);
                 if (tableswithtotals != null && tableswithtotals.ContainsKey(itab))
                 {
-                  Dictionary<int, List<int>>  tables = tableswithtotals[itab];
+                  Dictionary<int, List<int>> tables = tableswithtotals[itab];
                   foreach (KeyValuePair<int, List<int>> t in tables)
                   {
                     int table = t.Key;
                     List<int> columns = t.Value;
-                    ExcelWorksheet ws  = workbook.workbook.Worksheets[itab];
+                    ExcelWorksheet ws = workbook.workbook.Worksheets[itab];
                     ExcelTable exceltable = ws.Tables[table]; // first table?
                     exceltable.ShowTotal = true;
-                    ExcelRange totalrow = ws.Cells[ exceltable.Range.Start.Row, exceltable.Range.Start.Column, exceltable.Range.End.Row, exceltable.Range.End.Column ]; 
+                    ExcelRange totalrow = ws.Cells[exceltable.Range.Start.Row, exceltable.Range.Start.Column, exceltable.Range.End.Row, exceltable.Range.End.Column];
                     totalrow.Style.Numberformat.Format = "#,##0.00;(#,##0.00)";
                     foreach (int sumcolumn in columns)
                     {
@@ -245,6 +228,45 @@ namespace ACG.Common
       }
 
       return ws;
+    }
+    #endregion
+    #region cells/formatting
+    public void AddImage(string name, string path, int tab, string location)
+    {
+      string directory = Path.GetDirectoryName(path);
+      string filename = Path.GetFileName(path);
+      FileInfo logo = new DirectoryInfo(directory).GetFiles(filename)[0];
+      ExcelWorksheet sheet = workbook.Worksheets[tab];
+      var picture = sheet.Drawings.AddPicture(name, logo);
+      ExcelRange cell = sheet.Cells[location];
+      int row = cell.Start.Row;
+      int column = cell.Start.Column;
+      
+      picture.SetPosition(row, column);
+
+    }
+    public void SetCellValue(int tab, int row, int col, object value)
+    {
+      workbook.Worksheets[tab].Cells[row, col].Value = value;
+    }
+    public void SetCellFormat(int tab, int row, int col, string format)
+    {
+      ExcelRange cell = workbook.Worksheets[tab].Cells[row, col];
+      switch (format.ToLower())
+      {
+        case "bold":
+          cell.Style.Font.Bold = true;
+          break;
+        case "left":
+          cell.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Left;
+          break;
+        case "right":
+          cell.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Right;
+          break;
+        case "center":
+          cell.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+          break;
+      }
     }
     private ExcelRange formatCells(ExcelRange range, Dictionary<string, List<int>> formats = null)
     {
@@ -365,23 +387,14 @@ namespace ACG.Common
       } while (++currentalphabet <= nbralphabets);
       return returnvalue;
     }
-    public MemoryStream ToStream()
-    {
-      MemoryStream stream = new MemoryStream();
-      var bytes = excel.GetAsByteArray();
-      stream.Write(bytes, 0, bytes.Length);
-      return stream;
-    }
-    public Byte[] ToByteArray()
-    {
-      return excel.GetAsByteArray();
-    }
+    #endregion
+    #region private methods
     private static IEnumerable<TableStyles> GetTableStyles()
     {
       return Enum.GetValues(typeof(TableStyles)).Cast<TableStyles>();
     }
 
-   private  static void PrintTable(ExcelWorksheet worksheet, int row, int col, TableStyles style)
+    private  static void PrintTable(ExcelWorksheet worksheet, int row, int col, TableStyles style)
     {
       var table = worksheet.Tables.Add(worksheet.Cells[row, col, row + 4, col + 3], "");
       // here you can test to change some other properties of the table, such as:
@@ -442,5 +455,6 @@ namespace ACG.Common
       }
 
     }
+    #endregion
   }
 }

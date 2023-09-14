@@ -258,12 +258,10 @@ namespace CCI.Sys.Processors
     }
     internal  ImportFileInfo ImportExcelFile(string path, out string fileType)
     {
-      using (var pck = new OfficeOpenXml.ExcelPackage())
+      using (ExcelProcessor excel = new ExcelProcessor())
       {
-        using (var stream = System.IO.File.OpenRead(path))
-        {
-          pck.Load(stream);
-        }
+        int fileProcessedID = -1;
+        ExcelPackage pck = excel.LoadSpreadsheetFromFile(path);
         var ws = pck.Workbook.Worksheets.First();
         DataTable tbl = new DataTable();
         List<string> headerlist = new List<string>();
@@ -278,15 +276,29 @@ namespace CCI.Sys.Processors
         }
         headers.Length--; //strip the last comman
         headerlist.Add("FilesProcessedID");
-        string[] allheaders = new string[headers.Length + 1]; // add one for fileprocessedid
-        Array.Copy(headerlist.ToArray(), 0, allheaders, 0, headers.Length);
-        allheaders[headers.Length] = "FilesProcessedID";
+
         string headerline = headers.ToString();
 
         if (!_importFileSpecs.Where(s => s.HeaderLine.Equals(headerline, StringComparison.CurrentCultureIgnoreCase)).Any())
           throw new Exception("Import File with Header Line " + headerline + " does not exist");
         ImportFileSpecs spec = _importFileSpecs.Where(s => s.HeaderLine.Equals(headerline, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
         fileType = spec.FileType;
+        if (spec.FixupHeaderNames)
+        {
+          headerline = headerline.Replace(" ", "_").Replace("-", "_");
+          List<string> newheaders = new List<string>();
+          foreach (string header in headerlist)
+          {
+            newheaders.Add(header.Replace(" ", "_").Replace("-", "_"));
+          }
+          headerlist = newheaders;
+        }
+        string[] allheaders = new string[headerlist.Count]; // add one for fileprocessedid
+        Array.Copy(headerlist.ToArray(), 0, allheaders, 0, headerlist.Count);
+        using (DataAccess da = new DataAccess())
+        {
+          fileProcessedID = da.addFileProcessed(fileType, path, DateTime.Now, -1, false, "Import " + fileType);
+        }
         int startRow = 2;
         for (int rowNum = startRow; rowNum <= ws.Dimension.End.Row; rowNum++)
         {
@@ -294,9 +306,10 @@ namespace CCI.Sys.Processors
           object[] values = new object[ws.Dimension.End.Column];
           for (int icol = 0; icol < wsRow.Columns; icol++)
             values[icol] = ws.Cells[rowNum, icol + 1].Value;
-          object[] fieldvalues = new string[values.Length + 1];
+          object[] fieldvalues = new object[values.Length + 1];
           Array.Copy(values, 0, fieldvalues, 0, values.Length);
           fieldvalues = adjustFieldsForDataType(fieldvalues, allheaders);
+          fieldvalues[fieldvalues.Length - 1] = fileProcessedID;
           theserecords.Add(fieldvalues.ToList());
         }
         ImportFileInfo importFile = new ImportFileInfo()
@@ -305,6 +318,7 @@ namespace CCI.Sys.Processors
         };
         importFile.Records.Add(fileType, theserecords);
         importFile.Headers.Add(fileType, allheaders.ToList());
+
         return importFile;
       }
     }
