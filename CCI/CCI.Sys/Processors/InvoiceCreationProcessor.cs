@@ -41,7 +41,7 @@ namespace CCI.Sys.Processors
         {
           FileType = "NI",
           TableName = "[dbo].[CreatioNetworkInventory]",
-          HeaderLine = "Number,Carrier,Service Location,Parent Account No.,Child Account No.,Product Nickname,MRC ($),Stage,Status",
+          HeaderLine =  "Number,Carrier,Service Location,Parent Account No.,Child Account No.,Product Nickname,MRC ($),Stage,Status" ,
           RepaceAllRecords = true,
           IsActive = true
         },
@@ -49,8 +49,10 @@ namespace CCI.Sys.Processors
         {
           FileType = "CreatioAudit",
           TableName = "[dbo].[CreatioBillAudit]",
-          HeaderLine = "Number,Bill cycle date,Carrier invoice date,Order,Carrier,Location,Product,BAN,Parent,Child,Carrier charges to audit,Order.MRC,Variance (needs to be a calculated field),Total bill,First invoice1,Multi-Site Invoice,Ancillary charges,Comments,Dispute Pending,Dispute Notes,Stage,Status,Install Date,Building Type",
+          HeaderLine =   "Number,Bill cycle date,Carrier invoice date,Order,Carrier,Location,Product,BAN,Parent,Child,Carrier charges to audit,Order.MRC,Variance (needs to be a calculated field),Total bill,First invoice1,Multi-Site Invoice,Ancillary charges,Comments,Dispute Pending,Dispute Notes,Stage,Status,Install Date,Building Type",
           RepaceAllRecords = false,
+          CheckFordups = true,
+          UniqueKeys = new List<string>() { "[Order]" },
           IsActive = true,
           FixupHeaderNames = true
         }
@@ -202,7 +204,7 @@ namespace CCI.Sys.Processors
         fileinfo = ImportExcelFile(file.FullName, out fileType);
       else return; // we can't import it if we don't know what kind it is
       ImportFileSpecs spec = _importFileSpecs.Where(s => s.FileType == fileType).FirstOrDefault();
-      SaveImportFile(fileinfo, spec.TableName, spec.RepaceAllRecords);
+      SaveImportFile(fileinfo, spec.TableName, spec.RepaceAllRecords, spec.CheckFordups, spec.UniqueKeys);
     }
   }
 }

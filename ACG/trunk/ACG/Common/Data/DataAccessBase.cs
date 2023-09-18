@@ -13,6 +13,8 @@ using System.Reflection;
 //using ACG.Common.Model;
 
 using ACG.Common;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace ACG.Common.Data
 {
@@ -135,6 +137,28 @@ namespace ACG.Common.Data
           bulkCopy.BulkCopyTimeout = 6000;
           bulkCopy.DestinationTableName = sqltablename;
           bulkCopy.WriteToServer(dt);
+        }
+        catch (SqlException sqlex)
+        {
+          if (sqlex.Message.Contains("Received an invalid column length from the bcp client for colid"))
+          {
+            string pattern = @"\d+";
+            Match match = Regex.Match(sqlex.Message.ToString(), pattern);
+            var index = Convert.ToInt32(match.Value) - 1;
+
+            FieldInfo fi = typeof(SqlBulkCopy).GetField("_sortedColumnMappings", BindingFlags.NonPublic | BindingFlags.Instance);
+            var sortedColumns = fi.GetValue(bulkCopy);
+            var items = (Object[])sortedColumns.GetType().GetField("_items", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(sortedColumns);
+
+            FieldInfo itemdata = items[index].GetType().GetField("_metadata", BindingFlags.NonPublic | BindingFlags.Instance);
+            var metadata = itemdata.GetValue(items[index]);
+
+            var column = metadata.GetType().GetField("column", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).GetValue(metadata);
+            var length = metadata.GetType().GetField("length", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).GetValue(metadata);
+            return new Exception(String.Format("Column: {0} contains data with a length greater than: {1}", column, length));
+          }
+
+          return sqlex;
         }
         catch (Exception ex)
         {
@@ -340,8 +364,27 @@ namespace ACG.Common.Data
     public bool existsTable(string tableName)
     {
       bool retVal = false;
-      string[] restrictions = new string[3];
-      restrictions[2] = tableName;
+      string dbname = null;
+      string schemaname = null;
+      // now "fix up" the table name in case it is not in the correct format
+      tableName = tableName.Replace("[", "").Replace("]","");
+      if (tableName.Contains(".")) // has schema and maybe database in the name
+      {
+        string[] parts = tableName.Split('.');
+        if (parts.Count() == 2)
+        {
+          schemaname = parts[0];
+          tableName = parts[1];
+        }
+        else if (parts.Count() == 3)
+        {
+          dbname = parts[0];
+          schemaname = parts[1];
+          tableName = parts[2];
+        }
+      }
+      string[] restrictions = new string[3] { dbname, schemaname, tableName }; // restrictions are DB, Owner, and Table
+
       DataTable dt = sqlConnection.GetSchema("Tables", restrictions);
       if (dt.Rows.Count > 0)
         retVal = true;

@@ -124,6 +124,8 @@ namespace CCI.Sys.Processors
       public string TableName { get; set; }
       public string HeaderLine { get; set; }
       public bool RepaceAllRecords { get; set; } = false;
+      public bool CheckFordups { get; set; } = false;
+      public List<string> UniqueKeys { get; set; } = null;
       public bool IsActive { get; set; } = true;
       public bool FixupHeaderNames { get; set; } = false;
       public List<string> HeaderList
@@ -278,10 +280,10 @@ namespace CCI.Sys.Processors
         headerlist.Add("FilesProcessedID");
 
         string headerline = headers.ToString();
-
-        if (!_importFileSpecs.Where(s => s.HeaderLine.Equals(headerline, StringComparison.CurrentCultureIgnoreCase)).Any())
+        string headercompare = headerline.Substring(0, 35).Replace("_"," ");
+        if (!_importFileSpecs.Where(s => s.HeaderLine.StartsWith(headercompare, StringComparison.CurrentCultureIgnoreCase)).Any())
           throw new Exception("Import File with Header Line " + headerline + " does not exist");
-        ImportFileSpecs spec = _importFileSpecs.Where(s => s.HeaderLine.Equals(headerline, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
+        ImportFileSpecs spec = _importFileSpecs.Where(s => s.HeaderLine.StartsWith(headercompare, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
         fileType = spec.FileType;
         if (spec.FixupHeaderNames)
         {
@@ -293,6 +295,17 @@ namespace CCI.Sys.Processors
           }
           headerlist = newheaders;
         }
+        List<string> commentsToExclude = new List<string>()
+        {
+          "Final invoice, charged for $100.00 non returned equipment",
+          "RPM 5365 and 5575 are same invoice but separated by product type.",
+          "RPM 5365 and 5575 are same invoice but separated by product type.",
+          "Final invoice, charged $100 non returned equipment.  Credit to be mailed for -$47.49.",
+          "RPM 5531 and 6317 are same invoice but separated by product type",
+          "RPM 5531 and 6317 are same invoice but separated by product type",
+          "Final invoice, charged $100 non returned equipment.","Charges include RPM 07095","Includes credit of $835 for free month",
+          "This is split into 2 charges on the invoice $3400 and $726.18"
+        };
         string[] allheaders = new string[headerlist.Count]; // add one for fileprocessedid
         Array.Copy(headerlist.ToArray(), 0, allheaders, 0, headerlist.Count);
         using (DataAccess da = new DataAccess())
@@ -304,13 +317,31 @@ namespace CCI.Sys.Processors
         {
           var wsRow = ws.Cells[rowNum, 1, rowNum, ws.Dimension.End.Column];
           object[] values = new object[ws.Dimension.End.Column];
-          for (int icol = 0; icol < wsRow.Columns; icol++)
-            values[icol] = ws.Cells[rowNum, icol + 1].Value;
-          object[] fieldvalues = new object[values.Length + 1];
-          Array.Copy(values, 0, fieldvalues, 0, values.Length);
-          fieldvalues = adjustFieldsForDataType(fieldvalues, allheaders);
-          fieldvalues[fieldvalues.Length - 1] = fileProcessedID;
-          theserecords.Add(fieldvalues.ToList());
+          if (ws.Cells[rowNum, 2] != null) // sometimes the spreadsheet has a TON of empty rows. if the third column is null, then we assume empty
+          {
+            for (int icol = 0; icol < wsRow.Columns; icol++)
+              values[icol] = ws.Cells[rowNum, icol + 1].Value;
+              //{
+              //  if (icol == 16 || icol == 18)
+              //  {
+              //    string comment = ws.Cells[rowNum, icol + 1].Text;
+              //    //if (!commentsToExclude.Contains(comment))
+              //    //{
+              //      if (comment.Length < 1)
+              //        comment = string.Empty;
+              //      else
+              //        values[icol] = comment.Substring(0, Math.Min(comment.Length, 128)).Trim();
+              //    //}
+              //    //else
+              //    //values[icol] = "Comment Excluded";
+              //  }
+              //  else
+            object[] fieldvalues = new object[values.Length + 1];
+            Array.Copy(values, 0, fieldvalues, 0, values.Length);
+            fieldvalues = adjustFieldsForDataType(fieldvalues, allheaders);
+            fieldvalues[fieldvalues.Length - 1] = fileProcessedID;
+            theserecords.Add(fieldvalues.ToList());
+          }
         }
         ImportFileInfo importFile = new ImportFileInfo()
         {
@@ -323,7 +354,7 @@ namespace CCI.Sys.Processors
       }
     }
 
-    internal void SaveImportFile(ImportFileInfo file, string tablename, bool replaceall = false)
+    internal void SaveImportFile(ImportFileInfo file, string tablename, bool replaceall = false, bool checkfordups = false, List<string> uniquekeys = null)
     {
       {
         foreach (string rectype in file.Headers.Keys)
@@ -333,7 +364,7 @@ namespace CCI.Sys.Processors
           {
             // yes, so add the records to the db
             List<List<object>> records = file.Records[rectype]; // next get all the records with matching values
-            saveTableFromFileData(tablename, headers, records, _dataTypes, true, replaceall);
+            saveTableFromFileData(tablename, headers, records, _dataTypes, true, replaceall, checkfordups, uniquekeys);
           }
           // else
           //     No: do nothing
@@ -342,7 +373,7 @@ namespace CCI.Sys.Processors
     }
 
     internal void saveTableFromFileData(string tablename, List<string> headers, 
-      List<List<object>> records, Dictionary<string, string> datatypes, bool hasID, bool replaceall = false)
+      List<List<object>> records, Dictionary<string, string> datatypes, bool hasID, bool replaceall = false, bool checkfordups = false, List<string> uniquekeys = null)
     {
       using (DataAccess da = new DataAccess())
       {
@@ -353,13 +384,83 @@ namespace CCI.Sys.Processors
         }
         // all of these  files have an ID so we set the last parm to true
         DataSet ds = da.getDatasetFromDictionaryData(tablename, headers, records, _dataTypes, true);
+        Exception ex = null;
         if (ds != null && ds.Tables.Count > 0)
         {
           DataTable dt = ds.Tables[0];
           string fileProcessedID = dt.Rows[0]["FilesProcessedID"].ToString();
           if (!CommonFunctions.IsInteger(fileProcessedID))
             fileProcessedID = "-1";
-          Exception ex = da.insertDataTabletoSQL(tablename, dt);
+          if (!replaceall && checkfordups && uniquekeys != null && uniquekeys.Count > 0)
+          {
+            /*
+             * in this case, we do a bulk copy into an import table.
+             * Then we insert records from there into the original table
+             * where the unique key does not exist.
+             *
+             * Then we empty out the import table to be ready for next time
+             */
+            StringBuilder colssb = new StringBuilder();
+            StringBuilder selectlist = new StringBuilder();
+            foreach (DataColumn col in dt.Columns)
+            {
+              if (!col.ColumnName.Equals("ID", StringComparison.CurrentCultureIgnoreCase))
+              {
+                // we "escape" all column names with "[]" cause some of them are funky and sql won't like them otherwise
+                string colname = col.ColumnName.Replace(".","_").Replace("(","").Replace(")","");
+                
+                colssb.Append("[");
+                colssb.Append(colname);
+                colssb.Append("]");
+                colssb.Append(",");
+                // column list for select must reference the import table
+                selectlist.Append("i.");
+                selectlist.Append("[");
+                selectlist.Append(colname);
+                selectlist.Append("]");
+                selectlist.Append(",");
+              }
+            }
+            colssb.Length--; // strip last comma
+            selectlist.Length--;
+            string columnslist = " (" + colssb.ToString() + ") ";
+            string importtable;
+            if (tablename.EndsWith("]"))
+            {
+              // we have to insert the Import suffix INSIDE the square brackets
+              importtable = tablename.Substring(0, tablename.Length - 1) + "Import" + "]";
+            }
+            else
+              importtable = tablename + "Import";
+            if (da.existsTable(importtable)) // if this table has not been built, then we can't do anything
+            {
+              ex = da.insertDataTabletoSQL(importtable, dt);
+              if (ex == null) //if no error
+              {
+                string sql = "INSERT INTO " + tablename + columnslist +
+                  " SELECT " + selectlist.ToString() + " from " + importtable + " i " +
+                  " LEFT JOIN " + tablename + " t on ";
+                // left join on the target table based on the unique keys
+                bool firsttime = true;
+                foreach (string key in uniquekeys)
+                {
+                  if (firsttime)
+                    firsttime = false;
+                  else
+                    sql += " AND ";
+                  sql += "i." + key + " = t." + key;
+                }
+                sql += " WHERE t." + uniquekeys.First() + " IS NULL"; // and select records with no match
+                da.updateDataFromSQL(sql); // insert non dub records
+                sql = "TRUNCATE TABLE " + importtable;
+                da.updateDataFromSQL(sql); // empty out the import table
+              }
+            }
+            else
+              ex = new Exception("Import Table Does Not Exist");
+          }
+          else
+            ex  = da.insertDataTabletoSQL(tablename, dt);
           if (ex != null)
           {
             // update the files processed record with the error
