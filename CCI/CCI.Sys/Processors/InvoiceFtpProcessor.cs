@@ -28,6 +28,7 @@ namespace CCI.Sys.Processors
     const string APPSETTINGFTPPASSWORD = "FtpPassword";
     const string APPSETTINGLOCALFTPFOLDER = "FTPLocalFolder";
     const string APPSETTINGMAXDAYSTOPROCESS = "InvoiceIQUnibillMaxDaysToProcess";
+    const string APPSETTINGMAXFILE = "InvoiceIQUnibillMaxFilesToProcess";
 
     const string FILESPROCESSEDFILETYPEINVOICEIQ = CCI.Common.CommonData.FILESPROCESSEDFILETYPEINVOICEIQ;
     const string FILESPROCESSEDFILETYPEUNIBILL = CCI.Common.CommonData.FILESPROCESSEDFILETYPEUNIBILL;
@@ -38,6 +39,8 @@ namespace CCI.Sys.Processors
     private string _ftpUsername = null;
     private string _ftpPassword = null;
     private string _ftpDirectory = "FromIQ";
+    private int _maxFilesToProcess = -1;
+
 
     private string _localTextDirecory = "U:\\Data\\InvoiceIQ\\texts\\";
     private int _maxDaysToProcess = 45; 
@@ -84,6 +87,7 @@ namespace CCI.Sys.Processors
       }
       _sftp = new ACGSftp(_ftpUrl, _ftpUsername, _ftpPassword);
       _maxDaysToProcess = CommonFunctions.CInt(getAppSetting(APPSETTINGMAXDAYSTOPROCESS), 45);
+      _maxFilesToProcess = ACG.Common.CommonFunctions.CInt(System.Configuration.ConfigurationManager.AppSettings[APPSETTINGMAXFILE], -1);
       _fileList = GetFileList();
 
 
@@ -247,8 +251,10 @@ namespace CCI.Sys.Processors
     #endregion
     #region import unibill
     #region public methods
-    public List<string> ImportUnibills(int maxFilesToProcess = -1)
+    public List<string> ImportUnibills(int maxFilesToProcess = -99) // basically -99 is like null - no value
     {
+      if (maxFilesToProcess == -99)
+        maxFilesToProcess = _maxFilesToProcess;
       List<string> filesToProcess = getUnibillFilesToProcess(maxFilesToProcess);
       foreach (string filename in filesToProcess)
       {

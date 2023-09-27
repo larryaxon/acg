@@ -45,7 +45,14 @@ namespace ACG.Common
       ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
       excel = new ExcelPackage();
       workbook = excel.Workbook;
-      NumericFormats = numericformats;
+      if (numericformats != null)
+        NumericFormats = numericformats;
+      else
+        NumericFormats = new Dictionary<string, string>() 
+        { 
+          { "Date", "mm/dd/yy" },
+          { "Decimal", "#,##0.00;(#,##0.00)" }
+        };
       AlignmentFormats = alignmentformats;
     }
     public void Dispose()
@@ -153,7 +160,7 @@ namespace ACG.Common
                     ExcelWorksheet ws = workbook.workbook.Worksheets[itab];
                     ExcelTable exceltable = ws.Tables[table]; // first table?
                     exceltable.ShowTotal = true;
-                    ExcelRange totalrow = ws.Cells[exceltable.Range.Start.Row, exceltable.Range.Start.Column, exceltable.Range.End.Row, exceltable.Range.End.Column];
+                    ExcelRange totalrow = ws.Cells[exceltable.Range.End.Row, exceltable.Range.Start.Column, exceltable.Range.End.Row, exceltable.Range.End.Column];
                     totalrow.Style.Numberformat.Format = "#,##0.00;(#,##0.00)";
                     foreach (int sumcolumn in columns)
                     {

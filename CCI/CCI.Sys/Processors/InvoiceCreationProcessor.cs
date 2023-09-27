@@ -49,7 +49,8 @@ namespace CCI.Sys.Processors
         {
           FileType = "CreatioAudit",
           TableName = "[dbo].[CreatioBillAudit]",
-          HeaderLine =   "Number,Bill cycle date,Carrier invoice date,Order,Carrier,Location,Product,BAN,Parent,Child,Carrier charges to audit,Order.MRC,Variance (needs to be a calculated field),Total bill,First invoice1,Multi-Site Invoice,Ancillary charges,Comments,Dispute Pending,Dispute Notes,Stage,Status,Install Date,Building Type",
+          HeaderLine =   "Number,Bill cycle date,Carrier invoice date,Order,Carrier,Building Type,Location Nickname,Location,Product,BAN,Parent,Child,Carrier charges to audit,Order.MRC,Variance (needs to be a calculated field),Total bill,First invoice1,Multi-Site Invoice,Ancillary charges,Comments,Dispute Pending,Dispute Notes,Stage,Status",
+          //HeaderLine =   "Number,Bill cycle date,Carrier invoice date,Order,Carrier,Location,Product,BAN,Parent,Child,Carrier charges to audit,Order.MRC,Variance (needs to be a calculated field),Total bill,First invoice1,Multi-Site Invoice,Ancillary charges,Comments,Dispute Pending,Dispute Notes,Stage,Status,Install Date,Building Type",
           RepaceAllRecords = false,
           CheckFordups = true,
           UniqueKeys = new List<string>() { "[Order]" },
@@ -119,7 +120,17 @@ namespace CCI.Sys.Processors
         {
           { 0, new Dictionary<int, List<int>>() { { 0, new List<int>() { 7,8,9,10 } } } }
         };
-      using (ExcelProcessor excel = ExcelProcessor.CreateWorkbookFromDataset(ds, tabnames, tabSelectMap, null, totalcolumns))
+      // explicitly format the first column of the first table as date
+      Dictionary<int, Dictionary<string, List<int>>> formats = new Dictionary<int, Dictionary<string, List<int>>>()
+      {
+        { 1, new Dictionary<string, List<int>>()
+             {
+               { "Date", new List<int>() { 1 }  },
+               { "Decimal", new List<int>() { 8,9,10,11}  }
+              }
+        }
+      };
+      using (ExcelProcessor excel = ExcelProcessor.CreateWorkbookFromDataset(ds, tabnames, tabSelectMap, formats, totalcolumns))
       {
         // now that we have the spreadsheet, we need to add some data and formatting
         string logopath = ConfigurationManager.AppSettings["CityCareLogoPath"];

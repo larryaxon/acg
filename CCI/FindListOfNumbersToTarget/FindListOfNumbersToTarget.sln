@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33712.159
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FindListOfNumbersToTarget", "FindListOfNumbersToTarget.csproj", "{991CEAE7-02F8-4390-8692-BA1263DAB08E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{991CEAE7-02F8-4390-8692-BA1263DAB08E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{991CEAE7-02F8-4390-8692-BA1263DAB08E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{991CEAE7-02F8-4390-8692-BA1263DAB08E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{991CEAE7-02F8-4390-8692-BA1263DAB08E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9273EC5F-A4DE-4A81-AC11-1361E6F3D2A2}
+	EndGlobalSection
+EndGlobal

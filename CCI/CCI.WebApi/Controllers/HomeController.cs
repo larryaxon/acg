@@ -19,6 +19,11 @@ namespace CCI.WebApi.Controllers
   {
     const string FILESPROCESSEDFILETYPEINVOICEIQ = CCI.Common.CommonData.FILESPROCESSEDFILETYPEINVOICEIQ;
     const string FILESPROCESSEDFILETYPEUNIBILL = CCI.Common.CommonData.FILESPROCESSEDFILETYPEUNIBILL;
+
+    public HomeController()
+    {
+
+    }
     public ActionResult Index()
     {
       ViewBag.Title = "Invoice IQ Downloads";
@@ -74,7 +79,7 @@ namespace CCI.WebApi.Controllers
     {
       using (InvoiceFtpProcessor processor = new InvoiceFtpProcessor())
       {
-        List<string> filesProcessed = processor.ImportUnibills(10);
+        List<string> filesProcessed = processor.ImportUnibills();
         List<InvoiceFilesListGUIModel> model = new List<InvoiceFilesListGUIModel>();
         foreach (string file in filesProcessed)
         {

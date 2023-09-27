@@ -42,6 +42,8 @@ namespace ACG.Common.Data
     /// Shared SQL Connection instance.
     /// </summary>
     private string connectionString;
+    private SqlConnection _sqlConnection = null;
+
 
     #region ErrorMessages
     /// <summary>
@@ -168,13 +170,13 @@ namespace ACG.Common.Data
     {
       get
       {
-        SqlConnection sqlConnection = null;
         try
         {
-          sqlConnection = new SqlConnection(connectionString);
+          if (_sqlConnection == null) 
+            _sqlConnection = new SqlConnection(connectionString);
 
-          if (sqlConnection.State == ConnectionState.Closed)
-            sqlConnection.Open();
+          if (_sqlConnection.State == ConnectionState.Closed)
+            _sqlConnection.Open();
         }
         catch (SqlException se)
         {
@@ -182,7 +184,7 @@ namespace ACG.Common.Data
           throw new Exception(string.Format("Connection String <{0}> not valid",connectionString));
         }
 
-        return sqlConnection;
+        return _sqlConnection;
       }
     }
 
