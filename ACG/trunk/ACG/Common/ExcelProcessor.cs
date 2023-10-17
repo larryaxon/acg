@@ -32,6 +32,7 @@ namespace ACG.Common
     public static int BeginningRowNumber = 5;
     public Dictionary<string, string> NumericFormats = null;
     public List<string> AlignmentFormats = null;
+    public ExcelWorkbook Workbook {  get { return workbook; } }
     public ExcelProcessor(Dictionary<string, string> numericformats, List<string> alignmentformats)
     {
       constructAll(numericformats, alignmentformats);

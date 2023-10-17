@@ -20,6 +20,9 @@ using static System.Net.WebRequestMethods;
 using Microsoft.Office.Interop.Excel;
 using System.Net;
 using System.Web.Mvc;
+using OfficeOpenXml.Table;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Status;
 
 namespace CCI.Sys.Processors
 {
@@ -153,6 +156,16 @@ namespace CCI.Sys.Processors
         excel.SetCellValue(maintab, startingrow + 1, startingcol + 1, daterange);
         excel.SetCellFormat(maintab, startingrow + 1, startingcol + 1, "bold");
         excel.SetCellFormat(maintab, startingrow + 1, startingcol + 1, "center");
+        // change Variance to calcualted column
+        ExcelWorksheet ws = excel.Workbook.Worksheets[0];
+        ExcelTable exceltable = ws.Tables[0];
+        int varianceCol = 12;
+        // get the range of the column of data for the variance. Not4 we add 1 to the row cause we don't want the header
+        ExcelRange excelRange = ws.Cells[exceltable.Range.Start.Row+1, varianceCol, exceltable.Range.End.Row-1, varianceCol];
+        excelRange.Formula = string.Format("{0}-{1}", ws.Cells[exceltable.Range.Start.Row + 1, varianceCol-2].Address, ws.Cells[exceltable.Range.Start.Row + 1, varianceCol-1].Address);
+
+        //calculate the formulas
+        //ws.Calculate();
         MemoryStream stream = excel.ToStream();
         return stream;
       }
