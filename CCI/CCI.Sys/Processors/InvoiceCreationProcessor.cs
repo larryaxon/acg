@@ -56,7 +56,7 @@ namespace CCI.Sys.Processors
           //HeaderLine =   "Number,Bill cycle date,Carrier invoice date,Order,Carrier,Location,Product,BAN,Parent,Child,Carrier charges to audit,Order.MRC,Variance (needs to be a calculated field),Total bill,First invoice1,Multi-Site Invoice,Ancillary charges,Comments,Dispute Pending,Dispute Notes,Stage,Status,Install Date,Building Type",
           RepaceAllRecords = false,
           CheckFordups = true,
-          UniqueKeys = new List<string>() { "[Order]" },
+          UniqueKeys = new List<string>() { "[Number]" },
           IsActive = true,
           FixupHeaderNames = true
         }

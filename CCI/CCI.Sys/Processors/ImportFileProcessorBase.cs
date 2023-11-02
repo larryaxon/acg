@@ -435,9 +435,14 @@ namespace CCI.Sys.Processors
             if (da.existsTable(importtable)) // if this table has not been built, then we can't do anything
             {
               ex = da.insertDataTabletoSQL(importtable, dt);
-              if (ex == null) //if no error
+
+              if (ex == null) //if no error 
               {
-                string sql = "INSERT INTO " + tablename + columnslist +
+                // now update the import table with the files processed id
+                string sql = "Update " + importtable + " SET FilesProcessedID = " + fileProcessedID.ToString();
+                da.updateDataFromSQL(sql);
+                // now build the insert to copy the records to the "real" table
+                sql = "INSERT INTO " + tablename + columnslist +
                   " SELECT " + selectlist.ToString() + " from " + importtable + " i " +
                   " LEFT JOIN " + tablename + " t on ";
                 // left join on the target table based on the unique keys
@@ -451,7 +456,7 @@ namespace CCI.Sys.Processors
                   sql += "i." + key + " = t." + key;
                 }
                 sql += " WHERE t." + uniquekeys.First() + " IS NULL"; // and select records with no match
-                da.updateDataFromSQL(sql); // insert non dub records
+                da.updateDataFromSQL(sql); // insert non dup records
                 sql = "TRUNCATE TABLE " + importtable;
                 da.updateDataFromSQL(sql); // empty out the import table
               }
