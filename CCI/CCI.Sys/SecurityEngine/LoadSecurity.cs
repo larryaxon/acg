@@ -10,6 +10,8 @@ using CCI.Common;
 using CCI.Sys.Data;
 using CCI.Common.Logging;
 
+using ACG.Common;
+
 //using CCI.Common;
 //using CCI.Common.Model;
 
@@ -59,7 +61,7 @@ namespace CCI.Sys.SecurityEngine
     //EntityBase myEntity = new EntityBase();
     SecurityDB mySecurityDB = new SecurityDB();
 
-    private EncryptDecryptString encryptDecrypt = new EncryptDecryptString();
+    private CCI.Common.EncryptDecryptString encryptDecrypt = new CCI.Common.EncryptDecryptString();
     
     #endregion module data
 
@@ -298,8 +300,8 @@ namespace CCI.Sys.SecurityEngine
       if (dsTypes != null && dsTypes.Tables.Count == 1)
         foreach (DataRow row in dsTypes.Tables[0].Rows)
         {
-          string objectName = CommonFunctions.CString(row["SecurityObject"]).ToLower();
-          string objectType = CommonFunctions.CString(row["ObjectType"]).ToLower();
+          string objectName = ACG.Common.CommonFunctions.CString(row["SecurityObject"]).ToLower();
+          string objectType = ACG.Common.CommonFunctions.CString(row["ObjectType"]).ToLower();
           if (objectTypeList.ContainsKey(objectName))
             objectTypeList[objectName] = objectType;
           else 

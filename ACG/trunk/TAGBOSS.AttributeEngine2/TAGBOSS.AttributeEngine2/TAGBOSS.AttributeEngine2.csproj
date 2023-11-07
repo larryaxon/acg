@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TAGBOSS.Sys.AttributeEngine2</RootNamespace>
     <AssemblyName>TAGBOSS.AttributeEngine2</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -150,12 +150,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\TAGBOSS.Common\TAGBOSS.Common.csproj">
-      <Project>{6658BCCB-A3D9-4C18-9D0F-3BEC1AE752CC}</Project>
-      <Name>TAGBOSS.Common</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="log4net.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -182,6 +176,12 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\TAGBOSS.Common\TAGBOSS.Common.csproj">
+      <Project>{6658bccb-a3d9-4c18-9d0f-3bec1ae752cc}</Project>
+      <Name>TAGBOSS.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
