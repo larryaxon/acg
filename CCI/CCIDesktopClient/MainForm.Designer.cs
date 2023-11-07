@@ -921,13 +921,13 @@
       this.toolStripStatusLabel.Name = "toolStripStatusLabel";
       this.toolStripStatusLabel.Size = new System.Drawing.Size(39, 17);
       this.toolStripStatusLabel.Text = "Status";
-      //// 
-      //// testPDFToTextToolStripMenuItem
-      //// 
-      //this.testPDFToTextToolStripMenuItem.Name = "testPDFToTextToolStripMenuItem";
-      //this.testPDFToTextToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
-      //this.testPDFToTextToolStripMenuItem.Text = "Test PDF To Text";
-      //this.testPDFToTextToolStripMenuItem.Click += new System.EventHandler(this.testPDFToTextToolStripMenuItem_Click);
+      // 
+      // testPDFToTextToolStripMenuItem
+      // 
+      this.testPDFToTextToolStripMenuItem.Name = "testPDFToTextToolStripMenuItem";
+      this.testPDFToTextToolStripMenuItem.Size = new System.Drawing.Size(257, 22);
+      this.testPDFToTextToolStripMenuItem.Text = "Test PDF To Text";
+      this.testPDFToTextToolStripMenuItem.Click += new System.EventHandler(this.testPDFToTextToolStripMenuItem_Click);
       // 
       // MainForm
       // 

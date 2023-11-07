@@ -8,9 +8,6 @@ using CCI.Common;
 using CCI.Sys.Data;
 using CCI.Common.Logging;
 
-using ACG.Common;
-
-
 namespace CCI.Sys.SecurityEngine
 {
   /// <summary>

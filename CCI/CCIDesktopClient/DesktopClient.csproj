@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CCI.DesktopClient</RootNamespace>
     <AssemblyName>CCCIMain</AssemblyName>
-    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <FileUpgradeFlags>
@@ -689,6 +689,9 @@
     <EmbeddedResource Include="Screens\frmOrderEntry.resx">
       <DependentUpon>frmOrderEntry.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Screens\frmPDFtoText.resx">
+      <DependentUpon>frmPDFtoText.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Screens\frmProductList.resx">
       <DependentUpon>frmProductList.cs</DependentUpon>
     </EmbeddedResource>
@@ -753,6 +756,12 @@
     </Compile>
     <Compile Include="Screens\frmOrderEntry.Designer.cs">
       <DependentUpon>frmOrderEntry.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Screens\frmPDFtoText.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\frmPDFtoText.Designer.cs">
+      <DependentUpon>frmPDFtoText.cs</DependentUpon>
     </Compile>
     <Compile Include="Screens\frmProductList.cs">
       <SubType>Form</SubType>

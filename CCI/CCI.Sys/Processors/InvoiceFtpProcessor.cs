@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using OfficeOpenXml;
-//using OfficeOpenXml.FormulaParsing.ExpressionGraph;
+using OfficeOpenXml.FormulaParsing.ExpressionGraph;
 
 
 namespace CCI.Sys.Processors

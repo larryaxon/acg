@@ -593,10 +593,10 @@ namespace CCI.DesktopClient
       ShowForm(frm, true);
     }
 
-    //private void testPDFToTextToolStripMenuItem_Click(object sender, EventArgs e)
-    //{
-    //  ScreenBase frm = new frmPDFtoText();
-    //  ShowForm(frm, true);
-    //}
+    private void testPDFToTextToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+      ScreenBase frm = new frmPDFtoText();
+      ShowForm(frm, true);
+    }
   }
 }

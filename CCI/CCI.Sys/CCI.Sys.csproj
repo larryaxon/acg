@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CCI.Sys</RootNamespace>
     <AssemblyName>CCI.Sys</AssemblyName>
-    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -56,8 +56,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EPPlus, Version=7.0.0.3, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
-      <HintPath>..\CCI.WebApi\packages\EPPlus.7.0.0\lib\net462\EPPlus.dll</HintPath>
+    <Reference Include="EPPlus, Version=6.2.6.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\CCI.WebApi\packages\EPPlus.6.2.6\lib\net462\EPPlus.dll</HintPath>
     </Reference>
     <Reference Include="EPPlus.Interfaces, Version=6.1.1.0, Culture=neutral, PublicKeyToken=a694d7f3b0907a61, processorArchitecture=MSIL">
       <HintPath>..\CCI.WebApi\packages\EPPlus.Interfaces.6.1.1\lib\net462\EPPlus.Interfaces.dll</HintPath>
@@ -74,7 +74,7 @@
     </Reference>
     <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <EmbedInteropTypes>True</EmbedInteropTypes>
-      <HintPath>..\CCI.WebApi\packages\Microsoft.Office.Interop.Excel.15.0.4795.1000\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Office.Interop.Excel.15.0.4795.1000\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -82,10 +82,6 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\CCI.WebApi\packages\System.ComponentModel.Annotations.5.0.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
-    </Reference>
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -207,15 +203,15 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\ACG\trunk\ACG\ACG.csproj">
-      <Project>{a9e993b0-a25a-4f36-9339-1d7f6e6f5ada}</Project>
+      <Project>{A9E993B0-A25A-4F36-9339-1D7F6E6F5ADA}</Project>
       <Name>ACG</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\ACG\trunk\TAGBOSS.AttributeEngine2\TAGBOSS.AttributeEngine2\TAGBOSS.AttributeEngine2.csproj">
-      <Project>{2faffe05-61f2-4873-83f0-6f9f5d3fa76b}</Project>
+    <ProjectReference Include="..\..\acg\trunk\TAGBOSS.AttributeEngine2\TAGBOSS.AttributeEngine2\TAGBOSS.AttributeEngine2.csproj">
+      <Project>{2FAFFE05-61F2-4873-83F0-6F9F5D3FA76B}</Project>
       <Name>TAGBOSS.AttributeEngine2</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\ACG\trunk\TAGBOSS.Common\TAGBOSS.Common.csproj">
-      <Project>{6658bccb-a3d9-4c18-9d0f-3bec1ae752cc}</Project>
+    <ProjectReference Include="..\..\acg\trunk\TAGBOSS.Common\TAGBOSS.Common.csproj">
+      <Project>{6658BCCB-A3D9-4C18-9D0F-3BEC1AE752CC}</Project>
       <Name>TAGBOSS.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\CCI.Common\CCI.Common.csproj">
