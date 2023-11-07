@@ -17,39 +17,39 @@
   <table style="width:70%; margin-left:15%; margin-right:15%;">
     <tr>
       <th>
-        Zips and PDFs:
+        List Unprocessed Files:
       </th>
       <th>
-        Carvana Invoice:
+        Process Imports and EDIs:
       </th>
       <th>
-        Process EDI files:
+        Carvana Audit:
       </th>
     </tr>
+
     <tr>
       <td style="padding:4px">
         @Html.ActionLink("List Unprocessed Files", "UnprocessedZipFiles", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
       </td>
       <td style="padding:4px">
-        @Html.ActionLink("Upload Creatio Files", "FileUpload", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
-      </td>
-      <td style="padding:4px">
-        @Html.ActionLink("List Unprocessed Carvana Files", "UnprocessedUnibillFiles", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
-      </td>
-    </tr>
-    <tr>
-      <td style="padding:4px">
         @Html.ActionLink("Download Zips and PDFs Files", "ProcessZipFiles", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
       </td>
+      <td style="padding:4px">
+        <a id="downloadlink" href="javascript:ShowDownload();" class="btn btn-primary btn-sm detail" style="background-color:#0d6efd; width:300px; text-align:center; ">Download Creatio Audit</a>
+        @*@Html.ActionLink("Download Creatio Audit", "DownloadCreatioInvoice", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })*@
+      </td>
+
+    </tr>
+    <tr>
       <td style="padding:4px">
         @Html.ActionLink("List Unprocessed Creatio Files", "UnprocessedCreatioFiles", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
       </td>
       <td style="padding:4px">
-        @Html.ActionLink("Import Unprocessed Carvana  Files", "ImportUnibillFiles", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
+        @Html.ActionLink("Import Unprocessed EDI  Files", "ImportUnibillFiles", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
       </td>
     </tr>
     <tr>
-      <td style="padding:4px">
+      <td>
       </td>
       <td style="padding:4px">
         @Html.ActionLink("Import Creatio Files", "ImportCreatioFiles", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
@@ -61,11 +61,11 @@
       <td>
       </td>
       <td style="padding:4px">
-        <a id="downloadlink" href="javascript:ShowDownload();" class="btn btn-primary btn-sm detail" style="background-color:#0d6efd; width:300px; text-align:center; ">Download Creatio Audit</a>
-        @*@Html.ActionLink("Download Creatio Audit", "DownloadCreatioInvoice", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })*@
+        @Html.ActionLink("Upload Creatio Files", "FileUpload", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
       </td>
-      <td>
+      <td style="padding:4px">
       </td>
+
     </tr>
   </table>
   <div id="downloadinvoice" >
