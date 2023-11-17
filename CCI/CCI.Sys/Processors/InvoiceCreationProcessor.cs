@@ -128,8 +128,8 @@ namespace CCI.Sys.Processors
       {
         { 1, new Dictionary<string, List<int>>()
              {
-               { "Date", new List<int>() { 1 }  },
-               { "Decimal", new List<int>() { 8,9,10,11}  }
+               { "Date", new List<int>() { 2 }  },
+               { "Decimal", new List<int>() { 9,10,11,12}  }
               }
         }
       };
@@ -159,7 +159,7 @@ namespace CCI.Sys.Processors
         // change Variance to calcualted column
         ExcelWorksheet ws = excel.Workbook.Worksheets[0];
         ExcelTable exceltable = ws.Tables[0];
-        int varianceCol = 12;
+        int varianceCol = 13;
         // get the range of the column of data for the variance. Not4 we add 1 to the row cause we don't want the header
         ExcelRange excelRange = ws.Cells[exceltable.Range.Start.Row+1, varianceCol, exceltable.Range.End.Row-1, varianceCol];
         excelRange.Formula = string.Format("{0}-{1}", ws.Cells[exceltable.Range.Start.Row + 1, varianceCol-2].Address, ws.Cells[exceltable.Range.Start.Row + 1, varianceCol-1].Address);
