@@ -21,8 +21,12 @@ using Microsoft.Office.Interop.Excel;
 using System.Net;
 using System.Web.Mvc;
 using OfficeOpenXml.Table;
+using OfficeOpenXml.Drawing;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Status;
+using System.Windows.Media;
+using OfficeOpenXml.Style;
+using System.Drawing;
 
 namespace CCI.Sys.Processors
 {
@@ -31,9 +35,7 @@ namespace CCI.Sys.Processors
     private const string APPSETTINGCREATIOIMPORTFOLDER = "CreatioImportFolder";
     private const string FILETYPECREATIONETWORKINVENTORY = "CreatioNetworkInventory";
     private string _creatioImportFolder = "\\InvoiceIQ\\Creatio\\";
-
-
-
+    private const string CREATIOBILLAUDITUPLOADTABLE = "CreatioAuditUpload";
 
     public InvoiceCreationProcessor() : base()
     {
@@ -55,8 +57,18 @@ namespace CCI.Sys.Processors
           HeaderLine =   "Number,Bill cycle date,Carrier invoice date,Order,Carrier,Building Type,Location Nickname,Location,Product,BAN,Parent,Child,Carrier charges to audit,Order.MRC,Variance (needs to be a calculated field),Total bill,First invoice1,Multi-Site Invoice,Ancillary charges,Comments,Dispute Pending,Dispute Notes,Stage,Status",
           //HeaderLine =   "Number,Bill cycle date,Carrier invoice date,Order,Carrier,Location,Product,BAN,Parent,Child,Carrier charges to audit,Order.MRC,Variance (needs to be a calculated field),Total bill,First invoice1,Multi-Site Invoice,Ancillary charges,Comments,Dispute Pending,Dispute Notes,Stage,Status,Install Date,Building Type",
           RepaceAllRecords = false,
-          CheckFordups = true,
+          CheckForDups = true,
           UniqueKeys = new List<string>() { "[Number]" },
+          IsActive = true,
+          FixupHeaderNames = true
+        },
+        new ImportFileSpecs()
+        {
+          FileType = "CreatioAuditUpload",
+          TableName = "[dbo].[CreatioBillAuditUpload]",
+          HeaderLine =   "Number,Invoice Date,Creatio ID,Carrier,Building Type,Location Nickname,Location,Product,Parent,Child,Carrier Charges to Audit,R P M Control Charges,Variance,Total Bill,First Invoice,Multi- Site Invoice,Ancillary Charges?,Comment,Dispute Pending,Dispute Notes,Has E D IData",
+          RepaceAllRecords = false,
+          CheckForDups = false,
           IsActive = true,
           FixupHeaderNames = true
         }
@@ -172,7 +184,44 @@ namespace CCI.Sys.Processors
 
 
     }
+    public MemoryStream getCreationAuditExport(DateTime billCycleDate)
+    {
+      using (DataAccess da = new DataAccess())
+      {
+        DataSet ds = da.getCreationAuditExport(billCycleDate);
+        //ds = adjustFieldsForDataType(ds);
+        List<string> tabnames = new List<string>() { "Bill Audit " };
+        Dictionary<int, Dictionary<string, List<int>>> formats = new Dictionary<int, Dictionary<string, List<int>>>()
+        {
+          { 
+            1, new Dictionary<string, List<int>>()
+            {
+              {  "Date", new List<int>() { 4,5 } }
+            }
+          }
+        };
 
+        using (ExcelProcessor excel = ExcelProcessor.CreateWorkbookFromDataset(ds, tabnames, null, formats))
+        {
+          ExcelWorksheet ws = excel.Workbook.Worksheets[0];
+          ExcelRange headerline = ws.Cells[1, 1, 1, ws.Dimension.Columns];
+          headerline.Style.Fill.PatternType = ExcelFillStyle.Solid;
+          headerline.Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml("#5B9BD5"));
+          headerline.Style.Font.Color.SetColor(System.Drawing.Color.White);
+          headerline.Style.Font.Bold = true;
+          headerline.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+          ws.Row(1).Height = 40;
+          int nbrcols = ws.Dimension.Columns;
+          int nbrrows = ws.Dimension.Rows;
+          ExcelRange table = ws.Cells[1, 1, nbrrows, nbrcols];
+          table.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+          for (int irow = 2; irow <= nbrrows; irow++)
+            ws.Row(irow).Height = 30;
+          MemoryStream stream = excel.ToStream();
+          return stream;
+        }
+      }
+    }
 
     public DataSet GetProcReportDataSetFromQuery(string procname, Dictionary<string, object> parms, int maxrecords = -1)
     {
@@ -213,7 +262,20 @@ namespace CCI.Sys.Processors
         return da.GetDataFromSQL(sql.ToString());
       }
     }
+    public string AddCodes()
+    {
+      using (DataAccess da = new DataAccess())
+      {
+        using (InvoiceFtpProcessor processor = new InvoiceFtpProcessor())
+        {
+          da.AddCodeMasterValues("DataDictionary", processor._dataTypes);
 
+        }
+      }
+      return "Success";
+
+
+    }
     private void ProcessFile(ACGFileInfo file)
     {
       List<string> textExtensions = new List<string>() { ".txt", ".csv" };
@@ -228,7 +290,34 @@ namespace CCI.Sys.Processors
         fileinfo = ImportExcelFile(file.FullName, out fileType);
       else return; // we can't import it if we don't know what kind it is
       ImportFileSpecs spec = _importFileSpecs.Where(s => s.FileType == fileType).FirstOrDefault();
-      SaveImportFile(fileinfo, spec.TableName, spec.RepaceAllRecords, spec.CheckFordups, spec.UniqueKeys);
+      SaveImportFile(fileinfo, spec.TableName, spec.RepaceAllRecords, spec.CheckForDups, spec.UniqueKeys);
+      if (spec.FileType == CREATIOBILLAUDITUPLOADTABLE)
+        SaveUploadToCreatioBillAudit(fileinfo);
+    }
+    public void SaveUploadToCreatioBillAudit(ImportFileInfo fileinfo)
+    {
+      // first we need the bill cycle date
+      if (fileinfo.Records == null || fileinfo.Records.Count == 0 || !fileinfo.Records.ContainsKey(CREATIOBILLAUDITUPLOADTABLE))
+        return;
+      object[] records = fileinfo.Records[CREATIOBILLAUDITUPLOADTABLE].First().ToArray();
+      DateTime invoiceDate = ACG.Common.CommonFunctions.CDateTime(records[2]); // 3rd column is invoice date
+      // now find the bill cycle date
+      int day = invoiceDate.Day;
+      int month= invoiceDate.Month;
+      int year= invoiceDate.Year;
+      if (day >= 16) // prior month
+        month = month + 1;
+      if (month > 12)
+      {
+        month = 1;
+        year++;
+      }
+      DateTime billCycleDate = new DateTime(year, month, DateTime.DaysInMonth(year, month));
+      // and finally exec the proc to copy the data to the main table
+      using (DataAccess da = new DataAccess())
+      {
+        da.SaveUploadToCreatioBillAudit(billCycleDate);
+      }
     }
   }
 }

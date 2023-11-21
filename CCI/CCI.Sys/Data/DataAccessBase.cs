@@ -11,6 +11,7 @@ using TAGBOSS.Common;
 using TAGBOSS.Common.Model;
 
 using CCI.Common;
+using System.Reflection;
 
 namespace CCI.Sys.Data
 {
@@ -68,5 +69,6 @@ namespace CCI.Sys.Data
       }
       return returnTable;
     }
+
   }
 }

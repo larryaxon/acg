@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Reflection;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
@@ -60,12 +61,58 @@ Insert Into FilesProcessed ([FileType]
       return id ?? 0;
     }
 
-    public DataSet getCreationInvoice(DateTime fromDate, DateTime toDate)
+    public DataSet getCreatioInvoice(DateTime fromDate, DateTime toDate)
     {
       string sql = "SELECT * from [CreatioAuditView] WHERE [Invoice Date] between '" + fromDate.ToShortDateString() + "' AND '" + toDate.ToShortDateString() + "'";
       DataSet ds = GetDataFromSQL(sql);
       return ds;
     }
+    public void AddCodeMasterValues(string codeType, Dictionary<string, string> data)
+    {
+      const string basesql = "INSERT INTO CodeMaster (CodeType, CodeValue, Description) VALUES ('{0}','{1}','{2}')";
+      if (data == null || data.Count == 0) return;
+      foreach (KeyValuePair<string, string> code in data)
+      {
+        string sql;
+        if (!existsRecord("CodeMaster", new string[] { "CodeType", "CodeValue" }, new string[] { "MASTER", codeType }))
+        {
+          // the MASTER REcord doesn't exist, so add it
+          sql = string.Format(basesql, "MASTER", codeType, "List of " + codeType);
+          updateDataFromSQL(sql);
+        }
+        sql = string.Format(basesql, codeType, code.Key, code.Value);
+        updateDataFromSQL(sql);
+      }
+    }
+    public Dictionary<string, string> GetDataDictionary()
+    {
+      string codetype = "DataDictionary";
+      Dictionary<string, string> data = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase);
+      string sql = "SELECT CodeValue, Description FROM CodeMaster where CodeType = '" + codetype + "'";
+      DataSet ds = GetDataFromSQL(sql);
+      if (ds != null && ds.Tables.Count > 0)
+      {
+        foreach (DataRow row in ds.Tables[0].Rows)
+        {
+          string key = row[0].ToString();
+          string value = row[1].ToString();
+          data.Add(key, value);
+        }
+      }
+      return data;
+    }
+    public DataSet getCreationAuditExport(DateTime billCycleDate)
+    {
+      string sql = "SELECT * from CreatioAuditExport WHERE [Bill cycle date] = '" + billCycleDate.ToShortDateString() + "'";
+      DataSet ds = GetDataFromSQL(sql);
+      return ds;
+    }
+    public void SaveUploadToCreatioBillAudit(DateTime billCycleDate)
+    {
+      string sql = "EXEC PopulateCreatioBillAuditFromUpload '" + billCycleDate.ToShortDateString() + "'";
+      updateDataFromSQL(sql);
+    }
+
     #endregion
     public DataSet getDatasetFromDictionaryData(string tablename, List<string> headers, List<List<object>> records, Dictionary<string, string> datatypes = null,  bool hasID = false)
     {

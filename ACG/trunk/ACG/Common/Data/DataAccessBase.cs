@@ -319,6 +319,36 @@ namespace ACG.Common.Data
     //  }
     //  return returnTable;
     //}
+    public List<T> getListFromDataset<T>(DataSet ds)
+    {
+      if (ds == null)
+        return null;
+      if (ds.Tables.Count == 0)
+        return null;
+      List<T> list = new List<T>();
+      DataTable dt = ds.Tables[0];
+      var columns = dt.Columns;
+      foreach (DataRow row in dt.Rows)
+      {
+        object model = Activator.CreateInstance<T>();
+        Type type = model.GetType();
+
+        PropertyInfo[] properties = type.GetProperties();
+
+        foreach (PropertyInfo property in properties)
+        {
+          if (columns.Contains(property.Name))
+          {
+            object val = row[property.Name];
+            if (val == System.DBNull.Value)
+              val = null;
+            property.SetValue(model, val, null);
+          }
+        }
+        list.Add((T)model);
+      }
+      return list;
+    }
 
     public bool existsRecord(string tableName, string[] keyNames, string[] keyValues)
     {
@@ -781,35 +811,35 @@ namespace ACG.Common.Data
       return ds;
     }
 
-    protected DataSet getDataFromSQL(string[] mySQLs)
-    {
-      DataSet dsSQL = new DataSet();
-      SqlCommand command = createCommand();
-      SqlDataAdapter adapter = new SqlDataAdapter();
-      // Construct the stored procedure command instance
-      string mySQL = string.Empty;
-      for (int i = 0; i < mySQLs.GetLength(0); i++)
-      {
-        mySQL = mySQLs[i];
-        command.CommandType = CommandType.Text;
-        command.CommandText = mySQL;
-        try
-        {
-          adapter.SelectCommand = command;
-          adapter.Fill(dsSQL, "table" + i.ToString().Trim());
-          //dsSQL.Load(command.ExecuteReader(), LoadOption.PreserveChanges, tables);
-        }
-        catch (SqlException e)
-        {
-          throw e;
-        }
-      }
-      adapter.Dispose();
-      command.Dispose();
-      sqlConnection.Close();
+    //protected DataSet getDataFromSQL(string[] mySQLs)
+    //{
+    //  DataSet dsSQL = new DataSet();
+    //  SqlCommand command = createCommand();
+    //  SqlDataAdapter adapter = new SqlDataAdapter();
+    //  // Construct the stored procedure command instance
+    //  string mySQL = string.Empty;
+    //  for (int i = 0; i < mySQLs.GetLength(0); i++)
+    //  {
+    //    mySQL = mySQLs[i];
+    //    command.CommandType = CommandType.Text;
+    //    command.CommandText = mySQL;
+    //    try
+    //    {
+    //      adapter.SelectCommand = command;
+    //      adapter.Fill(dsSQL, "table" + i.ToString().Trim());
+    //      //dsSQL.Load(command.ExecuteReader(), LoadOption.PreserveChanges, tables);
+    //    }
+    //    catch (SqlException e)
+    //    {
+    //      throw e;
+    //    }
+    //  }
+    //  adapter.Dispose();
+    //  command.Dispose();
+    //  sqlConnection.Close();
 
-      return dsSQL;
-    }
+    //  return dsSQL;
+    //}
 
     protected DataAdapterContainer getDataAdapterFromSQL(string mySQL)
     {

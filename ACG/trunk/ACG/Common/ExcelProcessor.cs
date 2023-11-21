@@ -19,6 +19,7 @@ using System.Reflection.Emit;
 using System.Configuration;
 using System.Drawing;
 using OfficeOpenXml.ExternalReferences;
+using ACG.Common.Data;
 //using CallPoint.Models;
 
 namespace ACG.Common
@@ -39,7 +40,21 @@ namespace ACG.Common
     }
     public ExcelProcessor()
     {
-      constructAll(null, null);
+      List<ReportFormatModel> allformats  = GetReportFormats();
+      Dictionary<string, string> numericFormats = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase);
+      List<string> alignmentformats = new List<string>();
+      foreach (ReportFormatModel f in allformats)
+      {
+        if ((f.FormatOutput ?? "Excel") == "Excel")
+        {
+          if (f.FormatType == "Number")
+            numericFormats.Add(f.FormatName, f.FormatString);
+          else if (f.FormatType == "Alignment")
+            alignmentformats.Add(f.FormatName);
+
+        }
+      }
+      constructAll(numericFormats, alignmentformats);
     }
     private void constructAll(Dictionary<string, string> numericformats, List<string> alignmentformats)
     {
@@ -59,6 +74,15 @@ namespace ACG.Common
     public void Dispose()
     {
       excel.Dispose();
+    }
+    public List<ReportFormatModel> GetReportFormats()
+    {
+      string sql = "Select * from ReportFormats";
+      using (DataSourceCommon da = new DataSourceCommon())
+      {
+        DataSet ds = da.GetDataFromSQL(sql);
+        return da.getListFromDataset<ReportFormatModel>(ds);
+      }
     }
     #region file load/create
     public void Save()
@@ -184,8 +208,12 @@ namespace ACG.Common
             string tabname = dt.TableName; // if we don't specify the tab names in tabinfo, then we use the table name
             if (tabnames != null && tabindex < tabnames.Count) // but if we do have a tab name
               tabname = tabarray[tabindex]; // we use it
+            Dictionary<string, List<int>> theseformats = formats[tabindex+1]; // format tab index is 1 based, not zero based
             tabindex++;
-            workbook.CreateWorksheetFromDataTable(dt, tabname, "A1");
+            ExcelWorksheet ws = workbook.CreateWorksheetFromDataTable(dt, tabname, "A1",true, theseformats);
+
+
+
           }
         }
       }

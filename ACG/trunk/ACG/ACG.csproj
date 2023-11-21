@@ -161,6 +161,7 @@
     <Compile Include="Common\ACGSftp.cs" />
     <Compile Include="Common\ACGTable.cs" />
     <Compile Include="Common\ACGZip.cs" />
+    <Compile Include="Common\Data\DataSourceCommon.cs" />
     <Compile Include="Common\Data\SearchDataSourceCCIProducts.cs" />
     <Compile Include="Common\Data\SearchDataSourceCISMaterials.cs" />
     <Compile Include="Common\Data\SearchDataSourceCISEmployees.cs" />
@@ -215,6 +216,7 @@
     <Compile Include="Common\UserOption.cs" />
     <Compile Include="Common\UserOptionCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Common\ReportFormatModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

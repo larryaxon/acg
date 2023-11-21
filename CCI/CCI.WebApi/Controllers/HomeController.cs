@@ -31,7 +31,20 @@ namespace CCI.WebApi.Controllers
       return View();
     }
     #region zip files
+    public ActionResult ImportAndProcessZipFiles()
+    {
+      List<InvoiceFilesListGUIModel> filelist = processZipFiles(); // process zip files and get the return file list
+      filelist.AddRange(importUnibillFiles()); // now import the edi files and add them to the list
+      ViewBag.FileListTitle = "Files Downloaded and Processed";
+      return View("FileList", filelist);
+    }
     public ActionResult ProcessZipFiles()
+    {
+      List<InvoiceFilesListGUIModel> model = processZipFiles();
+      ViewBag.FileListTitle = "Files Downloaded and Processed";
+      return View("FileList", model); 
+    }
+    private List<InvoiceFilesListGUIModel> processZipFiles()
     {
       using (InvoiceFtpProcessor processor = new InvoiceFtpProcessor())
       {
@@ -41,8 +54,7 @@ namespace CCI.WebApi.Controllers
         {
           model.Add(new InvoiceFilesListGUIModel() { FileName = file });
         }
-        ViewBag.FileListTitle = "Files Downloaded and Processed";
-        return View("FileList", model); 
+        return model;
       }
     }
     public ActionResult UnprocessedZipFiles()
@@ -77,6 +89,13 @@ namespace CCI.WebApi.Controllers
     }
     public ActionResult ImportUnibillFiles()
     {
+      List<InvoiceFilesListGUIModel> model = importUnibillFiles();
+      ViewBag.FileListTitle = "Carvana Files Imported";
+      return View("FileList", model);
+
+    }
+    private List<InvoiceFilesListGUIModel> importUnibillFiles()
+    {
       using (InvoiceFtpProcessor processor = new InvoiceFtpProcessor())
       {
         List<string> filesProcessed = processor.ImportUnibills();
@@ -85,8 +104,7 @@ namespace CCI.WebApi.Controllers
         {
           model.Add(new InvoiceFilesListGUIModel() { FileName = file });
         }
-        ViewBag.FileListTitle = "Carvana Files Imported";
-        return View("FileList", model);
+        return model;
       }
     }
     #endregion
@@ -101,7 +119,15 @@ namespace CCI.WebApi.Controllers
       return RedirectToAction("Index");
     }
     #endregion
-
+    #region test routines
+    //public string AddCodes()
+    //{
+    //  using (InvoiceCreationProcessor processor = new InvoiceCreationProcessor())
+    //  {
+    //    return processor.AddCodes();
+    //  }
+    //}
+    #endregion
     #region Create Invoice
     public ActionResult UnprocessedCreatioFiles()
     {
@@ -134,6 +160,7 @@ namespace CCI.WebApi.Controllers
 
     public ActionResult FileUpload()
     {
+      throw new NotImplementedException();
       return View();
     }
     [HttpPost]
@@ -197,6 +224,16 @@ namespace CCI.WebApi.Controllers
       {
         string filename = "Carvana Audit " + DateTime.Today.ToShortDateString() + ".xlsx";
         MemoryStream stream = processor.GetCreatioInvoice(fromDate ?? defaultFromDate, toDate ?? defaultToDate);
+        FileStreamResult result = ToExcel(stream, filename);
+        return result;
+      }
+    }
+    public FileStreamResult DownloadCreatioExport(DateTime billCycleDate)
+    {
+      using (InvoiceCreationProcessor processor = new InvoiceCreationProcessor())
+      {
+        string filename = "Carvana Import File " + DateTime.Today.ToShortDateString() + ".xlsx";
+        MemoryStream stream = processor.getCreationAuditExport(billCycleDate);
         FileStreamResult result = ToExcel(stream, filename);
         return result;
       }

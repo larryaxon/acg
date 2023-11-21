@@ -20,77 +20,83 @@ namespace CCI.Sys.Processors
 {
   public class ImportFileProcessorBase : IDisposable
   {
-
     const string APPSETTINGLOCALBASEFOLDER = "LocalBaseFolder";
     internal List<ACGFileInfo> _fileList = null;
-    internal Dictionary<string, string> _dataTypes = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase)
-    {
-      { "ACCT_LEVEL", "int" },
-      { "ACTIVITY_COMP_DATE", "date" },
-      { "AIR_CHG_AMT", "decimal(8,2)" },
-      { "Ancillary_charges","bit" },
-      { "BAL_FWD", "decimal(8,2)" },
-      { "BAL_FWD_ADJ", "decimal(8,2)" },
-      { "BEG_CHG_DATE", "date" },
-      { "Bill_cycle_date", "date" },
-      { "BILL_PERIOD_END", "date" },
-      { "BILL_PERIOD_START", "date" },
-      { "Carrier_invoice_date", "date" },
-      { "CHG_AMT", "decimal(8,2)" },
-      { "Carrier_charges_to_audit", "decimal(10,2)" },
-      { "CHG_BASIS", "decimal(8,2)" },
-      { "CHG_QTY1_BILLED", "decimal(8,2)" },
-      { "CHG_QTY1_USED", "decimal(8,2)" },
-      { "CHG_QTY2_BILLED", "decimal(8,2)" },
-      { "CHG_QTY2_USED", "decimal(8,2)" },
-      { "CHG_RATE", "decimal(8,2)" },
-      { "CONTRACT_EFF_DATE", "date" },
-      { "CONTRACT_END_DATE", "date" },
-      { "DATA_CHG_AMT", "decimal(8,2)" },
-      { "DATE_ISSUED", "date" },
-      { "DATE_RECEIVED_FROM_SP", "date" },
-      { "DISC_CHG_AMT", "decimal(8,2)" },
-      { "DISC_PCT", "decimal(8,2)" },
-      { "Dispute_Pending", "bit" },
-      { "DUE_DATE" , "date" },
-      { "END_CHG_DATE", "date" },
-      { "FEAT_CHG_AMT", "decimal(8,2)" },
-      { "First_invoice1", "bit" },
-      { "Install_Date", "date" },
-      { "INV_DATE", "date" },
-      { "LD_CHG_AMT", "decimal(8,2)" },
-      { "MRC ($)", "decimal(8,2)" },
-      { "MSG_CHG_AMT", "decimal(8,2)" },
-      { "Multi_Site_Invoice", "bit" },
-      { "Order_MRC", "decimal(10,2)" },
-      { "ORIG_INV_DATE", "date" },
-      { "PMTS_APP_THRU_DATE", "date" },
-      { "PMTS_RCVD", "decimal(8,2)" },
-      { "PREV_BILL_AMT", "decimal(8,2)" },
-      { "PRORATE_FACTOR", "decimal(8,2)" },
-      { "ROAM_CHG_AMT", "decimal(8,2)" },
-      { "ROAM_TAX_CHG_AMT", "decimal(8,2)" },
-      { "SP_BAL_FWD", "decimal(8,2)" },
-      { "SP_INV_LINE_NUM", "int" },
-      { "SP_TOT_AMT_DUE", "decimal(8,2)" },
-      { "SP_TOT_NEW_CHGS", "decimal(8,2)" },
-      { "SVC_ESTABLISH_DATE", "date" },
-      { "TAX_SUR_CHG_AMT", "decimal(8,2)" },
-      { "Total_bill", "decimal(10,2)" },
-      { "TOT_AMT_DUE", "decimal(8,2)" },
-      { "TOT_AMT_DUE_ADJ", "decimal(8,2)" },
-      { "TOT_DISC_AMT", "decimal(8,2)" },
-      { "TOT_MRC_CHGS", "decimal(8,2)" },
-      { "TOT_NEW_CHG_ADJ", "decimal(8,2)" },
-      { "TOT_NEW_CHGS", "decimal(8,2)" },
-      { "TOT_OCC_CHGS", "decimal(8,2)" },
-      { "TOT_TAXSUR", "decimal(8,2)" },
-      { "TOT_USAGE_CHGS", "decimal(8,2)" },
-      { "USG_BAND", "decimal(8,2)" },
-      { "Variance_needs_to_be_a_calculated_field", "decimal(10,2)" },
-      { "FilesProcessedID", "int" }
+    internal Dictionary<string, string> _dataTypes = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase);
+    // changed to get from codemaster
+    //{
+    //  { "ACCT_LEVEL", "int" },
+    //  { "ACTIVITY_COMP_DATE", "date" },
+    //  { "AIR_CHG_AMT", "decimal(8,2)" },
+    //  { "Ancillary_charges","bit" },
+    //  { "Ancillary_Charges?","bit" },
+    //  { "BAL_FWD", "decimal(8,2)" },
+    //  { "BAL_FWD_ADJ", "decimal(8,2)" },
+    //  { "BEG_CHG_DATE", "date" },
+    //  { "Bill_cycle_date", "date" },
+    //  { "BILL_PERIOD_END", "date" },
+    //  { "BILL_PERIOD_START", "date" },
+    //  { "Carrier_invoice_date", "date" },
+    //  { "CHG_AMT", "decimal(8,2)" },
+    //  { "Carrier_charges_to_audit", "decimal(10,2)" },
+    //  { "CHG_BASIS", "decimal(8,2)" },
+    //  { "CHG_QTY1_BILLED", "decimal(8,2)" },
+    //  { "CHG_QTY1_USED", "decimal(8,2)" },
+    //  { "CHG_QTY2_BILLED", "decimal(8,2)" },
+    //  { "CHG_QTY2_USED", "decimal(8,2)" },
+    //  { "CHG_RATE", "decimal(8,2)" },
+    //  { "CONTRACT_EFF_DATE", "date" },
+    //  { "CONTRACT_END_DATE", "date" },
+    //  { "DATA_CHG_AMT", "decimal(8,2)" },
+    //  { "DATE_ISSUED", "date" },
+    //  { "DATE_RECEIVED_FROM_SP", "date" },
+    //  { "DISC_CHG_AMT", "decimal(8,2)" },
+    //  { "DISC_PCT", "decimal(8,2)" },
+    //  { "Dispute_Pending", "bit" },
+    //  { "DUE_DATE" , "date" },
+    //  { "END_CHG_DATE", "date" },
+    //  { "FEAT_CHG_AMT", "decimal(8,2)" },
+    //  { "First_invoice1", "bit" },
+    //  { "First_invoice", "bit" },
+    //  { "Has_E_D_IData","bit"},
+    //  { "Install_Date", "date" },
+    //  { "INV_DATE", "date" },
+    //  { "Invoice_Date", "exceldate" },
+    //  { "LD_CHG_AMT", "decimal(8,2)" },
+    //  { "MRC ($)", "decimal(8,2)" },
+    //  { "MSG_CHG_AMT", "decimal(8,2)" },
+    //  { "Multi__Site_Invoice", "bit" },
+    //  { "Order_MRC", "decimal(10,2)" },
+    //  { "ORIG_INV_DATE", "date" },
+    //  { "PMTS_APP_THRU_DATE", "date" },
+    //  { "PMTS_RCVD", "decimal(8,2)" },
+    //  { "PREV_BILL_AMT", "decimal(8,2)" },
+    //  { "PRORATE_FACTOR", "decimal(8,2)" },
+    //  { "ROAM_CHG_AMT", "decimal(8,2)" },
+    //  { "ROAM_TAX_CHG_AMT", "decimal(8,2)" },
+    //  { "R_P_M_Control_Charges","decimal(10,2)"},
+    //  { "SP_BAL_FWD", "decimal(8,2)" },
+    //  { "SP_INV_LINE_NUM", "int" },
+    //  { "SP_TOT_AMT_DUE", "decimal(8,2)" },
+    //  { "SP_TOT_NEW_CHGS", "decimal(8,2)" },
+    //  { "SVC_ESTABLISH_DATE", "date" },
+    //  { "TAX_SUR_CHG_AMT", "decimal(8,2)" },
+    //  { "Total_bill", "decimal(10,2)" },
+    //  { "TOT_AMT_DUE", "decimal(8,2)" },
+    //  { "TOT_AMT_DUE_ADJ", "decimal(8,2)" },
+    //  { "TOT_DISC_AMT", "decimal(8,2)" },
+    //  { "TOT_MRC_CHGS", "decimal(8,2)" },
+    //  { "TOT_NEW_CHG_ADJ", "decimal(8,2)" },
+    //  { "TOT_NEW_CHGS", "decimal(8,2)" },
+    //  { "TOT_OCC_CHGS", "decimal(8,2)" },
+    //  { "TOT_TAXSUR", "decimal(8,2)" },
+    //  { "TOT_USAGE_CHGS", "decimal(8,2)" },
+    //  { "USG_BAND", "decimal(8,2)" },
+    //  { "Variance_needs_to_be_a_calculated_field", "decimal(10,2)" },
+    //  { "Variance", "decimal(10,2)" },
+    //  { "FilesProcessedID", "int" }
 
-    };
+    //};
     internal string _localDirectory = "U:\\Data";
     #region public properties
     public List<ACGFileInfo> FileList
@@ -123,8 +129,9 @@ namespace CCI.Sys.Processors
       public string FileType { get; set; }
       public string TableName { get; set; }
       public string HeaderLine { get; set; }
+      public int HeaderRow { get; set; } = 1;
       public bool RepaceAllRecords { get; set; } = false;
-      public bool CheckFordups { get; set; } = false;
+      public bool CheckForDups { get; set; } = false;
       public List<string> UniqueKeys { get; set; } = null;
       public bool IsActive { get; set; } = true;
       public bool FixupHeaderNames { get; set; } = false;
@@ -149,6 +156,10 @@ namespace CCI.Sys.Processors
     {
       _localDirectory = getAppSetting(APPSETTINGLOCALBASEFOLDER, null);
       CommonData.SERVERCONFIGFILENAME = CommonData.SERVERCONFIGFILEDEFAULT; // db.config for now
+      using (DataAccess da = new DataAccess())
+      {
+        _dataTypes = da.GetDataDictionary();
+      }
     }
     public void Dispose()
     {
@@ -162,6 +173,35 @@ namespace CCI.Sys.Processors
     }
 
     #region other protected methods
+    internal DataSet adjustFieldsForDataType(DataSet ds)
+    {
+      if (ds == null || ds.Tables.Count == 0)
+        return ds;
+      DataTable dt = ds.Tables[0];
+      dt = adjustFieldsForDataType(dt);
+      return ds;
+    }
+    internal DataTable adjustFieldsForDataType(DataTable dt)
+    {
+      if (dt == null)
+        return dt;
+      if (dt.Rows.Count == 0)
+        return dt;
+      List<string> cols = new List<string>();
+      foreach (DataColumn c in dt.Columns)
+        cols.Add(c.ColumnName);
+      string[] colsarray = cols.ToArray();
+      foreach (DataRow row in dt.Rows)
+      {
+        object[] vals = new object[dt.Columns.Count];
+        for (int icol = 0; icol < vals.Length; icol++)
+          vals[icol] = row[icol];
+        vals = adjustFieldsForDataType(vals, colsarray);
+        for (int icol = 0; icol < vals.Length; icol++)
+          row[icol] = vals[icol];
+      }
+      return dt;
+    }
     internal object[] adjustFieldsForDataType(object[] fields, string[] columnNames)
     {
       // fixes up fields to be correct for data types
@@ -181,9 +221,17 @@ namespace CCI.Sys.Processors
         {
           case "string":
             break;
+          case "exceldate":
+            fldarray[i] = CommonFunctions.CDateTimeFromExcel(fldarray[i], DateTime.Now);
+            break;
           case "date":
             if (!CommonFunctions.IsDateTime(fldarray[i]))
-              fldarray[i] = null;
+            {
+              if (CommonFunctions.IsNumeric(fldarray[i])) // its an excel date
+                fldarray[i] = CommonFunctions.CDateTimeFromExcel(fldarray[i], DateTime.Now);
+              else
+                fldarray[i] = null;
+            }
             else
               fldarray[i] = CommonFunctions.CDateTime(fldarray[i]);
             break;
@@ -269,7 +317,15 @@ namespace CCI.Sys.Processors
         List<string> headerlist = new List<string>();
         StringBuilder headers = new StringBuilder();
         List<List<object>> theserecords = new List<List<object>>();
-        foreach (var firstRowCell in ws.Cells[1, 1, 1, ws.Dimension.End.Column])
+        // find header row
+        int headerrow = 1;
+        for (int irow = 1; irow < 20; irow++ ) // Surely the header rown can't be more than 20 rows down
+        {
+          object val = ws.Cells[irow, 1].Value;
+          if (val != null && !string.IsNullOrWhiteSpace(val.ToString()))
+            headerrow = irow;
+        }
+        foreach (var firstRowCell in ws.Cells[headerrow, 1, headerrow, ws.Dimension.End.Column])
         {
           string header = firstRowCell.Text;
           headers.Append(header);
@@ -312,8 +368,8 @@ namespace CCI.Sys.Processors
         {
           fileProcessedID = da.addFileProcessed(fileType, path, DateTime.Now, -1, false, "Import " + fileType);
         }
-        int startRow = 2;
-        for (int rowNum = startRow; rowNum <= ws.Dimension.End.Row; rowNum++)
+        int startRow = headerrow + 1;
+        for (int rowNum = startRow; rowNum < ws.Dimension.End.Row; rowNum++)
         {
           var wsRow = ws.Cells[rowNum, 1, rowNum, ws.Dimension.End.Column];
           object[] values = new object[ws.Dimension.End.Column];

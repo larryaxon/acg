@@ -916,6 +916,21 @@ namespace ACG.Common
     {
       return new DateTime(CommonData.PastDateTime.Year, CommonData.PastDateTime.Month, CommonData.PastDateTime.Day, t.Hours, t.Minutes, t.Seconds);
     }
+    public static DateTime CDateTimeFromExcel(object o, DateTime defaultDate)
+    {
+      if (o == null)
+        return defaultDate;
+      decimal ddate;
+      if (!decimal.TryParse(o.ToString(), out ddate))
+        return defaultDate;
+      DateTime baseDate = new DateTime(1900, 1, 1); // value of "1"
+      int idate = CInt(ddate);
+      DateTime newdate = baseDate.AddDays(idate - 2);
+      decimal dfractionalday = ddate - idate;
+      int iseconds = CInt(24 * dfractionalday * 60 * 60);
+      newdate = newdate.AddSeconds(iseconds);
+      return newdate;
+    }
     public static TimeSpan CTime(object o)
     {
       DateTime now = DateTime.Now;

@@ -4,12 +4,13 @@
   $(document).ready(function () {
     $(".datepicker").datepicker();
     $('#downloadinvoice').hide();
+    $('#downloadexport').hide();
   });
   function ShowDownload() {
     $('#downloadinvoice').show();
   }
-  function UploadEdited() {
-    alert("Not yet Implemented");
+  function ShowDownloadExport() {
+    $('#downloadexport').show();
   }
 </script>
 <main>
@@ -31,7 +32,7 @@
         @Html.ActionLink("List Unprocessed Files", "UnprocessedZipFiles", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
       </td>
       <td style="padding:4px">
-        @Html.ActionLink("Download Zips and PDFs Files", "ProcessZipFiles", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
+        @Html.ActionLink("Download and Process Zips, Pdfs, EDIs", "ImportAndProcessZipFiles", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
       </td>
     </tr>
     <tr>
@@ -40,7 +41,10 @@
       </td>
 
       <td style="padding:4px">
-        @Html.ActionLink("Import Unprocessed Carvana EDI Files", "ImportUnibillFiles", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
+        <a id="downloadlink" href="javascript:ShowDownload();" class="btn btn-primary btn-sm detail" style="background-color:#0d6efd; width:300px; text-align:center; ">Download Creatio Audit</a>
+        @*@Html.ActionLink("Download Creatio Audit", "DownloadCreatioInvoice", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })*@
+
+        @*@Html.ActionLink("Import Unprocessed Carvana EDI Files", "ImportUnibillFiles", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })*@
       </td>
     </tr>
     <tr>
@@ -48,8 +52,9 @@
         @Html.ActionLink("List Unprocessed Creatio Files", "UnprocessedCreatioFiles", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
       </td>
       <td style="padding:4px">
-        <a id="downloadlink" href="javascript:ShowDownload();" class="btn btn-primary btn-sm detail" style="background-color:#0d6efd; width:300px; text-align:center; ">Download Creatio Audit</a>
-        @*@Html.ActionLink("Download Creatio Audit", "DownloadCreatioInvoice", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })*@
+        @Html.ActionLink("Upload Edited Creatio Audit", "FileUpload", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
+
+        @*<a id="uploadedited" href="javascript:UploadEdited();" class="btn btn-primary btn-sm detail" style="background-color:#0d6efd; width:300px; text-align:center; ">Upload Edited Creatio</a>*@
       </td>
 
     </tr>
@@ -57,37 +62,30 @@
       <td style="padding:4px">
       </td>
       <td style="padding:4px">
-        <a id="uploadedited" href="javascript:UploadEdited();" class="btn btn-primary btn-sm detail" style="background-color:#0d6efd; width:300px; text-align:center; ">Upload Edited Creatio (Not Implemented)</a>
-
+        @Html.ActionLink("Import Edited File", "ImportCreatioFiles", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
       </td>
     </tr>
     <tr>
       <td style="padding:4px">
       </td>
-      <td style="padding:4px">
-        <a id="uploadimport" href="javascript:UploadEdited();" class="btn btn-primary btn-sm detail" style="background-color:#0d6efd; width:300px; text-align:center; ">Download Creatio Import (Not Implemented)</a>
 
-      </td>
-    </tr>
-    <tr>
       <td style="padding:4px">
-      </td>
-      <td style="padding:4px">
-        @Html.ActionLink("Upload Creatio Files", "FileUpload", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
+        <a id="uploadimport" href="javascript:ShowDownloadExport();" class="btn btn-primary btn-sm detail" style="background-color:#0d6efd; width:300px; text-align:center; ">Download File to Import into Creatio</a>
       </td>
     </tr>
     <tr>
       <td>
       </td>
-
       <td style="padding:4px">
-        @Html.ActionLink("Import Creatio Files", "ImportCreatioFiles", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
+        @Html.ActionLink("Upload Export From Creatio (Not Implemented)", "FileUpload", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
       </td>
+
     </tr>
   </table>
   <div id="downloadinvoice" >
     @using (Html.BeginForm("DownloadCreatioInvoice", "Home", FormMethod.Post))
     {
+      <h2>Download new Creatio Invoice for this Period</h2>
     <table>
       <tr>
         <td>
@@ -110,7 +108,16 @@
 
     }
   </div>
-
+  <div id="downloadexport">
+    @using (Html.BeginForm("DownloadCreatioExport", "Home", FormMethod.Post))
+    {
+      <h2>Download Export to Import into Creatio</h2>
+      <div>
+        @Html.Editor("billCycleDate", new { htmlAttributes = new { @class = "form-control datepicker", @autocomplete = "off" } })
+      </div>
+      <input type="submit" value="Download" class="btn btn-primary btn-sm detail" />
+    }
+  </div>
 </main>
 @*@section Scripts {
   @Scripts.Render("~/bundles/jqueryval")

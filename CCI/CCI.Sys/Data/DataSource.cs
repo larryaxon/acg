@@ -5,7 +5,6 @@ using System.Linq;
 using System.Data;
 using System.Text;
 
-using System.Data;
 using System.Data.SqlClient;
 using CCI.Common;
 using CCI.Sys.SecurityEngine;
@@ -362,7 +361,7 @@ Values ('{0}','{1}','{1} Pricing Level','{2}','{3}')"
       sql = string.Format(sql, "Payor", "Payor", externalID.Replace("'","''"), entityType, internalID, _securityContext.User, DateTime.Now.ToString());
       updateDataFromSQL(sql);
     }
-    public bool existsRecord(string tableName, string[] keyNames, string[] keyValues)
+    public new bool existsRecord(string tableName, string[] keyNames, string[] keyValues)
     {
       if (keyNames == null || keyValues == null || keyNames.GetLength(0) != keyValues.GetLength(0))
         return false;
