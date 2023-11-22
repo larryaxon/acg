@@ -85,6 +85,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BillCycleModel.cs" />
     <Compile Include="CCICommands.cs" />
     <Compile Include="CCIEntity.cs" />
     <Compile Include="CCIForm.cs" />
@@ -96,6 +97,7 @@
     <Compile Include="FieldValidation.cs" />
     <Compile Include="FormTypes.cs" />
     <Compile Include="MRCMatchingSelectedItem.cs" />
+    <Compile Include="ProcessStepsModel.cs" />
     <Compile Include="SecurityContext.cs" />
     <Compile Include="ServerRequest.cs" />
     <Compile Include="ServerResponse.cs" />

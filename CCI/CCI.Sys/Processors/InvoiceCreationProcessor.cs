@@ -27,6 +27,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.Status;
 using System.Windows.Media;
 using OfficeOpenXml.Style;
 using System.Drawing;
+using CCI.Common;
 
 namespace CCI.Sys.Processors
 {
@@ -34,6 +35,7 @@ namespace CCI.Sys.Processors
   {
     private const string APPSETTINGCREATIOIMPORTFOLDER = "CreatioImportFolder";
     private const string FILETYPECREATIONETWORKINVENTORY = "CreatioNetworkInventory";
+    private const string PROCESSSTEPCYCLE = "CreatioBillAudit";
     private string _creatioImportFolder = "\\InvoiceIQ\\Creatio\\";
     private const string CREATIOBILLAUDITUPLOADTABLE = "CreatioAuditUpload";
 
@@ -301,10 +303,19 @@ namespace CCI.Sys.Processors
         return;
       object[] records = fileinfo.Records[CREATIOBILLAUDITUPLOADTABLE].First().ToArray();
       DateTime invoiceDate = ACG.Common.CommonFunctions.CDateTime(records[2]); // 3rd column is invoice date
+      DateTime billCycleDate = CalculateBillCycleDate(invoiceDate);
+      // and finally exec the proc to copy the data to the main table
+      using (DataAccess da = new DataAccess())
+      {
+        da.SaveUploadToCreatioBillAudit(billCycleDate);
+      }
+    }
+    public static DateTime CalculateBillCycleDate(DateTime dt)
+    {
       // now find the bill cycle date
-      int day = invoiceDate.Day;
-      int month= invoiceDate.Month;
-      int year= invoiceDate.Year;
+      int day = dt.Day;
+      int month = dt.Month;
+      int year = dt.Year;
       if (day >= 16) // prior month
         month = month + 1;
       if (month > 12)
@@ -313,10 +324,28 @@ namespace CCI.Sys.Processors
         year++;
       }
       DateTime billCycleDate = new DateTime(year, month, DateTime.DaysInMonth(year, month));
-      // and finally exec the proc to copy the data to the main table
-      using (DataAccess da = new DataAccess())
+      return billCycleDate;
+    }
+
+    public List<ProcessStepsModel> getProcessStepsList()
+    {
+      using (DataSource da = new DataSource())
       {
-        da.SaveUploadToCreatioBillAudit(billCycleDate);
+        return da.getProcessStepsList(PROCESSSTEPCYCLE);
+      }
+    }
+    public List<BillCycleModel> getThisBillCycle(DateTime billCycleDate)
+    {
+      using (DataSource da = new DataSource())
+      {
+        return da.getThisBillCycle( billCycleDate);
+      }
+    }
+    public static int? processStep(string step, DateTime billDate, bool processed, string user)
+    {
+      using (DataSource da = new DataSource())
+      {
+        return da.processStep(step, billDate, processed, user);
       }
     }
   }

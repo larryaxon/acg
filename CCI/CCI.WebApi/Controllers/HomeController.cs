@@ -12,6 +12,9 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Linq.Expressions;
+using CCI.Common;
+using Newtonsoft.Json;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 
 namespace CCI.WebApi.Controllers
 {
@@ -19,22 +22,58 @@ namespace CCI.WebApi.Controllers
   {
     const string FILESPROCESSEDFILETYPEINVOICEIQ = CCI.Common.CommonData.FILESPROCESSEDFILETYPEINVOICEIQ;
     const string FILESPROCESSEDFILETYPEUNIBILL = CCI.Common.CommonData.FILESPROCESSEDFILETYPEUNIBILL;
-
+    const string PROCESSSTEPZIP = "ZipUpload";
+    const string PROCESSSTEPDOWNLOADAUDIT = "DownloadAudit";
+    const string PROCESSSTEPUPLOADEDITED = "UploadEditedAudit";
+    const string PROCESSSTEPDOWNLOADCREATIOIMPORT = "DownloadCreatioImport";
+    const string PROCESSSTEPUPLOADEXPORT = "UploadCreatioExport";
+    const string USER = "Melissa";
     public HomeController()
     {
 
     }
     public ActionResult Index()
     {
-      ViewBag.Title = "Invoice IQ Downloads";
+      ViewBag.Title = "Carvana Audit Process Cycle";
+      DateTime billCycleDate = InvoiceCreationProcessor.CalculateBillCycleDate(DateTime.Today.AddMonths(-1));
+      CreatioBillCycleGUIModel model = new CreatioBillCycleGUIModel()
+      {
+        BillCycleDate = billCycleDate
+      };
+      using (InvoiceCreationProcessor processor = new InvoiceCreationProcessor())
+      {
+        List<BillCycleModel> steps = processor.getThisBillCycle(billCycleDate);
+        foreach (BillCycleModel step in steps)
+        {
+          switch (step.Step)
+          {
+            case PROCESSSTEPZIP:
+                model.ZipUploaded = step.ProcessedDateTime;
+              break;
+            case PROCESSSTEPDOWNLOADAUDIT:
+                model.ZipUploaded = step.ProcessedDateTime;
+              break;
+            case PROCESSSTEPUPLOADEDITED:
+                model.ZipUploaded = step.ProcessedDateTime;
+              break;
+            case PROCESSSTEPDOWNLOADCREATIOIMPORT:
+                model.ZipUploaded = step.ProcessedDateTime;
+              break;
+            case PROCESSSTEPUPLOADEXPORT:
+                model.ZipUploaded = step.ProcessedDateTime;
+              break;
 
-      return View();
+          }
+        }
+      }
+      return View(model);
     }
     #region zip files
-    public ActionResult ImportAndProcessZipFiles()
+    public ActionResult ImportAndProcessZipFiles(DateTime billCycleDate)
     {
       List<InvoiceFilesListGUIModel> filelist = processZipFiles(); // process zip files and get the return file list
       filelist.AddRange(importUnibillFiles()); // now import the edi files and add them to the list
+      InvoiceCreationProcessor.processStep(PROCESSSTEPZIP, billCycleDate, true, USER);
       ViewBag.FileListTitle = "Files Downloaded and Processed";
       return View("FileList", filelist);
     }
@@ -143,7 +182,7 @@ namespace CCI.WebApi.Controllers
         return View("FileList", model);
       }
     }
-    public ActionResult ImportCreatioFiles()
+    public ActionResult ImportCreatioFiles(DateTime billCycleDate)
     {
       using (InvoiceCreationProcessor processor = new InvoiceCreationProcessor())
       {
@@ -153,6 +192,8 @@ namespace CCI.WebApi.Controllers
         {
           model.Add(new InvoiceFilesListGUIModel() { FileName = file });
         }
+        InvoiceCreationProcessor.processStep(PROCESSSTEPUPLOADEDITED, billCycleDate, true, USER);
+
         ViewBag.FileListTitle = "Creatio Network Inventory Files Imported";
         return View("FileList", model);
       }
@@ -164,7 +205,7 @@ namespace CCI.WebApi.Controllers
       return View();
     }
     [HttpPost]
-    public ActionResult UploadFiles()
+    public ActionResult UploadFiles(DateTime billCycleDate)
     {
       // Checking no of files injected in Request object  
       if (Request.Files.Count > 0)
@@ -202,6 +243,7 @@ namespace CCI.WebApi.Controllers
             fname = Path.Combine(localfolder, fname);
             file.SaveAs(fname);
           }
+          ImportCreatioFiles(billCycleDate);
           // Returns message that successfully uploaded  
           return Json("File Uploaded Successfully!");
         }
@@ -215,16 +257,18 @@ namespace CCI.WebApi.Controllers
         return Json("No files selected.");
       }
     }
-    public FileStreamResult DownloadCreatioInvoice(DateTime? fromDate = null, DateTime? toDate = null)
+    public FileStreamResult DownloadCreatioInvoice(DateTime billCycleDate)
     {
-      DateTime defaultFromDate = new DateTime(2023, 6, 16);
-      DateTime defaultToDate = new DateTime(2023, 7, 15);
+      DateTime fromDate = GetPeriodBeginDate(billCycleDate);
+      DateTime toDate = GetPeriodEndDate(billCycleDate);
 
       using (InvoiceCreationProcessor processor = new InvoiceCreationProcessor())
       {
         string filename = "Carvana Audit " + DateTime.Today.ToShortDateString() + ".xlsx";
-        MemoryStream stream = processor.GetCreatioInvoice(fromDate ?? defaultFromDate, toDate ?? defaultToDate);
+        MemoryStream stream = processor.GetCreatioInvoice(fromDate, toDate);
         FileStreamResult result = ToExcel(stream, filename);
+        InvoiceCreationProcessor.processStep(PROCESSSTEPZIP, billCycleDate, true, USER);
+
         return result;
       }
     }
@@ -235,10 +279,30 @@ namespace CCI.WebApi.Controllers
         string filename = "Carvana Import File " + DateTime.Today.ToShortDateString() + ".xlsx";
         MemoryStream stream = processor.getCreationAuditExport(billCycleDate);
         FileStreamResult result = ToExcel(stream, filename);
+        InvoiceCreationProcessor.processStep(PROCESSSTEPDOWNLOADCREATIOIMPORT, billCycleDate, true, USER);
+
         return result;
       }
     }
     #endregion
+    
+    public string getProcessSteps()
+    {
+      using (InvoiceCreationProcessor processor = new InvoiceCreationProcessor())
+      {
+        List<ProcessStepsModel> list =  processor.getProcessStepsList();
+        return JsonConvert.SerializeObject(list, Formatting.Indented);
+      }
+    }
+    public string getThisBillCycle(DateTime billCycleDate)
+    {
+      using (InvoiceCreationProcessor processor = new InvoiceCreationProcessor())
+      {
+        List<BillCycleModel> list = processor.getThisBillCycle(billCycleDate);
+        return JsonConvert.SerializeObject(list, Formatting.Indented);
+      }
+    }
+    
     private string ConvertListToString(List<string> list)
     {
       string txt = string.Empty;
@@ -271,6 +335,25 @@ namespace CCI.WebApi.Controllers
       stream.Seek(0, 0);
       FileStreamResult result = new FileStreamResult(stream, "application/vnd.ms-excel") { FileDownloadName = filename }; // and return the text file
       return result;
+    }
+    private DateTime GetPeriodBeginDate(DateTime billCycleDate)
+    {
+      const int beginday = 16;
+      int month = billCycleDate.Month - 1;
+      int year = billCycleDate.Year;
+      if (month < 0)
+      {
+        month = 12;
+        year--;
+      }
+      return new DateTime(year, month, beginday);
+    }
+    private DateTime GetPeriodEndDate(DateTime billCycleDate)
+    {
+      const int endday = 15;
+      int month = billCycleDate.Month;
+      int year = billCycleDate.Year;
+      return new DateTime(year, month, endday);
     }
 
   }

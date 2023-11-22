@@ -12,10 +12,27 @@ namespace CCI.Sys.Data
 {
   public partial class DataSource
   {
+    public List<ProcessStepsModel> getProcessStepsList(string cycle)
+    {
+      if (string.IsNullOrWhiteSpace(cycle))
+        return new List<ProcessStepsModel>();
+      string sql = "Select * from ProcessSteps where cycle = '" + cycle + "'";
+      DataSet ds = getDataFromSQL(sql);
+      //DataSet ds = getProcessSteps(cycle, billDate);
+      return getListFromDataset<ProcessStepsModel>(ds);
+    }
     public DataSet getProcessSteps(string cycle, DateTime billDate)
     {
       return getProcessSteps(cycle, billDate, false);
+      
     }
+    public List<BillCycleModel> getThisBillCycle( DateTime billCycleDate)
+    {
+      string sql = "SELECT * FROM BillingCycleDetail WHERE BillingDate = '" + billCycleDate.ToShortDateString() +  "'";
+      DataSet ds = getDataFromSQL(sql);
+      return getListFromDataset<BillCycleModel>(ds);
+    }
+
     public DataSet getProcessSteps(string cycle, DateTime billDate, bool testMode)
     {
       string cycleFilter = string.Format("(Cycle = '{0}'{1})", cycle, testMode ? string.Format(" OR Cycle = '{0}x'",cycle) : string.Empty);

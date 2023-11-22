@@ -12,9 +12,9 @@ using TAGBOSS.Common.Model;
 
 namespace CCI.Sys.Data
 {
-  public partial class DataSource : DataAccessBase
+  public partial class DataSource : DataAccessBase, IDisposable
   {
-
+    public void Dispose() { }
     #region general methods
 
     public void deleteOpportunityLineItems(int opportunityID)

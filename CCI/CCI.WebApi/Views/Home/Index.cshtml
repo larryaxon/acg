@@ -1,4 +1,4 @@
-﻿
+﻿@model CCI.WebApi.Models.CreatioBillCycleGUIModel
 <script type="text/javascript">
   var atoken = "";
   $(document).ready(function () {
@@ -17,7 +17,29 @@
   <section class="row">
     <h1>City Communications</h1>
     <p class="lead">Invoice IQ site downloads and imports</p>
+    <div id="selectbillcycle">
+      @using (Html.BeginForm("SelectBillCycle", "Home", FormMethod.Post))
+      {
+        <table>
+          <tr>
+            <td>
+              Current Bill Cycle
+            </td>
+            <td>
+              @Html.EditorFor(model => model.BillCycleDateDisplay, new { htmlAttributes = new { @class = "form-control datepicker", @autocomplete = "off" } })
+
+            </td>
+            <td>
+              <input type="submit" value="Select" class="btn btn-primary btn-sm detail" />
+
+            </td>
+          </tr>
+
+        </table>
+      }
+    </div>
   </section>
+  <br/>
   <table style="width:70%; margin-left:15%; margin-right:15%;">
     <tr>
       <th>
@@ -26,25 +48,30 @@
       <th>
         Carvana Invoice Monthly Process
       </th>
+      <td>
+        Date/Time Processed 
+      </td>
     </tr>
     <tr>
       <td style="padding:4px">
         @Html.ActionLink("List Unprocessed Files", "UnprocessedZipFiles", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
       </td>
       <td style="padding:4px">
-        @Html.ActionLink("Download and Process Zips, Pdfs, EDIs", "ImportAndProcessZipFiles", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
+        @Html.ActionLink("Download and Process Zips, Pdfs, EDIs", "ImportAndProcessZipFiles", new { billCycleDate = Model.BillCycleDate }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
+      </td>
+      <td style="width:300px;">
+        @Html.DisplayFor(model => model.ZipUploaded, new { @style= "width:300px;" })
       </td>
     </tr>
     <tr>
       <td style="padding:4px">
         @Html.ActionLink("List Unprocessed Carvana Files", "UnprocessedUnibillFiles", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
       </td>
-
       <td style="padding:4px">
         <a id="downloadlink" href="javascript:ShowDownload();" class="btn btn-primary btn-sm detail" style="background-color:#0d6efd; width:300px; text-align:center; ">Download Creatio Audit</a>
-        @*@Html.ActionLink("Download Creatio Audit", "DownloadCreatioInvoice", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })*@
-
-        @*@Html.ActionLink("Import Unprocessed Carvana EDI Files", "ImportUnibillFiles", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })*@
+      </td>
+      <td style="width:300px;">
+        @Html.DisplayFor(model => model.AuditDownloaded, new { @style = "width:300px;" })
       </td>
     </tr>
     <tr>
@@ -52,73 +79,68 @@
         @Html.ActionLink("List Unprocessed Creatio Files", "UnprocessedCreatioFiles", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
       </td>
       <td style="padding:4px">
-        @Html.ActionLink("Upload Edited Creatio Audit", "FileUpload", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
-
-        @*<a id="uploadedited" href="javascript:UploadEdited();" class="btn btn-primary btn-sm detail" style="background-color:#0d6efd; width:300px; text-align:center; ">Upload Edited Creatio</a>*@
+        @Html.ActionLink("Upload Edited Creatio Audit", "FileUpload", new { billCycleDate = Model.BillCycleDate }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
       </td>
-
-    </tr>
-    <tr>
-      <td style="padding:4px">
-      </td>
-      <td style="padding:4px">
-        @Html.ActionLink("Import Edited File", "ImportCreatioFiles", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
+      <td style="width:300px;">
+        @Html.DisplayFor(model => model.EditedFileUploaded, new { @style = "width:300px;" })
       </td>
     </tr>
     <tr>
       <td style="padding:4px">
       </td>
-
       <td style="padding:4px">
         <a id="uploadimport" href="javascript:ShowDownloadExport();" class="btn btn-primary btn-sm detail" style="background-color:#0d6efd; width:300px; text-align:center; ">Download File to Import into Creatio</a>
+      </td>
+      <td style="width:300px;">
+        @Html.DisplayFor(model => model.DownloadCreatioImport, new { @style = "width:300px;" })
       </td>
     </tr>
     <tr>
       <td>
       </td>
       <td style="padding:4px">
-        @Html.ActionLink("Upload Export From Creatio (Not Implemented)", "FileUpload", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
+        @Html.ActionLink("Upload Export From Creatio (Not Implemented)", "FileUpload", new { billCycleDate = Model.BillCycleDate }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
       </td>
-
+      <td style="width:300px;">
+        @Html.DisplayFor(model => model.UploadNewCreatioFile, new { @style = "width:300px;" })
+      </td>
     </tr>
   </table>
-  <div id="downloadinvoice" >
-    @using (Html.BeginForm("DownloadCreatioInvoice", "Home", FormMethod.Post))
+  <div id="downloadinvoice">
+    @using (Html.BeginForm("DownloadCreatioInvoice", "Home", new { billCycleDate = Model.BillCycleDate }, FormMethod.Post))
     {
       <h2>Download new Creatio Invoice for this Period</h2>
-    <table>
-      <tr>
-        <td>
-          From Date:
-        </td>
-        <td>
-          @Html.Editor("fromDate", new { htmlAttributes = new { @class = "form-control datepicker", @autocomplete = "off" } })
-        </td>
-      </tr>
-      <tr>
-        <td>
-          To Date:
-        </td>
-        <td>
-          @Html.Editor("toDate", new { htmlAttributes = new { @class = "form-control datepicker", @autocomplete = "off" } })
-        </td>
-      </tr>
-    </table>
-    <input type="submit" value="Download" class="btn btn-primary btn-sm detail" />
-
+      <table>
+        <tr>
+          <td>
+            Bill Cycle Date:
+          </td>
+          <td>
+            @Html.Editor("billCycleDate", new { htmlAttributes = new { @class = "form-control datepicker", @autocomplete = "off" } })
+          </td>
+        </tr>
+      </table>
+      <input type="submit" value="Download" class="btn btn-primary btn-sm detail" />
     }
   </div>
   <div id="downloadexport">
-    @using (Html.BeginForm("DownloadCreatioExport", "Home", FormMethod.Post))
+    @using (Html.BeginForm("DownloadCreatioExport", "Home", new { billCycleDate = Model.BillCycleDate }, FormMethod.Post))
     {
       <h2>Download Export to Import into Creatio</h2>
-      <div>
-        @Html.Editor("billCycleDate", new { htmlAttributes = new { @class = "form-control datepicker", @autocomplete = "off" } })
-      </div>
+      <table>
+        <tr>
+          <td>
+            Bill Cycle Date:
+          </td>
+          <td>
+            @Html.Editor("billCycleDate", new { htmlAttributes = new { @class = "form-control datepicker", @autocomplete = "off" } })
+          </td>
+        </tr>
+      </table>
       <input type="submit" value="Download" class="btn btn-primary btn-sm detail" />
     }
   </div>
 </main>
 @*@section Scripts {
-  @Scripts.Render("~/bundles/jqueryval")
-}*@
+    @Scripts.Render("~/bundles/jqueryval")
+  }*@
