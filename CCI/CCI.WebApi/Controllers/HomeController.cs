@@ -48,19 +48,19 @@ namespace CCI.WebApi.Controllers
           switch (step.Step)
           {
             case PROCESSSTEPZIP:
-                model.ZipUploaded = step.ProcessedDateTime;
+              model.ZipUploaded = step.ProcessedDateTime;
               break;
             case PROCESSSTEPDOWNLOADAUDIT:
-                model.ZipUploaded = step.ProcessedDateTime;
+              model.AuditDownloaded = step.ProcessedDateTime;
               break;
             case PROCESSSTEPUPLOADEDITED:
-                model.ZipUploaded = step.ProcessedDateTime;
+              model.EditedFileUploaded = step.ProcessedDateTime;
               break;
             case PROCESSSTEPDOWNLOADCREATIOIMPORT:
-                model.ZipUploaded = step.ProcessedDateTime;
+              model.DownloadCreatioImport = step.ProcessedDateTime;
               break;
             case PROCESSSTEPUPLOADEXPORT:
-                model.ZipUploaded = step.ProcessedDateTime;
+              model.UploadNewCreatioFile = step.ProcessedDateTime;
               break;
 
           }
@@ -267,7 +267,7 @@ namespace CCI.WebApi.Controllers
         string filename = "Carvana Audit " + DateTime.Today.ToShortDateString() + ".xlsx";
         MemoryStream stream = processor.GetCreatioInvoice(fromDate, toDate);
         FileStreamResult result = ToExcel(stream, filename);
-        InvoiceCreationProcessor.processStep(PROCESSSTEPZIP, billCycleDate, true, USER);
+        InvoiceCreationProcessor.processStep(PROCESSSTEPDOWNLOADAUDIT, billCycleDate, true, USER);
 
         return result;
       }
