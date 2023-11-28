@@ -326,7 +326,10 @@ namespace CCI.Sys.Processors
         {
           object val = ws.Cells[irow, 1].Value;
           if (val != null && !string.IsNullOrWhiteSpace(val.ToString()))
+          {
             headerrow = irow;
+            break;
+          }
         }
         foreach (var firstRowCell in ws.Cells[headerrow, 1, headerrow, ws.Dimension.End.Column])
         {

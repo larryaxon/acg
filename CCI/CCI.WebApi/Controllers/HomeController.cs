@@ -257,6 +257,8 @@ namespace CCI.WebApi.Controllers
             fname = Path.Combine(uploadFolder, fname);
             file.SaveAs(fname);
           }
+          ImportCreatioFiles(billCycleDate, fileType);
+
           // Returns message that successfully uploaded  
           return Json("File Uploaded Successfully!");
         }
@@ -267,6 +269,8 @@ namespace CCI.WebApi.Controllers
       }
       else
       {
+        ImportCreatioFiles(billCycleDate, fileType);
+
         return Json("No files selected.");
       }
     }
