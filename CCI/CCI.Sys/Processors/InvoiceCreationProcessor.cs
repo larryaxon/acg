@@ -39,6 +39,12 @@ namespace CCI.Sys.Processors
     private string _creatioImportFolder = "\\InvoiceIQ\\Creatio\\";
     private const string CREATIOBILLAUDITUPLOADTABLE = "CreatioAuditUpload";
 
+    public const string FILETYPENETWORKINVENTORY = "NI";
+    public const string FILETYPEIMPORTFROMCREATIO = "CreatioAudit";
+    public const string FILETYPEEDITEDUPLOAD = CREATIOBILLAUDITUPLOADTABLE;
+    public const string FILESPROCESSEDFILETYPEINVOICEIQ = "InvoiceIQ";
+    public const string FILESPROCESSEDFILETYPEUNIBILL = "Unibill";
+
     public InvoiceCreationProcessor() : base()
     {
       _creatioImportFolder = getAppSetting(APPSETTINGCREATIOIMPORTFOLDER, _creatioImportFolder);
@@ -46,7 +52,7 @@ namespace CCI.Sys.Processors
       {
         new ImportFileSpecs()
         {
-          FileType = "NI",
+          FileType = FILETYPENETWORKINVENTORY,
           TableName = "[dbo].[CreatioNetworkInventory]",
           HeaderLine =  "Number,Carrier,Service Location,Parent Account No.,Child Account No.,Product Nickname,MRC ($),Stage,Status" ,
           RepaceAllRecords = true,
@@ -54,7 +60,7 @@ namespace CCI.Sys.Processors
         },
         new ImportFileSpecs()
         {
-          FileType = "CreatioAudit",
+          FileType = FILETYPEIMPORTFROMCREATIO,
           TableName = "[dbo].[CreatioBillAudit]",
           HeaderLine =   "Number,Bill cycle date,Carrier invoice date,Order,Carrier,Building Type,Location Nickname,Location,Product,BAN,Parent,Child,Carrier charges to audit,Order.MRC,Variance (needs to be a calculated field),Total bill,First invoice1,Multi-Site Invoice,Ancillary charges,Comments,Dispute Pending,Dispute Notes,Stage,Status",
           //HeaderLine =   "Number,Bill cycle date,Carrier invoice date,Order,Carrier,Location,Product,BAN,Parent,Child,Carrier charges to audit,Order.MRC,Variance (needs to be a calculated field),Total bill,First invoice1,Multi-Site Invoice,Ancillary charges,Comments,Dispute Pending,Dispute Notes,Stage,Status,Install Date,Building Type",
@@ -66,7 +72,7 @@ namespace CCI.Sys.Processors
         },
         new ImportFileSpecs()
         {
-          FileType = "CreatioAuditUpload",
+          FileType = FILETYPEEDITEDUPLOAD,
           TableName = "[dbo].[CreatioBillAuditUpload]",
           HeaderLine =   "Number,Invoice Date,Creatio ID,Carrier,Building Type,Location Nickname,Location,Product,Parent,Child,Carrier Charges to Audit,R P M Control Charges,Variance,Total Bill,First Invoice,Multi- Site Invoice,Ancillary Charges?,Comment,Dispute Pending,Dispute Notes,Has E D IData",
           RepaceAllRecords = false,
@@ -77,10 +83,9 @@ namespace CCI.Sys.Processors
       };
       _localDirectory = _localDirectory + _creatioImportFolder;
     }
-    public List<string> ImportCreatioFiles()
+    public List<string> ImportCreatioFiles(string fileType = null)
     {
-      //List<ACGFileInfo> files = GetFileList();
-      return ProcessFiles();
+      return ProcessFiles(fileType);
     }
     public List<ACGFileInfo> GetFileList(string directory = null)
     {
@@ -110,12 +115,12 @@ namespace CCI.Sys.Processors
       List<string> filelist = filesToProcess.Select(f => f.Name).ToList();
       return filelist;
     }
-    public List<string> ProcessFiles()
+    public List<string> ProcessFiles(string fileType = null)
     {
       GetFileList(LocalFolder);
       List<ACGFileInfo> filesToProcess = getFilesToProcess();
       foreach (ACGFileInfo file in filesToProcess)
-        ProcessFile(file);
+        ProcessFile(file, fileType);
       return filesToProcess.Select(f => f.Name).ToList();
     }
     public MemoryStream GetCreatioInvoice(DateTime fromDate, DateTime toDate)
@@ -278,20 +283,21 @@ namespace CCI.Sys.Processors
 
 
     }
-    private void ProcessFile(ACGFileInfo file)
+    private void ProcessFile(ACGFileInfo file, string fileType = null)
     {
       List<string> textExtensions = new List<string>() { ".txt", ".csv" };
       List<string> excelExtensions = new List<string>() { ".xlsx" };
-      string fileType;
       ImportFileInfo fileinfo;
-
+      string thisFilesType;
       string extension = Path.GetExtension(file.Name);
       if (textExtensions.Contains(extension, StringComparer.CurrentCultureIgnoreCase))
-        fileinfo = ImportFile(file, out fileType);
-      else if (excelExtensions.Contains(extension, StringComparer.CurrentCultureIgnoreCase))
-        fileinfo = ImportExcelFile(file.FullName, out fileType);
+        fileinfo = ImportFile(file, out thisFilesType, fileType);
+      else if (excelExtensions.Contains(extension,StringComparer.CurrentCultureIgnoreCase))
+        fileinfo = ImportExcelFile(file.FullName, out thisFilesType, fileType);
       else return; // we can't import it if we don't know what kind it is
-      ImportFileSpecs spec = _importFileSpecs.Where(s => s.FileType == fileType).FirstOrDefault();
+      if (fileinfo == null) // we didn't process this file, probably cause it was not the one we asked for
+        return;
+      ImportFileSpecs spec = _importFileSpecs.Where(s => s.FileType == thisFilesType).FirstOrDefault();
       SaveImportFile(fileinfo, spec.TableName, spec.RepaceAllRecords, spec.CheckForDups, spec.UniqueKeys);
       if (spec.FileType == CREATIOBILLAUDITUPLOADTABLE)
         SaveUploadToCreatioBillAudit(fileinfo);

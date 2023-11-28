@@ -232,6 +232,7 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\FileList.cshtml" />
+    <Content Include="Views\Home\FileUploadOld.cshtml" />
     <Content Include="Views\Home\FileUpload.cshtml" />
   </ItemGroup>
   <ItemGroup>

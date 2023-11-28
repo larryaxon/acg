@@ -21,6 +21,7 @@ namespace CCI.Sys.Processors
   public class ImportFileProcessorBase : IDisposable
   {
     const string APPSETTINGLOCALBASEFOLDER = "LocalBaseFolder";
+    public const string CREATIOBILLAUDITIMPORTTABLE = "CreatioBillAuditImport";
     internal List<ACGFileInfo> _fileList = null;
     internal Dictionary<string, string> _dataTypes = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase);
     // changed to get from codemaster
@@ -97,7 +98,7 @@ namespace CCI.Sys.Processors
     //  { "FilesProcessedID", "int" }
 
     //};
-    internal string _localDirectory = "U:\\Data";
+    internal static string _localDirectory = "U:\\Data";
     #region public properties
     public List<ACGFileInfo> FileList
     {
@@ -115,7 +116,7 @@ namespace CCI.Sys.Processors
         return FileList.Select(f => f.Name).ToList();
       }
     }
-    public string LocalFolder
+    public static string LocalFolder
     {
       get { return _localDirectory; }
       set { _localDirectory = value; }
@@ -257,7 +258,7 @@ namespace CCI.Sys.Processors
       }
       return fldarray;
     }
-    internal ImportFileInfo ImportFile(ACGFileInfo file, out string fileType)
+    internal ImportFileInfo ImportFile(ACGFileInfo file, out string fileType, string selectedFileType = null)
     {
 
       ImportFileInfo importFile = new ImportFileInfo();
@@ -272,6 +273,8 @@ namespace CCI.Sys.Processors
           throw new Exception("Import File with Header Line " + headerline + " does not exist");
         ImportFileSpecs spec = _importFileSpecs.Where(s => s.HeaderLine.Equals(headerline, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
         fileType = spec.FileType;
+        if (selectedFileType != null && !fileType.Equals(selectedFileType, StringComparison.CurrentCultureIgnoreCase))
+          return null;
         using (DataAccess da = new DataAccess())
         {
           fileProcessedID = da.addFileProcessed(fileType, importFile.filepath, DateTime.Now, -1, false, "Import " + fileType);
@@ -306,7 +309,7 @@ namespace CCI.Sys.Processors
 
       }
     }
-    internal  ImportFileInfo ImportExcelFile(string path, out string fileType)
+    internal  ImportFileInfo ImportExcelFile(string path, out string fileType, string selectedFileType = null)
     {
       using (ExcelProcessor excel = new ExcelProcessor())
       {
@@ -341,6 +344,8 @@ namespace CCI.Sys.Processors
           throw new Exception("Import File with Header Line " + headerline + " does not exist");
         ImportFileSpecs spec = _importFileSpecs.Where(s => s.HeaderLine.StartsWith(headercompare, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
         fileType = spec.FileType;
+        if (selectedFileType != null && !fileType.Equals(selectedFileType, StringComparison.CurrentCultureIgnoreCase))
+          return null;
         if (spec.FixupHeaderNames)
         {
           headerline = headerline.Replace(" ", "_").Replace("-", "_");
@@ -351,17 +356,17 @@ namespace CCI.Sys.Processors
           }
           headerlist = newheaders;
         }
-        List<string> commentsToExclude = new List<string>()
-        {
-          "Final invoice, charged for $100.00 non returned equipment",
-          "RPM 5365 and 5575 are same invoice but separated by product type.",
-          "RPM 5365 and 5575 are same invoice but separated by product type.",
-          "Final invoice, charged $100 non returned equipment.  Credit to be mailed for -$47.49.",
-          "RPM 5531 and 6317 are same invoice but separated by product type",
-          "RPM 5531 and 6317 are same invoice but separated by product type",
-          "Final invoice, charged $100 non returned equipment.","Charges include RPM 07095","Includes credit of $835 for free month",
-          "This is split into 2 charges on the invoice $3400 and $726.18"
-        };
+        //List<string> commentsToExclude = new List<string>()
+        //{
+        //  "Final invoice, charged for $100.00 non returned equipment",
+        //  "RPM 5365 and 5575 are same invoice but separated by product type.",
+        //  "RPM 5365 and 5575 are same invoice but separated by product type.",
+        //  "Final invoice, charged $100 non returned equipment.  Credit to be mailed for -$47.49.",
+        //  "RPM 5531 and 6317 are same invoice but separated by product type",
+        //  "RPM 5531 and 6317 are same invoice but separated by product type",
+        //  "Final invoice, charged $100 non returned equipment.","Charges include RPM 07095","Includes credit of $835 for free month",
+        //  "This is split into 2 charges on the invoice $3400 and $726.18"
+        //};
         string[] allheaders = new string[headerlist.Count]; // add one for fileprocessedid
         Array.Copy(headerlist.ToArray(), 0, allheaders, 0, headerlist.Count);
         using (DataAccess da = new DataAccess())
@@ -497,21 +502,26 @@ namespace CCI.Sys.Processors
                 // now update the import table with the files processed id
                 string sql = "Update " + importtable + " SET FilesProcessedID = " + fileProcessedID.ToString();
                 da.updateDataFromSQL(sql);
-                // now build the insert to copy the records to the "real" table
-                sql = "INSERT INTO " + tablename + columnslist +
-                  " SELECT " + selectlist.ToString() + " from " + importtable + " i " +
-                  " LEFT JOIN " + tablename + " t on ";
-                // left join on the target table based on the unique keys
-                bool firsttime = true;
-                foreach (string key in uniquekeys)
+                if (importtable.Equals(CREATIOBILLAUDITIMPORTTABLE, StringComparison.CurrentCultureIgnoreCase))
+                  sql = "EXEC UpdateCreatioAuditFromCreatio";
+                else
                 {
-                  if (firsttime)
-                    firsttime = false;
-                  else
-                    sql += " AND ";
-                  sql += "i." + key + " = t." + key;
+                  // now build the insert to copy the records to the "real" table
+                  sql = "INSERT INTO " + tablename + columnslist +
+                    " SELECT " + selectlist.ToString() + " from " + importtable + " i " +
+                    " LEFT JOIN " + tablename + " t on ";
+                  // left join on the target table based on the unique keys
+                  bool firsttime = true;
+                  foreach (string key in uniquekeys)
+                  {
+                    if (firsttime)
+                      firsttime = false;
+                    else
+                      sql += " AND ";
+                    sql += "i." + key + " = t." + key;
+                  }
+                  sql += " WHERE t." + uniquekeys.First() + " IS NULL"; // and select records with no match
                 }
-                sql += " WHERE t." + uniquekeys.First() + " IS NULL"; // and select records with no match
                 da.updateDataFromSQL(sql); // insert non dup records
                 sql = "TRUNCATE TABLE " + importtable;
                 da.updateDataFromSQL(sql); // empty out the import table

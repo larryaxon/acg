@@ -80,7 +80,7 @@
         @Html.ActionLink("List Unprocessed Creatio Files", "UnprocessedCreatioFiles", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
       </td>
       <td style="padding:4px">
-        @Html.ActionLink("Upload Edited Creatio Audit", "FileUpload", new { billCycleDate = Model.BillCycleDate }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
+        @Html.ActionLink("Upload Edited Creatio Audit", "FileUpload", new { billCycleDate = Model.BillCycleDate, fileType = CCI.Sys.Processors.InvoiceCreationProcessor.FILETYPEEDITEDUPLOAD }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
       </td>
       <td style="width:300px;">
         @Html.DisplayFor(model => model.EditedFileUploaded, new { @style = "width:300px;" })
@@ -101,12 +101,21 @@
       <td>
       </td>
       <td style="padding:4px">
-        @Html.ActionLink("Upload Export From Creatio (Not Implemented)", "FileUpload", new { billCycleDate = Model.BillCycleDate }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
+        @Html.ActionLink("Upload Export From Creatio", "FileUpload", new { billCycleDate = Model.BillCycleDate, fileType = CCI.Sys.Processors.InvoiceCreationProcessor.FILETYPEIMPORTFROMCREATIO }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
       </td>
       <td style="width:300px;">
         @Html.DisplayFor(model => model.UploadNewCreatioFile, new { @style = "width:300px;" })
       </td>
     </tr>
+    @*<tr>
+      <td>
+      </td>
+      <td style="padding:4px">
+        @Html.ActionLink("Upload Files Test", "UploadFilesTest", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
+
+      </td>
+      <td></td>
+    </tr>*@
   </table>
   <div id="downloadinvoice">
     @using (Html.BeginForm("DownloadCreatioInvoice", "Home", new { billCycleDate = Model.BillCycleDate }, FormMethod.Post))

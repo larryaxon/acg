@@ -18,8 +18,8 @@ namespace CCI.WebApi.Controllers
 {
   public class APIController : ApiController
   {
-    const string FILESPROCESSEDFILETYPEINVOICEIQ = CCI.Common.CommonData.FILESPROCESSEDFILETYPEINVOICEIQ;
-    const string FILESPROCESSEDFILETYPEUNIBILL = CCI.Common.CommonData.FILESPROCESSEDFILETYPEUNIBILL;
+    const string FILESPROCESSEDFILETYPEINVOICEIQ = InvoiceCreationProcessor.FILESPROCESSEDFILETYPEINVOICEIQ;
+    const string FILESPROCESSEDFILETYPEUNIBILL = InvoiceCreationProcessor.FILESPROCESSEDFILETYPEUNIBILL;
     [Route("api/invoiceiq/processfiles")]
     [HttpGet]
     public List<string> ProcessInvoiceIQFiles()
@@ -100,10 +100,8 @@ namespace CCI.WebApi.Controllers
     [Route("api/invoiceiq/uploadpath")]
     public string GetUploadPath()
     {
-      using (InvoiceCreationProcessor processor = new InvoiceCreationProcessor())
-      {
-        return processor.LocalFolder;
-      }
+      return InvoiceCreationProcessor.LocalFolder;
+      
     }
     private HttpResponseMessage ToStream(MemoryStream stream, string filename)
     {

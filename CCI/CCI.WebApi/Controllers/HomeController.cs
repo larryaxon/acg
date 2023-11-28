@@ -15,23 +15,23 @@ using System.Linq.Expressions;
 using CCI.Common;
 using Newtonsoft.Json;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
+using System.Reflection.Emit;
 
 namespace CCI.WebApi.Controllers
 {
   public class HomeController : Controller
   {
-    const string FILESPROCESSEDFILETYPEINVOICEIQ = CCI.Common.CommonData.FILESPROCESSEDFILETYPEINVOICEIQ;
-    const string FILESPROCESSEDFILETYPEUNIBILL = CCI.Common.CommonData.FILESPROCESSEDFILETYPEUNIBILL;
+    #region constants
+    const string FILESPROCESSEDFILETYPEINVOICEIQ = InvoiceCreationProcessor.FILESPROCESSEDFILETYPEINVOICEIQ;
+    const string FILESPROCESSEDFILETYPEUNIBILL = InvoiceCreationProcessor.FILESPROCESSEDFILETYPEUNIBILL;
     const string PROCESSSTEPZIP = "ZipUpload";
     const string PROCESSSTEPDOWNLOADAUDIT = "DownloadAudit";
     const string PROCESSSTEPUPLOADEDITED = "UploadEditedAudit";
     const string PROCESSSTEPDOWNLOADCREATIOIMPORT = "DownloadCreatioImport";
     const string PROCESSSTEPUPLOADEXPORT = "UploadCreatioExport";
     const string USER = "Melissa";
-    public HomeController()
-    {
-
-    }
+    #endregion
+    public HomeController() { }
     public ActionResult Index()
     {
       ViewBag.Title = "Carvana Audit Process Cycle";
@@ -152,20 +152,6 @@ namespace CCI.WebApi.Controllers
     {
       return View(model);
     }
-    public ActionResult testtables(string path = null)
-    {
-      ExcelProcessor.GenerateSampleTables(path);
-      return RedirectToAction("Index");
-    }
-    #endregion
-    #region test routines
-    //public string AddCodes()
-    //{
-    //  using (InvoiceCreationProcessor processor = new InvoiceCreationProcessor())
-    //  {
-    //    return processor.AddCodes();
-    //  }
-    //}
     #endregion
     #region Create Invoice
     public ActionResult UnprocessedCreatioFiles()
@@ -182,11 +168,11 @@ namespace CCI.WebApi.Controllers
         return View("FileList", model);
       }
     }
-    public ActionResult ImportCreatioFiles(DateTime billCycleDate)
+    public ActionResult ImportCreatioFiles(DateTime billCycleDate, string fileType = null)
     {
       using (InvoiceCreationProcessor processor = new InvoiceCreationProcessor())
       {
-        List<string> filesProcessed = processor.ImportCreatioFiles();
+        List<string> filesProcessed = processor.ImportCreatioFiles(fileType);
         List<InvoiceFilesListGUIModel> model = new List<InvoiceFilesListGUIModel>();
         foreach (string file in filesProcessed)
         {
@@ -199,64 +185,7 @@ namespace CCI.WebApi.Controllers
       }
     }
 
-    public ActionResult FileUpload()
-    {
-      throw new NotImplementedException();
-      return View();
-    }
-    [HttpPost]
-    public ActionResult UploadFiles(DateTime billCycleDate)
-    {
-      // Checking no of files injected in Request object  
-      if (Request.Files.Count > 0)
-      {
-        try
-        {
-          string localfolder;
-          using (InvoiceCreationProcessor processor = new InvoiceCreationProcessor())
-          {
-            localfolder = processor.LocalFolder;
-          }
-          //  Get all files from Request object  
-          HttpFileCollectionBase files = Request.Files;
-          for (int i = 0; i < files.Count; i++)
-          {
-            //string path = AppDomain.CurrentDomain.BaseDirectory + "Uploads/";  
-            //string filename = Path.GetFileName(Request.Files[i].FileName);  
 
-            HttpPostedFileBase file = files[i];
-            string fname;
-
-            // Checking for Internet Explorer  
-            if (Request.Browser.Browser.ToUpper() == "IE" || Request.Browser.Browser.ToUpper() == "INTERNETEXPLORER")
-            {
-              string[] testfiles = file.FileName.Split(new char[] { '\\' });
-              fname = testfiles[testfiles.Length - 1];
-            }
-            else
-            {
-              fname = file.FileName;
-            }
-
-            // Get the complete folder path and store the file inside it.  
-            //fname = Path.Combine(Server.MapPath("~/Uploads/"), fname);
-            fname = Path.Combine(localfolder, fname);
-            file.SaveAs(fname);
-          }
-          ImportCreatioFiles(billCycleDate);
-          // Returns message that successfully uploaded  
-          return Json("File Uploaded Successfully!");
-        }
-        catch (Exception ex)
-        {
-          return Json("Error occurred. Error details: " + ex.Message);
-        }
-      }
-      else
-      {
-        return Json("No files selected.");
-      }
-    }
     public FileStreamResult DownloadCreatioInvoice(DateTime billCycleDate)
     {
       DateTime fromDate = GetPeriodBeginDate(billCycleDate);
@@ -285,7 +214,113 @@ namespace CCI.WebApi.Controllers
       }
     }
     #endregion
-    
+    #region upload files
+
+    public ActionResult FileUpload(DateTime billCycleDate, string fileType = null)
+    {
+      ViewBag.BillCycleDate = billCycleDate;
+      ViewBag.FileType = fileType;
+      return View();
+    }
+    [HttpPost]
+    public ActionResult UploadFiles(DateTime billCycleDate, string fileType = null)
+    {
+      string uploadFolder = InvoiceCreationProcessor.LocalFolder;
+      // Checking no of files injected in Request object  
+      if (Request.Files.Count > 0)
+      {
+        try
+        {
+          //  Get all files from Request object  
+          HttpFileCollectionBase files = Request.Files;
+          for (int i = 0; i < files.Count; i++)
+          {
+            //string path = AppDomain.CurrentDomain.BaseDirectory + "Uploads/";  
+            //string filename = Path.GetFileName(Request.Files[i].FileName);  
+
+            HttpPostedFileBase file = files[i];
+            string fname;
+
+            // Checking for Internet Explorer  
+            if (Request.Browser.Browser.ToUpper() == "IE" || Request.Browser.Browser.ToUpper() == "INTERNETEXPLORER")
+            {
+              string[] testfiles = file.FileName.Split(new char[] { '\\' });
+              fname = testfiles[testfiles.Length - 1];
+            }
+            else
+            {
+              fname = file.FileName;
+            }
+
+            // Get the complete folder path and store the file inside it.  
+            //fname = Path.Combine(Server.MapPath(uploadFolder), fname);
+            fname = Path.Combine(uploadFolder, fname);
+            file.SaveAs(fname);
+          }
+          // Returns message that successfully uploaded  
+          return Json("File Uploaded Successfully!");
+        }
+        catch (Exception ex)
+        {
+          return Json("Error occurred. Error details: " + ex.Message);
+        }
+      }
+      else
+      {
+        return Json("No files selected.");
+      }
+    }
+    //[HttpPost]
+    //public ActionResult UploadFiles(DateTime billCycleDate)
+    //{
+    //  // Checking no of files injected in Request object  
+    //  if (Request.Files.Count > 0)
+    //  {
+    //    try
+    //    {
+    //      string localfolder = InvoiceCreationProcessor.LocalFolder;
+    //      //  Get all files from Request object  
+    //      HttpFileCollectionBase files = Request.Files;
+    //      for (int i = 0; i < files.Count; i++)
+    //      {
+    //        //string path = AppDomain.CurrentDomain.BaseDirectory + "Uploads/";  
+    //        //string filename = Path.GetFileName(Request.Files[i].FileName);  
+
+    //        HttpPostedFileBase file = files[i];
+    //        string fname;
+
+    //        // Checking for Internet Explorer  
+    //        if (Request.Browser.Browser.ToUpper() == "IE" || Request.Browser.Browser.ToUpper() == "INTERNETEXPLORER")
+    //        {
+    //          string[] testfiles = file.FileName.Split(new char[] { '\\' });
+    //          fname = testfiles[testfiles.Length - 1];
+    //        }
+    //        else
+    //        {
+    //          fname = file.FileName;
+    //        }
+
+    //        // Get the complete folder path and store the file inside it.  
+    //        //fname = Path.Combine(Server.MapPath("~/Uploads/"), fname);
+    //        fname = Path.Combine(localfolder, fname);
+    //        file.SaveAs(fname);
+    //      }
+    //      ImportCreatioFiles(billCycleDate);
+    //      // Returns message that successfully uploaded  
+    //      return Json("File Uploaded Successfully!");
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //      return Json("Error occurred. Error details: " + ex.Message);
+    //    }
+    //  }
+    //  else
+    //  {
+    //    return Json("No files selected.");
+    //  }
+    //}
+    #endregion
+    #region Process Steps
     public string getProcessSteps()
     {
       using (InvoiceCreationProcessor processor = new InvoiceCreationProcessor())
@@ -302,7 +337,8 @@ namespace CCI.WebApi.Controllers
         return JsonConvert.SerializeObject(list, Formatting.Indented);
       }
     }
-    
+    #endregion
+    #region private methods
     private string ConvertListToString(List<string> list)
     {
       string txt = string.Empty;
@@ -355,6 +391,6 @@ namespace CCI.WebApi.Controllers
       int year = billCycleDate.Year;
       return new DateTime(year, month, endday);
     }
-
+    #endregion
   }
 }

@@ -58,7 +58,7 @@ order by Sequence", billDate.ToShortDateString(), cycleFilter);
         if (processed)
           sql = string.Format(@"update {0} set ProcessedBy = '{1}', ProcessedDateTime = '{2}', LastModifiedBy = '{1}', LastModifiedDateTime = '{2}'
             WHERE  Step = '{3}' AND BillingDate = '{4}'",
-            tableName, user, sDateTime,null, step, sBillDate);
+            tableName, user, sDateTime, step, sBillDate);
         else
           sql = string.Format("Update {0} set UnprocessedDateTime = getdate() where Step = '{1}' and BillingDate = '{2}'", tableName, step, sBillDate);
           //sql = string.Format("delete from {0} where Step = '{2}' and BillingDate = '{3}'", tableName, cycle, step, sBillDate);

@@ -30,8 +30,8 @@ namespace CCI.Sys.Processors
     const string APPSETTINGMAXDAYSTOPROCESS = "InvoiceIQUnibillMaxDaysToProcess";
     const string APPSETTINGMAXFILE = "InvoiceIQUnibillMaxFilesToProcess";
 
-    const string FILESPROCESSEDFILETYPEINVOICEIQ = CCI.Common.CommonData.FILESPROCESSEDFILETYPEINVOICEIQ;
-    const string FILESPROCESSEDFILETYPEUNIBILL = CCI.Common.CommonData.FILESPROCESSEDFILETYPEUNIBILL;
+    const string FILESPROCESSEDFILETYPEINVOICEIQ = InvoiceCreationProcessor.FILESPROCESSEDFILETYPEINVOICEIQ;
+    const string FILESPROCESSEDFILETYPEUNIBILL = InvoiceCreationProcessor.FILESPROCESSEDFILETYPEUNIBILL;
 
     const string FILEDOWNLOADFOLDER = "\\InvoiceIQ\\downloads\\";
 

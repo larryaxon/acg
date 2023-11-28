@@ -1,0 +1,49 @@
+﻿
+@{
+  ViewBag.Title = "FileUpload";
+}
+
+<h2>FileUpload</h2>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script>
+
+  $(document).ready(function () {
+    $('#btnUpload').click(function () {
+
+      // Checking whether FormData is available in browser
+      if (window.FormData !== undefined) {
+
+        var fileUpload = $("#FileUpload1").get(0);
+        var files = fileUpload.files;
+
+        // Create FormData object
+        var fileData = new FormData();
+
+        // Looping over all files and add it to FormData object
+        for (var i = 0; i < files.length; i++) {
+          fileData.append(files[i].name, files[i]);
+        }
+
+        $.ajax({
+          url: 'http://localhost/CCI.WebApi/Home/UploadFiles',
+          type: "POST",
+          contentType: false, // Not to set any content header
+          processData: false, // Not to process data
+          data: fileData,
+          success: function (result) {
+            alert(result);
+          },
+          error: function (err) {
+            alert(err.statusText);
+          }
+        });
+      } else {
+        alert("FormData is not supported.");
+      }
+    });
+  });
+</script>
+@Html.ActionLink("Back", "Index", new { }, new { @class = "btn btn-primary btn-sm detail" })
+
+<input type="file" id="FileUpload1" />
+<input type="button" id="btnUpload" value="Upload Files" />  
