@@ -794,6 +794,7 @@ namespace ACG.Common.Data
       //}
       //sqlConnection.Close();
       SqlCommand command = new SqlCommand(mySQL, sqlConnection);
+      command.CommandTimeout = 2000;
       SqlDataAdapter da = new SqlDataAdapter();
       try
       {

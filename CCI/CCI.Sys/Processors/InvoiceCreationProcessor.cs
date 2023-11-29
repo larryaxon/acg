@@ -76,16 +76,17 @@ namespace CCI.Sys.Processors
           TableName = "[dbo].[CreatioBillAuditUpload]",
           HeaderLine =   "Number,Invoice Date,Creatio ID,Carrier,Building Type,Location Nickname,Location,Product,Parent,Child,Carrier Charges to Audit,R P M Control Charges,Variance,Total Bill,First Invoice,Multi- Site Invoice,Ancillary Charges?,Comment,Dispute Pending,Dispute Notes,Has E D IData",
           RepaceAllRecords = false,
-          CheckForDups = false,
+          CheckForDups = true,
           IsActive = true,
+          ForcePreprocess = true,
           FixupHeaderNames = true
         }
       };
       _localDirectory = _localDirectory + _creatioImportFolder;
     }
-    public List<string> ImportCreatioFiles(string fileType = null)
+    public List<string> ImportCreatioFiles(string fileType = null, DateTime? billCycleDate = null)
     {
-      return ProcessFiles(fileType);
+      return ProcessFiles(fileType, billCycleDate);
     }
     public List<ACGFileInfo> GetFileList(string directory = null)
     {
@@ -115,16 +116,18 @@ namespace CCI.Sys.Processors
       List<string> filelist = filesToProcess.Select(f => f.Name).ToList();
       return filelist;
     }
-    public List<string> ProcessFiles(string fileType = null)
+    public List<string> ProcessFiles(string fileType = null, DateTime? billCycleDate = null)
     {
       GetFileList(LocalFolder);
       List<ACGFileInfo> filesToProcess = getFilesToProcess();
       foreach (ACGFileInfo file in filesToProcess)
-        ProcessFile(file, fileType);
+        ProcessFile(file, fileType, billCycleDate);
       return filesToProcess.Select(f => f.Name).ToList();
     }
     public MemoryStream GetCreatioInvoice(DateTime fromDate, DateTime toDate)
     {
+      fromDate = fromDate.AddMonths(-1);
+      toDate = toDate.AddMonths(-1);
       Dictionary<string, object> data = new Dictionary<string, object>() { {"@FromDate", fromDate }, { "@ToDate", toDate  } };
       DataSet ds = GetProcReportDataSetFromQuery("Exec CreatioAuditReport", data);
       List<string> tabnames = new List<string>() { "Audit", "Understanding your Audit" };
@@ -283,7 +286,7 @@ namespace CCI.Sys.Processors
 
 
     }
-    private void ProcessFile(ACGFileInfo file, string fileType = null)
+    private void ProcessFile(ACGFileInfo file, string fileType = null, DateTime? billCycleDate = null)
     {
       List<string> textExtensions = new List<string>() { ".txt", ".csv" };
       List<string> excelExtensions = new List<string>() { ".xlsx" };
@@ -298,7 +301,7 @@ namespace CCI.Sys.Processors
       if (fileinfo == null) // we didn't process this file, probably cause it was not the one we asked for
         return;
       ImportFileSpecs spec = _importFileSpecs.Where(s => s.FileType == thisFilesType).FirstOrDefault();
-      SaveImportFile(fileinfo, spec.TableName, spec.RepaceAllRecords, spec.CheckForDups, spec.UniqueKeys);
+      SaveImportFile(fileinfo, spec.TableName, spec.RepaceAllRecords, spec.CheckForDups, spec.UniqueKeys, spec.ForcePreprocess, billCycleDate);
       if (spec.FileType == CREATIOBILLAUDITUPLOADTABLE)
         SaveUploadToCreatioBillAudit(fileinfo);
     }

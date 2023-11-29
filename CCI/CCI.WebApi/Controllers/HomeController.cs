@@ -172,7 +172,7 @@ namespace CCI.WebApi.Controllers
     {
       using (InvoiceCreationProcessor processor = new InvoiceCreationProcessor())
       {
-        List<string> filesProcessed = processor.ImportCreatioFiles(fileType);
+        List<string> filesProcessed = processor.ImportCreatioFiles(fileType, billCycleDate);
         List<InvoiceFilesListGUIModel> model = new List<InvoiceFilesListGUIModel>();
         foreach (string file in filesProcessed)
         {

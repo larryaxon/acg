@@ -22,6 +22,7 @@ namespace CCI.Sys.Processors
   {
     const string APPSETTINGLOCALBASEFOLDER = "LocalBaseFolder";
     public const string CREATIOBILLAUDITIMPORTTABLE = "CreatioBillAuditImport";
+    public const string CREATIOBILLAUDITIMPORTTABLEUPLOAD = "CreatioBillAuditUploadImport";
     internal List<ACGFileInfo> _fileList = null;
     internal Dictionary<string, string> _dataTypes = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase);
     // changed to get from codemaster
@@ -135,6 +136,7 @@ namespace CCI.Sys.Processors
       public bool CheckForDups { get; set; } = false;
       public List<string> UniqueKeys { get; set; } = null;
       public bool IsActive { get; set; } = true;
+      public bool ForcePreprocess {  get; set; } = false;
       public bool FixupHeaderNames { get; set; } = false;
       public List<string> HeaderList
       {
@@ -418,7 +420,8 @@ namespace CCI.Sys.Processors
       }
     }
 
-    internal void SaveImportFile(ImportFileInfo file, string tablename, bool replaceall = false, bool checkfordups = false, List<string> uniquekeys = null)
+    internal void SaveImportFile(ImportFileInfo file, string tablename, bool replaceall = false,
+      bool checkfordups = false, List<string> uniquekeys = null, bool forcePreprocess = false, DateTime? billCycleDate = null)
     {
       {
         foreach (string rectype in file.Headers.Keys)
@@ -428,7 +431,7 @@ namespace CCI.Sys.Processors
           {
             // yes, so add the records to the db
             List<List<object>> records = file.Records[rectype]; // next get all the records with matching values
-            saveTableFromFileData(tablename, headers, records, _dataTypes, true, replaceall, checkfordups, uniquekeys);
+            saveTableFromFileData(tablename, headers, records, _dataTypes, true, replaceall, checkfordups, uniquekeys, forcePreprocess, billCycleDate);
           }
           // else
           //     No: do nothing
@@ -437,7 +440,8 @@ namespace CCI.Sys.Processors
     }
 
     internal void saveTableFromFileData(string tablename, List<string> headers, 
-      List<List<object>> records, Dictionary<string, string> datatypes, bool hasID, bool replaceall = false, bool checkfordups = false, List<string> uniquekeys = null)
+      List<List<object>> records, Dictionary<string, string> datatypes, bool hasID, bool replaceall = false,
+      bool checkfordups = false, List<string> uniquekeys = null, bool forcePreprocess = false, DateTime? billCycleDate = null)
     {
       using (DataAccess da = new DataAccess())
       {
@@ -455,7 +459,7 @@ namespace CCI.Sys.Processors
           string fileProcessedID = dt.Rows[0]["FilesProcessedID"].ToString();
           if (!CommonFunctions.IsInteger(fileProcessedID))
             fileProcessedID = "-1";
-          if (!replaceall && checkfordups && uniquekeys != null && uniquekeys.Count > 0)
+          if (forcePreprocess || (!replaceall && checkfordups && uniquekeys != null && uniquekeys.Count > 0))
           {
             /*
              * in this case, we do a bulk copy into an import table.
@@ -505,8 +509,13 @@ namespace CCI.Sys.Processors
                 // now update the import table with the files processed id
                 string sql = "Update " + importtable + " SET FilesProcessedID = " + fileProcessedID.ToString();
                 da.updateDataFromSQL(sql);
-                if (importtable.Equals(CREATIOBILLAUDITIMPORTTABLE, StringComparison.CurrentCultureIgnoreCase))
-                  sql = "EXEC UpdateCreatioAuditFromCreatio";
+                if (importtable.Equals(CREATIOBILLAUDITIMPORTTABLEUPLOAD, StringComparison.CurrentCultureIgnoreCase))
+                {
+                  if (billCycleDate == null)
+                    return; // we can't process if we don't have the date
+                  else
+                    sql = "EXEC UpdateCreatioAuditFromCreatio @billCycleDate='" + ((DateTime)billCycleDate).ToShortDateString() + "'";
+                }
                 else
                 {
                   // now build the insert to copy the records to the "real" table
