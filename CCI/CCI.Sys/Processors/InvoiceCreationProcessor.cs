@@ -124,11 +124,11 @@ namespace CCI.Sys.Processors
         ProcessFile(file, fileType, billCycleDate);
       return filesToProcess.Select(f => f.Name).ToList();
     }
-    public MemoryStream GetCreatioInvoice(DateTime fromDate, DateTime toDate)
+    public MemoryStream GetCreatioInvoice(DateTime billCycleDate)
     {
-      fromDate = fromDate.AddMonths(-1);
-      toDate = toDate.AddMonths(-1);
-      Dictionary<string, object> data = new Dictionary<string, object>() { {"@FromDate", fromDate }, { "@ToDate", toDate  } };
+      //fromDate = fromDate.AddMonths(-1);
+      //toDate = toDate.AddMonths(-1);
+      Dictionary<string, object> data = new Dictionary<string, object>() { {"@BillCycleDate", billCycleDate } };
       DataSet ds = GetProcReportDataSetFromQuery("Exec CreatioAuditReport", data);
       List<string> tabnames = new List<string>() { "Audit", "Understanding your Audit" };
       Dictionary<int, List<int>> tabSelectMap = new Dictionary<int, List<int>>()
@@ -164,6 +164,13 @@ namespace CCI.Sys.Processors
             Customer:	        Carvana LLC
             Invoice Audit:	5/16/23 - 06/15/23
         */
+        // calc the from/to dates from the cycle date
+        DateTime fromDate = billCycleDate.AddMonths(-1); // go back a month
+        int month = fromDate.Month;
+        int year = fromDate.Year;
+        fromDate = new DateTime(year, month, 16); // 16th of the month prior
+        DateTime toDate = fromDate.AddMonths(1).AddDays(-1); // 15th of the bcd month
+
         string daterange = fromDate.ToShortDateString() + " - " + toDate.ToShortDateString();
         int maintab = 0;
         int startingrow = 2;

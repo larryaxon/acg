@@ -32,10 +32,22 @@ namespace CCI.WebApi.Controllers
     const string USER = "Melissa";
     #endregion
     public HomeController() { }
-    public ActionResult Index()
+    public ActionResult SelectBillCycle(CreatioBillCycleGUIModel model)
+    {
+      DateTime billCycleDate = model.BillCycleDate;
+      // now make sure it is the end of the month
+      billCycleDate = new DateTime(billCycleDate.Year, billCycleDate.Month, DateTime.DaysInMonth(billCycleDate.Year, billCycleDate.Month));
+
+      return RedirectToAction("Index", new { bcDate = billCycleDate });
+    }
+    public ActionResult Index(DateTime? bcDate = null)
     {
       ViewBag.Title = "Carvana Audit Process Cycle";
-      DateTime billCycleDate = InvoiceCreationProcessor.CalculateBillCycleDate(DateTime.Today.AddMonths(-1));
+      DateTime billCycleDate; 
+      if (bcDate == null)
+        billCycleDate = InvoiceCreationProcessor.CalculateBillCycleDate(DateTime.Today.AddMonths(-1));
+      else
+        billCycleDate = (DateTime)bcDate;
       CreatioBillCycleGUIModel model = new CreatioBillCycleGUIModel()
       {
         BillCycleDate = billCycleDate
@@ -188,13 +200,13 @@ namespace CCI.WebApi.Controllers
 
     public FileStreamResult DownloadCreatioInvoice(DateTime billCycleDate)
     {
-      DateTime fromDate = GetPeriodBeginDate(billCycleDate);
-      DateTime toDate = GetPeriodEndDate(billCycleDate);
+      //DateTime fromDate = GetPeriodBeginDate(billCycleDate);
+      //DateTime toDate = GetPeriodEndDate(billCycleDate);
 
       using (InvoiceCreationProcessor processor = new InvoiceCreationProcessor())
       {
         string filename = "Carvana Audit " + DateTime.Today.ToShortDateString() + ".xlsx";
-        MemoryStream stream = processor.GetCreatioInvoice(fromDate, toDate);
+        MemoryStream stream = processor.GetCreatioInvoice(billCycleDate);
         FileStreamResult result = ToExcel(stream, filename);
         InvoiceCreationProcessor.processStep(PROCESSSTEPDOWNLOADAUDIT, billCycleDate, true, USER);
 
