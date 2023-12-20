@@ -100,7 +100,23 @@ namespace ACG.Common
     public MemoryStream ToStream()
     {
       MemoryStream stream = new MemoryStream();
-      var bytes = excel.GetAsByteArray();
+      foreach (ExcelWorksheet ws in excel.Workbook.Worksheets)
+      {
+        int endingrow = ws.Dimension.Rows;
+        int endingcol = ws.Dimension.Columns;
+
+      }
+      byte[] bytes = new byte[stream.Length];
+      try
+      {
+        bytes = excel.GetAsByteArray();
+      }
+      catch (Exception ex)
+      {
+        ExcelPackage blank = new ExcelPackage();
+        blank.Workbook.Worksheets.Add("No Audit Data Was Found");
+        bytes = blank.GetAsByteArray();
+      }
       stream.Write(bytes, 0, bytes.Length);
       return stream;
     }
@@ -231,7 +247,7 @@ namespace ACG.Common
       if (workbook.Worksheets[name] == null)
         AddSheet(name);
       ExcelWorksheet ws = GetSheet(name);
-      if (dt != null)
+      if (dt != null && dt.Rows.Count != 0)
         ws.Cells[locationcell].LoadFromDataTable(dt, true);
       if (formattables)
       {

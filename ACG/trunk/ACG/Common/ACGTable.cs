@@ -293,6 +293,8 @@ namespace ACG.Common
     }
     public static string PrettyPrintName(string name)
     {
+      if (string.IsNullOrWhiteSpace(name))
+        return string.Empty;
       StringBuilder sb = new StringBuilder();
 
       for (int i = 0; i < name.Length; i++)
