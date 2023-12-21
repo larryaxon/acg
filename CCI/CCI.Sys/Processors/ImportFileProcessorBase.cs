@@ -502,6 +502,7 @@ namespace CCI.Sys.Processors
               importtable = tablename + "Import";
             if (da.existsTable(importtable)) // if this table has not been built, then we can't do anything
             {
+              da.updateDataFromSQL("Truncate table " + importtable); // first, get rid of existing records in the import table
               ex = da.insertDataTabletoSQL(importtable, dt);
 
               if (ex == null) //if no error 
