@@ -49,7 +49,7 @@
         Carvana Invoice Monthly Process
       </th>
       <td>
-        Date/Time Processed 
+        Date/Time Processed
       </td>
     </tr>
     <tr>
@@ -60,7 +60,7 @@
         @Html.ActionLink("Download and Process Zips, Pdfs, EDIs", "ImportAndProcessZipFiles", new { billCycleDate = Model.BillCycleDate }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
       </td>
       <td style="width:300px;">
-        @Html.DisplayFor(model => model.ZipUploaded, new { @style= "width:300px;" })
+        @Html.DisplayFor(model => model.ZipUploaded, new { @style = "width:300px;" })
       </td>
     </tr>
     <tr>
@@ -87,7 +87,8 @@
       </td>
     </tr>
     <tr>
-      <td style="padding:4px">
+      <td style="padding:4px; font-weight:bold;">
+        Other Screens:
       </td>
       <td style="padding:4px">
         @Html.ActionLink("Download File to Import into Creatio", "DownloadCreatioExport", new { billCycleDate = Model.BillCycleDate }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
@@ -99,6 +100,7 @@
     </tr>
     <tr>
       <td>
+        @Html.ActionLink("Edit Creatio/EDI Parent/Child", "EDIMatching", new { billCycleDate = Model.BillCycleDate, fileType = CCI.Sys.Processors.InvoiceCreationProcessor.FILETYPEIMPORTFROMCREATIO }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
       </td>
       <td style="padding:4px">
         @Html.ActionLink("Upload Export From Creatio", "FileUpload", new { billCycleDate = Model.BillCycleDate, fileType = CCI.Sys.Processors.InvoiceCreationProcessor.FILETYPEIMPORTFROMCREATIO }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
@@ -107,15 +109,7 @@
         @Html.DisplayFor(model => model.UploadNewCreatioFile, new { @style = "width:300px;" })
       </td>
     </tr>
-    @*<tr>
-      <td>
-      </td>
-      <td style="padding:4px">
-        @Html.ActionLink("Upload Files Test", "UploadFilesTest", new { }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
 
-      </td>
-      <td></td>
-    </tr>*@
   </table>
   <div id="downloadinvoice">
     @using (Html.BeginForm("DownloadCreatioInvoice", "Home", new { billCycleDate = Model.BillCycleDate }, FormMethod.Post))

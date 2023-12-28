@@ -1,0 +1,64 @@
+﻿@model IEnumerable<CCI.Common.CreatioEDIMatchingModel>
+
+@{
+    ViewBag.Title = "Creatio/EDI Matching";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Content/ScrollingTable.css" rel="stylesheet" />
+<h2>Creatio/EDI Matching</h2>
+
+<p>
+  @Html.ActionLink("Back","Index", new { }, new { @class = "btn btn-primary btn-sm detail" })
+    @Html.ActionLink("New", "NewEDIMatching", new { }, new { @class = "btn btn-primary btn-sm detail" })
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Carrier)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AuditParent)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AuditChild)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EDIParent)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EDIChild)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ConsolidateToParent)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Carrier)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AuditParent)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AuditChild)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EDIParent)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EDIChild)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ConsolidateToParent)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "EDIMatchingDetail", new { id=item.ID }, new { @class = "btn btn-primary btn-sm detail" }) |
+            @Html.ActionLink("Delete", "DeleteEDIMatching", new { id=item.ID }, new { @class = "btn btn-primary btn-sm detail" })
+        </td>
+    </tr>
+}
+
+</table>

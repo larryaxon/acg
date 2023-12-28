@@ -16,6 +16,7 @@ using CCI.Common;
 using Newtonsoft.Json;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Reflection.Emit;
+using System.Security.Policy;
 
 namespace CCI.WebApi.Controllers
 {
@@ -196,8 +197,6 @@ namespace CCI.WebApi.Controllers
         return View("FileList", model);
       }
     }
-
-
     public FileStreamResult DownloadCreatioInvoice(DateTime billCycleDate)
     {
       //DateTime fromDate = GetPeriodBeginDate(billCycleDate);
@@ -352,6 +351,51 @@ namespace CCI.WebApi.Controllers
         List<BillCycleModel> list = processor.getThisBillCycle(billCycleDate);
         return JsonConvert.SerializeObject(list, Formatting.Indented);
       }
+    }
+    #endregion
+    #region EDI Matching Screen
+    public ActionResult EDIMatching()
+    {
+      using (InvoiceCreationProcessor processor = new InvoiceCreationProcessor())
+      {
+        List<CreatioEDIMatchingModel> model = processor
+          .getEDIMatching()
+          .OrderBy(e => e.Carrier)
+          .ThenBy(e => e.AuditParent)
+          .ThenBy(e => e.AuditChild)
+          .ToList();
+        return View(model);
+      }
+    }
+    public ActionResult EDIMatchingDetail(int id)
+    {
+      using (InvoiceCreationProcessor processor = new InvoiceCreationProcessor())
+      {
+        CreatioEDIMatchingModel model = processor.getEDIMatchingFromID(id);
+        return View(model);
+      }
+    }
+    public ActionResult DeleteEDIMatching(int id)
+    {
+      using (InvoiceCreationProcessor processor = new InvoiceCreationProcessor())
+      {
+        processor.DeleteEDIMatching(id);
+        return RedirectToAction("EDIMatching");
+      }
+    }
+    [HttpPost]
+    public ActionResult SaveEDIMatching(CreatioEDIMatchingModel model)
+    {
+      using (InvoiceCreationProcessor processor = new InvoiceCreationProcessor())
+      {
+        processor.UpdateEDIMatching(model);
+        return RedirectToAction("EDIMatching");
+      }
+    }
+    public ActionResult NewEDIMatching()
+    {
+      CreatioEDIMatchingModel model = new CreatioEDIMatchingModel();
+      return View("EDIMatchingDetail", model);
     }
     #endregion
     #region private methods

@@ -28,6 +28,7 @@ using System.Windows.Media;
 using OfficeOpenXml.Style;
 using System.Drawing;
 using CCI.Common;
+using System.Diagnostics;
 
 namespace CCI.Sys.Processors
 {
@@ -342,7 +343,6 @@ namespace CCI.Sys.Processors
       DateTime billCycleDate = new DateTime(year, month, DateTime.DaysInMonth(year, month));
       return billCycleDate;
     }
-
     public List<ProcessStepsModel> getProcessStepsList()
     {
       using (DataSource da = new DataSource())
@@ -362,6 +362,67 @@ namespace CCI.Sys.Processors
       using (DataSource da = new DataSource())
       {
         return da.processStep(step, billDate, processed, user);
+      }
+    }
+    public List<CreatioEDIMatchingModel> getEDIMatching()
+    {
+      string sql = "Select * from CreatioEDIMatching";
+      using (DataSource da = new DataSource())
+      {
+        DataSet ds = da.getDataFromSQL(sql);
+        List<CreatioEDIMatchingModel> list = DataSource.getListFromDataset<CreatioEDIMatchingModel>(ds);
+        return list;
+      }
+
+    }
+    public CreatioEDIMatchingModel getEDIMatchingFromID(int id)
+    {
+      string sql = "Select * from CreatioEDIMatching where ID = " + id.ToString();
+      using (DataSource da = new DataSource())
+      {
+        DataSet ds = da.getDataFromSQL(sql);
+        CreatioEDIMatchingModel model = DataSource.getListFromDataset<CreatioEDIMatchingModel>(ds).FirstOrDefault();
+        return model;
+      }
+    }
+    public void DeleteEDIMatching(int id)
+    {
+      string sql = "DELETE from CreatioEDIMatching where ID = " + id.ToString();
+      using (DataSource da = new DataSource())
+      {
+        da.updateDataFromSQL(sql);
+      }
+    }
+    public int? UpdateEDIMatching(CreatioEDIMatchingModel model)
+    {
+      const string INSERTSQL = @"INSERT INTO CreatioEDIMatching ([Carrier]
+,[AuditParent]
+,[AuditChild]
+,[EDIParent]
+,[EDIChild]
+,[ConsolidateToParent])
+VALUES ('{0}','{1}','{2}','{3}','{4}',{5})";
+
+      const string UPDATESQL = @"UPDATE CreatioEDIMatching
+SET Carrier = '{0}',
+AuditParent = '{1}',
+AuditChild = '{2}',
+EDIParent = '{3}',
+EDIChild = '{4}',
+ConsolidateToParent = {5}
+WHERE ID = {6}";
+      if (model == null)
+        return null;
+      string sql;
+      if (model.ID == null) // it is a new record
+        sql = string.Format(INSERTSQL, model.Carrier, model.AuditParent, model.AuditChild, model.EDIParent, model.EDIChild,
+          model.ConsolidateToParent == null || !(bool)model.ConsolidateToParent ? "0" : "1");
+      else
+        sql = string.Format(UPDATESQL, model.Carrier, model.AuditParent, model.AuditChild, model.EDIParent, model.EDIChild,
+          model.ConsolidateToParent == null || !(bool)model.ConsolidateToParent ? "0" : "1", model.ID.ToString());
+      using (DataSource da = new DataSource())
+      {
+        return da.updateDataFromSQL(sql);
       }
     }
   }

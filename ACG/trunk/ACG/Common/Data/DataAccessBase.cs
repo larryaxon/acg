@@ -772,7 +772,7 @@ namespace ACG.Common.Data
     /// <param name="mySQL">A valid SELECT statement</param>
     /// <returns></returns>
 
-    protected DataSet getDataFromSQL(string mySQL)
+    public DataSet getDataFromSQL(string mySQL)
     {
       DataSet ds = new DataSet();
       //SqlCommand command = createCommand();

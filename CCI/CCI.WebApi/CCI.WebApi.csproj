@@ -173,6 +173,7 @@
     <Content Include="Content\jquery-ui.css" />
     <Content Include="Content\jquery-ui.structure.css" />
     <Content Include="Content\jquery-ui.theme.css" />
+    <Content Include="Content\ScrollingTable.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="DB.config">
@@ -234,6 +235,8 @@
     <Content Include="Views\Home\FileList.cshtml" />
     <Content Include="Views\Home\FileUploadOld.cshtml" />
     <Content Include="Views\Home\FileUpload.cshtml" />
+    <Content Include="Views\Home\EDIMatching.cshtml" />
+    <Content Include="Views\Home\EDIMatchingDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

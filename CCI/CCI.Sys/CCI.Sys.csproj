@@ -131,6 +131,7 @@
     <Compile Include="Data\DataSource\DataSource.CityCare.cs" />
     <Compile Include="Data\DataSource\DataSource.CityHostedNameMatches.cs" />
     <Compile Include="Data\DataSource\DataSource.CityHostedUSOCScreen.cs" />
+    <Compile Include="Data\DataSource\DataSource.Common.cs" />
     <Compile Include="Data\DataSource\DataSource.CreditMemos.cs" />
     <Compile Include="Data\DataSource\DataSource.Customer.cs" />
     <Compile Include="Data\DataSource\DataSource.Dealer.cs" />
