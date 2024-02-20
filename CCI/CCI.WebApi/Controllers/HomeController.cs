@@ -17,6 +17,7 @@ using Newtonsoft.Json;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Reflection.Emit;
 using System.Security.Policy;
+using System.Diagnostics;
 
 namespace CCI.WebApi.Controllers
 {
@@ -181,11 +182,11 @@ namespace CCI.WebApi.Controllers
         return View("FileList", model);
       }
     }
-    public ActionResult ImportCreatioFiles(DateTime billCycleDate, string fileType = null)
+    public ActionResult ImportCreatioFiles(DateTime billCycleDate, string fileType = null, string filename = null)
     {
       using (InvoiceCreationProcessor processor = new InvoiceCreationProcessor())
       {
-        List<string> filesProcessed = processor.ImportCreatioFiles(fileType, billCycleDate);
+        List<string> filesProcessed = processor.ImportCreatioFiles(fileType, billCycleDate, filename);
         List<InvoiceFilesListGUIModel> model = new List<InvoiceFilesListGUIModel>();
         foreach (string file in filesProcessed)
         {
@@ -224,6 +225,17 @@ namespace CCI.WebApi.Controllers
         return result;
       }
     }
+    public FileStreamResult DownloadEDIData(DateTime billCycleDate)
+    {
+      using (InvoiceCreationProcessor processor = new InvoiceCreationProcessor())
+      {
+        string filename = "EDI Raw Data Bill Cycle " + billCycleDate.ToShortDateString() + " Downloaded " + DateTime.Today.ToString() + ".xlsx";
+        MemoryStream stream = processor.GetEDIData(billCycleDate);
+        FileStreamResult result = ToExcel(stream, filename);
+
+        return result;
+      }
+    }
     #endregion
     #region upload files
 
@@ -240,6 +252,7 @@ namespace CCI.WebApi.Controllers
       // Checking no of files injected in Request object  
       if (Request.Files.Count > 0)
       {
+        string fname = null;
         try
         {
           //  Get all files from Request object  
@@ -250,7 +263,7 @@ namespace CCI.WebApi.Controllers
             //string filename = Path.GetFileName(Request.Files[i].FileName);  
 
             HttpPostedFileBase file = files[i];
-            string fname;
+
 
             // Checking for Internet Explorer  
             if (Request.Browser.Browser.ToUpper() == "IE" || Request.Browser.Browser.ToUpper() == "INTERNETEXPLORER")
@@ -268,7 +281,7 @@ namespace CCI.WebApi.Controllers
             fname = Path.Combine(uploadFolder, fname);
             file.SaveAs(fname);
           }
-          ImportCreatioFiles(billCycleDate, fileType);
+          ImportCreatioFiles(billCycleDate, fileType, fname);
 
           // Returns message that successfully uploaded  
           return Json("File Uploaded Successfully!");

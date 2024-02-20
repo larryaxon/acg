@@ -85,9 +85,9 @@ namespace CCI.Sys.Processors
       };
       _localDirectory = _localDirectory + _creatioImportFolder;
     }
-    public List<string> ImportCreatioFiles(string fileType = null, DateTime? billCycleDate = null)
+    public List<string> ImportCreatioFiles(string fileType = null, DateTime? billCycleDate = null, string filename = null)
     {
-      return ProcessFiles(fileType, billCycleDate);
+      return ProcessFiles(fileType, billCycleDate, filename);
     }
     public List<ACGFileInfo> GetFileList(string directory = null)
     {
@@ -117,10 +117,10 @@ namespace CCI.Sys.Processors
       List<string> filelist = filesToProcess.Select(f => f.Name).ToList();
       return filelist;
     }
-    public List<string> ProcessFiles(string fileType = null, DateTime? billCycleDate = null)
+    public List<string> ProcessFiles(string fileType = null, DateTime? billCycleDate = null, string filename = null)
     {
       GetFileList(LocalFolder);
-      List<ACGFileInfo> filesToProcess = getFilesToProcess();
+      List<ACGFileInfo> filesToProcess = getFilesToProcess(fileType, true, filename);
       foreach (ACGFileInfo file in filesToProcess)
         ProcessFile(file, fileType, billCycleDate);
       return filesToProcess.Select(f => f.Name).ToList();
@@ -202,6 +202,24 @@ namespace CCI.Sys.Processors
 
 
     }
+    public MemoryStream GetEDIData(DateTime billCycleDate)
+    {
+      DataSet ds = GetEDIDataSet(billCycleDate);
+      Dictionary<int, Dictionary<string, List<int>>> formats = new Dictionary<int, Dictionary<string, List<int>>>()
+      {
+        { 1, new Dictionary<string, List<int>>()
+             {
+               { "Date", new List<int>() { 4,11 }  },
+               { "Decimal", new List<int>() { 5,6,7,8 }  }
+              }
+        }
+      };
+      using (ExcelProcessor excel = ExcelProcessor.CreateWorkbookFromDataset(ds, null, null, formats))
+      {
+        return excel.ToStream();
+      }
+
+    }
     public MemoryStream getCreationAuditExport(DateTime billCycleDate)
     {
       using (DataAccess da = new DataAccess())
@@ -278,6 +296,14 @@ namespace CCI.Sys.Processors
       using (DataAccess da = new DataAccess())
       {
         return da.GetDataFromSQL(sql.ToString());
+      }
+    }
+    private DataSet GetEDIDataSet(DateTime billCycleDate)
+    {
+      string sql = "SELECT * from unibillfacepageView where billcycledate = '" + billCycleDate.ToShortDateString() + "'";
+      using (DataAccess da = new DataAccess())
+      {
+        return da.GetDataFromSQL(sql);
       }
     }
     public string AddCodes()

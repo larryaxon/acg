@@ -25,80 +25,7 @@ namespace CCI.Sys.Processors
     public const string CREATIOBILLAUDITIMPORTTABLEUPLOAD = "CreatioBillAuditUploadImport";
     internal List<ACGFileInfo> _fileList = null;
     internal Dictionary<string, string> _dataTypes = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase);
-    // changed to get from codemaster
-    //{
-    //  { "ACCT_LEVEL", "int" },
-    //  { "ACTIVITY_COMP_DATE", "date" },
-    //  { "AIR_CHG_AMT", "decimal(8,2)" },
-    //  { "Ancillary_charges","bit" },
-    //  { "Ancillary_Charges?","bit" },
-    //  { "BAL_FWD", "decimal(8,2)" },
-    //  { "BAL_FWD_ADJ", "decimal(8,2)" },
-    //  { "BEG_CHG_DATE", "date" },
-    //  { "Bill_cycle_date", "date" },
-    //  { "BILL_PERIOD_END", "date" },
-    //  { "BILL_PERIOD_START", "date" },
-    //  { "Carrier_invoice_date", "date" },
-    //  { "CHG_AMT", "decimal(8,2)" },
-    //  { "Carrier_charges_to_audit", "decimal(10,2)" },
-    //  { "CHG_BASIS", "decimal(8,2)" },
-    //  { "CHG_QTY1_BILLED", "decimal(8,2)" },
-    //  { "CHG_QTY1_USED", "decimal(8,2)" },
-    //  { "CHG_QTY2_BILLED", "decimal(8,2)" },
-    //  { "CHG_QTY2_USED", "decimal(8,2)" },
-    //  { "CHG_RATE", "decimal(8,2)" },
-    //  { "CONTRACT_EFF_DATE", "date" },
-    //  { "CONTRACT_END_DATE", "date" },
-    //  { "DATA_CHG_AMT", "decimal(8,2)" },
-    //  { "DATE_ISSUED", "date" },
-    //  { "DATE_RECEIVED_FROM_SP", "date" },
-    //  { "DISC_CHG_AMT", "decimal(8,2)" },
-    //  { "DISC_PCT", "decimal(8,2)" },
-    //  { "Dispute_Pending", "bit" },
-    //  { "DUE_DATE" , "date" },
-    //  { "END_CHG_DATE", "date" },
-    //  { "FEAT_CHG_AMT", "decimal(8,2)" },
-    //  { "First_invoice1", "bit" },
-    //  { "First_invoice", "bit" },
-    //  { "Has_E_D_IData","bit"},
-    //  { "Install_Date", "date" },
-    //  { "INV_DATE", "date" },
-    //  { "Invoice_Date", "exceldate" },
-    //  { "LD_CHG_AMT", "decimal(8,2)" },
-    //  { "MRC ($)", "decimal(8,2)" },
-    //  { "MSG_CHG_AMT", "decimal(8,2)" },
-    //  { "Multi__Site_Invoice", "bit" },
-    //  { "Order_MRC", "decimal(10,2)" },
-    //  { "ORIG_INV_DATE", "date" },
-    //  { "PMTS_APP_THRU_DATE", "date" },
-    //  { "PMTS_RCVD", "decimal(8,2)" },
-    //  { "PREV_BILL_AMT", "decimal(8,2)" },
-    //  { "PRORATE_FACTOR", "decimal(8,2)" },
-    //  { "ROAM_CHG_AMT", "decimal(8,2)" },
-    //  { "ROAM_TAX_CHG_AMT", "decimal(8,2)" },
-    //  { "R_P_M_Control_Charges","decimal(10,2)"},
-    //  { "SP_BAL_FWD", "decimal(8,2)" },
-    //  { "SP_INV_LINE_NUM", "int" },
-    //  { "SP_TOT_AMT_DUE", "decimal(8,2)" },
-    //  { "SP_TOT_NEW_CHGS", "decimal(8,2)" },
-    //  { "SVC_ESTABLISH_DATE", "date" },
-    //  { "TAX_SUR_CHG_AMT", "decimal(8,2)" },
-    //  { "Total_bill", "decimal(10,2)" },
-    //  { "TOT_AMT_DUE", "decimal(8,2)" },
-    //  { "TOT_AMT_DUE_ADJ", "decimal(8,2)" },
-    //  { "TOT_DISC_AMT", "decimal(8,2)" },
-    //  { "TOT_MRC_CHGS", "decimal(8,2)" },
-    //  { "TOT_NEW_CHG_ADJ", "decimal(8,2)" },
-    //  { "TOT_NEW_CHGS", "decimal(8,2)" },
-    //  { "TOT_OCC_CHGS", "decimal(8,2)" },
-    //  { "TOT_TAXSUR", "decimal(8,2)" },
-    //  { "TOT_USAGE_CHGS", "decimal(8,2)" },
-    //  { "USG_BAND", "decimal(8,2)" },
-    //  { "Variance_needs_to_be_a_calculated_field", "decimal(10,2)" },
-    //  { "Variance", "decimal(10,2)" },
-    //  { "FilesProcessedID", "int" }
 
-    //};
     internal static string _localDirectory = "U:\\Data";
     #region public properties
     public List<ACGFileInfo> FileList
@@ -167,11 +94,19 @@ namespace CCI.Sys.Processors
     public void Dispose()
     {
     }
-    public List<ACGFileInfo> getFilesToProcess(string fileType = null)
+    public List<ACGFileInfo> getFilesToProcess(string fileType = null, bool reprocessFile = false, string filename = null)
     {
-      List<string> processedFiles = getFilesProcessed(fileType);  
       List<ACGFileInfo> files = FileList.ToList();
-      List<ACGFileInfo> filesToProcess = files.Where(ftp => !processedFiles.Contains(ftp.FullName)).ToList();
+      if (!string.IsNullOrWhiteSpace(filename))
+        files = files.Where(f => f.FullName.Equals(filename, StringComparison.CurrentCultureIgnoreCase)).ToList();
+      List<ACGFileInfo> filesToProcess;
+      if (reprocessFile)
+        filesToProcess = files;
+      else
+      {
+        List<string> processedFiles = getFilesProcessed(fileType);
+        filesToProcess = files.Where(ftp => !processedFiles.Contains(ftp.FullName)).ToList();
+      }
       return filesToProcess;
     }
 
@@ -510,12 +445,22 @@ namespace CCI.Sys.Processors
                 // now update the import table with the files processed id
                 string sql = "Update " + importtable + " SET FilesProcessedID = " + fileProcessedID.ToString();
                 da.updateDataFromSQL(sql);
+                // now extract the "real" table name from the format [dbo].[tablename] if it is in that format
+                if (importtable.Contains(".")) // had a schema prefix
+                {
+                  string[] parts = importtable.Split('.');
+                  int nbrparts = parts.Length;
+                  string tname = parts[nbrparts - 1];
+                  if (tname.StartsWith("["))
+                    tname = tname.Substring(1, tname.Length - 2);
+                  importtable = tname;
+                }
                 if (importtable.Equals(CREATIOBILLAUDITIMPORTTABLEUPLOAD, StringComparison.CurrentCultureIgnoreCase))
                 {
                   if (billCycleDate == null)
                     return; // we can't process if we don't have the date
                   else
-                    sql = "EXEC UpdateCreatioAuditFromCreatio @billCycleDate='" + ((DateTime)billCycleDate).ToShortDateString() + "'";
+                    sql = "EXEC PopulateCreatioBillAuditFromUpload @billCycleDate='" + ((DateTime)billCycleDate).ToShortDateString() + "'";
                 }
                 else
                 {

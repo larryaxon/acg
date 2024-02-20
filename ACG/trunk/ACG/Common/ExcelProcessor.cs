@@ -224,7 +224,9 @@ namespace ACG.Common
             string tabname = dt.TableName; // if we don't specify the tab names in tabinfo, then we use the table name
             if (tabnames != null && tabindex < tabnames.Count) // but if we do have a tab name
               tabname = tabarray[tabindex]; // we use it
-            Dictionary<string, List<int>> theseformats = formats[tabindex+1]; // format tab index is 1 based, not zero based
+            Dictionary<string, List<int>> theseformats = null;
+            if (formats != null)
+              theseformats = formats[tabindex+1]; // format tab index is 1 based, not zero based
             tabindex++;
             ExcelWorksheet ws = workbook.CreateWorksheetFromDataTable(dt, tabname, "A1",true, theseformats);
 
