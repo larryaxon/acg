@@ -209,8 +209,8 @@ namespace CCI.Sys.Processors
       {
         { 1, new Dictionary<string, List<int>>()
              {
-               { "Date", new List<int>() { 4,11 }  },
-               { "Decimal", new List<int>() { 5,6,7,8 }  }
+               { "Date", new List<int>() { 8,9,10,11,12,15 }  },
+               { "Decimal", new List<int>() { 13,14,16,17,18,19,20,21,22,23,24,25,26 }  }
               }
         }
       };
@@ -300,7 +300,15 @@ namespace CCI.Sys.Processors
     }
     private DataSet GetEDIDataSet(DateTime billCycleDate)
     {
-      string sql = "SELECT * from unibillfacepageView where billcycledate = '" + billCycleDate.ToShortDateString() + "'";
+      int year = billCycleDate.Year;
+      int month = billCycleDate.Month;
+
+      int day = billCycleDate.Day;
+      DateTime endDate = new DateTime(year, month, 15);
+      DateTime startDate = new DateTime(year, month, 16).AddMonths(-1);
+
+      string sql = "SELECT * from unibillfacepage where INV_Date between '" + startDate.ToShortDateString() + 
+        "' AND '" + endDate.ToShortDateString() + "'";
       using (DataAccess da = new DataAccess())
       {
         return da.GetDataFromSQL(sql);
