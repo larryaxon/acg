@@ -193,7 +193,8 @@ namespace CCI.Sys.Processors
         // get the range of the column of data for the variance. Not4 we add 1 to the row cause we don't want the header
         ExcelRange excelRange = ws.Cells[exceltable.Range.Start.Row+1, varianceCol, exceltable.Range.End.Row-1, varianceCol];
         excelRange.Formula = string.Format("{0}-{1}", ws.Cells[exceltable.Range.Start.Row + 1, varianceCol-2].Address, ws.Cells[exceltable.Range.Start.Row + 1, varianceCol-1].Address);
-
+        ExcelColumn disputeNotes = ws.Column(20);
+        disputeNotes.Width = 30;
         //calculate the formulas
         //ws.Calculate();
         MemoryStream stream = excel.ToStream();
