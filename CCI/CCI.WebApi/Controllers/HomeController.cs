@@ -411,6 +411,49 @@ namespace CCI.WebApi.Controllers
       return View("EDIMatchingDetail", model);
     }
     #endregion
+    #region EDI Carrier Matching Screen
+    public ActionResult EDICarrierMatching()
+    {
+      using (InvoiceCreationProcessor processor = new InvoiceCreationProcessor())
+      {
+        List<CreatioEDICarrierMatchingModel> model = processor
+          .getEDICarrierMatching()
+          .OrderBy(e => e.CreatioCarrier)
+          .ToList();
+        return View(model);
+      }
+    }
+    public ActionResult EDICarrierMatchingDetail(int id)
+    {
+      using (InvoiceCreationProcessor processor = new InvoiceCreationProcessor())
+      {
+        CreatioEDICarrierMatchingModel model = processor.getEDICarrierMatchingFromID(id);
+        return View(model);
+      }
+    }
+    public ActionResult DeleteEDICarrierMatching(int id)
+    {
+      using (InvoiceCreationProcessor processor = new InvoiceCreationProcessor())
+      {
+        processor.DeleteEDICarrierMatching(id);
+        return RedirectToAction("EDICarrierMatching");
+      }
+    }
+    [HttpPost]
+    public ActionResult SaveEDICarrierMatching(CreatioEDICarrierMatchingModel model)
+    {
+      using (InvoiceCreationProcessor processor = new InvoiceCreationProcessor())
+      {
+        processor.UpdateEDICarrierMatching(model);
+        return RedirectToAction("EDICarrierMatching");
+      }
+    }
+    public ActionResult NewEDICarrierMatching()
+    {
+      CreatioEDICarrierMatchingModel model = new CreatioEDICarrierMatchingModel();
+      return View("EDICarrierMatchingDetail", model);
+    }
+    #endregion
     #region private methods
     private string ConvertListToString(List<string> list)
     {

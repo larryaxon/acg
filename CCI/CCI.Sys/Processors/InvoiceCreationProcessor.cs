@@ -399,6 +399,8 @@ namespace CCI.Sys.Processors
         return da.processStep(step, billDate, processed, user);
       }
     }
+    #region Matching Screens
+    #region parent/child
     public List<CreatioEDIMatchingModel> getEDIMatching()
     {
       string sql = "Select * from CreatioEDIMatching";
@@ -460,5 +462,61 @@ WHERE ID = {6}";
         return da.updateDataFromSQL(sql);
       }
     }
+    #endregion
+    #region carrier
+    public List<CreatioEDICarrierMatchingModel> getEDICarrierMatching()
+    {
+      string sql = "Select * from CreatioEDICarrierMatch";
+      using (DataSource da = new DataSource())
+      {
+        DataSet ds = da.getDataFromSQL(sql);
+        List<CreatioEDICarrierMatchingModel> list = DataSource.getListFromDataset<CreatioEDICarrierMatchingModel>(ds);
+        return list;
+      }
+
+    }
+    public CreatioEDICarrierMatchingModel getEDICarrierMatchingFromID(int id)
+    {
+      string sql = "Select * from CreatioEDICarrierMatch where ID = " + id.ToString();
+      using (DataSource da = new DataSource())
+      {
+        DataSet ds = da.getDataFromSQL(sql);
+        CreatioEDICarrierMatchingModel model = DataSource.getListFromDataset<CreatioEDICarrierMatchingModel>(ds).FirstOrDefault();
+        return model;
+      }
+    }
+    public void DeleteEDICarrierMatching(int id)
+    {
+      string sql = "DELETE from CreatioEDICarrierMatch where ID = " + id.ToString();
+      using (DataSource da = new DataSource())
+      {
+        da.updateDataFromSQL(sql);
+      }
+    }
+    public int? UpdateEDICarrierMatching(CreatioEDICarrierMatchingModel model)
+    {
+      const string INSERTSQL = @"INSERT INTO CreatioEDICarrierMatch ([CreatioCarrier]
+,[EDICarrier])
+VALUES ('{0}','{1}')";
+
+      const string UPDATESQL = @"UPDATE CreatioEDICarrierMatch
+SET CreatioCarrier = '{0}',
+EDICarrier = '{1}'
+WHERE ID = {2}";
+
+      if (model == null)
+        return null;
+      string sql;
+      if (model.ID == null) // it is a new record
+        sql = string.Format(INSERTSQL, model.CreatioCarrier, model.EDICarrier);
+      else
+        sql = string.Format(UPDATESQL, model.CreatioCarrier, model.EDICarrier, model.ID.ToString());
+      using (DataSource da = new DataSource())
+      {
+        return da.updateDataFromSQL(sql);
+      }
+    }
+    #endregion
+    #endregion
   }
 }

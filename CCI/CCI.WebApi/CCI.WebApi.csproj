@@ -237,6 +237,8 @@
     <Content Include="Views\Home\FileUpload.cshtml" />
     <Content Include="Views\Home\EDIMatching.cshtml" />
     <Content Include="Views\Home\EDIMatchingDetail.cshtml" />
+    <Content Include="Views\Home\EDICarrierMatching.cshtml" />
+    <Content Include="Views\Home\EDICarrierMatchingDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

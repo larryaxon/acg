@@ -1,0 +1,45 @@
+﻿@model CCI.Common.CreatioEDICarrierMatchingModel
+
+@{
+    ViewBag.Title = "EDI Carrier Matching Detail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>EDI Carrier Matching Detail</h2>
+<div>
+  @Html.ActionLink("Back", "EDICarrierMatching", new { }, new { @class = "btn btn-primary btn-sm detail" })
+</div>
+@using (Html.BeginForm("SaveEDICarrierMatching", "Home", FormMethod.Post ))
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.ID)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CreatioCarrier, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CreatioCarrier, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CreatioCarrier, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.EDICarrier, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.EDICarrier, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.EDICarrier, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-primary btn-sm detail" />
+            </div>
+        </div>
+    </div>
+}
+
+

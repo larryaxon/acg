@@ -1,0 +1,40 @@
+﻿@model IEnumerable<CCI.Common.CreatioEDICarrierMatchingModel>
+
+@{
+    ViewBag.Title = "Creatio/EDI Carrier Matching";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Content/ScrollingTable.css" rel="stylesheet" />
+<h2>Creatio/EDI Carrier Matching</h2>
+
+<p>
+  @Html.ActionLink("Back","Index", new { }, new { @class = "btn btn-primary btn-sm detail" })
+    @Html.ActionLink("New", "NewEDICarrierMatching", new { }, new { @class = "btn btn-primary btn-sm detail" })
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.CreatioCarrier)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EDICarrier)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreatioCarrier)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EDICarrier)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "EDICarrierMatchingDetail", new { id=item.ID }, new { @class = "btn btn-primary btn-sm detail" }) |
+            @Html.ActionLink("Delete", "DeleteEDICarrierMatching", new { id=item.ID }, new { @class = "btn btn-primary btn-sm detail" })
+        </td>
+    </tr>
+}
+
+</table>

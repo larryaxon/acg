@@ -110,7 +110,10 @@
       </td>
     </tr>
     <tr>
-      <td></td>
+      <td>
+        @Html.ActionLink("Edit Creatio/EDI Carriers", "EDICarrierMatching", new { billCycleDate = Model.BillCycleDate, fileType = CCI.Sys.Processors.InvoiceCreationProcessor.FILETYPEIMPORTFROMCREATIO }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
+
+      </td>
       <td style="padding:4px">
         @Html.ActionLink("Download Raw EDI Data", "DownloadEDIData", new { billCycleDate = Model.BillCycleDate }, new { @class = "btn btn-primary btn-sm detail", @style = "width:300px; text-align:center;" })
 

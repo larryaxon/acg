@@ -93,6 +93,7 @@
     <Compile Include="CCISerializer.cs" />
     <Compile Include="CCITable.cs" />
     <Compile Include="Chargify.cs" />
+    <Compile Include="CreatioEDICarrierMatchingModel.cs" />
     <Compile Include="CreatioEDIMatchingModel.cs" />
     <Compile Include="EntityAlternateID.cs" />
     <Compile Include="FieldValidation.cs" />
